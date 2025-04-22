@@ -17,6 +17,8 @@ BALL_SPEED = 5
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 # Set up the game window
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -29,6 +31,7 @@ class Paddle:
         self.rect = pygame.Rect(x, y, PADDLE_WIDTH, PADDLE_HEIGHT)
         self.score = 0
         self.speed = PADDLE_SPEED
+        self.color = RED if x == 0 else BLUE
 
     def move(self, up, down):
         if up and self.rect.top > 0:
@@ -37,7 +40,7 @@ class Paddle:
             self.rect.y += self.speed
 
     def draw(self):
-        pygame.draw.rect(screen, WHITE, self.rect)
+        pygame.draw.rect(screen, self.color, self.rect)
 
 class Ball:
     def __init__(self):
@@ -50,6 +53,7 @@ class Ball:
         self.dy = BALL_SPEED * random.choice([-1, 1])
         self.rect = pygame.Rect(self.x - BALL_RADIUS, self.y - BALL_RADIUS,
                               BALL_RADIUS * 2, BALL_RADIUS * 2)
+        self.last_hit = None
 
     def move(self):
         self.x += self.dx
@@ -93,8 +97,12 @@ def main():
         ball.move()
 
         # Ball collision with paddles
-        if ball.rect.colliderect(left_paddle.rect) or ball.rect.colliderect(right_paddle.rect):
+        if ball.rect.colliderect(left_paddle.rect):
             ball.dx *= -1
+            ball.last_hit = left_paddle
+        elif ball.rect.colliderect(right_paddle.rect):
+            ball.dx *= -1
+            ball.last_hit = right_paddle
 
         # Score points
         if ball.x <= 0:
@@ -111,9 +119,12 @@ def main():
         ball.draw()
         draw_center_line()
 
-        # Draw scores
-        left_score = font.render(str(left_paddle.score), True, WHITE)
-        right_score = font.render(str(right_paddle.score), True, WHITE)
+        # Draw scores with colors based on last hit
+        left_score_color = left_paddle.color if ball.last_hit == left_paddle else WHITE
+        right_score_color = right_paddle.color if ball.last_hit == right_paddle else WHITE
+        
+        left_score = font.render(str(left_paddle.score), True, left_score_color)
+        right_score = font.render(str(right_paddle.score), True, right_score_color)
         screen.blit(left_score, (WINDOW_WIDTH//4, 20))
         screen.blit(right_score, (3*WINDOW_WIDTH//4, 20))
 
