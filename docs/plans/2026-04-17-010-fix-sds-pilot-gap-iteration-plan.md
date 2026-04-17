@@ -1,9 +1,14 @@
 ---
 title: "fix: sds-pilot gap iteration (Phases 3a/3b/3c)"
 type: fix
-status: active
+status: completed
 date: 2026-04-17
 origin: docs/knowledge/lessons/2026-04-17-pilot-figma-sds.md
+completion_commits:
+  - d7fb465c  # Phase 3a — G5 + G6 + G8
+  - dd1df9a6  # Re-pilot validation lesson
+  - 9585761a  # Phase 3b — G1 + G4 + G9 + rubric-applicator extract mode
+  - 56958605  # Phase 3c — G2 a11y-framework detection
 ---
 
 # fix: sds-pilot gap iteration (Phases 3a / 3b / 3c)
