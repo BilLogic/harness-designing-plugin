@@ -187,7 +187,14 @@ def detect_team_tooling() -> dict[str, list[str]]:
 
 
 def detect_config_sot() -> dict:
-    """Token-package + figma.config signals. (Storybook → v2, not here.)"""
+    """Token-package + figma.config signals. (Storybook → v2, not here.)
+
+    Token detection tries (in order):
+    1. Top-level explicit paths (`tokens/` dir, `style-dictionary.config.*`, `tokens.config.json`)
+    2. Recursive `tokens.json` search up to depth 3, excluding build/vendor dirs
+
+    Emits `tokens_package_paths: [...]` so downstream can reference actual paths.
+    """
     tokens_signals = [
         REPO / "tokens",
         REPO / "style-dictionary.config.js",
@@ -195,9 +202,31 @@ def detect_config_sot() -> dict:
         REPO / "style-dictionary.config.ts",
         REPO / "tokens.config.json",
     ]
-    has_tokens = any(
+    top_level_hit = any(
         (p.is_dir() if p.name == "tokens" else p.is_file()) for p in tokens_signals
     )
+    tokens_package_paths: list[str] = []
+    if top_level_hit:
+        for p in tokens_signals:
+            if (p.is_dir() if p.name == "tokens" else p.is_file()):
+                tokens_package_paths.append(str(p.relative_to(REPO)))
+
+    # Recursive tokens.json search (G1 — sds has scripts/tokens/tokens.json)
+    SKIP = {"node_modules", "dist", "build", ".next", "__pycache__", ".git",
+            ".turbo", "coverage", ".venv", "venv"}
+    for candidate in REPO.rglob("tokens.json"):
+        rel_parts = candidate.relative_to(REPO).parts
+        if any(part in SKIP for part in rel_parts):
+            continue
+        if len(rel_parts) > 3:
+            continue
+        rel = str(candidate.relative_to(REPO))
+        if rel not in tokens_package_paths:
+            tokens_package_paths.append(rel)
+        if len(tokens_package_paths) >= 5:  # cap output
+            break
+
+    has_tokens = top_level_hit or len(tokens_package_paths) > 0
 
     has_figma_config = any(
         (REPO / name).is_file()
@@ -207,6 +236,7 @@ def detect_config_sot() -> dict:
     return {
         "has_tokens_package": has_tokens,
         "has_figma_config": has_figma_config,
+        "tokens_package_paths": tokens_package_paths,
     }
 
 
@@ -355,6 +385,7 @@ def main() -> int:
         "bloat_overlay": bloat_overlay,
         "mcp_servers": mcp_servers,
         "team_tooling": team_tooling,
+        "tokens_package_paths": config_sot["tokens_package_paths"],
         "detected_at": datetime.datetime.now(datetime.timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         ),

@@ -11,9 +11,49 @@ Apply one rubric to one work item. Return structured findings. Generic wrapper �
 
 ## Inputs
 
-- `work_item_path` — path to the file / design / asset being critiqued (required)
-- `rubric_path` — path to the rubric definition file (required). Usually `skills/hd-review/assets/starter-rubrics/<name>.md` or a user file at `docs/rubrics/<name>.md` or `docs/context/design-system/<name>.md`.
+- `work_item_path` — path to the file / design / asset being critiqued OR analyzed (required)
+- `rubric_path` — path to a rubric definition file OR, in `extract` mode, the starter rubric whose SHAPE to use as the extraction template (required)
+- `mode` — `apply` (default) | `extract` — see "Two modes" below
 - `rubric_overrides` — optional per-criterion severity overrides from `design-harnessing.local.md`
+
+## Two modes
+
+### `mode: apply` (default — forward critique)
+
+Apply a known rubric to a work item. Produce findings that score the work item against the rubric's criteria. This is the original behavior described below.
+
+### `mode: extract` (inverse — find implicit rubrics)
+
+Read the work item (typically an AI-doc like `.github/copilot-instructions.md` or `AGENTS.md` with embedded conventions), identify rule-like / check-like statements that could become explicit rubric criteria, and return them as structured candidates.
+
+**Used by:** `hd:setup` Layer 4 "critique + extract" default when `has_ai_docs` + combined size > 200 lines. The user's existing AI-docs have implicit rubric content; this mode surfaces it as candidates for promotion.
+
+**Output shape in `extract` mode:**
+
+```yaml
+work_item: .github/copilot-instructions.md
+mode: extract
+extracted_candidates:
+  - candidate_id: approved-tokens-only
+    matches_starter: design-system-compliance
+    rule_statement: "Only use tokens from the approved set; no hex codes"
+    evidence:
+      - "Line 47: 'All colors must reference design tokens; hex codes are forbidden'"
+      - "Line 82: 'See src/styles/tokens.css for approved token set'"
+    suggested_severity: p1
+    rationale: "Appears as a rule with clear enforcement — good fit for promotion"
+  - candidate_id: react-aria-for-a11y
+    matches_starter: accessibility-wcag-aa
+    rule_statement: "Components must use React Aria/Stately for interactive primitives"
+    ...
+summary:
+  total_candidates: 5
+  strong_matches_to_starters: 4
+  novel_candidates: 1  # didn't match any starter rubric
+  recommendation: "Promote 4 strong matches to explicit rubric files; discuss the novel one with user before promotion"
+```
+
+The calling skill (`hd:setup`) then presents candidates to the user, gets approval per-candidate, and copies the matching starter rubric file + pre-fills with the extracted content.
 
 ## Procedure
 

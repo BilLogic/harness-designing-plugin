@@ -72,11 +72,28 @@ Default to B on silence. Never block.
 
 Surface detected `team_tooling` per category + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note once (not a separate step): *"compound-engineering detected — we coexist by default; won't touch its namespace."*
 
-Ask per category for anything detection missed. For each confirmed tool, triage per the integration-path table in [`references/known-mcps.md`](references/known-mcps.md):
+Ask **one batched question** covering all 6 categories (not 6 per-category prompts):
+
+> "I detected: `<list of detected tools>`. Anything else you (or contributors) use for this project — across these categories?
+>
+> - **Docs/wiki** — notion, confluence, coda, obsidian, google docs, …
+> - **Design** — figma, paper, pencildev, sketch, …
+> - **Diagramming** — excalidraw, miro, whimsical, figjam, …
+> - **Analytics** — amplitude, mixpanel, posthog, metabase, …
+> - **PM/issues** — linear, jira, github issues, asana, …
+> - **Comms** — slack, discord, loom, …
+>
+> Reply with anything I missed (one tool per line, or 'nothing else'). Format `category: tool` works if the tool isn't obvious from name (e.g., `analytics: fullstory`)."
+
+Parse the user's free-text reply — comma or newline separated tool names. Map each to its category (from the patterns in [`references/known-mcps.md`](references/known-mcps.md)). If ambiguous or unknown, ask a single follow-up.
+
+**Framing note:** use "you (or contributors)" rather than "your team" — most repos running `/hd:setup` are solo or near-solo. Team-size specifics come later when Step 9 writes `team_size`.
+
+For each confirmed tool, triage per the integration-path table in [`references/known-mcps.md`](references/known-mcps.md):
 
 - **active** — MCP live in session → offer live pull during later layer scaffolding
 - **start-server** — MCP configured but not running → give start command
-- **install-walkthrough** — tool in known-MCP table → install command + API-key URL
+- **install-walkthrough** — tool in known-MCP table → install command + API-key URL (full walkthrough detail in `known-mcps.md` per-tool subsection)
 - **pointer-only** — user-named tool not in known table → record, write pointer files, no install recommended
 
 Universal: only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
