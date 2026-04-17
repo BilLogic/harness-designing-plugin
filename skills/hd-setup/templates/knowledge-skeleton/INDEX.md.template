@@ -1,0 +1,55 @@
+# Knowledge layer — {{TEAM_NAME}}
+
+Layer 5 of the five-layer design harness. What the team has learned.
+
+## Structure
+
+- **[lessons/](lessons/)** — dated narratives of what happened (append-only; history is sacred)
+- **[graduations.md](graduations.md)** — meta-log of lesson → rule promotions
+- *(coming v0.5)* `docs/design-solutions/` — distilled solutions to recurring design problems
+
+## How to use
+
+### Capturing a lesson
+
+Create `lessons/YYYY-MM-DD-<slug>.md` with this frontmatter:
+
+```yaml
+---
+title: "Short title of the lesson"
+date: 2026-04-16
+tags: [tag-a, tag-b]
+graduation_candidate: false
+---
+```
+
+Body: **Context** / **Decision or Observation** / **Result** / **Graduation-readiness**. Keep it short — 5-10 sentences.
+
+*(v0.5: `/hd:compound` automates capture.)*
+
+### Graduating a lesson to a rule
+
+When the same pattern appears in 3+ lessons across different designers:
+
+1. Propose graduation (RFC, review, or PR conversation)
+2. On approval: add rule to `AGENTS.md` under "Graduated rules"
+3. Add meta-entry to [graduations.md](graduations.md) linking lesson → rule
+4. **Never delete the original lesson** — history is sacred
+
+*(v0.5: `/hd:compound` proposes graduations with plan-hash proof-of-consent.)*
+
+## Principles
+
+- **History is sacred** — lessons are append-only; delete nothing
+- **Graduate sparingly** — not every lesson becomes a rule; most stay as context-only
+- **Date everything** — a lesson without a date is a rule in disguise
+
+## Namespace
+
+This team uses `docs/knowledge/` and (v0.5+) `docs/design-solutions/`. Not `docs/solutions/` — that's the compound-engineering plug-in's namespace if installed. See [AGENTS.md § Coexistence](../../AGENTS.md#coexistence-with-compound-engineering).
+
+## Related layers
+
+- **Layer 1 Context** (`docs/context/`) — evergreen reference (semantic memory)
+- **Layer 5 Knowledge** (this directory) — dated narratives (episodic memory)
+- Graduated rules bridge the two: Layer 5 origin, Layer 1 / AGENTS.md destination

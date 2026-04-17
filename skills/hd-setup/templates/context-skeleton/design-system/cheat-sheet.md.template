@@ -1,0 +1,79 @@
+# {{TEAM_NAME}} — design system cheat-sheet
+
+Tier 2 context — loaded when a task touches design. Target length: ≤200 lines; more goes into Tier 3 (`docs/context/design-system/archive/` or the design-system source of truth).
+
+## Foundations
+
+### Colors
+
+{{COLOR_TOKENS}}
+
+<!-- Examples:
+- Primary: #0051FF
+- Secondary: #8B5CF6
+- Neutral: 50-950 scale
+- Semantic: success, warning, danger, info
+-->
+
+### Typography
+
+{{TYPOGRAPHY_TOKENS}}
+
+<!-- Examples:
+- Display: "Inter", -apple-system, sans-serif
+- Body: "Inter", -apple-system, sans-serif
+- Mono: "JetBrains Mono", monospace
+- Scale: 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 48 / 60
+-->
+
+### Spacing
+
+{{SPACING_TOKENS}}
+
+<!-- Example: 4px base, scale 4/8/12/16/20/24/32/40/48/64/80/96 -->
+
+### Radius
+
+{{RADIUS_TOKENS}}
+
+<!-- Example: sm=4px, md=8px, lg=16px, full=9999px -->
+
+## Components
+
+### Approved components
+
+{{APPROVED_COMPONENTS}}
+
+<!-- Example:
+- Button: variants primary / secondary / ghost / destructive
+- Input: variants text / password / email / number
+- Card: variants default / elevated / outlined
+- Badge: variants neutral / primary / success / warning / danger
+-->
+
+### Component budget
+
+{{COMPONENT_BUDGET_RULE}}
+
+<!-- Example: "No new primitive components without an RFC linked in docs/knowledge/decisions/." -->
+
+## Escape hatches
+
+Patterns for when the system doesn't fit. Each escape hatch has a clear trigger and a boundary.
+
+{{ESCAPE_HATCHES}}
+
+<!-- Example:
+- Marketing moments may request bespoke button variants. Rule: time-limited (campaign duration only); never merged into the core library; deleted when campaign ends. Recent attempt: docs/knowledge/lessons/2026-02-14-*
+-->
+
+## Design tokens source of truth
+
+{{TOKENS_SOURCE}}
+
+<!-- Example: "Figma library: [link]. Code tokens: packages/ui/tokens/. Drift check: `npm run tokens:verify`." -->
+
+## See also
+
+- `docs/rubrics/INDEX.md` — how rubrics apply design-system criteria
+- Layer 5 lessons tagged `design-system` — past decisions and experiments

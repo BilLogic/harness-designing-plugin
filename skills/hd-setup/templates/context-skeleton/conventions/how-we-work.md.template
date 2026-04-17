@@ -1,0 +1,64 @@
+# {{TEAM_NAME}} — how we work
+
+Tier 2 context — loaded when a task touches code or commits. Conventions that shape team output.
+
+## Commits
+
+{{COMMIT_CONVENTION}}
+
+<!-- Examples:
+- Conventional Commits: `feat(scope): description` / `fix(scope): description`
+- Freeform but imperative: "Add X", "Fix Y"
+- Always reference issue number: `[#123] feat: description`
+-->
+
+## Branch naming
+
+{{BRANCH_NAMING}}
+
+<!-- Examples:
+- `feature/<short-slug>` for features
+- `fix/<short-slug>` for bug fixes
+- `refactor/<short-slug>` for refactors
+-->
+
+## Review flow
+
+{{REVIEW_FLOW}}
+
+<!-- Examples:
+- All PRs require 1 approval; design-system changes require 2
+- PR template in `.github/pull_request_template.md`
+- Auto-assign reviewers via CODEOWNERS
+-->
+
+## File naming
+
+{{FILE_NAMING}}
+
+<!-- Examples:
+- Components: PascalCase (`UserProfileCard.tsx`)
+- Hooks: camelCase with `use` prefix (`useAuth.ts`)
+- Utilities: camelCase (`formatDate.ts`)
+- Tests: sibling file `.test.ts` or `.spec.ts`
+-->
+
+## Never do
+
+<!-- Procedural commitments. Things the team has agreed not to do. -->
+
+- {{NEVER_LIST_1}}
+- {{NEVER_LIST_2}}
+
+## Always do
+
+<!-- Procedural commitments. Things the team always does. -->
+
+- {{ALWAYS_LIST_1}}
+- {{ALWAYS_LIST_2}}
+
+## References
+
+- Linting config: {{LINT_CONFIG_PATH}}
+- CI pipeline: {{CI_CONFIG_PATH}}
+- Contributor guide: {{CONTRIBUTING_LINK}}  <!-- optional -->
