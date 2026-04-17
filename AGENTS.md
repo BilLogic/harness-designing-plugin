@@ -138,7 +138,9 @@ Required reading before authoring any skill:
 
 Rules that earned their place here via episodic→procedural graduation (see [docs/knowledge/graduations.md](docs/knowledge/graduations.md)). Each entry: `[YYYY-MM-DD] Rule. Source: path/to/lesson.md`.
 
-<!-- Add new graduated rules above this line. v0.MVP seeds one example in P3.4. -->
+<!-- Add new graduated rules above this line. -->
+
+- [2026-04-16] Don't ship future-version skill stubs with `disable-model-invocation: true` at current version. Wait to author the skill when it's being built. Stubs with fake trigger text + the flag make the skill surface actively worse than if it didn't exist. Source: [docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md](docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md)
 
 ## Pre-commit checklist
 
