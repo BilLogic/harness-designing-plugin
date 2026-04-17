@@ -1,8 +1,8 @@
 {
   "name": "design-harness",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "displayName": "Design Harness",
-  "description": "Design-focused AI harness. 2 skills for learning and setting up a five-layer design harness (Context, Skills, Orchestration, Rubrics, Knowledge).",
+  "description": "Design-focused AI harness. 4 skills for learning, setting up, maintaining, and reviewing a five-layer design harness (Context, Skills, Orchestration, Rubrics, Knowledge).",
   "author": {
     "name": "Bill Guo"
   },

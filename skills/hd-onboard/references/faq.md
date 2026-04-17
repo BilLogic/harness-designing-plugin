@@ -28,7 +28,7 @@ Inside your repo. The harness is version-controlled alongside the code and desig
 
 ## 7. What's a "graduation"?
 
-When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Graduated rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/graduations.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:compound` (v0.5) proposes graduations; `/hd:graduate` is *not* a separate skill (folded into compound — single verb family).
+When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Graduated rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/graduations.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:compound` proposes graduations; `/hd:graduate` is *not* a separate skill (folded into compound — single verb family).
 
 ## 8. Do I need Claude Code, or does this work elsewhere?
 

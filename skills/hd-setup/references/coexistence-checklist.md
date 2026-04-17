@@ -11,7 +11,7 @@ Run the coexistence overlay when `~/.claude/plugins/cache/compound-engineering-p
 | Compound's | Ours | Check |
 |---|---|---|
 | `/ce:*` commands | `/hd:*` commands | All our skill `name:` frontmatter fields start with `hd:`; never bare |
-| `docs/solutions/` | `docs/design-solutions/` | We NEVER write to `docs/solutions/`; `hd:compound` (v0.5) writes to `docs/design-solutions/` |
+| `docs/solutions/` | `docs/design-solutions/` | We NEVER write to `docs/solutions/`. `docs/design-solutions/` is our reserved namespace for future distilled pattern-solutions; `hd:compound` currently writes lessons to `docs/knowledge/lessons/` |
 | `compound-engineering.local.md` | `design-harnessing.local.md` | We create/read ONLY `design-harnessing.local.md`; leave theirs alone |
 | `ce-*` skill prefix | `hd-*` skill prefix | All our skill dirs are `hd-*` |
 

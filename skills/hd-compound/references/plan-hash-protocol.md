@@ -152,7 +152,7 @@ User:  /hd:compound graduate-apply --plan-hash a1b2c3...
 Skill: Hash verified. Writing AGENTS.md line 47. Writing graduations.md entry. Done.
        Graduated: "Don't ship future-version skill stubs..."
        Source lesson preserved: docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md
-       Next: commit this graduation, or run `/hd:review` (v1).
+       Next: commit this graduation, or run `/hd:review` for a harness audit.
 ```
 
 ### Example 2: Drift detected (file changed between propose and apply)

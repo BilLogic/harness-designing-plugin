@@ -181,7 +181,7 @@ Graduated: <title>
 Next steps:
   1. Review the changes: git diff HEAD
   2. Commit: git commit -m "chore: graduate <title>"
-  3. (Optional) Run `/hd:review` for harness audit (v1)
+  3. (Optional) Run `/hd:review` for harness audit
 ```
 
 ## Failure modes

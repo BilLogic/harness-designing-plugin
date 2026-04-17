@@ -23,9 +23,9 @@ During build:
 
 ## Namespace
 
-This plug-in's own knowledge lives here (`docs/knowledge/`). Output from `/hd:compound` (v0.5) when users scaffold their own harnesses lives at the user's `docs/knowledge/` — we don't mix.
+This plug-in's own knowledge lives here (`docs/knowledge/`). When users scaffold harnesses in their own repos, `/hd:compound` writes their lessons to their repo's `docs/knowledge/` — never mixed with ours.
 
-Separately: `docs/design-solutions/` is reserved for `/hd:compound` distilled pattern-solutions (v0.5+) — **not** `docs/solutions/`, which is compound-engineering's namespace.
+Separately: `docs/design-solutions/` is reserved for future distilled pattern-solutions (currently unused) — **not** `docs/solutions/`, which is compound-engineering's namespace.
 
 ## Current lessons
 

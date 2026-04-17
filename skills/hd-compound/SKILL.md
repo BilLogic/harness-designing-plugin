@@ -79,13 +79,13 @@ Report concise:
 - Graduation signal: if capture just created the 3rd+ matching lesson, surface graduation candidacy
 - Next step suggestion:
   - After capture → "Review `/hd:onboard` if new to Layer 5 mechanics" or "Consider `/hd:compound graduate-propose` when ≥3 related lessons"
-  - After graduate-apply → "Commit: `git commit -m \"chore: graduate <title>\"`" or "Run `/hd:review`" (v1)
+  - After graduate-apply → "Commit: `git commit -m \"chore: graduate <title>\"`" or "Run `/hd:review`"
 
 ## What this skill does NOT do
 
 - **Does not answer concept questions** → hand off to `/hd:onboard`
 - **Does not scaffold harness structure** → hand off to `/hd:setup`
-- **Does not audit harness health** → hand off to `/hd:review` (v1)
+- **Does not audit harness health** → hand off to `/hd:review`
 - **Does not modify source lessons** — history is sacred (Layer 5 append-only rule)
 - **Does not apply graduations without a verified plan-hash** — refusal is structural, not advisory
 

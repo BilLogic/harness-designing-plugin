@@ -26,8 +26,8 @@ Real skills from this plug-in:
 
 - `hd-onboard` — this skill — answer concept questions
 - `hd-setup` — adaptive scaffold/reorganize/audit
-- `hd-compound` (v0.5) — capture lessons + graduate to rules
-- `hd-review` (v1) — audit harness + critique work items
+- `hd-compound` — capture lessons + graduate to rules
+- `hd-review` — audit harness + critique work items
 
 ## When to add a skill
 

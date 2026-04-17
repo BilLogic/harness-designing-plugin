@@ -3,12 +3,12 @@
 **Purpose:** action-oriented guide for the Rubrics layer — critically, rubrics are *distributed behavior*, not a folder.
 **Concept explainer:** [hd-onboard `layer-4-rubrics.md`](../../hd-onboard/references/layer-4-rubrics.md)
 
-## v0.MVP scope — thin pointer only
+## hd-setup scope — thin pointer only
 
 `hd:setup` scaffolds `docs/rubrics/INDEX.md` as a **thin pointer file** (~15 lines) explaining that:
 
 - Rubric *definitions* live in `docs/context/design-system/` (Layer 1 territory)
-- Rubric *execution* happens in `skills/hd-review/` (v1 — not shipped at v0.MVP)
+- Rubric *execution* happens in `skills/hd-review/` (audit + critique modes)
 - Rubric *enforcement* lives in `AGENTS.md` as quality gates
 
 The INDEX.md is navigational, not prescriptive. It exists so users looking for "the rubrics folder" find the distributed-pattern explanation rather than an empty dir.
@@ -49,12 +49,12 @@ See article §4d for the reasoning.
 
 ## Active rubrics (v0.MVP)
 
-None yet. Add rubric criteria to `docs/context/design-system/<rubric-name>.md` as your team formalizes them. When `/hd:review` ships (v1), it reads this index + the distributed criteria to run checks.
+None yet. Add rubric criteria to `docs/context/design-system/<rubric-name>.md` as your team formalizes them. When `/hd:review` runs, it reads this index + the distributed criteria to run checks.
 ```
 
 ## When v0.5+ expands Layer 4
 
-- When user has ≥3 documented rubric criteria in `docs/context/design-system/`, `hd:review` (v1) activates Layer 4 execution
+- When user has ≥3 documented rubric criteria in `docs/context/design-system/`, `hd:review` activates Layer 4 execution
 - Starter rubrics ship at v1 in `skills/hd-review/templates/starter-rubrics/` (accessibility, design-system, component-budget)
 
 ## See also

@@ -25,7 +25,7 @@ Plus `docs/design-solutions/` namespace reserved (not populated at v0.MVP — `h
    - "When a lesson recurs 3+ times, graduate it to a rule in `AGENTS.md`"
    - "The original lesson stays — history is sacred"
    - "A meta-entry lands in `graduations.md` linking lesson → rule"
-4. **Hand off to `/hd:compound`** (v0.5) for ongoing capture.
+4. **Hand off to `/hd:compound`** for ongoing capture.
 
 ## Lesson schema
 
@@ -62,7 +62,7 @@ Keep entries short — 5-10 sentences. Long lessons are rare; most are a paragra
 
 ## Graduation workflow (for user awareness)
 
-- Proposer identifies pattern (3+ lessons on same topic) via `hd:compound` (v0.5)
+- Proposer identifies pattern (3+ lessons on same topic) via `hd:compound`
 - Plan emitted with proposed rule text + source lessons
 - User reviews plan + confirms via plan-hash
 - `hd:compound` applies: appends rule to `AGENTS.md`, adds meta-entry to `graduations.md`, lesson files stay untouched
@@ -71,7 +71,7 @@ This workflow is NOT in v0.MVP — inform user it's coming at v0.5.
 
 ## Audit signals for Layer 5 (v0.5+)
 
-`hd:review` (v1) flags Layer 5 gaps when:
+`hd:review` flags Layer 5 gaps when:
 
 - Lessons accumulate but no graduations ever happen (team forgetting to promote)
 - Lessons have no tags (hard to identify recurring patterns)

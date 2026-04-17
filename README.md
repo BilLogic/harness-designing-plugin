@@ -11,18 +11,18 @@ You already have a design harness. It's just scattered — across Slack pins, No
 
 ## Skills
 
-All four skills are code-complete in the repo. Marketplace release phases align with Substack article cadence:
+Four skills, full-release at v1.0.0:
 
-| Skill | Verb | Use it to… | Ships |
-|---|---|---|---|
-| `/hd:onboard` | learn | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. | **v0.MVP** (article #1) |
-| `/hd:setup` | setup | Scaffold or reorganize your harness. Adaptive across greenfield / scattered / advanced repos. `detect-mode.sh` emits deterministic mode JSON. | **v0.MVP** (article #1) |
-| `/hd:compound` | maintain | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for the destructive AGENTS.md write (SHA-256 tamper-detection). | v0.5 (article #3) |
-| `/hd:review` | improve | Audit your harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget starters). | v1 (article #5) |
+| Skill | Verb | Use it to… |
+|---|---|---|
+| `/hd:onboard` | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. |
+| `/hd:setup` | **setup** | Scaffold or reorganize your harness. Adaptive across greenfield / scattered / advanced repos. `detect-mode.sh` emits deterministic mode JSON. |
+| `/hd:compound` | **maintain** | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for destructive AGENTS.md writes (SHA-256 tamper-detection). |
+| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget starters). |
 
 ## Install
 
-### v0.MVP — `git clone`
+### Local dev — `git clone`
 
 ```bash
 git clone https://github.com/BilLogic/design-harnessing-plugin ~/path/to/design-harness
@@ -30,16 +30,15 @@ git clone https://github.com/BilLogic/design-harnessing-plugin ~/path/to/design-
 #   claude --plugin-dir ~/path/to/design-harness
 ```
 
-### v1+ — marketplace *(coming soon)*
+### Marketplaces *(pending first publication)*
 
 ```bash
 # Claude Code marketplace
 /plugin marketplace add BilLogic/design-harnessing-plugin
 /plugin install design-harness
-
-# Codex CLI submission planned at v0.5
-# Cursor marketplace submission at v1
 ```
+
+Also submitted to Codex CLI directory and Cursor marketplace — all three sibling manifests (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`) ship from this same repo.
 
 ## File tree
 
@@ -63,10 +62,10 @@ design-harness/                        ← this repo IS the plug-in payload (fla
 │   └── plans/                         ← PRDs + scenario matrices
 │
 └── skills/
-    ├── hd-onboard/                    ← LEARN (v0.MVP) — SKILL.md + 10 atomic reference files
-    ├── hd-setup/                      ← SETUP (v0.MVP) — SKILL.md + 9 refs + 3 workflows + 9 templates + detect-mode.sh
-    ├── hd-compound/                   ← MAINTAIN (v0.5) — SKILL.md + 3 refs + 3 workflows + 2 templates; plan-hash mechanism
-    └── hd-review/                     ← IMPROVE (v1) — SKILL.md + 5 refs + 3 workflows + 2 templates + 3 starter rubrics + budget-check.sh; <protected_artifacts> declared
+    ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic reference files
+    ├── hd-setup/                      ← SETUP — SKILL.md + 9 refs + 3 workflows + 9 templates + detect-mode.sh
+    ├── hd-compound/                   ← MAINTAIN — SKILL.md + 3 refs + 3 workflows + 2 templates; plan-hash mechanism
+    └── hd-review/                     ← IMPROVE — SKILL.md + 5 refs + 3 workflows + 2 templates + 3 starter rubrics + budget-check.sh; <protected_artifacts> declared
 ```
 
 ## Coexists with compound-engineering

@@ -126,7 +126,7 @@ Report: N files classified, M files created, K lines moved, backup count. List b
 
 - **Verify reorg looks right?** → "Compare `AGENTS.md` vs `AGENTS.md.bak-YYYYMMDD`"
 - **Continue building the harness?** → "Populate placeholder `{{TODO}}` fields"
-- **Ongoing maintenance?** → "Run `/hd:compound`" *(v0.5)*
+- **Ongoing maintenance?** → "Run `/hd:compound`"
 
 ## Failure modes
 

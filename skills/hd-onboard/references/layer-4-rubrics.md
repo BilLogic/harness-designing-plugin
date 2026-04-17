@@ -19,14 +19,14 @@
 The article §4d is emphatic: **rubrics are a *behavior of the system*, not a folder.** They live in three places simultaneously:
 
 1. **Definitions** — `docs/context/design-system/` describes what "good" looks like (Layer 1 territory)
-2. **Execution** — `skills/hd-review/` (v1) runs the checks
+2. **Execution** — `skills/hd-review/` runs the checks (audit + critique modes)
 3. **Enforcement** — `AGENTS.md` lists rubric requirements as quality gates
 
 Centralizing everything in one `rubrics/` folder flattens the structure and breaks the connection between *what good is* (Layer 1) and *how we check for it* (Layer 2 skill + Layer 3 gate).
 
 ## The v0 trade-off
 
-v0.MVP has a thin pointer file at `docs/rubrics/INDEX.md` so users can FIND the rubric story when they look. The actual rubrics execute in `hd:review` (v1). Until v1, the rubric layer is "definitions only" — no automated check.
+`docs/rubrics/INDEX.md` is a thin pointer file so users can FIND the rubric story when they look. The actual rubrics execute in `hd:review` (audit + critique modes).
 
 ## What does NOT belong here
 
@@ -46,7 +46,7 @@ Most design teams have an informal rubric already — "does this match our style
 
 ## Scaffolded by
 
-Partially by `/hd:setup` (it creates `docs/context/design-system/` and `docs/rubrics/INDEX.md`). Fully activated by `/hd:review` (v1) which runs the checks. Run `/hd:critique` *(also v1)* to apply rubrics to a single work item.
+Partially by `/hd:setup` (it creates `docs/context/design-system/` and `docs/rubrics/INDEX.md`). Fully activated by `/hd:review audit` (harness-wide) or `/hd:review critique <path>` (single work item).
 
 ## See also
 

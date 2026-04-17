@@ -96,14 +96,14 @@ Write atomically: write to `design-harnessing.local.md.new`, then `mv` (prevents
 Report what was created (file list + line counts). Confirm Tier 1 budget via `wc -l AGENTS.md docs/context/product/one-pager.md`. Suggest ONE next step tuned to user context:
 
 - **New to the framework?** → `/hd:onboard` for concept Q&A
-- **Ready to capture lessons as you work?** → `/hd:compound` *(v0.5)*
-- **Want to audit what you built?** → `/hd:review` *(v1)*
+- **Ready to capture lessons as you work?** → `/hd:compound`
+- **Want to audit what you built?** → `/hd:review`
 
 ## What this skill does NOT do
 
 - **Does not answer concept questions** → hand off to `/hd:onboard`
-- **Does not capture ongoing lessons** → hand off to `/hd:compound` (v0.5)
-- **Does not audit harness health** → hand off to `/hd:review` (v1)
+- **Does not capture ongoing lessons** → hand off to `/hd:compound`
+- **Does not audit harness health** → hand off to `/hd:review`
 - **Does not invoke other skills directly** — always suggest, never invoke
 
 ## Coexistence rules (must follow)

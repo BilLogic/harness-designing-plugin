@@ -53,7 +53,7 @@ Self-review checklist before PR:
 5. New lessons dated; frontmatter valid YAML
 6. CHANGELOG updated under `[Unreleased]` (move to versioned section only at release)
 
-If `/ce:review` or `/hd:review` (v1) exists in the session, run them before human review.
+If `/ce:review` or `/hd:review` is available in the session, run them before human review.
 
 ## Dogfood
 

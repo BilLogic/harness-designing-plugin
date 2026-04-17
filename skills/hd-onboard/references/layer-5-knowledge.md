@@ -36,7 +36,7 @@ If you mix them (append lessons into the design-system cheat-sheet), the cheat-s
 
 ## Our `docs/design-solutions/` namespace
 
-`hd:compound` (v0.5) writes to `docs/design-solutions/` for distilled pattern-solutions — **not** `docs/solutions/` (that's compound-engineering's namespace). Keeps the two plug-ins out of each other's way.
+`hd:compound` writes lessons to `docs/knowledge/lessons/` and graduated rules to `AGENTS.md`. `docs/design-solutions/` is reserved for future distilled pattern-solutions — **not** `docs/solutions/` (compound-engineering's namespace). Keeps the two plug-ins out of each other's way.
 
 ## What does NOT belong here
 
@@ -66,7 +66,7 @@ graduation_candidate: true
 
 ## Scaffolded by
 
-`/hd:setup` scaffolds the `docs/knowledge/` tree and seeds one starter lesson. `/hd:compound` (v0.5) captures ongoing lessons and proposes graduations.
+`/hd:setup` scaffolds the `docs/knowledge/` tree and seeds one starter lesson. `/hd:compound` captures ongoing lessons and proposes graduations.
 
 ## See also
 

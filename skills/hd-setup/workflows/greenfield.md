@@ -57,7 +57,7 @@ mkdir -p docs/context/product \
          docs/context/conventions \
          docs/knowledge/lessons \
          docs/rubrics
-# docs/design-solutions/ NOT created — reserved for hd:compound (v0.5)
+# docs/design-solutions/ NOT created — reserved for future distilled-solution output; hd:compound writes lessons to docs/knowledge/lessons/
 ```
 
 ## Step 5 — Walk Layer 1 (Context)
@@ -111,8 +111,8 @@ Write atomically: write to `design-harnessing.local.md.new`, then `mv`.
 Report what was created (file list + line counts). Confirm Tier 1 budget (combined AGENTS.md + one-pager ≤200 lines). Suggest ONE next action based on user context:
 
 - **New to the framework?** → "Run `/hd:onboard` to explore concepts before going deeper"
-- **Want to capture lessons as you work?** → "Run `/hd:compound`" *(coming in v0.5)*
-- **Ready to audit what you just built?** → "Run `/hd:review`" *(coming in v1)*
+- **Want to capture lessons as you work?** → "Run `/hd:compound`"
+- **Ready to audit what you just built?** → "Run `/hd:review`"
 
 ## Failure modes
 

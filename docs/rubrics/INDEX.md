@@ -7,7 +7,7 @@ Layer 4 of the five-layer design harness. For this plug-in's own dogfood.
 Per article §4d: rubrics are distributed across three loci:
 
 - **Definitions** → [`../context/design-system/cheat-sheet.md`](../context/design-system/cheat-sheet.md) (what "good" looks like for plug-in files + content)
-- **Execution** → `skills/hd-review/` (v1 — audit + critique runs the checks; not yet shipped)
+- **Execution** → `skills/hd-review/` (audit + critique modes run the checks)
 - **Enforcement** → [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist" (gates at commit time)
 
 Centralizing everything here in `rubrics/` would break the connection between *what good is* (Layer 1) and *how we check for it* (Layer 2 + AGENTS.md). This INDEX is navigational, not prescriptive.
@@ -37,15 +37,15 @@ Per [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist", every 
 
 `/ce:review` has run against this scaffold and surfaced the findings codified in the graduated-rules section.
 
-## v1 scope (when `hd:review` ships)
+## `hd:review` execution
 
-`hd:review` will execute rubric checks programmatically:
+`hd:review` executes rubric checks programmatically:
 
-- `audit-parallel.md` / `audit-serial.md` workflows run compound-engineering's research + review agents against the harness
+- `audit-parallel.md` / `audit-serial.md` workflows run compound-engineering's research + review agents against the harness (parallel ≤5; serial auto-switch ≥6)
 - `critique.md` workflow applies rubrics to a specific work item
 - Starter rubrics ship at `skills/hd-review/templates/starter-rubrics/` (for users to extend): accessibility-wcag-aa, design-system-compliance, component-budget
 
-Until then, rubric enforcement is manual (human + `/ce:review`).
+Run `/hd:review audit` for harness health; `/hd:review critique <path-or-url>` for single-work-item rubric application.
 
 ## See also
 

@@ -101,7 +101,7 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 >
 > On graduation: the original lesson stays (history is sacred), a new rule lands in `AGENTS.md` under "Graduated rules," and a meta-entry lands in `docs/knowledge/graduations.md` linking lesson → rule + date.
 >
-> The `/hd:compound` skill (v0.5) will propose graduations when it detects matching lessons. Until v0.5 ships, graduate manually via PR.
+> The `/hd:compound` skill proposes graduations when it detects matching lessons (≥3 same-topic occurrences). Run `/hd:compound graduate-propose <topic>` to start.
 
 ## What this skill does NOT do
 
