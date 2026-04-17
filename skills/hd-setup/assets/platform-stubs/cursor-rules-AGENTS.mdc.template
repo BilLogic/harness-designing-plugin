@@ -1,0 +1,7 @@
+---
+description: Canonical team conventions
+globs: **/*
+alwaysApply: true
+---
+
+See [`AGENTS.md`](../../AGENTS.md) at repo root — single source of truth for team conventions across Claude Code, Codex CLI, Cursor, Windsurf, and Copilot.

@@ -21,35 +21,92 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 ├── CHANGELOG.md
 ├── LICENSE                        # MIT
 ├── README.md
-├── docs/                          # meta-harness for THIS plug-in + plans
-│   ├── context/                   # Layer 1 for this project
-│   ├── knowledge/                 # Layer 5 for this project (lessons + graduations)
+│
+├── docs/                          # meta-harness for THIS plug-in
+│   ├── context/                   # Layer 1 applied to us
+│   ├── knowledge/                 # Layer 5 applied to us (lessons + graduations)
 │   ├── rubrics/INDEX.md           # Layer 4 pointer
 │   └── plans/                     # PRDs + scenario docs
+│
+├── agents/                        # reusable sub-agents invoked by skills via Task
+│   ├── analysis/
+│   │   └── graduation-candidate-scorer.md
+│   ├── research/
+│   │   ├── lesson-retriever.md
+│   │   └── article-quote-finder.md
+│   ├── review/
+│   │   ├── skill-quality-auditor.md
+│   │   └── rubric-applicator.md
+│   └── workflow/
+│       └── harness-health-analyzer.md
+│
 └── skills/
-    ├── hd-onboard/                # v0.MVP — LEARN (Q&A)
-    └── hd-setup/                  # v0.MVP — SETUP (scaffold)
+    ├── hd-onboard/                # LEARN (Q&A)
+    │   ├── SKILL.md
+    │   └── references/            # 10 atomic concept files
+    ├── hd-setup/                  # SETUP (walk the five layers)
+    │   ├── SKILL.md
+    │   ├── references/
+    │   ├── assets/
+    │   │   └── platform-stubs/    # per-IDE thin redirect stubs
+    │   └── scripts/
+    │       ├── detect.py
+    │       └── detect-mode.sh
+    ├── hd-compound/               # MAINTAIN (capture + graduate)
+    │   ├── SKILL.md
+    │   ├── references/
+    │   └── assets/
+    └── hd-review/                 # IMPROVE (audit + critique)
+        ├── SKILL.md
+        ├── references/
+        ├── assets/
+        │   └── starter-rubrics/   # a11y, design-system, component-budget,
+        │                          # skill-quality, interaction-states
+        └── scripts/
+            └── budget-check.sh
 ```
 
-**v0.MVP ships 2 skills.** v0.5 adds `hd-compound` (maintain); v1 adds `hd-review` (improve). Not-yet-shipped skills do NOT exist on disk — no stubs.
+**No `workflows/` folders inside skills.** Procedures live in each SKILL.md; shared procedures that span skills become sub-agents in `agents/<category>/`.
 
 **No `commands/` directory.** Commands are skills with `name: hd:verb` frontmatter, exposed as `/hd:verb` (compound v2.39.0 convention).
 
 ## `docs/` is our meta-harness
 
-`docs/context/`, `docs/knowledge/`, `docs/rubrics/` at repo root are the five-layer harness running **on this plug-in itself** (dogfood). Distinct from `skills/hd-setup/templates/context-skeleton/` — which is what `/hd:setup` writes to a **user's** repo. Two different harnesses:
+`docs/context/`, `docs/knowledge/`, `docs/rubrics/` at repo root are the five-layer harness running **on this plug-in itself** (dogfood). Distinct from `skills/hd-setup/assets/context-skeleton/` — which is what `/hd:setup` writes to a **user's** repo. Two different harnesses:
 
 - `docs/` = ours (the plug-in maintainers' harness)
-- `skills/hd-setup/templates/` = theirs (what we scaffold for end-users)
+- `skills/hd-setup/assets/` = theirs (what we scaffold for end-users)
+
+## `agents/` is for reusable sub-agents
+
+Each `.md` file under `agents/<category>/` defines a Task-invokable sub-agent: YAML frontmatter (`name`, `description`, optional `color` + `model`) + prose that acts as the sub-agent's system prompt.
+
+Categories mirror compound's convention (with some of ours):
+- `analysis/` — deterministic analysis (scoring, clustering)
+- `research/` — retrieval + citation finding
+- `review/` — rubric application + quality checks
+- `workflow/` — procedural helpers that span multiple skills
+
+**Invocation convention from skills:** fully-qualified Task names only. From inside our skills:
+```
+Task design-harnessing:<category>:<agent-name>(...)
+```
+From OUR skills to compound's agents:
+```
+Task compound-engineering:<category>:<agent-name>(...)
+```
+Never bare names — compound 2.35.0 lesson: bare names get re-prefixed wrong.
+
+**When to create a new agent:** prove ≥2 invocation sites across ≥2 skills, OR a case where an isolated context window measurably improves quality (heavy reads, parallel dispatch). Don't create speculatively.
 
 ## Command naming
 
 All commands use `hd:` prefix (two letters — *harness design*; secondary read *high-definition design*).
 
-- `/hd:onboard` — Q&A about the harness concept (learn; v0.MVP)
-- `/hd:setup` — scaffold or reorganize your harness (setup; v0.MVP)
-- `/hd:compound` — capture lessons, graduate to rules (maintain; v0.5)
-- `/hd:review` — audit your harness + critique work (improve; v1)
+- `/hd:onboard` — Q&A about the harness concept (LEARN)
+- `/hd:setup` — walk the five layers (SETUP)
+- `/hd:compound` — capture lessons, graduate to rules (MAINTAIN)
+- `/hd:review` — audit harness health, critique work items (IMPROVE)
 
 Never ship bare command names. Always namespaced (compound 2.38.0 rename-pain lesson).
 
