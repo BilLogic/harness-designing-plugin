@@ -1,0 +1,81 @@
+---
+title: "Harness audit — {{DATE}}"
+date: {{DATE}}
+tags: [audit, layer-audit, harness-health]
+graduation_candidate: false
+---
+
+# Harness audit — {{DATE}}
+
+## Top 3 priorities
+
+{{TOP_3_PRIORITIES}}
+
+<!-- Surfaces the top-severity findings; user reads this even if they don't read the full report. -->
+
+## Current state
+
+{{INVENTORY_TABLE}}
+
+<!-- Table summarizing:
+- AGENTS.md line count + Tier 1 budget status
+- docs/context/ file count + total line count
+- docs/knowledge/lessons/ count + date spread
+- docs/knowledge/graduations.md entry count
+- skills/ count (user-authored vs plug-in-shipped)
+-->
+
+## Findings
+
+### P1 — structural (ship-blocking)
+
+{{P1_FINDINGS}}
+
+<!-- Each finding:
+- severity: p1
+- category: tier-budget | coexistence | protected-artifacts | missing-layer | schema-invalid
+- file: <path>
+- finding: <one-sentence description>
+- suggested_action: <concrete next step>
+- detected_by: <agent name; always-present for learnings-researcher matches>
+-->
+
+### P2 — drift (should fix)
+
+{{P2_FINDINGS}}
+
+### P3 — polish (nice-to-have)
+
+{{P3_FINDINGS}}
+
+## Suggested actions
+
+{{SUGGESTED_ACTIONS}}
+
+<!-- Grouped by priority:
+1. Address all P1 findings before next ship
+2. Schedule P2 findings for next iteration
+3. P3 is optional; address when convenient
+-->
+
+## Agents used
+
+{{AGENT_LIST}}
+
+<!-- List of agents that contributed findings:
+- compound-engineering:research:learnings-researcher (always-run)
+- compound-engineering:review:pattern-recognition-specialist
+- compound-engineering:review:code-simplicity-reviewer
+- (plus any user-configured agents from design-harnessing.local.md review_agents)
+-->
+
+## Meta
+
+- Execution mode: {{EXECUTION_MODE}} (parallel | serial)
+- Agents invoked: {{AGENT_COUNT}}
+- Duration: {{DURATION_SECONDS}}s
+- Report version: {{REPORT_VERSION}}  <!-- bump if template schema changes -->
+
+---
+
+**Note:** This audit report is itself a Layer 5 lesson — dated, append-only, history is sacred. Don't edit or delete this file; author a counter-lesson if findings need revising.
