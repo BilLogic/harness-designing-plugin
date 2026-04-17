@@ -11,12 +11,14 @@ You already have a design harness. It's just scattered — across Slack pins, No
 
 ## Skills
 
+All four skills are code-complete in the repo. Marketplace release phases align with Substack article cadence:
+
 | Skill | Verb | Use it to… | Ships |
 |---|---|---|---|
-| `/hd:onboard` | learn | Ask questions about the harness concept. Article-backed Q&A. | **v0.MVP** |
-| `/hd:setup` | setup | Scaffold or reorganize your harness. Adaptive — works greenfield, on scattered docs, or as a light audit. | **v0.MVP** |
-| `/hd:compound` | maintain | Capture lessons; propose graduations from narrative to team rule. | v0.5 |
-| `/hd:review` | improve | Audit your harness; critique a work item against team rubrics. | v1 |
+| `/hd:onboard` | learn | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. | **v0.MVP** (article #1) |
+| `/hd:setup` | setup | Scaffold or reorganize your harness. Adaptive across greenfield / scattered / advanced repos. `detect-mode.sh` emits deterministic mode JSON. | **v0.MVP** (article #1) |
+| `/hd:compound` | maintain | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for the destructive AGENTS.md write (SHA-256 tamper-detection). | v0.5 (article #3) |
+| `/hd:review` | improve | Audit your harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget starters). | v1 (article #5) |
 
 ## Install
 
@@ -61,8 +63,10 @@ design-harness/                        ← this repo IS the plug-in payload (fla
 │   └── plans/                         ← PRDs + scenario matrices
 │
 └── skills/
-    ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic reference files
-    └── hd-setup/                      ← SETUP — SKILL.md + 9 refs + 3 workflows + templates + detect-mode.sh
+    ├── hd-onboard/                    ← LEARN (v0.MVP) — SKILL.md + 10 atomic reference files
+    ├── hd-setup/                      ← SETUP (v0.MVP) — SKILL.md + 9 refs + 3 workflows + 9 templates + detect-mode.sh
+    ├── hd-compound/                   ← MAINTAIN (v0.5) — SKILL.md + 3 refs + 3 workflows + 2 templates; plan-hash mechanism
+    └── hd-review/                     ← IMPROVE (v1) — SKILL.md + 5 refs + 3 workflows + 2 templates + 3 starter rubrics + budget-check.sh; <protected_artifacts> declared
 ```
 
 ## Coexists with compound-engineering

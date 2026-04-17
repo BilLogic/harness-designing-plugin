@@ -5,7 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-*(No changes since [0.1.0] ship-ready.)*
+All four skills now code-complete ahead of article cadence. v0.5 and v1 skills staged in the repo but not yet tagged for release — release gates coordinate with article publication.
+
+### Added (staged)
+
+- `hd-compound` (v0.5 — releases with article #3 Knowledge Compounding) — MAINTAIN skill: capture lessons + graduate to rules with SHA-256 plan-hash proof-of-consent. 9 files: SKILL.md + 3 references (lesson-patterns, graduation-criteria, plan-hash-protocol) + 3 workflows (capture, propose-graduation, apply-graduation) + 2 templates. Commit `540a1b45`.
+- `hd-review` (v1 — releases with article #5 Rubric Setting + finale) — IMPROVE skill: audit harness health + critique work items. 15 files: SKILL.md + 5 references + 3 workflows (audit-parallel, audit-serial per compound 2.39.0, critique) + 2 templates + 3 starter rubrics (accessibility-wcag-aa, design-system-compliance, component-budget) + `budget-check.sh` script. Declares `<protected_artifacts>` block so `/ce:review` respects our outputs. Commit `5a871c87`.
+- Implementation plan 006 (v0.5 hd-compound spec with plan-hash protocol).
+- Implementation plan 007 (v1 hd-review spec with protected-artifacts + audit orchestration spec).
+
+### Staged release gates
+
+- **[0.5.0]** — tag when article #3 publishes. `hd-compound` becomes marketplace-visible.
+- **[1.0.0]** — tag when article #5 + finale publishes. `hd-review` becomes marketplace-visible. Plug-in advertised as four-skill full release.
+
+Staging approach: code lands ahead of article publication to allow usability testing; visibility gated by release tags matching article cadence.
 
 ## [0.1.0] — 2026-04-16 (v0.MVP, ready to ship)
 
