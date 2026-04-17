@@ -1,0 +1,16 @@
+---
+title: "{{TITLE}}"
+date: {{DATE}}
+tags: [{{TAGS}}]
+graduation_candidate: {{GRADUATION_CANDIDATE}}
+---
+
+# Lesson
+
+**Context:** {{CONTEXT}}
+
+**Decision / Observation:** {{DECISION}}
+
+**Result:** {{RESULT}}
+
+**Graduation-readiness:** {{GRADUATION_READINESS}}
