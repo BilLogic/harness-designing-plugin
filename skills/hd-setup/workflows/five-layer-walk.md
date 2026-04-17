@@ -1,34 +1,21 @@
-# Workflow — Layer walk (unified)
+# Workflow — five-layer walk
 
-**When to use:** every `/hd:setup` invocation after Step 1 (detection) and Step 1.5 (tool discovery). Replaces the v1.0 mode-split workflows (`greenfield.md` / `scattered.md` / `advanced.md`), which now serve as per-starting-state seed-content references loaded by this workflow.
+**When to use:** loaded by `SKILL.md` as Steps 4–8 of the overall setup flow. By the time this workflow starts, the SKILL.md has already run detection (Step 1), the onboard soft-check (Step 2), and tool discovery (Step 3). This workflow owns only the per-layer walk.
 
-**Goal:** walk the user through Layer 1 → Layer 5 in order. At each layer, show what was detected, offer a default action, and let the user pick: **link / critique / scaffold / skip**. Record each decision in `design-harnessing.local.md` (`layer_decisions:`). **Never** modify other-tool harnesses (`.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, etc.).
+**Goal:** walk the user through Layer 1 → Layer 5 in strict order. At each layer: show what was detected, propose a default action, let the user pick **link / critique / scaffold / skip**. Record each decision in `design-harnessing.local.md` under `layer_decisions:`. **Never** modify other-tool harnesses (`.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`).
 
-## Progress checklist
+## Per-layer procedure (runs 5 times, once per layer)
 
 ```
-Layer Walk Progress:
-- [ ] Step 0: Onboard check (soft-suggest /hd:onboard if no prior local.md)
-- [ ] Step 1: Layer 1 — Context
-- [ ] Step 2: Layer 2 — Skills
-- [ ] Step 3: Layer 3 — Orchestration
-- [ ] Step 4: Layer 4 — Rubrics
-- [ ] Step 5: Layer 5 — Knowledge
-- [ ] Step 6: Write design-harnessing.local.md with layer_decisions
-- [ ] Step 7: Summarize + suggest next
+For each of Layer 1 through Layer 5, in order:
+  1. FRAME — explain the layer in one sentence + cite article §
+  2. SHOW — present what detect.py found for this layer + what team_tooling maps here
+  3. PROPOSE — pick default action per the decision table below
+  4. ASK — user chooses link / critique / scaffold / skip; record in layer_decisions
+  5. EXECUTE the chosen action (procedures below, per layer)
 ```
 
-Progress is visible to the user in every response.
-
-## Step 0 — Onboard soft-check
-
-If `design-harnessing.local.md` does not exist at setup start AND `article_read: true` is not known:
-
-> "Quick check: new to the five-layer frame? A 5-min intro is available via `/hd:onboard`. Either run that first (recommended) or we proceed and I'll walk you through as we go."
-
-Options: `onboard-first | proceed | already-know-this`. Record the choice in the local.md prose section on first write.
-
-**Never block.** Default path if user doesn't answer is `proceed`.
+The 5 sections that follow (Layer 1 through Layer 5) apply this procedure in order.
 
 ## Per-layer action options (universal contract)
 
@@ -54,7 +41,7 @@ At every layer:
 
 The default is a **suggestion**, never an enforcement. User can pick any of the 4 options.
 
-## Step 1 — Layer 1 (Context)
+## Layer 1 — Context
 
 **Frame for user:**
 
@@ -91,7 +78,7 @@ Open-ended, user drives. Skill waits for answers:
 
 **User says "I don't know":** offer baseline from Material 3 / Fluent 2 foundations + their existing code (README, package.json description). Skill drafts, user edits.
 
-## Step 2 — Layer 2 (Skills)
+## Layer 2 — Skills
 
 **Frame:**
 
@@ -106,7 +93,7 @@ Open-ended, user drives. Skill waits for answers:
 1. "Is there a workflow you've had to explain 3+ times in the last month?"
 2. "If you could automate one repetitive design-adjacent task, what would it be?"
 
-## Step 3 — Layer 3 (Orchestration)
+## Layer 3 — Orchestration
 
 **Frame:**
 
@@ -121,7 +108,7 @@ Open-ended, user drives. Skill waits for answers:
 1. "When a design goes from idea to shipped, name the 3–5 steps it passes through."
 2. "What's the most common handoff that breaks?"
 
-## Step 4 — Layer 4 (Rubrics)
+## Layer 4 — Rubrics
 
 **Frame:**
 
@@ -146,7 +133,7 @@ Offer baseline rubric seeds from established design systems:
 - awesome-design-md → [github.com/VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) — cheat-sheet patterns
 - Starter rubrics in [`../../hd-review/templates/starter-rubrics/`](../../hd-review/templates/starter-rubrics/) — pick one, customize
 
-## Step 5 — Layer 5 (Knowledge)
+## Layer 5 — Knowledge
 
 **Frame:**
 
@@ -163,35 +150,9 @@ Offer baseline rubric seeds from established design systems:
 2. "What's a mistake you made recently that you want to prevent recurring?"
 3. "Is there a pattern you've noticed across 3+ projects worth formalizing?" (candidate for graduation)
 
-## Step 6 — Write `design-harnessing.local.md`
+## After the walk — handoff to SKILL.md
 
-Use [`../templates/design-harnessing.local.md.template`](../templates/design-harnessing.local.md.template) (schema v2). Populate:
-
-- `schema_version: "2"`
-- `setup_mode` from detection
-- `setup_date: <today>`
-- `team_size` from user answer
-- `skipped_layers` from layer decisions
-- `coexistence.compound_engineering` from detection
-- `article_read` from Step 0
-- `team_tooling` from Step 1.5
-- `mcp_servers_at_setup` from detection
-- `layer_decisions: { layer_1: <choice>, ..., layer_5: <choice> }`
-- `other_tool_harnesses_detected` — list of paths for `.agent/`, `.claude/`, `.codex/`, `docs/plans/` if detected
-
-**Atomic write:** write to `design-harnessing.local.md.new`, then `mv`.
-
-## Step 7 — Summarize + suggest next
-
-Report:
-
-- **Layer decisions** (5-row table: layer → choice → evidence/path)
-- **Tier 1 budget** (show `wc -l` output for AGENTS.md + any L1 file scaffolded)
-- **Other-tool harnesses respected** (list paths — confirmation they were not modified)
-- **Next step** suggestion, tuned to what happened:
-  - If mostly scaffold → "Capture first lesson as you work: `/hd:compound capture`"
-  - If mostly link → "Audit the combined harness: `/hd:review audit`"
-  - If mostly critique → "Address findings one at a time; re-run `/hd:review audit` when done"
+Once all 5 layers have a decision (recorded in-memory), control returns to `SKILL.md` Steps 9 (write `design-harnessing.local.md`) and 10 (summarize + suggest next). This workflow does NOT write the local.md itself — the SKILL.md owns that atomic write so the layer-walk can stay pure procedure.
 
 ## Team-size-adaptive language
 

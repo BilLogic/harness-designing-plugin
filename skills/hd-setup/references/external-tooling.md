@@ -1,8 +1,8 @@
-# External tooling — discovery, access, integration
+# External tooling — categories, known MCPs, fallback seeds
 
-**Purpose:** spec for how `hd:setup` discovers the team's full tool ecosystem (docs, design, diagramming, analytics, PM, comms) and offers integration paths — MCP, API key, or pointer-only — at Step 1.5 before the five-layer walk.
+**Purpose:** reference spec consulted during the tool-discovery phase of `workflows/five-layer-walk.md`. Lists the 6 tool categories `hd:setup` cares about, the known-installable MCP table (the only MCPs we recommend), and fallback seed sources for teams without external sources.
 
-**Loaded by:** SKILL.md Step 1.5 and `workflows/layer-walk.md` per-layer "link" option.
+**Loaded by:** `workflows/five-layer-walk.md` during tool discovery (ordered procedural steps live there — this file is reference material only).
 
 ## Universal principle
 
@@ -25,58 +25,20 @@ Explicitly: if the SKILL session has access to specific MCPs (for example `mcp__
 
 Not every team uses every category. Users tag which tools matter; skill records per-category in `design-harnessing.local.md`.
 
-## Step 1.5 — tool-discovery flow
+## Integration-path triage table
 
-After mode detection, before layer walk:
+When the tool-discovery step (in `workflows/five-layer-walk.md`) encounters a tool, one of four integration paths applies:
 
-### 1. Surface what was detected
+| Condition | Path | Action |
+|---|---|---|
+| Tool's MCP is live in session (callable as a tool) | **active** | Offer to pull live content during relevant layer scaffolding |
+| Tool's MCP is listed in `detect.py mcp_servers` (configured in `.mcp.json` / `.cursor/mcp.json`) but not live in session | **start-server** | Give the standard start command; user starts it + re-invokes or continues without live content |
+| Tool is in the Known MCP installs table below but nothing configured yet | **install-walkthrough** | Share install command + API-key URL; offer to write the mcp.json stanza |
+| Tool user named but NOT in Known table | **pointer-only** | Record in `team_tooling` + write a pointer file at the relevant layer; no MCP install offered |
 
-```
-Detected in your repo:
-  docs: notion (2 refs), google_docs (3 refs)
-  design: figma (7 refs)
-  pm: github_issues
-  — nothing detected for: diagramming, analytics, comms
+**Never recommend an MCP package that isn't in the Known table** — broken or unmaintained packages create worse UX than pointer-only.
 
-MCP servers configured (from .mcp.json / .cursor/mcp.json):
-  shadcn
-
-(MCP servers at session level — your Claude Code global config — aren't
-visible to me from the repo; I'll ask per-tool if integration matters.)
-```
-
-### 2. Ask per-category — open-ended first
-
-For each category, ask:
-
-> "Any [category] tools your team uses that I missed?"
-
-Even if detection returned nothing, ASK — most teams use analytics and comms tools that never leave URL traces in the repo.
-
-### 3. Per-tool integration triage
-
-For each tool the user confirms (detected OR added manually), decide integration path:
-
-```
-For tool <T>:
-  A. Is <T>-MCP in session? (check via tool-availability introspection)
-     YES → offer "load live content via MCP" (active integration)
-  B. Is <T>-MCP configured in repo's mcp.json but not in session?
-     OFFER instructions: "your repo declares <T>-MCP but the server isn't
-     running in this session. Start it via: <standard start cmd for <T>>"
-  C. Is <T>-MCP available as a known install? (Known MCPs list below)
-     OFFER walkthrough: "install via `<cmd>`, get API key at <url>, add
-     to your mcp.json. Shall I write the mcp.json stanza?"
-  D. Otherwise:
-     RECORD as a pointer-only source. No live integration; user accesses
-     manually; future skill runs see the pointer in team_tooling.
-```
-
-### 4. Record decisions
-
-Write `team_tooling:` and `mcp_servers_at_setup:` fields to `design-harnessing.local.md` (schema v2). Never lose the user's answers — re-runs respect prior decisions per the re-run semantics in `workflows/layer-walk.md`.
-
-## Known MCP installs (reference table)
+## Known MCP installs
 
 Portable install instructions per tool. Keep this table short and accurate — offer only what's actually maintained. **Never offer a broken or unmaintained MCP.**
 
@@ -99,7 +61,7 @@ User can manually wire up MCP later and re-run `/hd:setup` to upgrade.
 
 ## Per-layer integration patterns
 
-How discovered tools map into each layer during `layer-walk.md`:
+How discovered tools map into each layer during `five-layer-walk.md`:
 
 ### Layer 1 (Context)
 - **docs (notion/google_docs/confluence)** — offer to pull root-level product pages + classify into `docs/context/product/`, `docs/context/conventions/`
@@ -150,6 +112,6 @@ The starter rubrics shipped in `skills/hd-review/templates/starter-rubrics/` alr
 ## See also
 
 - [`local-md-schema.md`](local-md-schema.md) — where `team_tooling` + `mcp_servers_at_setup` land
-- [`../workflows/layer-walk.md`](../workflows/layer-walk.md) — per-layer integration step uses this reference
+- [`../workflows/five-layer-walk.md`](../workflows/five-layer-walk.md) — per-layer integration step uses this reference
 - [`../scripts/detect.py`](../scripts/detect.py) — emits raw detection data this reference interprets
 - Ideation doc [`docs/plans/2026-04-17-009-v1.1-skill-ideation.md`](../../../docs/plans/2026-04-17-009-v1.1-skill-ideation.md) C5 / C6 — rationale for this spec

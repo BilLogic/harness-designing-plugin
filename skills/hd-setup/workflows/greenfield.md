@@ -1,53 +1,12 @@
-# Workflow — Greenfield setup
+# Reference — Greenfield seed content
 
-**When to use:** mode `greenfield` from `detect-mode.sh` (scenario S1 / S8 / fresh repo with plug-in installed).
-**Goal:** functioning two-layer scaffold (Layer 1 Context + Layer 5 Knowledge) in ≤10 minutes.
+**Status in v1.1+:** no longer a standalone workflow. [`five-layer-walk.md`](five-layer-walk.md) loads this file on demand when a layer's default action is **scaffold** AND the repo has no prior material — i.e., the greenfield case for that layer.
 
-## Progress checklist
+**Legacy status:** this file was a standalone v1.0 workflow. It's preserved because its seed-content (template references, scaffold scripts, confirmation language) is still valuable when `five-layer-walk.md` routes a layer to scaffold-from-zero. The coexistence announcement + team-size branching have moved upstream to SKILL.md Step 3 (tool discovery) and `five-layer-walk.md` team-size-adaptive language.
 
-Copy this into your response and check off:
+**Don't read this top-down as a workflow.** Read only the section that matches the layer you're scaffolding.
 
-```
-Greenfield Setup Progress:
-- [ ] Step 1: Confirm greenfield mode with user
-- [ ] Step 2: Ask team size (solo / small / medium / large)
-- [ ] Step 3: Announce compound-engineering coexistence (if detected)
-- [ ] Step 4: Scaffold docs/ skeleton
-- [ ] Step 5: Walk Layer 1 (Context) with user
-- [ ] Step 6: Walk Layer 5 (Knowledge) with user
-- [ ] Step 7: Write AGENTS.md from template
-- [ ] Step 8: Write design-harnessing.local.md
-- [ ] Step 9: Summarize + suggest next step
-```
-
-## Step 1 — Confirm mode
-
-Surface detection in plain language. Example:
-
-> This looks like a **greenfield** repo — no AI setup yet, no AGENTS.md, no `docs/`. I'll scaffold from zero. Takes about 10 minutes of back-and-forth. OK to proceed, or did I miss something?
-
-Proceed only on explicit confirmation.
-
-## Step 2 — Ask team size
-
-Branch on response (per [tier-budget-model.md](../references/tier-budget-model.md) — team size affects Tier 1 content choices):
-
-- **solo** — defer Layer 5 graduation complexity; emphasize Layers 1 + 4; single-person knowledge capture is fine as scratchpad
-- **small (2-5)** — light-touch team patterns; keep AGENTS.md lean
-- **medium (5-20)** — primary persona; full five-layer recommendation
-- **large (20+)** — medium setup + rotation-resilient onboarding emphasis
-
-Record answer — goes into `design-harnessing.local.md` `team_size` field (Step 8).
-
-## Step 3 — Announce coexistence (if compound detected)
-
-From `detect-mode.sh` output, if `coexistence.compound_engineering: true`, surface once:
-
-> Detected `compound-engineering` plug-in installed. `/hd:*` and `/ce:*` coexist without namespace fights — see [coexistence-checklist.md](../references/coexistence-checklist.md). No action needed from you.
-
-See [coexistence-checklist.md](../references/coexistence-checklist.md) for the full rules applied during scaffolding.
-
-## Step 4 — Scaffold skeleton
+## Scaffold skeleton (used by any greenfield-layer scaffold)
 
 Create directories (confirm with user before executing):
 

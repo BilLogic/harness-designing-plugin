@@ -27,60 +27,67 @@ Copy into your response and track progress:
 
 ```
 hd:setup Progress:
-- [ ] Step 1: Run detect.py
-- [ ] Step 2: Suggest /hd:onboard if new user (soft, non-blocking)
-- [ ] Step 3: Step 1.5 — tool discovery across 6 categories
-- [ ] Step 4: Five-layer walk (L1 → L5) via workflows/layer-walk.md
-- [ ] Step 5: Write design-harnessing.local.md (schema v2)
-- [ ] Step 6: Summarize + suggest next
+- [ ] Step 1: Detect — run detect.py; parse JSON
+- [ ] Step 2: Onboard check — suggest /hd:onboard if first-time user (soft)
+- [ ] Step 3: Tool discovery — surface detected + ask per category
+- [ ] Step 4: Layer 1 (Context) — link / critique / scaffold / skip
+- [ ] Step 5: Layer 2 (Skills) — link / critique / scaffold / skip
+- [ ] Step 6: Layer 3 (Orchestration) — link / critique / scaffold / skip
+- [ ] Step 7: Layer 4 (Rubrics) — link / critique / scaffold / skip
+- [ ] Step 8: Layer 5 (Knowledge) — link / critique / scaffold / skip
+- [ ] Step 9: Write design-harnessing.local.md (schema v2)
+- [ ] Step 10: Summarize decisions + suggest next skill
 ```
+
+Steps 4–8 are the five-layer walk — executed per [`workflows/five-layer-walk.md`](workflows/five-layer-walk.md). Each layer gets its own progress line so the user always sees where they are.
 
 ## Step 1 — Detect
 
 Run [`scripts/detect.py`](scripts/detect.py) from the user's repo root. Emits JSON schema v2 per [`references/local-md-schema.md`](references/local-md-schema.md). Parse and retain for all subsequent steps.
 
-If python3 unavailable, the bash shim [`scripts/detect-mode.sh`](scripts/detect-mode.sh) delegates to the python script. If bash+python3 both unavailable (rare), fall back to manual checklist in [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
+If python3 unavailable, the bash shim [`scripts/detect-mode.sh`](scripts/detect-mode.sh) delegates to the python script. If both unavailable (rare), fall back to manual checklist in [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
-## Step 2 — Onboard soft-check
+## Step 2 — Onboard check
 
 If `design-harnessing.local.md` does not exist AND user hasn't indicated prior familiarity:
 
-> "New to the five-layer frame? Quick options:
+> "New to the five-layer frame?
 > A. Run `/hd:onboard` first (5-min intro)
 > B. Proceed — I'll explain as we go
 > C. Already know it — skip the preamble"
 
 Soft suggestion only. Default to B on no answer. Never block.
 
-## Step 3 — Step 1.5: tool discovery
+## Step 3 — Tool discovery
 
-Per [`references/external-tooling.md`](references/external-tooling.md). Surface detected `team_tooling` + `mcp_servers` from Step 1, ask per-category for anything missing, triage per-tool integration path:
+Surface detected `team_tooling` + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note it here once (not as a separate step): *"compound-engineering detected — we coexist by default; won't touch its namespace (`docs/solutions/`, `ce-*`)."*
 
-- MCP in session → active pull offered
-- MCP configured in repo but not in session → start-command instructions
-- Tool known-installable (see `external-tooling.md` table) → install walkthrough with API-key pointers
-- Otherwise → pointer-only, recorded in `team_tooling`
+Ask per-category for anything detection missed, then triage each tool per the integration-path table in [`references/external-tooling.md`](references/external-tooling.md):
 
-**Universal principle:** only offer tools from the known-MCP table or ones the user names. Never recommend unknown / unmaintained packages. Never use plug-in-maintainer-specific MCPs — all integrations flow through the user's own config.
+- **active** — MCP live in session → offer live pull
+- **start-server** — MCP configured but not running → give start command
+- **install-walkthrough** — tool in known-MCP table → install command + API-key URL
+- **pointer-only** — tool user-named but not in known table → record, write pointer, no install recommended
 
-## Step 4 — Five-layer walk
+Universal principle: only offer MCPs from the known-installs table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
 
-Route to [`workflows/layer-walk.md`](workflows/layer-walk.md). That workflow owns:
+## Steps 4–8 — Five-layer walk (L1 → L5)
+
+Route to [`workflows/five-layer-walk.md`](workflows/five-layer-walk.md). That workflow owns:
 
 - Per-layer frame + seed questions
 - Default action suggestions (based on detection)
 - Link / critique / scaffold / skip mechanics per layer
 - Team-size-adaptive language (solo / small / medium / large)
+- Re-run semantics (additive-only on repeat)
 
-`layer-walk.md` loads [`references/layer-1-context.md`](references/layer-1-context.md) through [`layer-5-knowledge.md`](references/layer-5-knowledge.md) on demand, per layer reached.
+Each layer step (4 through 8) corresponds to one walk iteration. `five-layer-walk.md` loads the per-layer reference ([`references/layer-1-context.md`](references/layer-1-context.md) through [`layer-5-knowledge.md`](references/layer-5-knowledge.md)) on demand as each layer is reached.
 
-**The three legacy per-mode workflows** ([`greenfield.md`](workflows/greenfield.md), [`scattered.md`](workflows/scattered.md), [`advanced.md`](workflows/advanced.md)) remain as per-starting-state seed-content references. `layer-walk.md` loads them when their seed questions are relevant — they are NOT standalone routes in v1.1+.
+## Step 9 — Write `design-harnessing.local.md`
 
-## Step 5 — Write `design-harnessing.local.md`
+Schema v2 spec: [`references/local-md-schema.md`](references/local-md-schema.md). Template: [`templates/design-harnessing.local.md.template`](templates/design-harnessing.local.md.template).
 
-Schema v2 spec: [`references/local-md-schema.md`](references/local-md-schema.md). Use [`templates/design-harnessing.local.md.template`](templates/design-harnessing.local.md.template).
-
-Populate from layer-walk decisions:
+Populate from walk decisions:
 - `schema_version: "2"`, `setup_mode`, `setup_date`, `team_size`
 - `skipped_layers`, `coexistence`, `article_read`
 - `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`
@@ -88,7 +95,7 @@ Populate from layer-walk decisions:
 
 Atomic write (temp file + `mv`).
 
-## Step 6 — Summarize + suggest next
+## Step 10 — Summarize + suggest next
 
 Report:
 - Layer-decision table (5 rows: layer → choice → evidence)
@@ -122,7 +129,7 @@ See [`references/coexistence-checklist.md`](references/coexistence-checklist.md)
 
 ## Reference files
 
-### Layer guides (loaded on demand by layer-walk.md)
+### Layer guides (loaded on demand by five-layer-walk.md)
 - [layer-1-context.md](references/layer-1-context.md)
 - [layer-2-skills.md](references/layer-2-skills.md)
 - [layer-3-orchestration.md](references/layer-3-orchestration.md)
@@ -138,7 +145,7 @@ See [`references/coexistence-checklist.md`](references/coexistence-checklist.md)
 
 ## Workflows
 
-- [layer-walk.md](workflows/layer-walk.md) — **primary** workflow (v1.1+)
+- [five-layer-walk.md](workflows/five-layer-walk.md) — **primary** workflow (v1.1+)
 - Legacy per-mode (now per-starting-state seed refs loaded by layer-walk):
   - [greenfield.md](workflows/greenfield.md)
   - [scattered.md](workflows/scattered.md)
