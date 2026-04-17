@@ -1,14 +1,16 @@
-# Layer 2 — Skill Curation (setup guide)
+# Layer 2 — Skills (depth reference)
 
-**Purpose:** action-oriented guide for the Skill Curation layer during setup and audit.
+**Loaded by:** `SKILL.md` Step 5 when scaffolding or critiquing Layer 2. Seed questions + decision defaults live in SKILL.md; this file provides the "what good looks like" criteria and skill-authoring resources.
+
 **Concept explainer:** [hd-onboard `layer-2-skills.md`](../../hd-onboard/references/layer-2-skills.md) — "what IS Layer 2?"
 
-## v0.MVP scope — Layer 2 is NOT actively scaffolded
+## hd:setup does NOT author skills for users
 
-`hd:setup` at v0.MVP does not generate skills for users. Teams author their own skills. This layer is referenced during:
+Teams author their own skills — `hd:setup` provides guidance + prerequisite checks, never generates. The skill's Layer 2 step:
 
-- **Greenfield mode** — inform user that Layer 2 exists; point at skill-authoring resources; do NOT scaffold an empty `skills/` dir
-- **Advanced mode (audit)** — check if user has skills; flag if none after 3+ months of harness use ("you've got context and knowledge; might be time for your first skill")
+- **Scaffold default** — skip (Layer 2 is premature for most teams; revisit when patterns emerge)
+- **Critique default** — invoke `design-harnessing:review:skill-quality-auditor` per existing SKILL.md
+- **Link default** — if user has `.claude/skills/` / `.cursor/skills/` / `.agent/skills/` already, write pointer files to those locations
 
 ## What "good Layer 2" looks like
 

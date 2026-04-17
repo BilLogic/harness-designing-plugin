@@ -1,56 +1,64 @@
-# Layer 1 — Context Engineering (setup guide)
+# Layer 1 — Context (depth reference)
 
-**Purpose:** action-oriented guide for scaffolding or auditing Layer 1 in a user's repo.
-**Concept explainer:** see [hd-onboard `layer-1-context.md`](../../hd-onboard/references/layer-1-context.md) if the user asks "what IS Context?"
+**Loaded by:** `SKILL.md` Step 4 when scaffolding or critiquing Layer 1. Seed questions + top-level procedure live in SKILL.md; this file provides the per-sub-file detail needed during scaffolding.
 
-## What to scaffold
+**Concept explainer:** [`hd-onboard/references/layer-1-context.md`](../../hd-onboard/references/layer-1-context.md) — "what IS Context?"
 
-Four sub-paths under `docs/context/`:
+## Four sub-files under `docs/context/`
 
 ```
 docs/context/
-├── agent-persona.md                    # how AI should behave — voice, defaults, escalation
+├── agent-persona.md          # how AI should behave — voice, defaults, escalation
 ├── product/
-│   └── one-pager.md                    # what the product is, for whom, core thesis
+│   └── one-pager.md          # what the product is, for whom, core thesis
 ├── design-system/
-│   └── cheat-sheet.md                  # components, tokens, variants, escape-hatch rules
+│   └── cheat-sheet.md        # components, tokens, variants, escape-hatch rules
 └── conventions/
-    └── how-we-work.md                  # commits, reviews, naming, file conventions
+    └── how-we-work.md        # commits, reviews, naming, file conventions
 ```
 
-Templates for each live in `skills/hd-setup/templates/context-skeleton/`.
+Templates: [`../assets/context-skeleton/`](../assets/context-skeleton/) (one `.template` per sub-file).
 
-## Three-tier loading — enforce at scaffold time
+## Per-sub-file scaffold detail
 
-- **Tier 1 (always loaded, ≤200 lines combined)** — `AGENTS.md` + `docs/context/product/one-pager.md`. Every task sees this.
-- **Tier 2 (skill-triggered)** — `docs/context/design-system/cheat-sheet.md` + `docs/context/conventions/how-we-work.md`.
-- **Tier 3 (explicit pull)** — full design-system library, archived decisions (not scaffolded by v0.MVP; user adds as needed).
+### `agent-persona.md`
+Ask: voice guidelines? default behavior when unclear — ask / assume reasonable / escalate? Fill placeholders; mark unknowns `{{TODO: …}}`.
 
-**Check Tier 1 budget at scaffold time:** after writing, run `wc -l AGENTS.md docs/context/product/one-pager.md | tail -1` and confirm total ≤200. If over, propose moving non-critical product lines to Tier 2 (`docs/context/product/details.md`).
+### `product/one-pager.md`
+Ask: product in one sentence for a new teammate? user in one sentence? core thesis? Keep under 30 lines — this is Tier 1 (every-task) context.
 
-## Scaffolding steps per sub-file
+### `design-system/cheat-sheet.md`
+Ask: do you have a design system? If yes, point me at it (Figma / tokens package / Storybook); if no, scaffold a starter. Starter has 4 sections: **foundations / styles / components / escape hatches**. Mark starter content `{{TODO}}` — user fills incrementally.
 
-1. **`agent-persona.md`** — ask user: "Any voice guidelines? Defaults when unclear — ask / assume reasonable / escalate?" Fill placeholders; mark unknowns `{{TODO: ...}}`.
-2. **`product/one-pager.md`** — ask user: "Product in one sentence? Who's it for?" Keep under 30 lines.
-3. **`design-system/cheat-sheet.md`** — ask user: "Do you have a design system? If yes, point me at it; if no, scaffold a starter." Starter has 4 sections (foundations, styles, components, escape hatches). Mark starter sections `{{TODO}}`.
-4. **`conventions/how-we-work.md`** — ask user: "Any style guide or 'how we work' notes?" Include commits, reviews, naming.
+### `conventions/how-we-work.md`
+Ask: style guide or "how we work" notes? Include **commits / reviews / naming / file conventions**.
 
-## Existing content — preserve + classify
+## Tier budget
 
-If user already has `AGENTS.md` or similar at repo root, **do not overwrite**. Instead:
+Tier 1 combined ≤200 lines = `AGENTS.md` + `product/one-pager.md`. After scaffolding, verify:
 
-1. Read existing file.
-2. Classify content against Layer 1 sub-paths (rules → Layer 1 conventions or AGENTS.md rules; product description → product/one-pager; component list → design-system/cheat-sheet).
-3. Show diff preview before any write (see `workflows/scattered.md`).
+```bash
+wc -l AGENTS.md docs/context/product/one-pager.md | tail -1
+```
 
-## Edge cases from scenario matrix
+If over, propose moving non-critical product lines to `docs/context/product/details.md` (Tier 2). Full tier model + rationale: [tier-budget-model.md](tier-budget-model.md).
 
-- **S2 Single-file setup** — classify and unpack, never destroy original
-- **S3 DESIGN.md style** — decompose into `design-system/` structure
-- **S6 Bloated docs** — enforce Tier 1 budget; propose tier promotion
+## Healthy AGENTS.md
+
+Pattern library: [good-agents-md-patterns.md](good-agents-md-patterns.md). Key properties: concise, imperatively-worded, links to context layers, has a "Graduated rules" section for hd:compound writes.
+
+## When existing content is present
+
+Classify-don't-overwrite. Map existing content to Layer 1 sub-paths (rules → AGENTS.md or conventions; product description → product/one-pager; component list → design-system/cheat-sheet). Diff preview before any write (F4 safety in SKILL.md).
+
+## Scenario edge cases
+
+- **S2 single-file AGENTS.md** — classify sections, unpack, never destroy original
+- **S3 DESIGN.md pattern** — decompose into `design-system/` sub-structure
+- **S6 bloated docs** — Tier 1 budget enforcement; propose tier promotion
 
 ## See also
 
-- [tier-budget-model.md](tier-budget-model.md) — budget details
-- [good-agents-md-patterns.md](good-agents-md-patterns.md) — what a healthy AGENTS.md looks like
-- hd-onboard [layer-1-context.md](../../hd-onboard/references/layer-1-context.md) — conceptual explainer
+- [tier-budget-model.md](tier-budget-model.md) — three-tier budget model + rationale
+- [good-agents-md-patterns.md](good-agents-md-patterns.md) — healthy AGENTS.md shape
+- [hd-onboard/references/layer-1-context.md](../../hd-onboard/references/layer-1-context.md) — concept explainer

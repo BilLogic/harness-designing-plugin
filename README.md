@@ -11,14 +11,27 @@ You already have a design harness. It's just scattered — across Slack pins, No
 
 ## Skills
 
-Four skills, full-release at v1.0.0:
+Four user-facing skills:
 
 | Skill | Verb | Use it to… |
 |---|---|---|
 | `/hd:onboard` | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. |
-| `/hd:setup` | **setup** | Scaffold or reorganize your harness. Adaptive across greenfield / scattered / advanced repos. `detect-mode.sh` emits deterministic mode JSON. |
+| `/hd:setup` | **setup** | Walk the five layers in order. At each layer, detect existing harnesses + external tooling and offer per-layer **link / critique / scaffold / skip**. `detect.py` emits schema-v2 JSON covering other-tool harnesses, MCP config, 6-category team tooling, config SoT. |
 | `/hd:compound` | **maintain** | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for destructive AGENTS.md writes (SHA-256 tamper-detection). |
-| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget, **skill-quality** starters — the last being a 9-point Layer 2 health check applied to every `skills/*/SKILL.md` during audit). |
+| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics. 5 starter rubrics shipped (WCAG a11y, design-system-compliance, component-budget, interaction-states, skill-quality). |
+
+## Sub-agents
+
+Six reusable sub-agents at plug-in root (`agents/`), invoked from our skills via `Task design-harnessing:<category>:<name>(…)`:
+
+| Category | Agent | What it does |
+|---|---|---|
+| `analysis/` | `graduation-candidate-scorer` | Clusters lessons, scores grad-readiness (recurrence × clean-imperative × team-agreement) |
+| `research/` | `lesson-retriever` | Retrieves past lessons weighted by relevance × recency × importance |
+| `research/` | `article-quote-finder` | Verbatim article quotes with § citations |
+| `review/` | `skill-quality-auditor` | Applies 9-section skill-quality rubric to any SKILL.md |
+| `review/` | `rubric-applicator` | Applies any rubric to any work item |
+| `workflow/` | `harness-health-analyzer` | Deep narrative 5-layer health report |
 
 ## Install
 
@@ -59,18 +72,32 @@ design-harness/                        ← this repo IS the plug-in payload (fla
 │   ├── context/                       ← Layer 1: how AI behaves when working on this plug-in
 │   ├── knowledge/lessons/             ← Layer 5: what we've learned building it
 │   ├── rubrics/INDEX.md               ← Layer 4: pointer (distributed pattern)
-│   └── plans/                         ← PRDs + scenario matrices
+│   └── plans/                         ← PRDs + ideation + scenario matrices
+│
+├── agents/                            # reusable sub-agents (invoked via Task)
+│   ├── analysis/
+│   │   └── graduation-candidate-scorer.md
+│   ├── research/
+│   │   ├── lesson-retriever.md
+│   │   └── article-quote-finder.md
+│   ├── review/
+│   │   ├── skill-quality-auditor.md
+│   │   └── rubric-applicator.md
+│   └── workflow/
+│       └── harness-health-analyzer.md
 │
 └── skills/
-    ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic reference files
-    ├── hd-setup/                      ← SETUP — SKILL.md + 9 refs + 3 workflows + 9 templates + detect-mode.sh
-    ├── hd-compound/                   ← MAINTAIN — SKILL.md + 3 refs + 3 workflows + 2 templates; plan-hash mechanism
-    └── hd-review/                     ← IMPROVE — SKILL.md + 5 refs + 3 workflows + 2 templates + 4 starter rubrics + budget-check.sh; <protected_artifacts> declared
+    ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic references
+    ├── hd-setup/                      ← SETUP — SKILL.md + 10 references (5 layer + 5 shared) + assets (AGENTS.md template, context/knowledge skeletons, platform-stubs for scattered-mode SSoT consolidation) + scripts (detect.py schema-v2 + detect-mode.sh shim)
+    ├── hd-compound/                   ← MAINTAIN — SKILL.md + 3 references (lesson-patterns, graduation-criteria, plan-hash-protocol) + assets (lesson + graduation-entry templates); plan-hash mechanism
+    └── hd-review/                     ← IMPROVE — SKILL.md + 5 references + assets (report + critique templates, 5 starter rubrics) + budget-check.sh; <protected_artifacts> declared
 ```
+
+**No `workflows/` folders inside skills.** Procedures live in each SKILL.md; shared procedures that span skills are sub-agents in `agents/`. Matches compound-engineering's current convention.
 
 ## Coexists with compound-engineering
 
-Runs alongside [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) without namespace fights. Our `/hd:*` vs their `/ce:*`; our `docs/design-solutions/` (v0.5+) vs their `docs/solutions/`; our `design-harnessing.local.md` vs their `compound-engineering.local.md`. See [AGENTS.md § Coexistence](./AGENTS.md#coexistence-with-compound-engineering) for full collision-avoidance rules.
+Runs alongside [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) without namespace fights. Our `/hd:*` vs their `/ce:*`; our `docs/design-solutions/` vs their `docs/solutions/`; our `design-harnessing.local.md` vs their `compound-engineering.local.md`. Our skills invoke compound's agents via fully-qualified Task names (e.g., `Task compound-engineering:research:learnings-researcher(…)`). See [AGENTS.md § Coexistence](./AGENTS.md#coexistence-with-compound-engineering) for full collision-avoidance rules.
 
 ## License
 
