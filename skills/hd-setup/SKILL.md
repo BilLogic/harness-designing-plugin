@@ -106,6 +106,12 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 
 Default is a **suggestion**, not enforcement. User picks any of 4 options.
 
+### Link-mode contract — extract + pointer (all layers)
+
+When any layer chooses **link**, write a pointer file using [`assets/pointer-file.md.template`](assets/pointer-file.md.template). The pointer must include a **3–5 line extracted summary** of the source content in plain prose — not just a bare `See [path]` reference. Pointer files should be Tier 1 useful standalone; the source provides full detail.
+
+Read the source (via MCP if live, filesystem read for local paths, or pasted content from user for URLs without MCP), extract the summary, fill the template, write with explicit confirmation. Step 4 (Layer 1) includes a concrete example.
+
 ### Post-action checkpoint (friction, Layers 1–4)
 
 After executing an action at a layer, offer before moving on:
@@ -135,7 +141,23 @@ Default after silence is D. Users never feel railroaded.
 - Write 4 sub-files from [`assets/context-skeleton/`](assets/context-skeleton/) templates
 - Enforce Tier 1 budget per [`references/tier-budget-model.md`](references/tier-budget-model.md): `AGENTS.md` + `product/one-pager.md` combined ≤ 200 lines
 
-**Execute — link:** write pointer files under `docs/context/<subtopic>/` referencing external source (e.g., `See [Notion — PLUS product](<url>)` or `See [.agent/rules/100-project-context.md](path)`).
+**Execute — link:** write pointer files under `docs/context/<subtopic>/` using [`assets/pointer-file.md.template`](assets/pointer-file.md.template). Each pointer file must include a 3–5 line **extracted summary** of the source content, not just the bare link. Goal: pointer file is Tier 1 useful standalone; source has full detail.
+
+Read the source (Notion page via MCP if live, `.agent/rules/*`, `.github/copilot-instructions.md` section, etc.), extract a 3–5 line summary in plain prose, fill the template.
+
+Example for sds L1 product pointer:
+```markdown
+# Product (pointer to source)
+
+**Source:** [.github/copilot-instructions.md § "Repository Overview"](../../../.github/copilot-instructions.md)
+
+SDS is a production-ready design system featuring Figma Code Connect
+integration, React components built on React Aria/Stately for
+accessibility, and Storybook as interactive documentation. Audience:
+design-system teams extending the library or studying patterns.
+
+*Pointer file — authoritative content lives at the source above.*
+```
 
 **Execute — critique:** apply bloat-detection checks from [`references/tier-budget-model.md`](references/tier-budget-model.md). Surface findings. Don't write.
 
@@ -179,21 +201,41 @@ Aggregate findings. Present to user. Don't modify anything.
 
 **Frame:** "Layer 4 — Rubrics. Taste embedded as checks. Distributed pattern (article §4d)."
 
-**Show:** `has_tokens_package`, `has_figma_config`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files.
+**Show:** `has_tokens_package`, `has_figma_config`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files, combined size of existing AI-docs (AGENTS.md + CLAUDE.md + `.cursor/rules/` + `.github/copilot-instructions.md` + DESIGN.md).
 
-**Propose default:**
-- `has_tokens_package` or `has_figma_config` → **scaffold** design-system-compliance rubric referencing actual tokens
-- `has_external_skills` → **scaffold** skill-quality rubric entry
-- Nothing → **scaffold** starter trio: accessibility + design-system + component-budget
+**Propose default** (checked in order; first match wins):
 
-**Execute — scaffold:**
+| Condition | Default |
+|---|---|
+| 1. `has_ai_docs: true` AND combined existing AI-doc size > 200 lines | **critique + extract** (surface implicit rubrics from existing docs; do NOT duplicate as fresh starters) |
+| 2. `has_tokens_package` or `has_figma_config` | **scaffold** design-system-compliance rubric referencing actual token paths |
+| 3. `has_external_skills: true` | **scaffold** skill-quality rubric entry |
+| 4. Nothing detected | **scaffold** starter trio (accessibility-wcag-aa + design-system-compliance + component-budget) |
+
+Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
+
+**Execute — critique + extract** (condition 1):
+1. Invoke the rubric-applicator sub-agent against each existing AI-doc with a "meta-extract" target: find rule-like statements that could become explicit rubric criteria.
+   ```
+   Task design-harnessing:review:rubric-applicator(
+     work_item_path: ".github/copilot-instructions.md",
+     rubric_path: "skills/hd-review/assets/starter-rubrics/skill-quality.md",
+     mode: "extract"
+   )
+   ```
+2. Present extracted candidates to user as a list: *"I see 5 implicit rubrics in your copilot-instructions.md: (a) approved color tokens, (b) React Aria for a11y, (c) component-budget gate for new primitives, (d) storybook-first pattern, (e) no-hex-codes. Want to promote any to explicit rubric files under `docs/context/design-system/`?"*
+3. For each candidate the user approves: copy the matching starter rubric from [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/), pre-fill with the extracted content, show the user the result, atomic write on confirmation.
+4. For candidates the user rejects: record in `design-harnessing.local.md` prose section as "surfaced but declined" so re-runs don't re-propose.
+5. Never modify the source AI-doc file. Extraction is read-only on the source.
+
+**Execute — scaffold** (conditions 2/3/4):
 - Load [`references/layer-4-rubrics.md`](references/layer-4-rubrics.md) for L4 depth (why distributed, INDEX.md pattern)
 - Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?
 - If "no clear criteria yet" → offer baselines: Material 3 / Fluent 2 / awesome-design-md / starters in [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/)
 - Write `docs/rubrics/INDEX.md` from [`assets/rubrics-index.md.template`](assets/rubrics-index.md.template)
 - Copy user-selected starters into `docs/context/design-system/` or `docs/rubrics/` for customization
 
-**Execute — critique:** invoke:
+**Execute — critique** (targeted, when user explicitly points at a work item): invoke:
 
 ```
 Task design-harnessing:review:rubric-applicator(

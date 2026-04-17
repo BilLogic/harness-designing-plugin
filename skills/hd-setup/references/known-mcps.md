@@ -40,15 +40,15 @@ When the tool-discovery step (in `workflows/five-layer-walk.md`) encounters a to
 
 ## Known MCP installs
 
-Portable install instructions per tool. Keep this table short and accurate — offer only what's actually maintained. **Never offer a broken or unmaintained MCP.**
+Portable install instructions per tool. Keep this table short and accurate — offer only what's actually maintained. **Never offer a broken or unmaintained MCP.** Each row here has a corresponding detail subsection below with full install + wire-up + auth instructions.
 
-| Tool | MCP package | Auth | Reference |
+| Tool | Package | Auth | Reference |
 |---|---|---|---|
-| notion | `@modelcontextprotocol/server-notion` (varies) | Notion internal integration token | notion.so/help/create-integrations-with-the-notion-api |
-| figma | `@figma/mcp` (dev-mode) | Figma personal access token | figma.com/developers/api#access-tokens |
-| linear | `@linear/mcp` or community | Linear API key | linear.app/settings/api |
-| github (issues) | `@modelcontextprotocol/server-github` | GitHub personal access token | github.com/settings/tokens |
-| slack | community packages exist; verify maintenance | Slack bot token | api.slack.com/authentication/token-types |
+| notion | `@modelcontextprotocol/server-notion` (varies) | Notion internal integration token | [notion.so/help/create-integrations-with-the-notion-api](https://notion.so/help/create-integrations-with-the-notion-api) |
+| figma | `@figma/mcp` (dev-mode, runs locally on port 3845) | Figma personal access token | [figma.com/developers/api#access-tokens](https://figma.com/developers/api#access-tokens) |
+| linear | `@linear/mcp` or community | Linear API key | [linear.app/settings/api](https://linear.app/settings/api) |
+| github (issues) | `@modelcontextprotocol/server-github` | GitHub personal access token | [github.com/settings/tokens](https://github.com/settings/tokens) |
+| slack | community packages exist; verify maintenance | Slack bot token | [api.slack.com/authentication/token-types](https://api.slack.com/authentication/token-types) |
 | google_docs | via google-workspace MCPs (varies) | OAuth or service-account JSON | — |
 
 **When a tool is NOT in this table** but the user says they use it, the skill should:
@@ -58,6 +58,79 @@ Portable install instructions per tool. Keep this table short and accurate — o
 3. Note in `design-harnessing.local.md` under `team_tooling.<category>.<tool>` with `integration: pointer_only`
 
 User can manually wire up MCP later and re-run `/hd:setup` to upgrade.
+
+## Per-tool install detail
+
+### figma (dev-mode)
+
+Figma MCP runs as a **local SSE server** spawned by Figma desktop or via `npx`. Claude Code connects over SSE to `localhost:3845`.
+
+**1. Get an access token.** [figma.com/developers/api#access-tokens](https://figma.com/developers/api#access-tokens) — create a personal access token with "File content" scope minimum.
+
+**2. Start the local server.** Two paths:
+- **Figma desktop (recommended):** enable *Preferences → Enable Dev Mode MCP Server*. Figma starts the local server automatically when a design file is open.
+- **Standalone:** `npx -y @figma/mcp` in a separate terminal.
+
+Both expose the SSE endpoint at `http://127.0.0.1:3845/sse`.
+
+**3. Wire Claude Code.**
+
+```bash
+claude mcp add --transport sse figma-dev-mode-mcp-server http://127.0.0.1:3845/sse
+```
+
+**4. Wire Cursor** (if also used). Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "figma-dev-mode": {
+      "transport": "sse",
+      "url": "http://127.0.0.1:3845/sse"
+    }
+  }
+}
+```
+
+**5. Verify.** In Claude Code, the MCP should register as `figma-dev-mode-mcp-server` with tools like `get_code`, `get_variable_defs`, `get_screenshot`. Test with: "List the variable definitions from my current Figma selection."
+
+**Troubleshooting:** if `claude mcp list` shows the server but tools don't appear, confirm Figma desktop is running AND a file is open (the server only runs while a file is active).
+
+### notion
+
+**1. Create an integration.** [notion.so/help/create-integrations-with-the-notion-api](https://notion.so/help/create-integrations-with-the-notion-api) — internal integration, grab the integration token.
+
+**2. Share the relevant pages** with the integration (Notion's permissions model is share-per-page, not workspace-wide).
+
+**3. Install + wire.** Package varies — recent options: `@suekou/mcp-notion-server`, or OpenAPI-based `@modelcontextprotocol/server-notion`. Confirm the package is currently maintained before recommending. Once chosen:
+
+```bash
+claude mcp add notion npx -y <package-name> --auth-token $NOTION_TOKEN
+```
+
+### linear
+
+**1. Get API key.** [linear.app/settings/api](https://linear.app/settings/api) — personal API key.
+
+**2. Install + wire.** Official-ish package: `@tacticlaunch/mcp-linear` or `@linear/mcp` if/when it ships. Wire:
+
+```bash
+claude mcp add linear npx -y <package-name> --auth-token $LINEAR_API_KEY
+```
+
+### github (issues)
+
+**1. Get personal access token.** [github.com/settings/tokens](https://github.com/settings/tokens) — fine-grained token with `repo` and `issues` scopes.
+
+**2. Install + wire.**
+
+```bash
+claude mcp add github npx -y @modelcontextprotocol/server-github --auth-token $GITHUB_TOKEN
+```
+
+### slack, google_docs
+
+Packages vary in maintenance status. **Verify currency** before recommending to a user. If unsure, fall back to pointer-only (record the Slack workspace URL / Google Drive folder URL as a Layer 1 or Layer 5 pointer; user accesses manually).
 
 ## Per-layer integration patterns
 
