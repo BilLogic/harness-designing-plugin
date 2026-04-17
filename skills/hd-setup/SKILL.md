@@ -218,7 +218,9 @@ Aggregate findings. Present to user. Don't modify anything.
 
 **Frame:** "Layer 4 — Rubrics. Taste embedded as checks. Distributed pattern (article §4d)."
 
-**Show:** `has_tokens_package`, `has_figma_config`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files, combined size of existing AI-docs (AGENTS.md + CLAUDE.md + `.cursor/rules/` + `.github/copilot-instructions.md` + DESIGN.md).
+**Show:** `has_tokens_package` + `tokens_package_paths`, `has_figma_config`, `a11y_framework_in_use` + `detected_a11y_packages`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files, combined size of existing AI-docs (AGENTS.md + CLAUDE.md + `.cursor/rules/` + `.github/copilot-instructions.md` + DESIGN.md).
+
+**Rationale injection:** when `a11y_framework_in_use: true`, elevate the `accessibility-wcag-aa` rubric in recommendations with the framework name — e.g., *"accessibility-wcag-aa is especially relevant because your repo already uses `<detected_a11y_packages>`; the rubric grounds the a11y investment in explicit checks."*
 
 **Propose default** (checked in order; first match wins):
 

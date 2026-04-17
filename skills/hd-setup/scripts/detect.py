@@ -240,6 +240,69 @@ def detect_config_sot() -> dict:
     }
 
 
+# --- C2 (extended): a11y-framework detection via package.json deps -----------
+
+
+A11Y_FRAMEWORK_PATTERNS = [
+    # react-aria family (Adobe) — matches react-aria, react-aria-components,
+    # react-aria-next, @react-aria/*, @react-stately/*, @react-types/*
+    re.compile(r"^react-aria(-|$)"),
+    re.compile(r"^@react-(aria|stately|types)/"),
+    re.compile(r"^react-stately(-|$)"),
+    # react-spectrum family
+    re.compile(r"^react-spectrum(-|$)"),
+    re.compile(r"^@adobe/react-spectrum"),
+    # radix-ui family
+    re.compile(r"^@radix-ui/"),
+    # headlessui family
+    re.compile(r"^@headlessui/"),
+    # reakit
+    re.compile(r"^reakit(-|$)"),
+    # base-ui / MUI headless primitives
+    re.compile(r"^@mui/base"),
+    re.compile(r"^@base-ui-components/"),
+    # ariakit (successor to reakit)
+    re.compile(r"^ariakit(-|$)"),
+    re.compile(r"^@ariakit/"),
+]
+
+
+def detect_a11y_framework() -> dict:
+    """Parse package.json dependencies + devDependencies for a11y framework signals.
+
+    Emits a11y_framework_in_use: bool + detected_a11y_packages: [pkg-name, ...]
+    Used by Layer 4 default to elevate accessibility-wcag-aa rubric rationale.
+    """
+    pkg_json = REPO / "package.json"
+    if not pkg_json.is_file():
+        return {"a11y_framework_in_use": False, "detected_a11y_packages": []}
+
+    try:
+        data = json.loads(pkg_json.read_text(encoding="utf-8", errors="replace"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return {"a11y_framework_in_use": False, "detected_a11y_packages": []}
+
+    all_deps: set[str] = set()
+    for field in ("dependencies", "devDependencies", "peerDependencies"):
+        deps = data.get(field) or {}
+        if isinstance(deps, dict):
+            all_deps.update(deps.keys())
+
+    detected: list[str] = []
+    for dep in sorted(all_deps):
+        for pat in A11Y_FRAMEWORK_PATTERNS:
+            if pat.match(dep):
+                detected.append(dep)
+                break
+        if len(detected) >= 10:  # cap
+            break
+
+    return {
+        "a11y_framework_in_use": len(detected) > 0,
+        "detected_a11y_packages": detected,
+    }
+
+
 # --- existing v1 signals (preserved for backward compat) ----------------------
 
 
@@ -352,11 +415,12 @@ def main() -> int:
     mcp_servers = detect_mcp_servers()
     team_tooling = detect_team_tooling()
     config_sot = detect_config_sot()
+    a11y = detect_a11y_framework()
 
     mode, priority = decide_mode(v1, other_h)
     bloat_overlay = v1["has_bloat"] and mode == "scattered"
 
-    # Merge signal flags (v1 + C1 + C4) into single signals dict
+    # Merge signal flags (v1 + C1 + C4 + a11y) into single signals dict
     signals = {
         "has_local_md": v1["has_local_md"],
         "has_placeholders": v1["has_placeholders"],
@@ -371,6 +435,7 @@ def main() -> int:
         "has_plans_convention": other_h["has_plans_convention"],
         "plans_convention_count": other_h["plans_convention_count"],
         "has_tokens_package": config_sot["has_tokens_package"],
+        "a11y_framework_in_use": a11y["a11y_framework_in_use"],
         "has_figma_config": config_sot["has_figma_config"],
     }
 
@@ -386,6 +451,7 @@ def main() -> int:
         "mcp_servers": mcp_servers,
         "team_tooling": team_tooling,
         "tokens_package_paths": config_sot["tokens_package_paths"],
+        "detected_a11y_packages": a11y["detected_a11y_packages"],
         "detected_at": datetime.datetime.now(datetime.timezone.utc).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         ),
