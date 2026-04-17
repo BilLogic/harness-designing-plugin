@@ -142,7 +142,12 @@ When context budget is tight:
 
 - [templates/audit-report.md.template](templates/audit-report.md.template) — audit output format
 - [templates/critique-response.md.template](templates/critique-response.md.template) — critique output format
-- [templates/starter-rubrics/](templates/starter-rubrics/) — 3 shipped rubrics (accessibility, design-system-compliance, component-budget) — users extend by authoring new rubrics in `docs/context/design-system/` or `docs/rubrics/`
+- [templates/starter-rubrics/](templates/starter-rubrics/) — 4 shipped rubrics:
+  - `accessibility-wcag-aa.md` — a11y (applies to design-file, html, css)
+  - `design-system-compliance.md` — token + variant adherence (applies to design-file, css, token-json)
+  - `component-budget.md` — new-primitive-component RFC gate
+  - `skill-quality.md` — 9-point Layer 2 skill health check (applies to skill-md); audit mode runs this over every `skills/*/SKILL.md`
+  - Users extend by authoring new rubrics in `docs/context/design-system/` or `docs/rubrics/`
 
 ## Scripts
 

@@ -18,7 +18,7 @@ Four skills, full-release at v1.0.0:
 | `/hd:onboard` | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. |
 | `/hd:setup` | **setup** | Scaffold or reorganize your harness. Adaptive across greenfield / scattered / advanced repos. `detect-mode.sh` emits deterministic mode JSON. |
 | `/hd:compound` | **maintain** | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for destructive AGENTS.md writes (SHA-256 tamper-detection). |
-| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget starters). |
+| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics (WCAG, design-system, component-budget, **skill-quality** starters — the last being a 9-point Layer 2 health check applied to every `skills/*/SKILL.md` during audit). |
 
 ## Install
 
@@ -65,7 +65,7 @@ design-harness/                        ← this repo IS the plug-in payload (fla
     ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic reference files
     ├── hd-setup/                      ← SETUP — SKILL.md + 9 refs + 3 workflows + 9 templates + detect-mode.sh
     ├── hd-compound/                   ← MAINTAIN — SKILL.md + 3 refs + 3 workflows + 2 templates; plan-hash mechanism
-    └── hd-review/                     ← IMPROVE — SKILL.md + 5 refs + 3 workflows + 2 templates + 3 starter rubrics + budget-check.sh; <protected_artifacts> declared
+    └── hd-review/                     ← IMPROVE — SKILL.md + 5 refs + 3 workflows + 2 templates + 4 starter rubrics + budget-check.sh; <protected_artifacts> declared
 ```
 
 ## Coexists with compound-engineering

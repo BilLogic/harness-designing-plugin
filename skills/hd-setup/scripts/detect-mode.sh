@@ -25,13 +25,18 @@ compound_installed=false
 
 [ -f "design-harnessing.local.md" ] && has_local_md=true
 
-# Count placeholder hits — 3+ triggers localize mode
+# Count placeholder hits — 3+ triggers localize mode.
+# Pattern: {{UPPER_SNAKE_CASE}} only — matches real localization markers
+# like {{TEAM_NAME}}, {{YOUR_PRODUCT}}. Avoids false positives from prose
+# that mentions the `{{` syntax in examples or docs.
 placeholder_count=0
 if command -v grep >/dev/null 2>&1; then
-  placeholder_count=$(grep -rln "{{" . 2>/dev/null \
+  placeholder_count=$(grep -rlE '\{\{[A-Z][A-Z0-9_]+\}\}' . 2>/dev/null \
     --exclude-dir=.git \
     --exclude-dir=node_modules \
     --exclude-dir=skills \
+    --exclude-dir=plans \
+    --exclude-dir=knowledge \
     --exclude="*.template" \
     | wc -l | tr -d ' ')
 fi
@@ -62,7 +67,9 @@ for f in AGENTS.md CLAUDE.md DESIGN.md; do
   fi
 done
 [ "$combined_lines" -gt 200 ] && combined_bloat=true
-{ "$single_file_bloat" = true || "$combined_bloat" = true ; } && has_bloat=true
+if [ "$single_file_bloat" = true ] || [ "$combined_bloat" = true ]; then
+  has_bloat=true
+fi
 
 # Coexistence overlay
 if [ -d "$HOME/.claude/plugins/cache/compound-engineering-plugin" ]; then

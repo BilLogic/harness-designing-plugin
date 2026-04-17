@@ -23,11 +23,15 @@
 - 1-5 custom skills (beyond what the plug-in ships) after 3+ months of use
 - Each skill has SKILL.md ≤200 lines with proper YAML frontmatter
 - All skills use the team's `<prefix>-*` convention
+- Each skill passes the 9-point `skill-quality` rubric (see [`../templates/starter-rubrics/skill-quality.md`](../templates/starter-rubrics/skill-quality.md))
 
 **Drift signals:**
 - 0 custom skills after 6 months of use (suggests underused harness)
 - Skill with description >180 chars (context budget waste)
 - Skills without tags / categorization
+- Any skill failing ≥ 2 sections of `skill-quality` rubric at p1 severity
+
+**Audit action:** for every `skills/*/SKILL.md`, run the `skill-quality` rubric. Roll findings into the Layer 2 section of the audit report with the failing-section numbers cited (1–9).
 
 ### Layer 3 — Workflow Orchestration
 
