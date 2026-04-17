@@ -141,6 +141,88 @@ git init
 **Invocation:** `/hd:setup`
 **Capture:** interactive placeholder walkthrough; post-run `grep -r "{{" .` should return 0 hits (or only explicitly-skipped ones).
 
+### T-S11 — Other-tool harness respected (v1.1)
+**Scenario:** [S11](./hd-setup-scenarios.md#s11--other-tool-harness-present-plus-uno---agent----claude----codex-)
+**Setup:**
+```bash
+mkdir -p /tmp/hd-test/t-s11-other-harness && cd /tmp/hd-test/t-s11-other-harness
+git init
+mkdir -p .agent/rules .claude docs/plans
+cat > .agent/rules/100-project-context.md <<'EOF'
+# Product: test widget
+EOF
+echo '{}' > .claude/launch.json
+for i in 001 002 003; do
+  echo "# Plan $i" > "docs/plans/2026-04-16-$i-feat-something-plan.md"
+done
+```
+**Invocation:** `/hd:setup`
+**User answers:** pick "link" at L1, "skip" at L2, "scaffold" at L4 + L5.
+**Teardown:** `rm -rf /tmp/hd-test/t-s11-other-harness`
+**Capture:**
+- `design-harnessing.local.md` contains `other_tool_harnesses_detected:` with `.agent/` + `.claude/` + `docs/plans/`
+- `.agent/rules/100-project-context.md` byte-identical after run
+- `.claude/launch.json` byte-identical after run
+- Pointer file exists at `docs/context/product/` that references `.agent/rules/`
+
+### T-S12 — MCP pre-configured (v1.1)
+**Scenario:** [S12](./hd-setup-scenarios.md#s12--mcp-pre-configured-in-repo)
+**Setup:**
+```bash
+mkdir -p /tmp/hd-test/t-s12-mcp/.cursor && cd /tmp/hd-test/t-s12-mcp
+git init
+cat > .cursor/mcp.json <<'EOF'
+{
+  "mcpServers": {
+    "notion": { "command": "npx", "args": ["notion-mcp"] },
+    "figma": { "command": "npx", "args": ["@figma/mcp"] }
+  }
+}
+EOF
+```
+**Invocation:** `/hd:setup`
+**Capture:**
+- Step 1 detection surfaces `mcp_servers: [figma, notion]` in agent output
+- Agent asks per-tool integration path (active use if available, install-walkthrough if not)
+- Final `design-harnessing.local.md` contains `mcp_servers_at_setup: [figma, notion]`
+
+### T-S13 — External tooling URL-only (v1.1)
+**Scenario:** [S13](./hd-setup-scenarios.md#s13--external-tooling-referenced-but-no-mcp-configured)
+**Setup:**
+```bash
+mkdir -p /tmp/hd-test/t-s13-urls && cd /tmp/hd-test/t-s13-urls
+git init
+cat > README.md <<'EOF'
+# Widget
+Brand docs: https://www.notion.so/team/widget-brand
+Design file: https://figma.com/design/abc123
+Issues: https://github.com/team/widget/issues
+EOF
+```
+**Invocation:** `/hd:setup`
+**Capture:**
+- Step 1.5 surfaces `team_tooling.docs: [notion]` and `team_tooling.design: [figma]` and `team_tooling.pm: [github_issues]`
+- Agent offers per-tool triage (install-walkthrough / pointer-only / ignore)
+- If user picks pointer-only for Notion: `docs/context/product/` contains a pointer file with the Notion URL
+- Final `design-harnessing.local.md` `team_tooling.docs: [notion]`, `design: [figma]`, `pm: [github_issues]`
+
+### T-S14 — Tokens / figma-config as SoT (v1.1)
+**Scenario:** [S14](./hd-setup-scenarios.md#s14--tokens-package--figma-config-as-design-system-source-of-truth)
+**Setup:**
+```bash
+mkdir -p /tmp/hd-test/t-s14-tokens/tokens && cd /tmp/hd-test/t-s14-tokens
+git init
+cat > tokens/colors.json <<'EOF'
+{ "color": { "primary": { "value": "#0051FF" }, "text": { "value": "#1A1A1A" } } }
+EOF
+```
+**Invocation:** `/hd:setup`
+**User answers:** scaffold L1 cheat-sheet + scaffold L4 rubric.
+**Capture:**
+- L1 cheat-sheet `docs/context/design-system/cheat-sheet.md` contains references to actual token names (`color.primary`, `color.text`)
+- L4 rubric scaffolded + references the tokens path
+- No modifications to `tokens/colors.json`
+
 ---
 
 ## Team-context tests

@@ -123,6 +123,38 @@ On invocation, `hd-setup` auto-detects the user's starting state via these signa
 - **Priority:** v0.5
 - **See:** [T-S10](./hd-setup-test-cases.md#t-s10), [C-S10](./hd-setup-success-criteria.md#c-s10)
 
+### S11 — Other-tool harness present (plus-uno / `.agent/` / `.claude/` / `.codex/`)
+- **Signal:** `detect.py` emits any of `has_claude_dir`, `has_codex_dir`, `has_agent_dir`, `has_external_skills` (≥1 SKILL.md under `.claude/skills` or `.cursor/skills`), or `has_plans_convention` (≥3 files matching `YYYY-MM-DD-NNN-*-plan.md` in `docs/plans/`).
+- **Mode:** `advanced` (priority 2)
+- **Expected behavior:** Walk L1–L5 with **link** as the default per-layer action for any layer whose content the other-tool harness covers. Never modify files under `.agent/` / `.claude/` / `.codex/` / external skill dirs.
+- **User story:** "As a user who built harness-ish structure with plus-uno (or compound-engineering, or by hand), I run `/hd:setup`. The agent detects my existing harness, explicitly promises not to touch it, and walks me layer by layer. At each layer where I already have something, it offers to add a pointer file from `docs/<layer>/` back to my existing source. I react: relieved (my work is respected) and curious (what gaps exist?). We end with `design-harnessing.local.md` listing my detected harnesses under `other_tool_harnesses_detected` and a clear per-layer decisions table."
+- **Priority:** v1.1
+- **See:** [T-S11](./hd-setup-test-cases.md#t-s11), [C-S11](./hd-setup-success-criteria.md#c-s11)
+
+### S12 — MCP pre-configured in repo
+- **Signal:** `detect.py` emits non-empty `mcp_servers` list (parsed from `.mcp.json`, `.cursor/mcp.json`, `.codex/mcp.json`, or `.claude/mcp.json`).
+- **Mode:** any (overlay on other modes)
+- **Expected behavior:** At Step 1.5 tool discovery, surface the detected MCP servers explicitly. For each one that's a known harness-relevant MCP (notion / figma / linear / github), offer active integration: "this session doesn't have `<mcp>` loaded — start it via `<start-cmd>`" or, if available, "pull live content into layer seed." Never use the plug-in-maintainer's own MCPs — only the user's.
+- **User story:** "As a user who configured `.cursor/mcp.json` with shadcn (or whoever), I run `/hd:setup`. The agent reports 'detected MCPs in your repo: shadcn' and asks whether I'd like those loaded / referenced during the layer walk. It does NOT magically pull Notion content I never authorized. I react: trust (tool is transparent about what it can/can't see). We end with `mcp_servers_at_setup` recorded in local.md for future re-runs."
+- **Priority:** v1.1
+- **See:** [T-S12](./hd-setup-test-cases.md#t-s12), [C-S12](./hd-setup-success-criteria.md#c-s12)
+
+### S13 — External tooling referenced but no MCP configured
+- **Signal:** `detect.py` emits non-empty `team_tooling.<category>` for any of docs/design/diagramming/analytics/pm/comms, but `mcp_servers` is empty (or doesn't contain a server matching the detected tool).
+- **Mode:** any (overlay)
+- **Expected behavior:** At Step 1.5, surface the URL-referenced tools per category and ask: "your repo references Notion — want me to (a) walk you through installing Notion MCP + getting an API key, (b) record Notion as a pointer-only source, or (c) ignore?" Never recommend unknown or unmaintained MCP packages; only tools in `external-tooling.md` known-MCP table.
+- **User story:** "As a user whose team docs live in Notion but whose repo has no Notion MCP, I run `/hd:setup`. The agent says 'your docs mention Notion 12 times — how do you want to handle it?' with three clear options. If I pick install-walkthrough, it gives me the exact command + where to get the API key. If I pick pointer-only, it writes a pointer file into Layer 1 (Context) that says 'brand docs live at [Notion URL]'. I react: seen (the tool knows where my work lives) and unblocked (I have a clear next step). We end with my Notion URL recorded in `team_tooling.docs` + a pointer file at `docs/context/product/notion-pointer.md`."
+- **Priority:** v1.1
+- **See:** [T-S13](./hd-setup-test-cases.md#t-s13), [C-S13](./hd-setup-success-criteria.md#c-s13)
+
+### S14 — Tokens-package / figma-config as design-system source-of-truth
+- **Signal:** `detect.py` emits `has_tokens_package: true` (one of: `tokens/` dir, `style-dictionary.config.*`, `tokens.config.json`) OR `has_figma_config: true` (`figma.config.json` or `figma-config.json`).
+- **Mode:** any (overlay)
+- **Expected behavior:** At Layer 1 (Context) frame, explicitly surface the detected source-of-truth. Seed `docs/context/design-system/cheat-sheet.md` with references to actual token names (reading token files). At Layer 4 (Rubrics), default to **scaffold** design-system-compliance rubric that references the detected tokens.
+- **User story:** "As a user with a `tokens/` package (or `figma.config.json`), I run `/hd:setup`. At Layer 1, the agent says 'your design-system source-of-truth looks like `tokens/`' and asks whether to use it to seed the cheat-sheet. If I say yes, it reads actual token names and writes a cheat-sheet that matches reality. At Layer 4, it proposes a design-system-compliance rubric that CHECKS against those same tokens. I react: grounded (the harness is tied to real code, not abstractions). We end with a cheat-sheet + rubric pair that mutually reinforce."
+- **Priority:** v1.1
+- **See:** [T-S14](./hd-setup-test-cases.md#t-s14), [C-S14](./hd-setup-success-criteria.md#c-s14)
+
 ---
 
 ## Category 2 — Team-context scenarios (what the skill asks mid-setup)

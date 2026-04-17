@@ -170,6 +170,56 @@
 
 ---
 
+### C-S11 — Other-tool harness respected (v1.1)
+**Scenario:** [S11](./hd-setup-scenarios.md#s11--other-tool-harness-present-plus-uno---agent----claude----codex-) · **Test:** [T-S11](./hd-setup-test-cases.md#t-s11--other-tool-harness-respected-v11)
+**Pass when ALL:**
+- [ ] `detect.py` mode is `advanced` with `priority_matched: 2`
+- [ ] Every file under `.agent/`, `.claude/`, `.codex/`, `.cursor/skills/` is byte-identical before and after the run (`diff -r` clean)
+- [ ] `design-harnessing.local.md` `other_tool_harnesses_detected:` lists the detected paths
+- [ ] For every layer where the other-tool harness had material, the user's decision was offered and recorded in `layer_decisions:`
+- [ ] Any `link` decision produced a pointer file under `docs/<layer>/` that references the other-tool source by path
+- [ ] Zero "rivalry" language in transcript (no "I'll take over your harness" / "migrate to hd-*" / etc.)
+**User-story pass:** user describes the experience as "my existing harness was respected, I got a clear per-layer decision, I'm unblocked to continue."
+**Evidence:** `diff -r` of `.agent/` / `.claude/` before vs. after; `design-harnessing.local.md` dump; pointer file content check.
+
+### C-S12 — MCP pre-configured surfaced (v1.1)
+**Scenario:** [S12](./hd-setup-scenarios.md#s12--mcp-pre-configured-in-repo) · **Test:** [T-S12](./hd-setup-test-cases.md#t-s12--mcp-pre-configured-v11)
+**Pass when ALL:**
+- [ ] `detect.py` output `mcp_servers:` contains all servers from every mcp.json file in the repo
+- [ ] Agent surfaces the detected server list at Step 1.5 (user-visible)
+- [ ] For each known-integrable server (notion, figma, linear, github), agent offers a per-tool integration triage with the 3 options (active / start-command / pointer-only)
+- [ ] Agent NEVER recommends an MCP package not in `external-tooling.md` known-installs table
+- [ ] Agent NEVER silently uses its session's own MCPs on the user's behalf without explicit consent
+- [ ] `mcp_servers_at_setup:` in `design-harnessing.local.md` matches the detected list
+**User-story pass:** user says "the tool was transparent about what it knew and what it could do; it did not magically pull my data without asking."
+**Evidence:** transcript grep for session-MCP names; comparison of `detect.py mcp_servers` with final `mcp_servers_at_setup`; check that no MCP named was from outside the known table.
+
+### C-S13 — External tooling URL-only (v1.1)
+**Scenario:** [S13](./hd-setup-scenarios.md#s13--external-tooling-referenced-but-no-mcp-configured) · **Test:** [T-S13](./hd-setup-test-cases.md#t-s13--external-tooling-url-only-v11)
+**Pass when ALL:**
+- [ ] Every URL-referenced tool (notion, figma, linear, etc.) surfaces in `detect.py team_tooling` output
+- [ ] Agent surfaces detected tools per category at Step 1.5
+- [ ] For each tool user confirms, one of 3 integration paths offered: install-walkthrough / pointer-only / ignore
+- [ ] Install-walkthrough (if chosen) names the correct MCP package from the known table + points to the API-key URL
+- [ ] Pointer-only (if chosen) produces a pointer file at the appropriate layer with the source URL
+- [ ] `team_tooling.<category>:` in `design-harnessing.local.md` matches user decisions
+- [ ] ZERO recommendations of MCP packages outside the known table
+**User-story pass:** user describes the tool as "aware of where my work lives" and feels "unblocked — I have a clear next step for each source."
+**Evidence:** transcript grep for offered MCP packages (must be in known table); pointer file content; `team_tooling` dump.
+
+### C-S14 — Tokens / figma-config SoT (v1.1)
+**Scenario:** [S14](./hd-setup-scenarios.md#s14--tokens-package--figma-config-as-design-system-source-of-truth) · **Test:** [T-S14](./hd-setup-test-cases.md#t-s14--tokens--figma-config-as-sot-v11)
+**Pass when ALL:**
+- [ ] `detect.py` emits `has_tokens_package: true` OR `has_figma_config: true` (whichever applies)
+- [ ] At L1 frame, agent explicitly surfaces the detected SoT ("your design-system source-of-truth looks like `tokens/`")
+- [ ] If user scaffolds L1 cheat-sheet, output references actual token names read from files (not just `{{PLACEHOLDER}}`)
+- [ ] If user scaffolds L4 rubric, output includes a rubric rule that REFERENCES the detected SoT path
+- [ ] Zero modifications to the SoT files themselves (`tokens/*`, `figma.config.json`)
+**User-story pass:** user describes the harness as "grounded in my real code" (cheat-sheet matches tokens; rubric checks against the same tokens).
+**Evidence:** cheat-sheet content diff vs. actual token names; rubric content showing token-path reference; `diff` of SoT files (must be zero).
+
+---
+
 ## Remaining scenarios (v0.5 criteria TBD)
 
 The following scenarios from [`hd-setup-scenarios.md`](./hd-setup-scenarios.md) do not yet have locked success criteria — they ship in v0.5 and will be spec'd when that gate approaches:
