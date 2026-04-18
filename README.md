@@ -18,7 +18,7 @@ Four user-facing skills:
 | `/hd:onboard` | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references, article § citations. |
 | `/hd:setup` | **setup** | Walk the five layers in order. At each layer, detect existing harnesses + external tooling and offer per-layer **link / critique / scaffold / skip**. `detect.py` emits schema-v2 JSON covering other-tool harnesses, MCP config, 6-category team tooling, config SoT. |
 | `/hd:compound` | **maintain** | Capture lessons; propose graduations from narrative to team rule. **Plan-hash proof-of-consent** for destructive AGENTS.md writes (SHA-256 tamper-detection). |
-| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics. **12 starter rubrics shipped** — a11y-wcag-aa, design-system-compliance, component-budget, skill-quality, interaction-states, heuristic-evaluation, typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design (distilled from Impeccable + Nielsen + Material 3 + Fluent 2). |
+| `/hd:review` | **improve** | Audit harness health (multi-agent orchestration, parallel/serial auto-switch at 6+); critique work items against team rubrics. **14 starter rubrics shipped** — a11y-wcag-aa, design-system-compliance (with managed-DS pre-fills for antd/chakra/mui/mantine), component-budget, skill-quality, interaction-states, heuristic-evaluation, typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design, telemetry-display (IoT/hardware), i18n-cjk (bilingual/CJK products). Distilled from Impeccable + Nielsen + Material 3 + Fluent 2. |
 
 ## Sub-agents
 
@@ -90,7 +90,7 @@ design-harness/                        ← this repo IS the plug-in payload (fla
     ├── hd-onboard/                    ← LEARN — SKILL.md + 10 atomic references
     ├── hd-setup/                      ← SETUP — SKILL.md + 10 references (5 layer + 5 shared) + assets (AGENTS.md template, context/knowledge skeletons, platform-stubs for scattered-mode SSoT consolidation) + scripts (detect.py schema-v2 + detect-mode.sh shim)
     ├── hd-compound/                   ← MAINTAIN — SKILL.md + 3 references (lesson-patterns, graduation-criteria, plan-hash-protocol) + assets (lesson + graduation-entry templates); plan-hash mechanism
-    └── hd-review/                     ← IMPROVE — SKILL.md + 5 references + assets (report + critique templates, 12 starter rubrics) + budget-check.sh; <protected_artifacts> declared
+    └── hd-review/                     ← IMPROVE — SKILL.md + 5 references + assets (report + critique templates, 14 starter rubrics) + budget-check.sh; <protected_artifacts> declared
 ```
 
 **No `workflows/` folders inside skills.** Procedures live in each SKILL.md; shared procedures that span skills are sub-agents in `agents/`. Matches compound-engineering's current convention.

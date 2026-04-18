@@ -5,6 +5,40 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3e — pilot consolidation (6-repo matrix)
+
+Completed per [`docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md`](docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md). Findings from 4 new parallel pilots (caricature, oracle-chat, lightning, plus-uno) combined with prior pilots (sds, plus-marketing) consolidated in [`docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md`](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md).
+
+**E1 — Template graduations** (`c722bb24`):
+- `hd-config.md.template` gains `layer_decisions` (5-row array with decision + why + files_written), `other_tool_harnesses_detected` (list of `{path, owner, policy}`), `files_written` (flat list); `schema_version: "2"` now consistent with detect.py output.
+- `rubrics-index.md.template` added (was referenced by SKILL.md Step 7 but missing; every pilot hand-wrote `docs/rubrics/INDEX.md`).
+- `hd-config-schema.md` updated to v2 with filled-in plus-marketing example.
+
+**E3 — Rubric library round 2** (`60efe132`): starter count 12 → 14.
+- `telemetry-display.md` (NEW, 103 lines): 7 IoT/hardware criteria (freshness indicators, offline affordances, device-state viz, binary-protocol display, map-as-canvas, update choreography, alarm prioritization). Surfaced by lightning pilot.
+- `i18n-cjk.md` (NEW, 102 lines): 7 bilingual/CJK criteria (dual-script line-height, mixed-script punctuation, IME states, date/number formats, bilingual register, line-break, font-stack fallback). Surfaced by caricature + lightning.
+- `design-system-compliance.md` gains managed-DS pre-fill sections for ant-design / chakra-ui / mui / mantine (+48 lines).
+
+**E2 — detect.py signal expansion** (`f0680e22`): +177 lines.
+- New signals: `has_rubrics_dir`, `rubrics_file_count`, `has_knowledge_dir`, `knowledge_file_count`, `memory_types_present` (scans `memory_type:` with `type:` fallback), `layers_present` composite, `managed_design_system` (antd/chakra/mui/mantine).
+- a11y patterns expanded: `@radix-ui/`, `radix-ui`, `@headlessui/`, `@reach/`, `react-bootstrap` (closes blind spot from pilots #2/4/6).
+- `external_skills_count` fixed: counts `SKILL.md` + bare `*.md`, takes max across sibling `.claude|.codex|.cursor/skills` dirs to avoid double-counting mirrors. Lightning: 10 → 5.
+- `coexistence.compound_engineering` upgraded from bool to `{present, paths_found[], config_file}`.
+- `team_tooling.pm` gains `markdown-todos` when `todos/` has ≥2 `\d{3}-\w+.*\.md` files.
+
+**E6 — hd-compound graduation-loop safety** (`d50f7b5d`): closes the safety thesis that was previously aspirational.
+- `compute-plan-hash.sh` (NEW, 123 lines, `+x`): deterministic SHA-256 canonical-string builder. Strict normalization (`LC_ALL=C sort` on paths, LF-only, no trailing newline, fixed field order joined by single `\n`, paths joined by `|`). Byte-identical hashes across runs verified.
+- Persisted propose artifact: SKILL.md Propose writes `.hd/propose-<8hex>.json` containing all inputs + `canonical_string` + `sha256`. Apply globs by `--hash` prefix, re-runs the script, compares. No longer depends on conversation context — survives session compaction. Cleanup moves to `.hd/applied/`.
+- `gitignore-entries.txt` asset added (hd-setup proposes `.hd/` to user's `.gitignore`).
+- Removed dangling `workflows/propose-graduation.md` / `workflows/apply-graduation.md` refs in `plan-hash-protocol.md` + `graduation-criteria.md` (AGENTS.md forbids `workflows/` inside skills; `grep -r workflows/ skills/hd-compound/` returns 0).
+- Lesson-corpus convention (Option A — match reality): `lesson-patterns.md` rewritten for date-slug (`YYYY-MM-DD-<slug>.md`) per-event files (the actual corpus convention, vs. the prior domain-grouped aspiration). Capture Step 2 creates new dated file, no append-to-domain.
+
+**E4 — Pattern graduations** (`b7b360ab`):
+- **`.agent/` or `.claude/` present → skip L1/L2/L3, scaffold L4/L5** (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno). Graduated to `AGENTS.md § Graduated rules` + `hd-setup/SKILL.md` new "Guardrail" section before Step 1 + default-action table.
+- **Additive-only discipline when existing harness detected** (6 confirmations, all pilots). Graduated to `AGENTS.md § Graduated rules` + `hd-setup/SKILL.md` guardrail announces the mode up front.
+
+**Regression:** `detect.py` v2 against all 6 `/tmp/hd-real-test/*` clones — all signals populate as expected. sds=scattered, others=advanced. Schema v2 consistent.
+
 ### Phase 3d — plus-uno template alignment + rubric expansion
 
 Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-plan.md`](docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-plan.md). Six parts, one commit per part:
