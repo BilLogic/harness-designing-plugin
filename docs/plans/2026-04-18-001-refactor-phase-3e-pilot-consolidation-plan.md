@@ -1,7 +1,7 @@
 ---
 title: "Phase 3e — pilot consolidation: template graduations, detect.py signal expansion, rubric library round 2"
 type: refactor
-status: active
+status: completed
 date: 2026-04-18
 origin: docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md
 ---
