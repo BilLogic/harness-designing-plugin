@@ -37,7 +37,7 @@ hd:setup Progress:
 - [ ] Step 10: Summarize decisions + suggest next skill
 ```
 
-Steps 4–8 each follow the same per-layer procedure documented below.
+Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-procedure.md`](references/per-layer-procedure.md) for the FRAME → SHOW → PROPOSE → ASK → EXECUTE contract, default-action table, link-mode extract-and-pointer rule, and post-layer checkpoint.
 
 ## Guardrail — additive-only when existing harness detected
 
@@ -56,14 +56,7 @@ This is a graduated rule (see [AGENTS.md § Graduated rules](../../AGENTS.md#gra
 
 ## Step 1 — Detect
 
-Before running detect, ask once:
-
-> "Also scan your user-level MCPs (`~/.claude/mcp.json`, `~/.codex/mcp.json`)? This surfaces team-independent MCPs like your personal Figma/Notion integrations.
-> **Default: no** — keeps detection repo-scoped. Say `yes` to include."
-
-If the user says `yes`, invoke `python3 scripts/detect.py --include-user-mcps`. Otherwise invoke `python3 scripts/detect.py` (repo-scoped, unchanged default).
-
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`. When `--include-user-mcps` was passed, also retain `signals.user_mcps_included` + `signals.user_mcp_sources` so provenance can be recorded in `hd-config.md`.
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
@@ -92,230 +85,41 @@ Default to B on silence. Never block.
 
 ## Step 3 — Tool discovery
 
-Surface detected `team_tooling` per category + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note once (not a separate step): *"compound-engineering detected — we coexist by default; won't touch its namespace."*
+Surface detected `team_tooling` + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note once: *"compound-engineering detected — we coexist by default; won't touch its namespace."*
 
-Ask **one batched question** covering all 6 categories (not 6 per-category prompts):
+Ask **one batched question** across all 6 categories (docs/wiki, design, diagramming, analytics, PM/issues, comms) with the detected list and category examples. Use "you (or contributors)" framing. Parse free-text reply; map to categories via [`references/known-mcps.md`](references/known-mcps.md). For each confirmed tool, triage per that file's integration-path table: **active** / **start-server** / **install-walkthrough** / **pointer-only**.
 
-> "I detected: `<list of detected tools>`. Anything else you (or contributors) use for this project — across these categories?
->
-> - **Docs/wiki** — notion, confluence, coda, obsidian, google docs, …
-> - **Design** — figma, paper, pencildev, sketch, …
-> - **Diagramming** — excalidraw, miro, whimsical, figjam, …
-> - **Analytics** — amplitude, mixpanel, posthog, metabase, …
-> - **PM/issues** — linear, jira, github issues, asana, …
-> - **Comms** — slack, discord, loom, …
->
-> Reply with anything I missed (one tool per line, or 'nothing else'). Format `category: tool` works if the tool isn't obvious from name (e.g., `analytics: fullstory`)."
-
-Parse the user's free-text reply — comma or newline separated tool names. Map each to its category (from the patterns in [`references/known-mcps.md`](references/known-mcps.md)). If ambiguous or unknown, ask a single follow-up.
-
-**Framing note:** use "you (or contributors)" rather than "your team" — most repos running `/hd:setup` are solo or near-solo. Team-size specifics come later when Step 9 writes `team_size`.
-
-For each confirmed tool, triage per the integration-path table in [`references/known-mcps.md`](references/known-mcps.md):
-
-- **active** — MCP live in session → offer live pull during later layer scaffolding
-- **start-server** — MCP configured but not running → give start command
-- **install-walkthrough** — tool in known-MCP table → install command + API-key URL (full walkthrough detail in `known-mcps.md` per-tool subsection)
-- **pointer-only** — user-named tool not in known table → record, write pointer files, no install recommended
-
-Universal: only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
-
-## Per-layer procedure (applied to Layers 1–5)
-
-For each of Steps 4–8, run this 5-part cycle:
-
-```
-FRAME → explain the layer in one sentence + article § reference
-SHOW  → present detect.py signals relevant to this layer
-PROPOSE → default action (link / critique / scaffold / skip) per the table below
-ASK   → user picks action; record in layer_decisions
-EXECUTE → perform chosen action; checkpoint after (optional review / capture / continue)
-```
-
-### Default action per detection
-
-| Condition | Default |
-|---|---|
-| **Guardrail fired** (existing `.agent/` or `.claude/` with content) + layer is L1/L2/L3 | **skip** (existing harness IS this layer) |
-| **Guardrail fired** + layer is L4/L5 | scaffold (typical genuine gap) |
-| Nothing detected at this layer + no external tooling mentioned | scaffold |
-| Team tool detected (e.g., notion for L1) + MCP live in session | scaffold + MCP-pull |
-| Team tool detected + MCP not in session | link + install-walkthrough |
-| Other-tool harness artifact (e.g., `.agent/rules/*` for L1) | link |
-| Existing `docs/<layer>/` file (prior hd-* run) | critique |
-| Bloat detected (L1 only) | critique |
-
-Default is a **suggestion**, not enforcement. User picks any of 4 options.
-
-### Link-mode contract — extract + pointer (all layers)
-
-When any layer chooses **link**, write a pointer file using [`assets/pointer-file.md.template`](assets/pointer-file.md.template). The pointer must include a **3–5 line extracted summary** of the source content in plain prose — not just a bare `See [path]` reference. Pointer files should be Tier 1 useful standalone; the source provides full detail.
-
-Read the source (via MCP if live, filesystem read for local paths, or pasted content from user for URLs without MCP), extract the summary, fill the template, write with explicit confirmation. Step 4 (Layer 1) includes a concrete example.
-
-### Post-action checkpoint (friction, Layers 1–4)
-
-After executing an action at a layer, offer before moving on:
-
-```
-Layer N [link | critique | scaffold | skip] complete. Before Layer N+1:
-  A. Review what landed — /hd:review critique <path> on it
-  B. Capture a lesson — /hd:compound capture if something surprised you
-  C. Inspect manually — open the file, look around
-  D. Continue to Layer N+1
-```
-
-Default after silence is D. Users never feel railroaded.
+Only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
 
 ## Step 4 — Layer 1 (Context)
 
-**Frame:** "Layer 1 — Context. What the AI needs every time: product, user, design system, conventions. Semantic memory (article §4a)."
+Semantic memory: product, user, design system, conventions. Walk the per-layer cycle; scaffold writes under `docs/context/` using the context skeleton, link writes pointer files with 3–5 line extracted summaries, critique applies bloat-detection.
 
-**Show:** detect signals — `has_agent_dir`, `has_ai_docs`, `team_tooling.docs`, `team_tooling.design`, `has_tokens_package`, `has_figma_config`, Tier 1 budget state.
-
-**Propose default** per table above.
-
-**Execute — scaffold:**
-- Load [`references/layer-1-context.md`](references/layer-1-context.md) for L1 depth (baseline shape + healthy-AGENTS.md patterns)
-- Ask scaffold depth: **full baseline** (21 files across product/conventions/design-system — matches plus-uno) vs **simple mode** (~4 files — just app.md + tech-stack.md + tokens.md + components/cheat-sheet.md). Default: full baseline for team repos, simple mode for solo.
-- Seed questions for product/: (1) product in one sentence? (2) user in one sentence? (3) biggest design constraint? (4) top 3 features?
-- Seed questions for conventions/: (1) primary language + framework? (2) 3 most important coding rules?
-- Seed questions for design-system/: (1) token source of truth (Figma / tokens package / CSS vars)? (2) existing component library (shadcn / Radix / custom)? (3) a11y target (WCAG AA baseline)?
-- If "I don't know" on design-system → offer Material 3 / Fluent 2 / awesome-design-md baselines + user's README/package.json
-- Copy the chosen template set from [`assets/context-skeleton/`](assets/context-skeleton/) under `docs/context/`, pre-filling `{{PLACEHOLDER}}` with user answers
-- Enforce Tier 1 budget per [`references/tier-budget-model.md`](references/tier-budget-model.md): `AGENTS.md` + `docs/context/product/app.md` combined ≤ 200 lines (non-Tier-1 content like features/flows/pillars lives in sibling files — doesn't count against budget)
-
-**Execute — link:** write pointer files under `docs/context/<subtopic>/` using [`assets/pointer-file.md.template`](assets/pointer-file.md.template). Each pointer file must include a 3–5 line **extracted summary** of the source content, not just the bare link. Goal: pointer file is Tier 1 useful standalone; source has full detail.
-
-Read the source (Notion page via MCP if live, `.agent/rules/*`, `.github/copilot-instructions.md` section, etc.), extract a 3–5 line summary in plain prose, fill the template.
-
-Example for sds L1 product pointer:
-```markdown
-# Product (pointer to source)
-
-**Source:** [.github/copilot-instructions.md § "Repository Overview"](../../../.github/copilot-instructions.md)
-
-SDS is a production-ready design system featuring Figma Code Connect
-integration, React components built on React Aria/Stately for
-accessibility, and Storybook as interactive documentation. Audience:
-design-system teams extending the library or studying patterns.
-
-*Pointer file — authoritative content lives at the source above.*
-```
-
-**Execute — critique:** apply bloat-detection checks from [`references/tier-budget-model.md`](references/tier-budget-model.md). Surface findings. Don't write.
+→ See [references/step-4-layer-1-context.md](references/step-4-layer-1-context.md) for full procedure.
 
 ## Step 5 — Layer 2 (Skills)
 
-**Frame:** "Layer 2 — Skills. AI capabilities your team codifies. Procedural memory (article §4b)."
+Procedural memory: AI capabilities the team codifies. Default is **skip** unless external skills exist (**critique**) or `.agent/skills/` is present (**link**).
 
-**Show:** `has_external_skills`, `has_claude_dir`, `.agent/skills/` presence.
-
-**Propose default:**
-- `has_external_skills: true` → **critique** via skill-quality rubric
-- `.agent/skills/` → **link**
-- Nothing → **skip** (Layer 2 is premature for most teams)
-
-**Execute — critique:** per-skill invocation:
-
-```
-Task design-harnessing:review:skill-quality-auditor(
-  skill_md_path: "<path>/SKILL.md"
-)
-```
-
-Aggregate findings. Present to user. Don't modify anything.
-
-**Execute — scaffold:** seed questions: (1) workflow explained 3+ times last month? (2) repetitive task worth automating? Point user at [`references/layer-2-skills.md`](references/layer-2-skills.md) for authoring discipline.
+→ See [references/step-5-layer-2-skills.md](references/step-5-layer-2-skills.md) for full procedure.
 
 ## Step 6 — Layer 3 (Orchestration)
 
-**Frame:** "Layer 3 — Orchestration. How skills + handoffs flow. Procedural memory (article §4c)."
+How skills and handoffs flow across PM tools, diagrams, and CI. Default is **link** when a PM tool is detected; **skip** when fewer than 3 Layer 2 skills exist.
 
-**Show:** `team_tooling.pm` (linear / github_issues / jira), `team_tooling.diagramming`, GitHub Actions in `.github/workflows/`.
-
-**Propose default:**
-- `team_tooling.pm` present → **link** (orchestration lives in PM tool labels)
-- `team_tooling.diagramming` → **link** to sequence/state diagrams
-- Fewer than 3 Layer 2 skills → **skip**
-
-**Execute — scaffold:** seed questions: (1) 3–5 steps from idea to shipped? (2) most common handoff that breaks? See [`references/layer-3-orchestration.md`](references/layer-3-orchestration.md) for L3 depth.
+→ See [references/step-6-layer-3-orchestration.md](references/step-6-layer-3-orchestration.md) for full procedure.
 
 ## Step 7 — Layer 4 (Rubrics)
 
-**Frame:** "Layer 4 — Rubrics. Taste embedded as checks. Distributed pattern (article §4d)."
+Taste embedded as explicit checks. If existing AI-docs exceed 200 lines, **critique + extract** implicit rubrics; otherwise **scaffold** from the 12 starter rubrics. Rubrics live in `docs/rubrics/`, not `docs/context/design-system/`.
 
-**Show:** `has_tokens_package` + `tokens_package_paths`, `has_figma_config`, `a11y_framework_in_use` + `detected_a11y_packages`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files, combined size of existing AI-docs (AGENTS.md + CLAUDE.md + `.cursor/rules/` + `.github/copilot-instructions.md` + DESIGN.md).
-
-**Rationale injection:** when `a11y_framework_in_use: true`, elevate the `accessibility-wcag-aa` rubric in recommendations with the framework name — e.g., *"accessibility-wcag-aa is especially relevant because your repo already uses `<detected_a11y_packages>`; the rubric grounds the a11y investment in explicit checks."*
-
-**Propose default** (checked in order; first match wins):
-
-| Condition | Default |
-|---|---|
-| 1. `has_ai_docs: true` AND combined existing AI-doc size > 200 lines | **critique + extract** (surface implicit rubrics from existing docs; do NOT duplicate as fresh starters) |
-| 2. `has_tokens_package` or `has_figma_config` | **scaffold** design-system-compliance rubric referencing actual token paths |
-| 3. `has_external_skills: true` | **scaffold** skill-quality rubric entry |
-| 4. Nothing detected | **scaffold** starter trio (accessibility-wcag-aa + design-system-compliance + component-budget) |
-
-Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
-
-**Execute — critique + extract** (condition 1):
-1. Invoke the rubric-applicator sub-agent against each existing AI-doc with a "meta-extract" target: find rule-like statements that could become explicit rubric criteria.
-   ```
-   Task design-harnessing:review:rubric-applicator(
-     work_item_path: ".github/copilot-instructions.md",
-     rubric_path: "skills/hd-review/assets/starter-rubrics/skill-quality.md",
-     mode: "extract"
-   )
-   ```
-2. Present extracted candidates to user as a list: *"I see 5 implicit rubrics in your copilot-instructions.md: (a) approved color tokens, (b) React Aria for a11y, (c) component-budget gate for new primitives, (d) storybook-first pattern, (e) no-hex-codes. Want to promote any to explicit rubric files under `docs/rubrics/`?"*
-3. For each candidate the user approves: copy the matching starter rubric from [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/) to `docs/rubrics/<name>.md`, pre-fill with the extracted content, show the user the result, atomic write on confirmation.
-4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
-5. Never modify the source AI-doc file. Extraction is read-only on the source.
-
-**Execute — scaffold** (conditions 2/3/4):
-- Load [`references/layer-4-rubrics.md`](references/layer-4-rubrics.md) for L4 depth (distributed-behavior rationale, 12-starter enumeration, INDEX.md pattern)
-- Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?
-- If "no clear criteria yet" → offer the 12 starter rubrics at [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/) (distilled from Impeccable + Nielsen + Material 3 + Fluent 2) + fallback baselines
-- Write `docs/rubrics/INDEX.md` from [`assets/rubrics-index.md.template`](assets/rubrics-index.md.template)
-- Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
-
-**Execute — critique** (targeted, when user explicitly points at a work item): invoke:
-
-```
-Task design-harnessing:review:rubric-applicator(
-  work_item_path: <user-provided>,
-  rubric_path: <rubric file>
-)
-```
+→ See [references/step-7-layer-4-rubrics.md](references/step-7-layer-4-rubrics.md) for full procedure.
 
 ## Step 8 — Layer 5 (Knowledge)
 
-**Frame:** "Layer 5 — Knowledge. What the team has learned. Episodic memory + graduated procedural (article §4e)."
+Episodic memory + graduated procedural rules. Default is **critique** (via `graduation-candidate-scorer`) when `has_plans_convention`, else **scaffold** an empty lessons directory.
 
-**Show:** `has_plans_convention` + count, existing lessons count, graduation count, `team_tooling.docs` (for retros) and `team_tooling.pm` (for closed-issue decisions).
-
-**Propose default:**
-- `has_plans_convention: true` → **critique** — invoke `graduation-candidate-scorer` on existing lessons
-- `team_tooling.docs` + MCP live → **scaffold** + offer to pull retro/post-mortem/decision-labeled pages
-- Nothing → **scaffold** empty lessons dir from [`assets/knowledge-skeleton/`](assets/knowledge-skeleton/)
-
-**Execute — critique:** invoke:
-
-```
-Task design-harnessing:analysis:graduation-candidate-scorer(
-  lessons_root: "docs/knowledge/lessons/",
-  graduated_log: "docs/knowledge/graduations.md"
-)
-```
-
-Surface ready clusters to user. Suggest `/hd:compound graduate-propose <topic>` for each.
-
-**Execute — scaffold:**
-- Load [`references/layer-5-knowledge.md`](references/layer-5-knowledge.md) for L5 depth
-- Seed questions: (1) 3 decisions in last 6 months new hire should know? (2) mistake you want to prevent recurring? (3) pattern across 3+ projects worth formalizing?
-- Write `docs/knowledge/INDEX.md`, `docs/knowledge/graduations.md`, 1 starter lesson
+→ See [references/step-8-layer-5-knowledge.md](references/step-8-layer-5-knowledge.md) for full procedure.
 
 ## Step 9 — Write `hd-config.md`
 
@@ -358,39 +162,21 @@ When invoked on a repo that has `hd-config.md`:
 
 ## What this skill does NOT do
 
-- **Concept Q&A** → `/hd:onboard`
-- **Ongoing lesson capture** → `/hd:compound`
-- **Harness audit** → `/hd:review`
-- **Invoke other hd skills directly** — always suggest, never invoke
-- **Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/`** — strict coexistence
-- **Write to `docs/solutions/`** (compound's namespace)
-- **Recommend unknown MCPs** — see [`references/known-mcps.md`](references/known-mcps.md)
+- Concept Q&A → `/hd:onboard`; lesson capture → `/hd:compound`; audit → `/hd:review`
+- Invoke other hd skills directly — always suggest, never invoke
+- Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/` — strict coexistence
+- Write to `docs/solutions/` (compound's namespace) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)
 
 ## Coexistence
 
-- ✅ Reads other-tool harnesses + external tooling for detection + link targets
-- ✅ Writes pointer files (`docs/<layer>/...` containing `See [external]`) when link chosen
-- ❌ Never writes to `docs/solutions/`
-- ❌ Never uses `compound-engineering.local.md`
-- ❌ No "conflict / rivalry / vs." language
-- ✅ Cross-plug-in Task calls fully-qualified: `Task compound-engineering:research:learnings-researcher(...)`
-
-See [`references/coexistence-checklist.md`](references/coexistence-checklist.md).
+Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses `compound-engineering.local.md`, no rivalry language. Cross-plug-in Task calls always fully-qualified: `Task compound-engineering:research:learnings-researcher(...)`. See [`references/coexistence-checklist.md`](references/coexistence-checklist.md).
 
 ## Reference files
 
-### Layer guides (loaded on demand per layer)
-- [layer-1-context.md](references/layer-1-context.md) — L1 depth incl. healthy AGENTS.md patterns
-- [layer-2-skills.md](references/layer-2-skills.md)
-- [layer-3-orchestration.md](references/layer-3-orchestration.md)
-- [layer-4-rubrics.md](references/layer-4-rubrics.md) — incl. INDEX.md template
-- [layer-5-knowledge.md](references/layer-5-knowledge.md) — incl. lesson YAML
-
-### Shared
-- [tier-budget-model.md](references/tier-budget-model.md)
-- [coexistence-checklist.md](references/coexistence-checklist.md)
-- [hd-config-schema.md](references/hd-config-schema.md) — schema v2 spec
-- [known-mcps.md](references/known-mcps.md) — 6-category tool map + known-MCP install table
+- [per-layer-procedure.md](references/per-layer-procedure.md) — shared FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + checkpoint
+- Step procedures: [step-4-layer-1-context.md](references/step-4-layer-1-context.md), [step-5-layer-2-skills.md](references/step-5-layer-2-skills.md), [step-6-layer-3-orchestration.md](references/step-6-layer-3-orchestration.md), [step-7-layer-4-rubrics.md](references/step-7-layer-4-rubrics.md), [step-8-layer-5-knowledge.md](references/step-8-layer-5-knowledge.md)
+- Layer depth guides: [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns), [layer-2-skills.md](references/layer-2-skills.md), [layer-3-orchestration.md](references/layer-3-orchestration.md), [layer-4-rubrics.md](references/layer-4-rubrics.md) (INDEX.md template), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML)
+- Shared: [tier-budget-model.md](references/tier-budget-model.md), [coexistence-checklist.md](references/coexistence-checklist.md), [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
 
 ## Assets
 
