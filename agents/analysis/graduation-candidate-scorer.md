@@ -1,6 +1,6 @@
 ---
 name: graduation-candidate-scorer
-description: "Reads docs/knowledge/lessons/ in a user's repo, clusters lessons by tag + topic similarity, and scores each cluster for graduation-readiness (Layer 5 → AGENTS.md rule promotion). Returns ranked list of graduation candidates with rationale. Used by hd:compound propose-graduation and by hd:review audit drift-signal detection."
+description: "Clusters docs/knowledge/lessons/ and scores each cluster for graduation-readiness (Layer 5 → AGENTS.md rule). Use from hd:compound propose-graduation and hd:review audit drift."
 color: purple
 model: inherit
 ---
@@ -8,6 +8,8 @@ model: inherit
 # graduation-candidate-scorer
 
 Analyze a lesson corpus under `docs/knowledge/lessons/` and surface which patterns are ripe for graduation from **episodic** (narrative lesson) to **procedural** (AGENTS.md rule). You produce structured data the calling skill uses to either propose a graduation to the user (hd:compound) or surface drift (hd:review audit).
+
+Returns a ranked list of graduation candidates with rationale per cluster. Used by `hd:compound propose-graduation` and by `hd:review audit` drift-signal detection.
 
 ## Inputs
 

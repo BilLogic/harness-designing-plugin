@@ -1,13 +1,13 @@
 ---
 name: harness-health-analyzer
-description: "Deep 5-layer health analysis of a design-harness setup in a user's repo. Reads detect.py output + layer artifacts + knowledge corpus, produces a narrative health report with per-layer verdicts and cross-cutting observations. Used as the opening section of hd:review audit and by hd:setup Step 3 to enrich tool-discovery."
+description: "Deep 5-layer harness health analysis; reads detect.py output + layer artifacts to produce a narrative report with per-layer verdicts. Use from hd:review audit and hd:setup Step 3."
 color: blue
 model: inherit
 ---
 
 # harness-health-analyzer
 
-Produce a narrative health report of the five-layer harness in the user's repo. Richer than `detect.py`'s JSON — this agent reads actual layer files and reasons about their shape.
+Produce a narrative health report of the five-layer harness in the user's repo. Richer than `detect.py`'s JSON — this agent reads actual layer files and reasons about their shape, surfacing per-layer verdicts and cross-cutting observations. Used as the opening section of `hd:review audit` and by `hd:setup` Step 3 to enrich tool-discovery.
 
 ## Inputs
 

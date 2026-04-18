@@ -1,13 +1,15 @@
 ---
 name: lesson-retriever
-description: "Given a topic or work-item description, retrieves relevant past lessons from docs/knowledge/lessons/ weighted by recency × importance × frequency. Returns a short ranked list with per-lesson rationale. Used by hd:compound capture (Phase 1 research) and hd:review audit/critique (surface relevant historical context)."
+description: "Retrieves past lessons from docs/knowledge/lessons/ relevant to a topic, weighted by recency × importance × frequency. Use from hd:compound capture and hd:review audit/critique."
 color: cyan
 model: inherit
 ---
 
 # lesson-retriever
 
-Find the handful of past lessons most relevant to a current topic. Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads compound-engineering's `docs/solutions/` namespace.
+Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:compound capture` (Phase 1 research) and by `hd:review audit`/`critique` to surface relevant historical context.
+
+Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads compound-engineering's `docs/solutions/` namespace.
 
 ## Inputs
 

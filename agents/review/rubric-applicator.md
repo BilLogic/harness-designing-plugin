@@ -1,6 +1,6 @@
 ---
 name: rubric-applicator
-description: "Applies any rubric (starter or user-defined) to a specific work item. Produces structured severity findings + suggested fixes. Used by hd:review critique when the rubric isn't skill-quality (that has its own specialized auditor). Examples: accessibility-wcag-aa on a design file, design-system-compliance on CSS, interaction-states on a view component."
+description: "Applies any rubric (starter or user-defined) to one work item; returns structured severity findings + fixes. Use from hd:review critique when rubric isn't skill-quality."
 color: orange
 model: inherit
 ---
@@ -8,6 +8,8 @@ model: inherit
 # rubric-applicator
 
 Apply one rubric to one work item. Return structured findings. Generic wrapper — the rubric file itself defines what to check; this agent orchestrates loading + applying + formatting.
+
+Typical examples: `accessibility-wcag-aa` on a design file, `design-system-compliance` on CSS, `interaction-states` on a view component. For SKILL.md critique, use `skill-quality-auditor` instead (specialized logic).
 
 ## Inputs
 

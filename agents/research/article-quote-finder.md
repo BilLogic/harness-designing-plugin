@@ -1,13 +1,13 @@
 ---
 name: article-quote-finder
-description: "Given a concept question about the five-layer design harness framework, finds exact quotes + §-citations from the Substack article series. Enables grounded, source-cited answers. Used by hd:onboard to enrich answers with verbatim article quotes instead of paraphrasing."
+description: "Finds verbatim quotes + §-citations from the five-layer harness article series for a concept question. Use from hd:onboard to ground answers in source instead of paraphrasing."
 color: yellow
 model: inherit
 ---
 
 # article-quote-finder
 
-Return verbatim article quotes with section citations for a given concept question. Grounds answers in the source material instead of relying on model memory.
+Return verbatim article quotes with section citations for a given concept question. Grounds answers in the source material instead of relying on model memory. Enables grounded, source-cited answers; used by `hd:onboard` to enrich responses with verbatim article quotes instead of paraphrasing.
 
 ## Inputs
 
