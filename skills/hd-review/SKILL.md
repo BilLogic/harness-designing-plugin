@@ -59,6 +59,9 @@ hd:review audit Progress:
 - [ ] Step 11: Summarize + suggest next
 ```
 
+Load-from-config → dispatch sub-agents (parallel ≤5 / serial ≥6) → synthesize with protected-artifacts cross-check → atomic write one dated audit lesson → summarize.
+→ See [references/audit-procedure.md](references/audit-procedure.md) for full procedure
+
 ### Critique mode
 
 ```
@@ -70,200 +73,8 @@ hd:review critique Progress:
 - [ ] Step 5: Emit inline; zero file writes
 ```
 
-## Audit mode — procedure
-
-**Step 1 — Load agent list.** Read `hd-config.md` YAML frontmatter field `review_agents`. Expected format:
-
-```yaml
-review_agents:
-  - compound-engineering:research:learnings-researcher
-  - compound-engineering:review:pattern-recognition-specialist
-  - compound-engineering:review:code-simplicity-reviewer
-  - compound-engineering:review:agent-native-reviewer
-```
-
-If missing, use defaults (audit-critical trio):
-- `compound-engineering:research:learnings-researcher`
-- `compound-engineering:review:pattern-recognition-specialist`
-- `compound-engineering:review:code-simplicity-reviewer`
-
-Users extend by adding more agents to the config.
-
-**Step 2 — Count + auto-switch.**
-
-```bash
-agent_count=$(yq '.review_agents | length' hd-config.md)
-```
-
-- **count ≤ 5** → parallel dispatch
-- **count ≥ 6** → serial dispatch; surface notice:
-
-  > "Running audit in serial mode (6+ agents configured). Use `--parallel` to override."
-
-Compound CHANGELOG 2.39.0: 6+ parallel agents crash context.
-
-**Step 3 — Run harness-health-analyzer.** Opens the audit report with a narrative 5-layer health assessment:
-
-```
-Task design-harnessing:workflow:harness-health-analyzer(
-  repo_root: ".",
-  detect_json: <output from hd:setup's scripts/detect.py>,
-  mode: "full"
-)
-```
-
-**Step 4 — Per-skill health (L2 check).** For each `skills/*/SKILL.md`:
-
-```
-Task design-harnessing:review:skill-quality-auditor(
-  skill_md_path: "<path>/SKILL.md"
-)
-```
-
-Aggregate per-skill findings into the audit report's Layer 2 section. Each finding cites the rubric section number (1–9).
-
-**Step 5 — Graduation drift (L5 check).**
-
-```
-Task design-harnessing:analysis:graduation-candidate-scorer(
-  lessons_root: "docs/knowledge/lessons/",
-  graduated_log: "docs/knowledge/graduations.md"
-)
-```
-
-Ready-to-graduate clusters become drift findings — "10 lessons on X topic, 0 graduated — drought signal."
-
-**Step 6 — Deterministic data.** Run:
-
-```bash
-bash skills/hd-review/scripts/budget-check.sh > /tmp/hd-budget.json
-```
-
-Output tier-1 line counts, per-skill SKILL.md sizes, violations. Authoritative for bloat findings.
-
-**Step 7 — Dispatch review agents.**
-
-### Parallel (count ≤ 5)
-
-For each agent in `review_agents`, invoke via Task tool (fully-qualified names per compound 2.35.0 requirement). All agents receive the same context: harness-health-analyzer output + budget-check.sh output + the inventory table from detect.py:
-
-```
-Task compound-engineering:research:learnings-researcher(
-  "Audit the design-harness setup at <worktree-path>. Check for past
-   documented lessons relevant to current state, docs/solutions/ matches
-   from compound, graduation drought signals. Inventory + budget data
-   attached. Return findings with severity (p1/p2/p3)."
-)
-
-Task compound-engineering:review:pattern-recognition-specialist("...")
-Task compound-engineering:review:code-simplicity-reviewer("...")
-[...additional configured agents]
-```
-
-Dispatch ALL in a single parallel burst (one tool call per agent, all in the same response).
-
-### Serial (count ≥ 6)
-
-Same agents as parallel, but one at a time. Wait for each to complete before starting the next. Use this when 6+ agents are configured (context safety).
-
-**Step 8 — Synthesize + cross-check.**
-
-1. **Deduplicate** — same issue from multiple agents merges into one finding (note "flagged by N agents")
-2. **Categorize** — P1/P2/P3 per [`references/audit-criteria.md`](references/audit-criteria.md)
-3. **Source-attribute** — every finding tags which agent(s) flagged it
-4. **Protected-artifacts cross-check** — discard any finding recommending deletion/gitignore of a protected path. Pattern from compound's `ce-review/SKILL.md`.
-
-**Step 9 — Render report.** Load [`assets/audit-report.md.template`](assets/audit-report.md.template). Fill placeholders:
-- `{{DATE}}`, `{{TOP_3_PRIORITIES}}`, `{{INVENTORY_TABLE}}`
-- `{{P1_FINDINGS}}` / `{{P2_FINDINGS}}` / `{{P3_FINDINGS}}`
-- `{{LAYER_2_SKILL_QUALITY_FINDINGS}}` (from Step 4)
-- `{{LAYER_5_DRIFT_FINDINGS}}` (from Step 5)
-- `{{SUGGESTED_ACTIONS}}`, `{{AGENT_LIST}}`, `{{EXECUTION_MODE}}`
-
-**Step 10 — Atomic write.** Single file: `docs/knowledge/lessons/harness-audit-YYYY-MM-DD.md`.
-
-Collision handling (multiple audits same day):
-
-```bash
-date_stem="docs/knowledge/lessons/harness-audit-$(date -u +%Y-%m-%d)"
-seq=1
-target="${date_stem}.md"
-while [ -f "$target" ]; do
-  target="${date_stem}-$(printf '%03d' $seq).md"
-  seq=$((seq + 1))
-done
-```
-
-Atomic: temp file + `mv`. Post-write: `git status` must show only the new audit file. Any other diff → rollback + abort.
-
-**Step 11 — Summarize.**
-
-```
-Audit complete: <report-path>
-  Findings: <N total> — <P1> P1, <P2> P2, <P3> P3
-  Top 3 priorities: [...]
-
-Next step:
-  1. Review: <report-path>
-  2. Address P1 before next ship
-  3. (Optional) Capture recurring pattern: /hd:compound capture
-```
-
-## Critique mode — procedure
-
-**Step 1 — Parse target.** From `/hd:review critique <path-or-url> [--rubric <name>]`. If target missing → ask: *"Which work item? Give me a path or URL."*
-
-**Step 2 — Resolve rubric.**
-
-Resolution order:
-1. `--rubric <name>` explicit → look in `docs/rubrics/<name>.md` first, then `docs/context/design-system/<name>.md` (legacy or team-specific overlay), then `skills/hd-review/assets/starter-rubrics/<name>.md`
-2. No explicit → infer from work item type (see [`references/rubric-application.md`](references/rubric-application.md)):
-   - `.tsx` / `.jsx` / `.html` / `.css` → `design-system-compliance`
-   - `SKILL.md` → `skill-quality`
-   - Figma file URL → `accessibility-wcag-aa` + `design-system-compliance`
-
-If ambiguous, ask: *"Which rubric? Available: [list]"*
-
-**Step 3 — Dispatch.** Specialized handling for SKILL.md targets; generic for everything else:
-
-### Target is a SKILL.md + rubric is skill-quality
-
-```
-Task design-harnessing:review:skill-quality-auditor(
-  skill_md_path: <path>
-)
-```
-
-### Any other target
-
-```
-Task design-harnessing:review:rubric-applicator(
-  work_item_path: <path>,
-  rubric_path: <rubric file>
-)
-```
-
-**Step 4 — Aggregate per [`references/critique-format.md`](references/critique-format.md).**
-
-Output format:
-```markdown
-## Critique — <work-item>
-**Rubric:** <name> · **Composite:** healthy | degraded | critical_fail
-
-### P1 findings (fix before merge)
-- [criterion: <name>] <evidence> → <suggested_fix>
-
-### P2 findings (should fix)
-...
-
-### P3 findings (polish)
-...
-
-### Recommendation
-<one-sentence verdict + next step>
-```
-
-**Step 5 — Emit inline. Zero file writes.** `git status` after critique must be clean.
+Parse target + rubric → resolve rubric path → dispatch applicator sub-agent → aggregate findings → emit inline (zero writes).
+→ See [references/critique-procedure.md](references/critique-procedure.md) for full procedure
 
 ## What this skill does NOT do
 
@@ -292,6 +103,8 @@ When context budget is tight:
 
 ## Reference files
 
+- [references/audit-procedure.md](references/audit-procedure.md) — full audit-mode step sequence (Steps 1–11)
+- [references/critique-procedure.md](references/critique-procedure.md) — full critique-mode step sequence (Steps 1–5)
 - [references/audit-criteria.md](references/audit-criteria.md) — five-layer health criteria + severity framework
 - [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds + scripts
 - [references/drift-detection.md](references/drift-detection.md) — stale-file + graduation-drought signals
