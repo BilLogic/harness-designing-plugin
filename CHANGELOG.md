@@ -5,6 +5,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3d — plus-uno template alignment + rubric expansion
+
+Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-plan.md`](docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-plan.md). Six parts, one commit per part:
+
+**Part E** (`26fad172`) — Config file renamed `design-harnessing.local.md` → `hd-config.md`; reference `local-md-schema.md` → `hd-config-schema.md`. 24 living files updated; historical plan/lesson files preserved. Coexistence intact (compound has `compound-engineering.local.md`).
+
+**Part A** (`34e940f7`) — Layer 1 context-skeleton aligned with plus-uno baseline:
+- `product/` expanded to 5 files (app / features / flows / users / pillars)
+- `conventions/` expanded to 4 files (coding / integrations / tech-stack / terminology)
+- `design-system/` restructured into foundations/ + styles/ + components/ triad + `index-manifest.json` (mirrors Material 3 / Ant Design / plus-uno patterns)
+- Dropped `agent-persona.md` per Bill directive
+- SKILL.md Step 4 now offers "full baseline vs simple mode" depth choice
+
+**Part B** (`65bff04d`) — Layer 5 knowledge-skeleton with 5+1 memory-type model:
+- New scaffolded files: `INDEX.md` (domain table with Memory Type column), `README.md` (taxonomy explainer), `changelog.md` (temporal), `decisions.md` (procedural-chosen ADR), `ideations.md` (speculative), `preferences.md` (semantic-taste)
+- Lessons are now **domain-grouped** (`lessons/<domain>.md` with ~15 entries) not per-date
+- `graduations.md` deferred scaffold (created on first graduation)
+- Memory-type labels appear in 3 places: YAML frontmatter, INDEX column, README
+- `hd:compound capture` rewritten to classify-and-append-to-domain-file (not create-dated-file); enforces split threshold
+
+**Part C** (`e3251916`) — Rubric library expanded 5 → 12 starters:
+- Added: `heuristic-evaluation.md` (Nielsen 10), `typography.md` (Impeccable + Material 3), `color-and-contrast.md` (Impeccable + Material 3 + WCAG), `spatial-design.md` (Impeccable + Material 3), `motion-design.md` (Impeccable + Material 3), `ux-writing.md` (Impeccable + Fluent 2), `responsive-design.md` (Impeccable + Material 3)
+- Each new rubric cites its `source:` derivation in YAML frontmatter
+
+**Part D + F** (`2dff1da9`) — Rubric location correction + reference alignment:
+- Rubrics now live at `docs/rubrics/<name>.md` (NOT `docs/context/design-system/`). Design-system = source content (tokens/color/type DEFINITIONS); rubrics = checks against that content. Separate concerns.
+- `hd-setup/SKILL.md` Step 7 scaffold + critique-extract paths updated
+- `hd-review/SKILL.md` rubric resolution: docs/rubrics/ first, design-system/ legacy fallback
+- `layer-4-rubrics.md` rewritten with 12-starter enumeration + corrected distributed-behavior explanation
+- `rubric-application.md` canonicalizes `docs/rubrics/`
+- README + hd-review SKILL.md Assets section list all 12 starters
+
 ### Architecture reshape — comprehensive structure
 
 **Added**

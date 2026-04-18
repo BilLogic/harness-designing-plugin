@@ -1,9 +1,15 @@
 ---
 title: "refactor: Phase 3d — plus-uno template alignment + rubric library expansion"
 type: refactor
-status: active
+status: completed
 date: 2026-04-17
 origin: conversation (plus-uno docs/context/ + docs/knowledge/ structure reviewed; pbakaus/impeccable inspected)
+completion_commits:
+  - 26fad172  # Part E — config rename
+  - 34e940f7  # Part A — L1 context-skeleton
+  - 65bff04d  # Part B — L5 knowledge-skeleton + hd:compound capture
+  - e3251916  # Part C — 7 new starter rubrics
+  - 2dff1da9  # Part D + F — rubric location correction + reference alignment
 ---
 
 # refactor: Phase 3d — plus-uno template alignment + rubric library expansion
