@@ -27,4 +27,4 @@ Both inform agent behavior; this file is where the agent learns the team's taste
 Preferences CAN change. When one does:
 1. Update the entry (don't strike through; this isn't an ADR)
 2. Note the change in `changelog.md` with the date
-3. If the change affects existing work, flag it as a graduation candidate
+3. If the change affects existing work, flag it as a rule adoption candidate

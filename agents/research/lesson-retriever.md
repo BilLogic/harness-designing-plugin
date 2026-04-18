@@ -87,4 +87,4 @@ If no lessons score above 2.0, return empty `retrieved_lessons[]` and set `summa
 ## See also
 
 - `skills/hd-maintain/references/lesson-patterns.md` — what well-formed lessons look like (scoring assumes this shape)
-- `agents/analysis/graduation-candidate-scorer.md` — sibling agent for cluster-level analysis
+- `agents/analysis/rule-candidate-scorer.md` — sibling agent for cluster-level analysis

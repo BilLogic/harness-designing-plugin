@@ -2,7 +2,7 @@
 title: "Harness audit — {{DATE}}"
 date: {{DATE}}
 tags: [audit, layer-audit, harness-health]
-graduation_candidate: false
+rule_candidate: false
 ---
 
 # Harness audit — {{DATE}}
@@ -21,7 +21,7 @@ graduation_candidate: false
 - AGENTS.md line count + Tier 1 budget status
 - docs/context/ file count + total line count
 - docs/knowledge/lessons/ count + date spread
-- docs/knowledge/graduations.md entry count
+- docs/knowledge/changelog.md entry count
 - skills/ count (user-authored vs plug-in-shipped)
 -->
 

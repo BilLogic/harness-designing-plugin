@@ -59,7 +59,7 @@ This plug-in's *structure* mirrors compound's verbatim where it makes sense:
 
 ## What we diverged on
 
-- **Domain vocabulary** — no PRs, tests, worktrees. Design lexicon only: mockup, rubric, review, critique, variant, accessibility, graduation.
+- **Domain vocabulary** — no PRs, tests, worktrees. Design lexicon only: mockup, rubric, review, critique, variant, accessibility, rules.
 - **Command-first onboarding** — compound's entry is `/ce:brainstorm`. Ours is *structural*: `/hd:learn` shows the layered `docs/` FIRST, then invites a command. Layout is the thesis.
 - **Multi-provider support** — compound ships a TypeScript converter for 11+ providers. We ship sibling manifests (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`) — same SKILL.md tree serves all three.
 

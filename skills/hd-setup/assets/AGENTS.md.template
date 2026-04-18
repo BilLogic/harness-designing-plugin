@@ -26,18 +26,18 @@ How the AI should behave in this repo: voice, defaults, escalation.
 
 Full persona: [docs/context/agent-persona.md](docs/context/agent-persona.md)
 
-## Graduated rules
+## Rules
 
-Rules that earned their place here via Layer 5 graduation (a lesson proved itself 3+ times across the team). Each entry: date + rule + link to source lesson.
+Rules that earned their place here via Layer 5 promotion (a lesson proved itself 3+ times across the team). Each entry: date + rule + link to source lesson.
 
-<!-- Add new graduated rules above this line. Format:
+<!-- Add new rules above this line. Format:
 - [YYYY-MM-DD] Rule statement. Source: docs/knowledge/lessons/YYYY-MM-DD-slug.md
 -->
 
 ## Knowledge layer
 
 Lessons: [docs/knowledge/lessons/](docs/knowledge/lessons/)
-Graduations log: [docs/knowledge/graduations.md](docs/knowledge/graduations.md)
+Rule-adoption log: [docs/knowledge/changelog.md](docs/knowledge/changelog.md)
 
 ## When in doubt
 

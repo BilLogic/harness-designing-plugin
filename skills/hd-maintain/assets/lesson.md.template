@@ -2,7 +2,7 @@
 title: "{{TITLE}}"
 date: {{DATE}}
 tags: [{{TAGS}}]
-graduation_candidate: {{GRADUATION_CANDIDATE}}
+rule_candidate: {{RULE_CANDIDATE}}
 ---
 
 # Lesson

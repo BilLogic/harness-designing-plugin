@@ -10,7 +10,7 @@ Never at plug-in root. Never nested inside `docs/`. Never inside `.claude/`.
 
 ## Schema — LOCKED (schema_version: "2")
 
-Bumps from `"1"` to `"2"` to add `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, and `files_written`. The pilot series (plus-marketing #2, oracle-chat #4, lightning #5, plus-uno #6) all wrote these fields manually; graduation makes them first-class. `"1"` files auto-upgrade on next run (missing fields default as documented).
+Bumps from `"1"` to `"2"` to add `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, and `files_written`. The pilot series (plus-marketing #2, oracle-chat #4, lightning #5, plus-uno #6) all wrote these fields manually; promotes them to first-class. `"1"` files auto-upgrade on next run (missing fields default as documented).
 
 ```markdown
 ---

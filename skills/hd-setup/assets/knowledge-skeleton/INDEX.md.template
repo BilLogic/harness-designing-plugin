@@ -1,7 +1,7 @@
 <!-- Tier: 2 (knowledge index — loaded when agent navigates Layer 5) -->
 # Knowledge Index
 
-Route to the right knowledge file based on what you need. Updated on each `/hd:maintain capture` + graduation.
+Route to the right knowledge file based on what you need. Updated on each `/hd:maintain capture` + rule adoption.
 
 ## Domains
 
@@ -13,14 +13,14 @@ Route to the right knowledge file based on what you need. Updated on each `/hd:m
 | Ideations | speculative | [ideations.md](ideations.md) | 0 | {{YYYY-MM-DD}} | open-questions |
 | Changelog | temporal | [changelog.md](changelog.md) | 0 | {{YYYY-MM-DD}} | harness-evolution |
 
-Graduations log (meta-log, `memory_type: meta-log`) appears here when first graduation fires: `graduations.md`.
+Rule-adoption log (meta-log, `memory_type: meta-log`) appears here when first rule adoption fires: `changelog.md`.
 
 ## How to use
 
 - **Before starting a new design task** — check `lessons/<domain>.md` for prior episodes on the topic
 - **Before shipping a significant change** — check `decisions.md` to see what's already chosen and why
 - **After completing work** — capture via `/hd:maintain capture`; lesson appends to the relevant `lessons/<domain>.md`
-- **When a pattern recurs 3+ times** — run `/hd:maintain graduate-propose <topic>`; rule lands in `AGENTS.md`, meta-entry in `graduations.md`
+- **When a pattern recurs 3+ times** — run `/hd:maintain rule-propose <topic>`; rule lands in `AGENTS.md`, meta-entry in `changelog.md`
 
 ## Split threshold
 

@@ -60,7 +60,7 @@ Tier 3 is where long-form design-system docs, accessibility appendices, and deci
 | AGENTS.md has 500 lines | Split rules into `docs/context/conventions/*.md` (Tier 2); keep AGENTS.md <150 lines |
 | Product one-pager is 300 lines | Move details to `docs/context/product/details.md`; keep one-pager <30 lines |
 | Design-system cheat-sheet is 2000 lines | Most of it is Tier 3 reference material; cheat-sheet should be <200 lines with links into the archive |
-| Graduations.md growing unboundedly | Lessons in `docs/knowledge/lessons/` stay Tier 3; graduations.md just lists pointers |
+| Rules.md growing unboundedly | Lessons in `docs/knowledge/lessons/` stay Tier 3; changelog.md just lists pointers |
 
 ## See also
 

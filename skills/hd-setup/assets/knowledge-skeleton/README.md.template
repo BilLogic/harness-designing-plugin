@@ -12,7 +12,7 @@ Layer 5 of the five-layer design harness: **what the team has learned**. Organiz
 | `preferences.md` | **semantic-taste** | Stable taste calls the team holds | Mutable with team agreement |
 | `ideations.md` | **speculative** | Open questions, unchosen paths, ideas we might revisit | Append-only; cross off when decided |
 | `changelog.md` | **temporal** | When harness-structural changes happened (file renames, layer additions) | Append-only |
-| `graduations.md` | **meta-log** | Which lessons graduated into AGENTS.md rules, and when | Append-only; created on first graduation (not at setup) |
+| `changelog.md` | **meta-log** | Which lessons promoted into AGENTS.md rules, and when | Append-only; created on first rule adoption (not at setup) |
 
 The taxonomy comes from agent-memory research (OpenClaw / MemGPT / Generative Agents). Article §2.5 covers the mapping to the broader harness-memory model.
 
@@ -25,7 +25,7 @@ Each memory type has a different *lifecycle*:
 - Preferences are the only mutable file — taste changes, we update
 - Ideations cross off as ideas either graduate or get rejected
 - Changelog is strictly temporal
-- Graduations is the meta-log: which lessons became rules
+- Rules is the meta-log: which lessons became rules
 
 Mixing them in one big `lessons.md` collapses the lifecycles — you can't tell what to append to, what to revise, what to delete.
 
@@ -37,8 +37,8 @@ Mixing them in one big `lessons.md` collapses the lifecycles — you can't tell 
   - Taste-we-hold → `preferences.md`
   - Idea-we-might-pursue → `ideations.md`
   - User picks if ambiguous; skill auto-infers from tags when clear.
-- **`/hd:maintain graduate-propose <topic>`** reads `lessons/<domain>.md` files; proposes graduation when ≥ 3 same-topic episodes with a clean imperative.
-- **`/hd:maintain graduate-apply --plan-hash <sha>`** writes the rule to `AGENTS.md` + meta-entry to `graduations.md`. Source lessons are never touched.
+- **`/hd:maintain rule-propose <topic>`** reads `lessons/<domain>.md` files; proposes rule adoption when ≥ 3 same-topic episodes with a clean imperative.
+- **`/hd:maintain rule-apply --plan-hash <sha>`** writes the rule to `AGENTS.md` + meta-entry to `changelog.md`. Source lessons are never touched.
 
 ## Split threshold
 

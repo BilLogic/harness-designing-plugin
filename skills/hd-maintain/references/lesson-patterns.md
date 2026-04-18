@@ -28,15 +28,15 @@ title: "Short title of the lesson"      # required; 3-10 words; descriptive
 date: YYYY-MM-DD                        # required; ISO date of capture; must match filename prefix
 tags: [tag-a, tag-b, tag-c]             # required; 1-5 tags; kebab-case
 memory_type: episodic                   # episodic | procedural-chosen | semantic-taste | speculative | temporal
-graduation_candidate: true | false      # required for episodic; ready to graduate soon?
-graduated_to: null                      # optional; filled post-graduation w/ AGENTS.md entry ref
+rule_candidate: true | false      # required for episodic; ready to graduate soon?
+rule_ref: null                      # optional; filled post-adoption w/ AGENTS.md entry ref
 importance: 3                           # optional 1-5; used by lesson-retriever weighting
 ---
 ```
 
-`title` is byte-stable (used in plan-hash computation at graduation time). Don't change it after capture.
+`title` is byte-stable (used in plan-hash computation at rule-adoption time). Don't change it after capture.
 
-`tags` drive graduation-candidate detection: when ≥ 3 lesson files share a tag, that tag becomes a graduation topic. Cross-referencing happens at tag-search time (via `lesson-retriever`), not by filename.
+`tags` drive rule-candidate detection: when ≥ 3 lesson files share a tag, that tag becomes a rule topic. Cross-referencing happens at tag-search time (via `lesson-retriever`), not by filename.
 
 ## Body structure (episodic)
 
@@ -77,7 +77,7 @@ title: "Don't ship future-version skill stubs with disable-model-invocation"
 date: 2026-04-16
 tags: [skill-authoring, stubs, disable-model-invocation, anti-pattern]
 memory_type: episodic
-graduation_candidate: true
+rule_candidate: true
 ---
 
 # Lesson
@@ -99,7 +99,7 @@ Lessons without dates are rules in disguise. Date is how we know when to revisit
 
 ### Mixed rules and stories
 
-Bad: `"Button variants limited to 3. We tried 4 in Feb 2026 and reverted."` — that's a rule + a story mashed together. Split them: the rule goes in AGENTS.md (once graduated); the story goes in the lesson.
+Bad: `"Button variants limited to 3. We tried 4 in Feb 2026 and reverted."` — that's a rule + a story mashed together. Split them: the rule goes in AGENTS.md (once promoted); the story goes in the lesson.
 
 ### Kitchen-sink lessons
 
@@ -109,19 +109,19 @@ Bad: a 500-line lesson covering 4 unrelated topics from one design review. Split
 
 Bad: `"Lesson about buttons"`. Good: `"Don't ship future-version skill stubs with disable-model-invocation"`. Title should convey the imperative, not just the topic.
 
-### Speculative graduation
+### Speculative rule adoption
 
-Bad: `graduation_candidate: true` on the first occurrence of a pattern. Wait for 3+ before flagging. Premature graduation muddies the signal.
+Bad: `rule_candidate: true` on the first occurrence of a pattern. Wait for 3+ before flagging. Premature rule adoption muddies the signal.
 
 ## Graduation-readiness heuristics
 
-Set `graduation_candidate: true` when ALL of:
+Set `rule_candidate: true` when ALL of:
 
 1. You've seen this pattern before (≥1 prior lesson with overlapping tags)
 2. The lesson can be stated as a clean imperative ("always X unless Y")
 3. It survives a "would-the-team-agree?" gut check
 
-Set `graduation_candidate: false` when ANY of:
+Set `rule_candidate: false` when ANY of:
 
 1. It's a one-off (unique situation unlikely to recur)
 2. It's controversial (team might disagree)
@@ -142,10 +142,10 @@ Tags are kebab-case. Use 1-5 tags. Mix categories:
 - **Status:** `anti-pattern`, `pattern`, `open-question`, `deprecated`
 - **Specific:** `disable-model-invocation`, `tier-budget`, `compound-coexistence`
 
-Tags drive graduation detection — ≥3 matching-tag lessons → propose graduation. Consistent tagging is the cheapest high-impact lesson-curation discipline.
+Tags drive rule adoption detection — ≥3 matching-tag lessons → propose rule. Consistent tagging is the cheapest high-impact lesson-curation discipline.
 
 ## See also
 
-- [graduation-criteria.md](graduation-criteria.md) — when a lesson crosses the graduation threshold
-- [plan-hash-protocol.md](plan-hash-protocol.md) — proof-of-consent mechanism for the graduation write
+- [rule-adoption-criteria.md](rule-adoption-criteria.md) — when a lesson crosses the rule adoption threshold
+- [plan-hash-protocol.md](plan-hash-protocol.md) — proof-of-consent mechanism for the rule write
 - [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md) — conceptual framing of Layer 5

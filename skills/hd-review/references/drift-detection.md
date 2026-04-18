@@ -1,6 +1,6 @@
 # Drift detection
 
-**Purpose:** stale-file heuristics + graduation-drought signals + coexistence-drift detection. Loaded by audit workflows.
+**Purpose:** stale-file heuristics + rule-adoption-drought signals + coexistence-drift detection. Loaded by audit workflows.
 
 ## Stale-file heuristics
 
@@ -25,9 +25,9 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 
 **What to suggest:** "Review and either update, mark stable, or archive to Tier 3."
 
-## Graduation drought
+## Rule-adoption drought
 
-**Signal:** ≥10 lessons sharing a canonical tag set, with 0 graduations on that topic in `docs/knowledge/graduations.md`, over ≥3 months elapsed since the first matching lesson.
+**Signal:** ≥10 lessons sharing a canonical tag set, with 0 rule adoptions on that topic in `docs/knowledge/changelog.md`, over ≥3 months elapsed since the first matching lesson.
 
 **Interpretation:** the team captures but doesn't compound. Lessons accumulate as a read-only archive instead of a running curriculum. Layer 5 isn't functioning.
 
@@ -36,13 +36,13 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 ```bash
 # For each unique tag across lessons:
 # 1. Count lessons with that tag
-# 2. Count graduations.md entries mentioning that tag or related topic
-# 3. If lessons >= 10 and graduations == 0 and oldest-lesson-date < 3-months-ago → drought
+# 2. Count changelog.md entries mentioning that tag or related topic
+# 3. If lessons >= 10 and rule adoptions == 0 and oldest-lesson-date < 3-months-ago → drought
 ```
 
 **Severity:** P2. Not structural (nothing broken), but the compounding machinery isn't running.
 
-**What to suggest:** "Consider `/hd:maintain graduate-propose <tag>` for this topic."
+**What to suggest:** "Consider `/hd:maintain rule-propose <tag>` for this topic."
 
 ## Front-loaded capture
 
@@ -71,14 +71,14 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 
 **Severity:** P1 structural for all four. These are hard coexistence rules; violations break the "we can both be installed" promise.
 
-## Graduations integrity
+## Rules integrity
 
 **Checks:**
 
-1. Every entry in `docs/knowledge/graduations.md` corresponds to a rule in `AGENTS.md` § Graduated rules → otherwise orphan entry
-2. Every rule in `AGENTS.md` § Graduated rules links to a lesson that exists → otherwise orphan rule
-3. Plan-hash field in graduations.md is filled (not `{{PLACEHOLDER}}`)
-4. Source lesson files referenced in graduations.md all exist and are byte-identical to pre-graduation state (if we have a hash record)
+1. Every entry in `docs/knowledge/changelog.md` corresponds to a rule in `AGENTS.md` § Rules → otherwise orphan entry
+2. Every rule in `AGENTS.md` § Rules links to a lesson that exists → otherwise orphan rule
+3. Plan-hash field in changelog.md is filled (not `{{PLACEHOLDER}}`)
+4. Source lesson files referenced in changelog.md all exist and are byte-identical to pre-adoption state (if we have a hash record)
 
 **Severity:** P2 drift for orphans; P1 if source lesson missing (history was destroyed — sacred rule violated).
 
@@ -104,16 +104,16 @@ These are all low-severity — teams have valid reasons for any of these states 
 # Extract all tags; group by Levenshtein distance ≤2
 ```
 
-**Severity:** P3 polish. Causes graduation-detection to miss matches across variant-tagged lessons.
+**Severity:** P3 polish. Causes rule-detection to miss matches across variant-tagged lessons.
 
 ## Documentation-vs-reality drift
 
-**Signal:** `AGENTS.md` references a skill/file that doesn't exist, or a graduated rule cites a source lesson path that doesn't resolve.
+**Signal:** `AGENTS.md` references a skill/file that doesn't exist, or a rule cites a source lesson path that doesn't resolve.
 
-**Severity:** P1 structural if skill-referenced (breaks skill discovery); P2 if graduation-referenced (audit trail broken).
+**Severity:** P1 structural if skill-referenced (breaks skill discovery); P2 if rule-referenced (audit trail broken).
 
 ## See also
 
 - [audit-criteria.md](audit-criteria.md) — priority framework + cross-cutting checks
 - [bloat-detection.md](bloat-detection.md) — complementary (bloat is volume-based; drift is time- and relation-based)
-- `../../hd-maintain/references/graduation-criteria.md` — when drought can be addressed via graduation
+- `../../hd-maintain/references/rule-adoption-criteria.md` — when drought can be addressed via rule adoption

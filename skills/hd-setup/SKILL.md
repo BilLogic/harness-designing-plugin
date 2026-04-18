@@ -52,7 +52,7 @@ If any signal fires:
 3. **Keep Steps 7/8 defaults** (Layer 4 rubrics + Layer 5 knowledge) — these are typically the genuine gap.
 4. **Emit into `hd-config.md`** `other_tool_harnesses_detected: [{path, owner: user, policy: respect}, ...]` listing every pre-existing artifact so future `/hd:review` calls can parse + respect.
 
-This is a graduated rule (see [AGENTS.md § Graduated rules](../../AGENTS.md#graduated-rules)), confirmed across 4 pilots (plus-marketing, oracle-chat, lightning, plus-uno) with 6-pilot additive-only discipline intact.
+This is a rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots (plus-marketing, oracle-chat, lightning, plus-uno) with 6-pilot additive-only discipline intact.
 
 ## Step 1 — Detect
 
@@ -117,7 +117,7 @@ Taste embedded as explicit checks. If existing AI-docs exceed 200 lines, **criti
 
 ## Step 8 — Layer 5 (Knowledge)
 
-Episodic memory + graduated procedural rules. Default is **critique** (via `graduation-candidate-scorer`) when `has_plans_convention`, else **scaffold** an empty lessons directory.
+Episodic memory + procedural rules. Default is **critique** (via `rule-candidate-scorer`) when `has_plans_convention`, else **scaffold** an empty lessons directory.
 
 → See [references/step-8-layer-5-knowledge.md](references/step-8-layer-5-knowledge.md) for full procedure.
 
@@ -195,6 +195,6 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 ## Sub-agents invoked
 
 - `design-harnessing:workflow:harness-health-analyzer` — deep narrative analysis (Step 1 optional)
-- `design-harnessing:analysis:graduation-candidate-scorer` — L5 cluster scoring (Step 8 critique)
+- `design-harnessing:analysis:rule-candidate-scorer` — L5 cluster scoring (Step 8 critique)
 - `design-harnessing:review:skill-quality-auditor` — L2 skill audit (Step 5 critique)
 - `design-harnessing:review:rubric-applicator` — L4 rubric application (Step 7 critique)

@@ -36,14 +36,14 @@ For each of Layers 1–5, read the relevant artifacts and assess:
 | **L2 Skills** | `skills/**/SKILL.md`, `.claude/skills/**`, `.cursor/skills/**` | Per-skill quality (description length, frontmatter validity), count vs team maturity |
 | **L3 Orchestration** | `docs/orchestration/**`, `.github/workflows/**` sync jobs, PM tool labels | Presence + last-updated, handoff-pattern coherence |
 | **L4 Rubrics** | `docs/rubrics/INDEX.md`, rubric files under `docs/context/design-system/`, AGENTS.md quality-gate section | Rubric count, freshness, whether they reference actual tokens |
-| **L5 Knowledge** | `docs/knowledge/lessons/**`, `docs/knowledge/graduations.md` | Lesson count, graduation cadence, drought signals |
+| **L5 Knowledge** | `docs/knowledge/lessons/**`, `docs/knowledge/changelog.md` | Lesson count, rule-adoption cadence, drought signals |
 
 ### Phase 3: cross-cutting observations
 
 Beyond per-layer verdicts, surface:
 - **Tier 1 budget health** (global)
 - **Coexistence** — any `.agent/` / `.claude/` / `.codex/` detected, confirm untouched
-- **Graduation cadence** — ratio of lessons to graduations; drought signal if >10 lessons same topic with 0 graduations
+- **Rule-adoption cadence** — ratio of lessons to rule adoptions; drought signal if >10 lessons same topic with 0 rule adoptions
 - **External tooling integration depth** — are detected tools actually linked in layer files, or are they orphan URLs?
 
 ### Phase 4: compose narrative report
@@ -66,7 +66,7 @@ Structure:
 
 ### Cross-cutting
 - Coexistence: .agent/ detected, untouched ✓
-- Graduation cadence: 3 lessons per graduation (healthy)
+- Rule-adoption cadence: 3 lessons per rule adoption (healthy)
 - External tooling: Notion + Figma detected; both linked in L1 pointer files ✓
 
 ### Top 3 attention areas
@@ -96,7 +96,7 @@ per_layer:
 cross_cutting:
   tier_1_budget: pass
   coexistence: ".agent/ detected at .agent/ — untouched"
-  graduation_cadence: "3 lessons per graduation (healthy)"
+  rule_adoption_cadence: "3 lessons per rule adoption (healthy)"
   external_tooling_integration_depth: "good — both detected tools have pointer files in L1"
 top_attention_areas:
   - "Layer 3 has only 1 orchestration artifact — consider adding workflow doc if team >5"
@@ -130,4 +130,4 @@ narrative_markdown: |
 - `skills/hd-setup/scripts/detect.py` — the upstream detector this agent reads
 - `skills/hd-review/references/audit-criteria.md` — the per-layer health criteria this agent operationalizes
 - `skills/hd-review/references/drift-detection.md` — drift signals this agent surfaces
-- `agents/analysis/graduation-candidate-scorer.md` — sibling agent for Layer 5 cluster analysis
+- `agents/analysis/rule-candidate-scorer.md` — sibling agent for Layer 5 cluster analysis

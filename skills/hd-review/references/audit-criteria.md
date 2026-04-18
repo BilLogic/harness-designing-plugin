@@ -51,7 +51,7 @@
 - `docs/rubrics/INDEX.md` exists as distributed-pattern pointer
 - Rubric definitions in `docs/context/design-system/` (criteria files)
 - `skills/hd-review/` exists for execution (self-reference — this skill IS the layer's execution engine)
-- AGENTS.md § Graduated rules contains at least one rubric-derived rule
+- AGENTS.md § Rules contains at least one rubric-derived rule
 
 **Drift signals:**
 - `docs/rubrics/` missing or empty
@@ -63,14 +63,14 @@
 **Healthy:**
 - `docs/knowledge/lessons/*.md` has entries spread across time (not front-loaded)
 - Lessons have consistent tagging
-- At least one graduation visible in git history (via `docs/knowledge/graduations.md`)
-- Graduation cadence: ~1 per 10 lessons is healthy
+- At least one rule visible in git history (via `docs/knowledge/changelog.md`)
+- Rule-adoption cadence: ~1 per 10 lessons is healthy
 
 **Drift signals:**
-- 10+ lessons with same tag and 0 graduations → graduation drought
+- 10+ lessons with same tag and 0 rule adoptions → rule-adoption drought
 - Lessons without dates or tags
 - All lessons from a single week (burst capture; no ongoing discipline)
-- `graduations.md` contains entries with `{{PLACEHOLDER}}` left unfilled
+- `changelog.md` contains entries with `{{PLACEHOLDER}}` left unfilled
 
 ## Cross-cutting checks
 
@@ -113,7 +113,7 @@ Findings categorize as:
 ### P2 — Drift (should fix; not blocking)
 
 - Stale files (6+ months, no explicit stable marker)
-- Graduation drought (10+ same-tag lessons, 0 graduations)
+- Rule-adoption drought (10+ same-tag lessons, 0 rule adoptions)
 - Skill-count drift (unused or proliferating)
 - Naming inconsistencies
 - Description char budget violations
@@ -139,6 +139,6 @@ If the user asks "is my app accessible?" → route to `hd:review critique <file>
 ## See also
 
 - [bloat-detection.md](bloat-detection.md) — concrete thresholds + scripts for bloat
-- [drift-detection.md](drift-detection.md) — stale-file and graduation-drought heuristics
+- [drift-detection.md](drift-detection.md) — stale-file and rule-adoption-drought heuristics
 - [critique-format.md](critique-format.md) — output shape for critique mode (distinct from audit)
 - Article §4d — why Layer 4 is distributed behavior

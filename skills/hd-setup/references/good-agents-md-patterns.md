@@ -17,7 +17,7 @@ Six sections, in order:
 3. **Command naming convention** (if plug-in authoring) OR just "how we work" section (10-15 lines)
 4. **Coexistence rules** (if other AI tools in play) (5-15 lines)
 5. **Skill / code compliance checklist** (20-40 lines)
-6. **Graduated rules section** — starts empty; populates via Layer 5 graduation (5-50 lines depending on team age)
+6. **Rules section** — starts empty; populates via Layer 5 promotion (5-50 lines depending on team age)
 
 Total: 100-150 lines when healthy. Budget exceeded = drift; promote content to Tier 2.
 
@@ -54,9 +54,9 @@ Never ship bare names.
 
 [20-line checklist]
 
-## Graduated rules
+## Rules
 
-<!-- Add new graduated rules above this line. -->
+<!-- Add new rules above this line. -->
 - [2026-04-16] Button variants limited to approved set; new variants require RFC.
   Source: docs/knowledge/lessons/2026-04-16-button-variants-escape-hatch.md
 ```
@@ -90,7 +90,7 @@ Approved: primary, secondary, ghost. New variants require RFC.
 
 **Why wrong:** Violates Tier 1 budget catastrophically. AI ignores sections. Signal-to-noise tanks.
 
-**Fix:** Keep AGENTS.md to rules + rubric gates + graduated rules. Everything else promotes to Tier 2 (`docs/context/*`) or Tier 3 (archived).
+**Fix:** Keep AGENTS.md to rules + rubric gates + rules. Everything else promotes to Tier 2 (`docs/context/*`) or Tier 3 (archived).
 
 ### Anti-pattern 3: Time-sensitive statements
 

@@ -24,13 +24,13 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 │
 ├── docs/                          # meta-harness for THIS plug-in
 │   ├── context/                   # Layer 1 applied to us
-│   ├── knowledge/                 # Layer 5 applied to us (lessons + graduations)
+│   ├── knowledge/                 # Layer 5 applied to us (lessons + rule adoptions)
 │   ├── rubrics/INDEX.md           # Layer 4 pointer
 │   └── plans/                     # PRDs + scenario docs
 │
 ├── agents/                        # reusable sub-agents invoked by skills via Task
 │   ├── analysis/
-│   │   └── graduation-candidate-scorer.md
+│   │   └── rule-candidate-scorer.md
 │   ├── research/
 │   │   ├── lesson-retriever.md
 │   │   └── article-quote-finder.md
@@ -105,7 +105,7 @@ All commands use `hd:` prefix (two letters — *harness design*; secondary read 
 
 - `/hd:learn` — Q&A about the harness concept (LEARN)
 - `/hd:setup` — walk the five layers (SETUP)
-- `/hd:maintain` — capture lessons, graduate to rules (MAINTAIN)
+- `/hd:maintain` — capture lessons, promote lessons to rules (MAINTAIN)
 - `/hd:review` — audit harness health, critique work items (IMPROVE)
 
 Never ship bare command names. Always namespaced (compound 2.38.0 rename-pain lesson).
@@ -136,7 +136,7 @@ When describing skill components, use these exact verbs:
 - **`scripts/`** = EXECUTE (bash/python tools; output consumed, source not loaded)
 - **`assets/`** = ASSETS (templates + starters + skeletons; referenced by skill logic)
 
-Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `audit-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills graduate to sub-agents in `agents/<category>/`.
+Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `audit-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills promote to sub-agents in `agents/<category>/`.
 
 ## Skill authoring references
 
@@ -153,11 +153,11 @@ Required reading before authoring any skill:
 - **Never write to `docs/solutions/`** — that's compound-engineering's namespace. Our equivalent is `docs/design-solutions/` (v0.5+).
 - **Cross-plug-in agent invocation** always uses fully-qualified names: `Task compound-engineering:research:learnings-researcher(...)`.
 
-## Graduated rules
+## Rules
 
-Rules that earned their place here via episodic→procedural graduation (see [docs/knowledge/graduations.md](docs/knowledge/graduations.md)). Each entry: `[YYYY-MM-DD] Rule. Source: path/to/lesson.md`.
+Rules that earned their place via episodic lesson → team rule. Each entry dated and sourced back to a lesson. Adoption events are also logged in [`docs/knowledge/changelog.md`](docs/knowledge/changelog.md). Format: `[YYYY-MM-DD] Rule. Source: path/to/lesson.md`.
 
-<!-- Add new graduated rules above this line. -->
+<!-- Add new rules above this line. -->
 
 - [2026-04-18] When `.agent/` or `.claude/` is detected with ≥1 skill or rule file, `/hd:setup` defaults to: skip L1/L2/L3 prompts and scaffold only L4 (rubrics) and L5 (knowledge). The existing harness is treated as Layer 1+2 authority; hd-* adds Layer 4+5 on top. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno).
 - [2026-04-18] `/hd:setup` is **additive-only** when any existing harness is detected. Never modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or compound-engineering artifacts. New files only. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (6 confirmations across full pilot matrix).

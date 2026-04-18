@@ -36,8 +36,8 @@ If the pattern is team-specific and one-off, it's a Layer 1 convention entry, no
 
 During advanced audit, `hd:setup` flags Layer 2 as a gap when:
 
-- `docs/knowledge/lessons/` has 10+ lessons AND no graduations AND no skills
-- `AGENTS.md` has 20+ rules (graduated or not) — some rules are probably skill-shaped
+- `docs/knowledge/lessons/` has 10+ lessons AND no rule adoptions AND no skills
+- `AGENTS.md` has 20+ rules (promoted or not) — some rules are probably skill-shaped
 - User reports spending >30% of AI session time on repetitive prompting patterns
 
 ## Skill-authoring resources (shared with contributors)

@@ -31,7 +31,7 @@ The plug-in walks you through each layer, detects what you already have, and off
 |---|---|---|
 | [`/hd:learn`](skills/hd-learn/SKILL.md) | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references (one per layer + glossary + FAQ + coexistence + memory-taxonomy), article § citations when the corpus is configured. No writes. |
 | [`/hd:setup`](skills/hd-setup/SKILL.md) | **setup** | Walk the five layers in order. Detect existing harnesses (`.agent/`, `.claude/`, `AGENTS.md`, compound-engineering artifacts) and external tooling (6 team-tool categories, MCP configs at repo- and optionally user-level). Offer per-layer link / critique / scaffold / skip. Write `hd-config.md` recording every decision. |
-| [`/hd:maintain`](skills/hd-maintain/SKILL.md) | **maintain** | Capture lessons (episodic memory; one dated file per event). Propose graduations from narrative lesson to team rule in AGENTS.md. **Destructive graduations require SHA-256 plan-hash proof-of-consent** — compute on propose, persist to `.hd/propose-<hash>.json`, verify on apply. Survives context compaction. |
+| [`/hd:maintain`](skills/hd-maintain/SKILL.md) | **maintain** | Capture lessons (episodic memory; one dated file per event). Propose rules from narrative lesson to team rule in AGENTS.md. **Destructive rule adoptions require SHA-256 plan-hash proof-of-consent** — compute on propose, persist to `.hd/propose-<hash>.json`, verify on apply. Survives context compaction. |
 | [`/hd:review`](skills/hd-review/SKILL.md) | **improve** | `audit` harness health via multi-agent orchestration (parallel/serial auto-switch at 6+ agents) — full mode or `mode:quick` (~30s preflight). `critique` work items against rubrics. `<protected_artifacts>` declared so `/ce:review` and friends never flag our outputs. |
 
 ---
@@ -44,7 +44,7 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`. Descrip
 
 | Category | Agent | Purpose |
 |---|---|---|
-| `analysis/` | `graduation-candidate-scorer` | Cluster lessons; score graduation-readiness on recurrence × clean-imperative × team-agreement |
+| `analysis/` | `rule-candidate-scorer` | Cluster lessons; score rule-readiness on recurrence × clean-imperative × team-agreement |
 | `research/` | `lesson-retriever` | Retrieve past lessons weighted by relevance × recency × importance |
 | `research/` | `article-quote-finder` | Verbatim article quotes with § citations (graceful empty if corpus not configured) |
 | `review/` | `skill-quality-auditor` | Apply 9-section skill-quality rubric to any SKILL.md |
@@ -90,13 +90,13 @@ Schema spec at [`skills/hd-setup/references/hd-config-schema.md`](skills/hd-setu
 
 Five rules the plug-in enforces on itself (dogfooded in `docs/`):
 
-1. **Additive-only when an existing harness is detected.** `/hd:setup` never modifies `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or compound artifacts. New files only. *Confirmed across 6-repo pilot matrix; graduated rule 2026-04-18.*
+1. **Additive-only when an existing harness is detected.** `/hd:setup` never modifies `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or compound artifacts. New files only. *Confirmed across 6-repo pilot matrix; rule 2026-04-18.*
 2. **Existing harness → skip L1/L2/L3, scaffold L4/L5 by default.** When `.agent/` or `.claude/` with content is detected, the existing harness IS Layer 1+2; hd-* adds rubrics + knowledge on top. *Graduated rule 2026-04-18, 4 pilot confirmations.*
-3. **Graduated rules require plan-hash consent.** AGENTS.md edits that promote episodic learnings to procedural rules compute a SHA-256 over title + date + author + paths + diff, persist the plan artifact to `.hd/propose-<hash>.json`, and verify on apply. Two sessions or context-compaction-safe.
+3. **Rules require plan-hash consent.** AGENTS.md edits that promote episodic learnings to procedural rules compute a SHA-256 over title + date + author + paths + diff, persist the plan artifact to `.hd/propose-<hash>.json`, and verify on apply. Two sessions or context-compaction-safe.
 4. **Never fabricate examples.** `rubric-applicator`'s extract mode uses sentinel strings when source lacks explicit positive/negative examples, rather than inventing plausible snippets. Every candidate carries `source_citation: <repo-relative-path>:<line-range>`.
 5. **Skill quality gated at three tiers.** Frontmatter description ≤180 chars (hard cap on agent-facing tokens). SKILL.md ≤200 lines soft / 500 hard (progressive disclosure). Tier 1 combined context ≤200 lines. Enforced by [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh).
 
-Every rule above earned its place via **episodic → procedural graduation**: captured as lessons in `docs/knowledge/lessons/`, scored by `graduation-candidate-scorer`, promoted only after ≥3 confirmations across different repos.
+Every rule above earned its place via **episodic → procedural promotion**: captured as lessons in `docs/knowledge/lessons/`, scored by `rule-candidate-scorer`, promoted only after ≥3 confirmations across different repos.
 
 ---
 
@@ -147,20 +147,20 @@ design-harness/
 ├── .cursor-plugin/plugin.json         # Cursor manifest
 ├── .cursor/rules/AGENTS.mdc           # Cursor IDE redirect → AGENTS.md
 │
-├── AGENTS.md                          # conventions + graduated rules
+├── AGENTS.md                          # conventions + rules
 ├── CLAUDE.md                          # @AGENTS.md (1 line shim)
 ├── CHANGELOG.md  LICENSE  README.md
 │
 ├── docs/                              # meta-harness — we run the 5-layer pattern on ourselves
 │   ├── context/                       # Layer 1 applied to us
 │   ├── knowledge/                     # Layer 5 — lessons, decisions, preferences, changelog
-│   │   ├── graduations.md             # meta-log of episodic→procedural promotions
+│   │   ├── changelog.md             # meta-log of episodic→procedural promotions
 │   │   └── lessons/                   # dated files (YYYY-MM-DD-<slug>.md)
 │   ├── rubrics/INDEX.md               # Layer 4 pointer
 │   └── plans/                         # PRDs + phase plans (YYYY-MM-DD-NNN-*)
 │
 ├── agents/                            # 6 reusable sub-agents
-│   ├── analysis/graduation-candidate-scorer.md
+│   ├── analysis/rule-candidate-scorer.md
 │   ├── research/lesson-retriever.md
 │   ├── research/article-quote-finder.md (+ corpus.md companion)
 │   ├── review/skill-quality-auditor.md
@@ -179,7 +179,7 @@ design-harness/
         └── scripts/budget-check.sh    # SKILL budget + Tier 1 compliance
 ```
 
-Per-mode procedures live in `references/<mode>-procedure.md` files (F5 convention), not `workflows/` subdirectories. Shared procedures graduate to sub-agents in `agents/<category>/`.
+Per-mode procedures live in `references/<mode>-procedure.md` files (F5 convention), not `workflows/` subdirectories. Shared procedures promote to sub-agents in `agents/<category>/`.
 
 ---
 
@@ -199,7 +199,7 @@ Pilots and lessons welcome. If you run `/hd:setup` against a repo we haven't tes
 - Any starter rubric gaps the run surfaced
 - Any `detect.py` false-negatives on your stack
 
-Pattern graduations require ≥3 confirmations across different repos. Additive-only discipline applies to our own dev loop too.
+Pattern rule adoption require ≥3 confirmations across different repos. Additive-only discipline applies to our own dev loop too.
 
 ---
 

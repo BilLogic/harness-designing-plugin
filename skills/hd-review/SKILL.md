@@ -50,7 +50,7 @@ hd:review audit Progress:
 - [ ] Step 2: Count agents; auto-switch to serial if ≥6
 - [ ] Step 3: Run harness-health-analyzer sub-agent (opens the report)
 - [ ] Step 4: Run skill-quality-auditor per skill (L2 health check)
-- [ ] Step 5: Run graduation-candidate-scorer (L5 drift check)
+- [ ] Step 5: Run rule-candidate-scorer (L5 drift check)
 - [ ] Step 6: Run budget-check.sh for deterministic budget data
 - [ ] Step 7: Dispatch review agents (parallel or serial)
 - [ ] Step 8: Synthesize findings + cross-check against <protected_artifacts>
@@ -109,7 +109,7 @@ When context budget is tight:
 - [references/critique-procedure.md](references/critique-procedure.md) — full critique-mode step sequence (Steps 1–5)
 - [references/audit-criteria.md](references/audit-criteria.md) — five-layer health criteria + severity framework
 - [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds + scripts
-- [references/drift-detection.md](references/drift-detection.md) — stale-file + graduation-drought signals
+- [references/drift-detection.md](references/drift-detection.md) — stale-file + rule-adoption-drought signals
 - [references/critique-format.md](references/critique-format.md) — critique output shape
 - [references/rubric-application.md](references/rubric-application.md) — rubric → work-item mapping + resolution order
 
@@ -140,7 +140,7 @@ When context budget is tight:
 
 - `design-harnessing:workflow:harness-health-analyzer` — narrative 5-layer health (audit Step 3)
 - `design-harnessing:review:skill-quality-auditor` — per-skill rubric (audit Step 4 + critique on SKILL.md)
-- `design-harnessing:analysis:graduation-candidate-scorer` — L5 drift detection (audit Step 5)
+- `design-harnessing:analysis:rule-candidate-scorer` — L5 drift detection (audit Step 5)
 - `design-harnessing:review:rubric-applicator` — generic rubric → work item (critique default)
 - `compound-engineering:research:learnings-researcher` — always-run during audit (Step 7)
 - Other `compound-engineering:review:*` agents per user config (Step 7)

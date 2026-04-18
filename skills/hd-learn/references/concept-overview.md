@@ -14,7 +14,7 @@ You already have a design harness. It's just scattered — across Slack pins, No
 | 2 | **Skill Curation** | Reusable capabilities your team offers: research, plan, prototype, review, compound. | Additive | §4b |
 | 3 | **Workflow Orchestration** | How skills compose into real work: sequences, handoffs, quality gates. | Versioned | §4c |
 | 4 | **Rubric Setting** | Taste embedded as checks: accessibility, design-system compliance, component budgets. | Distributed across the harness (not a folder) | §4d |
-| 5 | **Knowledge Compounding** | What the team has learned — lessons, decisions, graduated rules. | Append-only for lessons; graduated rules edit AGENTS.md | §4e |
+| 5 | **Knowledge Compounding** | What the team has learned — lessons, decisions, rules. | Append-only for lessons; rules edit AGENTS.md | §4e |
 
 ## Why this isn't a style guide
 

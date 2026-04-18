@@ -51,7 +51,7 @@ Completed per [`docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-
 **F1 — Agent description trimming** (`7a419d16`): all 6 sub-agent frontmatter `description:` fields trimmed to ≤180 chars (range was 237–352; now 166–179). Expository content moved into system-prompt bodies; no information loss.
 
 **F3 — hd-learn FAQ polish** (`bd1bb037`):
-- `faq.md`: +3 Q&A entries (Q11 "Why five layers specifically?" defending arity via memory-mechanism distinctness; Q12 ".agent/ / CLAUDE.md coexistence" citing 2026-04-18 graduated rules; Q13 "customizing starter rubrics" with 3 paths).
+- `faq.md`: +3 Q&A entries (Q11 "Why five layers specifically?" defending arity via memory-mechanism distinctness; Q12 ".agent/ / CLAUDE.md coexistence" citing 2026-04-18 rules; Q13 "customizing starter rubrics" with 3 paths).
 - `memory-taxonomy.md`: added "Derivative types" section with speculative + temporal entries; top-of-file clarifying sentence ("4 classical + 2 derivative"). Original 4-type table preserved verbatim.
 
 **F4 — `budget-check.sh` rewrite** (`0d7ae491`): 153 → 178 lines. All JSON construction via `jq -n` (17 invocations); `yq` dependency fully removed (grep -c yq = 0); `set -euo pipefail`; paths always quoted; edge-case guards for empty skill dirs, missing SKILL.md, missing description, quoted vs unquoted YAML values. Dead first loop deleted. `bash -n` passes; emits valid JSON; exit 0 healthy / exit 1 on violations.
@@ -89,7 +89,7 @@ Budget-check post-Phase-3f: 3/4 SKILL.md files pass soft cap (124 / 124 / 144); 
 
 Completed per [`docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md`](docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md). Findings from 4 new parallel pilots (caricature, oracle-chat, lightning, plus-uno) combined with prior pilots (sds, plus-marketing) consolidated in [`docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md`](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md).
 
-**E1 — Template graduations** (`c722bb24`):
+**E1 — Template rule adoption** (`c722bb24`):
 - `hd-config.md.template` gains `layer_decisions` (5-row array with decision + why + files_written), `other_tool_harnesses_detected` (list of `{path, owner, policy}`), `files_written` (flat list); `schema_version: "2"` now consistent with detect.py output.
 - `rubrics-index.md.template` added (was referenced by SKILL.md Step 7 but missing; every pilot hand-wrote `docs/rubrics/INDEX.md`).
 - `hd-config-schema.md` updated to v2 with filled-in plus-marketing example.
@@ -110,12 +110,12 @@ Completed per [`docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-
 - `compute-plan-hash.sh` (NEW, 123 lines, `+x`): deterministic SHA-256 canonical-string builder. Strict normalization (`LC_ALL=C sort` on paths, LF-only, no trailing newline, fixed field order joined by single `\n`, paths joined by `|`). Byte-identical hashes across runs verified.
 - Persisted propose artifact: SKILL.md Propose writes `.hd/propose-<8hex>.json` containing all inputs + `canonical_string` + `sha256`. Apply globs by `--hash` prefix, re-runs the script, compares. No longer depends on conversation context — survives session compaction. Cleanup moves to `.hd/applied/`.
 - `gitignore-entries.txt` asset added (hd-setup proposes `.hd/` to user's `.gitignore`).
-- Removed dangling `workflows/propose-graduation.md` / `workflows/apply-graduation.md` refs in `plan-hash-protocol.md` + `graduation-criteria.md` (AGENTS.md forbids `workflows/` inside skills; `grep -r workflows/ skills/hd-maintain/` returns 0).
+- Removed dangling `workflows/propose-rule.md` / `workflows/apply-rule.md` refs in `plan-hash-protocol.md` + `rule-adoption-criteria.md` (AGENTS.md forbids `workflows/` inside skills; `grep -r workflows/ skills/hd-maintain/` returns 0).
 - Lesson-corpus convention (Option A — match reality): `lesson-patterns.md` rewritten for date-slug (`YYYY-MM-DD-<slug>.md`) per-event files (the actual corpus convention, vs. the prior domain-grouped aspiration). Capture Step 2 creates new dated file, no append-to-domain.
 
-**E4 — Pattern graduations** (`b7b360ab`):
-- **`.agent/` or `.claude/` present → skip L1/L2/L3, scaffold L4/L5** (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno). Graduated to `AGENTS.md § Graduated rules` + `hd-setup/SKILL.md` new "Guardrail" section before Step 1 + default-action table.
-- **Additive-only discipline when existing harness detected** (6 confirmations, all pilots). Graduated to `AGENTS.md § Graduated rules` + `hd-setup/SKILL.md` guardrail announces the mode up front.
+**E4 — Pattern rule adoption** (`b7b360ab`):
+- **`.agent/` or `.claude/` present → skip L1/L2/L3, scaffold L4/L5** (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno). Graduated to `AGENTS.md § Rules` + `hd-setup/SKILL.md` new "Guardrail" section before Step 1 + default-action table.
+- **Additive-only discipline when existing harness detected** (6 confirmations, all pilots). Graduated to `AGENTS.md § Rules` + `hd-setup/SKILL.md` guardrail announces the mode up front.
 
 **Regression:** `detect.py` v2 against all 6 `/tmp/hd-real-test/*` clones — all signals populate as expected. sds=scattered, others=advanced. Schema v2 consistent.
 
@@ -135,7 +135,7 @@ Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-p
 **Part B** (`65bff04d`) — Layer 5 knowledge-skeleton with 5+1 memory-type model:
 - New scaffolded files: `INDEX.md` (domain table with Memory Type column), `README.md` (taxonomy explainer), `changelog.md` (temporal), `decisions.md` (procedural-chosen ADR), `ideations.md` (speculative), `preferences.md` (semantic-taste)
 - Lessons are now **domain-grouped** (`lessons/<domain>.md` with ~15 entries) not per-date
-- `graduations.md` deferred scaffold (created on first graduation)
+- `changelog.md` deferred scaffold (created on first rule adoption)
 - Memory-type labels appear in 3 places: YAML frontmatter, INDEX column, README
 - `hd:maintain capture` rewritten to classify-and-append-to-domain-file (not create-dated-file); enforces split threshold
 
@@ -155,7 +155,7 @@ Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-p
 
 **Added**
 - `agents/` at plug-in root — 6 reusable sub-agents invoked via fully-qualified Task names from our skills (`design-harnessing:<category>:<name>`). Categories: analysis, research, review, workflow.
-  - `agents/analysis/graduation-candidate-scorer.md` — cluster lessons, score 1–5 on grad-readiness (3 dims: recurrence × clean-imperative × team-agreement)
+  - `agents/analysis/rule-candidate-scorer.md` — cluster lessons, score 1–5 on grad-readiness (3 dims: recurrence × clean-imperative × team-agreement)
   - `agents/research/lesson-retriever.md` — retrieve past lessons weighted by relevance × recency × importance
   - `agents/research/article-quote-finder.md` — verbatim article quotes with § citations
   - `agents/review/skill-quality-auditor.md` — apply 9-section skill-quality rubric to any SKILL.md
@@ -179,8 +179,8 @@ Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-p
 - **Deleted `workflows/` folders** in hd-setup, hd-maintain, hd-review. Procedures absorbed into each SKILL.md inline. Rationale: workflows inside skills conflated procedural memory with orchestration memory. Shared procedures that span skills are now sub-agents in `agents/`. Matches compound-engineering's current (GitHub main) convention where most skills are flat SKILL.md + references + assets.
 - **Renamed `templates/` → `assets/`** in all skills (matches compound's current convention).
 - **hd-setup SKILL.md rewritten** (164 → 326 lines): 10-step workflow with explicit Layers 1–5 each as their own step (was previously hidden under a single "five-layer walk" bullet). Per-layer procedure with FRAME → SHOW → PROPOSE → ASK → EXECUTE. Per-layer checkpoint (A/B/C/D: review/capture/inspect/continue) prevents agent-driven steamrolling. Explicit `link / critique / scaffold / skip` contract at every layer. Strict non-interference with `.agent/` / `.claude/` / `.codex/` / external `.cursor/skills/`.
-- **hd-maintain SKILL.md rewritten** (122 → 240 lines): three modes (capture / propose / apply) inlined with distinct checklists each. Integration with `design-harnessing:research:lesson-retriever` (capture Phase 1) and `design-harnessing:analysis:graduation-candidate-scorer` (propose).
-- **hd-review SKILL.md rewritten** (154 → 324 lines): audit + critique inlined. Audit dispatches `design-harnessing:workflow:harness-health-analyzer` (opening), `design-harnessing:review:skill-quality-auditor` (per-skill L2 check), `design-harnessing:analysis:graduation-candidate-scorer` (L5 drift), plus configured `compound-engineering:*` reviewers. Critique dispatches `design-harnessing:review:rubric-applicator` (generic) or `skill-quality-auditor` (SKILL.md targets).
+- **hd-maintain SKILL.md rewritten** (122 → 240 lines): three modes (capture / propose / apply) inlined with distinct checklists each. Integration with `design-harnessing:research:lesson-retriever` (capture Phase 1) and `design-harnessing:analysis:rule-candidate-scorer` (propose).
+- **hd-review SKILL.md rewritten** (154 → 324 lines): audit + critique inlined. Audit dispatches `design-harnessing:workflow:harness-health-analyzer` (opening), `design-harnessing:review:skill-quality-auditor` (per-skill L2 check), `design-harnessing:analysis:rule-candidate-scorer` (L5 drift), plus configured `compound-engineering:*` reviewers. Critique dispatches `design-harnessing:review:rubric-applicator` (generic) or `skill-quality-auditor` (SKILL.md targets).
 - `references/external-tooling.md` renamed → `references/known-mcps.md` (tighter name reflecting what it actually is: 6-category tool map + known-MCP install table + fallback seeds from Material 3 / Fluent 2 / awesome-design-md).
 - `detect-mode.sh` kept as thin bash shim; canonical detector is now `detect.py` (schema v2).
 - AGENTS.md plug-in conventions doc expanded with full architecture diagram + `agents/` invocation convention + "when to create a new agent" rule.
@@ -190,7 +190,7 @@ Completed per [`docs/plans/2026-04-17-011-refactor-phase-3d-template-alignment-p
 - `detect-mode.sh` placeholder regex false-positive on our own repo: tightened `{{.*}}` → `{{[A-Z][A-Z0-9_]+}}` and fixed `--exclude-dir` basename matching (grep doesn't match paths).
 
 **Memory-management research (OpenClaw / MemGPT / Generative Agents / Voyager lens)**
-Our five-layer framework maps cleanly to established memory-type taxonomy. Procedural = SKILL.md; semantic = references/; episodic = `docs/knowledge/lessons/` (append-only memory stream per Generative Agents pattern); working = Claude Code's context window (managed via progressive disclosure, mirroring MemGPT memory tiers). Our graduation mechanism IS reflection (Generative Agents) + skill acquisition (Voyager). Tier 1/2/3 context budget IS memory tiering by access frequency (MemGPT). Future directions noted for post-comprehensive-reshape: importance scoring on lessons, recurrence count on patterns, retrieval-weighted by recency × relevance × importance.
+Our five-layer framework maps cleanly to established memory-type taxonomy. Procedural = SKILL.md; semantic = references/; episodic = `docs/knowledge/lessons/` (append-only memory stream per Generative Agents pattern); working = Claude Code's context window (managed via progressive disclosure, mirroring MemGPT memory tiers). Our rule adoption mechanism IS reflection (Generative Agents) + skill acquisition (Voyager). Tier 1/2/3 context budget IS memory tiering by access frequency (MemGPT). Future directions noted for post-comprehensive-reshape: importance scoring on lessons, recurrence count on patterns, retrieval-weighted by recency × relevance × importance.
 
 **Regression check**
 All 6 real repos (figma/sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno) continue to route correctly after the reshape. Budgets green: Tier 1 179/200, all 4 SKILL.md under 500-line hard cap (hd-maintain 240, hd-learn 124, hd-review 324, hd-setup 326).
@@ -207,7 +207,7 @@ First public release. Four-skill design-harness plug-in, full-release at v1.0.0.
 
 - **`hd-setup`** — SETUP verb. Adaptive scaffold / reorganize / audit of the five-layer harness in a user's repo. 23 files: SKILL.md router + 9 references (5 layer-specific + 4 shared: tier-budget-model, good-agents-md-patterns, coexistence-checklist, local-md-schema) + 3 workflows (greenfield / scattered / advanced) + 9 templates (AGENTS.md, design-harnessing.local.md, context-skeleton with 4 sub-files, knowledge-skeleton with 3 sub-files) + `scripts/detect-mode.sh` deterministic bash mode detection emitting LOCKED JSON shape.
 
-- **`hd-maintain`** — MAINTAIN verb. Capture lessons + graduate to rules. **SHA-256 plan-hash proof-of-consent** for the destructive AGENTS.md write prevents hallucinated approval from runaway agents or LLM-default "yes" completions. 9 files: SKILL.md + 3 references (lesson-patterns, graduation-criteria, plan-hash-protocol) + 3 workflows (capture, propose-graduation, apply-graduation) + 2 templates.
+- **`hd-maintain`** — MAINTAIN verb. Capture lessons + promote lessons to rules. **SHA-256 plan-hash proof-of-consent** for the destructive AGENTS.md write prevents hallucinated approval from runaway agents or LLM-default "yes" completions. 9 files: SKILL.md + 3 references (lesson-patterns, graduation-criteria, plan-hash-protocol) + 3 workflows (capture, propose-rule, apply-rule) + 2 templates.
 
 - **`hd-review`** — IMPROVE verb. Audit harness health (multi-agent orchestration via Task tool, parallel/serial auto-switch at 6+ agents per compound 2.39.0 lesson) + critique work items against team rubrics. Declares `<protected_artifacts>` block so `/ce:review` respects our outputs during cross-plug-in runs. 15 files: SKILL.md + 5 references + 3 workflows (audit-parallel, audit-serial, critique) + 2 templates + 3 starter rubrics (accessibility-wcag-aa, design-system-compliance, component-budget) + `scripts/budget-check.sh`.
 
@@ -223,12 +223,12 @@ First public release. Four-skill design-harness plug-in, full-release at v1.0.0.
 
 **Meta-harness (dogfood):**
 - `docs/context/` — Layer 1 for this plug-in's own build (agent-persona, product one-pager, design-system/file conventions cheat-sheet, conventions/how-we-work)
-- `docs/knowledge/` — Layer 5 with 3 real lessons from the build session + one graduation visible in git history
+- `docs/knowledge/` — Layer 5 with 3 real lessons from the build session + one rule visible in git history
 - `docs/rubrics/INDEX.md` — Layer 4 thin pointer (distributed-pattern explainer)
 - `docs/plans/` — PRDs + implementation plans + scenario matrices (historical record of the build)
 
-**First graduated rule (via episodic→procedural graduation):**
-- "Don't ship future-version skill stubs with `disable-model-invocation: true`" — lesson + AGENTS.md rule + graduations.md meta-entry. Surfaced by `/ce:review` synthesis of 3 independent reviewer agents. Informed the decision to ship all four skills together rather than stage behind article cadence.
+**First rule (via episodic→procedural promotion):**
+- "Don't ship future-version skill stubs with `disable-model-invocation: true`" — lesson + AGENTS.md rule + changelog.md meta-entry. Surfaced by `/ce:review` synthesis of 3 independent reviewer agents. Informed the decision to ship all four skills together rather than stage behind article cadence.
 
 ### Changed
 
@@ -253,7 +253,7 @@ Per `docs/plans/2026-04-16-005-feat-v0-mvp-implementation-plan.md` + 006 + 007:
 - Phase 1 structural refactor passed 10/10 verification checks (commit `6d7a5e16`)
 - hd-learn passed 7/7 acceptance checks (commit `d361bb2e`)
 - hd-setup passed 8/8 acceptance checks (commit `b4387dd2`)
-- Meta-harness + graduation example (commit `712222aa`)
+- Meta-harness + rule adoption example (commit `712222aa`)
 - hd-maintain with plan-hash protocol (commit `540a1b45`)
 - hd-review with `<protected_artifacts>` block + budget-check.sh (commit `5a871c87`)
 - README + CHANGELOG reflect full-release state (commit `ddd159cd` + this commit)

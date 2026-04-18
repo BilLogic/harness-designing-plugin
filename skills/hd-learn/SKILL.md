@@ -87,21 +87,21 @@ Load [layer-1-context.md](references/layer-1-context.md), [layer-5-knowledge.md]
 
 > Context (Layer 1) is *semantic memory* — evergreen reference material the AI needs every time (design system, product, conventions). Mutable but curated. See article §4a.
 >
-> Knowledge (Layer 5) is *episodic memory* — dated narratives of what happened (decisions, lessons, graduations). Append-only; history is sacred. See article §4e.
+> Knowledge (Layer 5) is *episodic memory* — dated narratives of what happened (decisions, lessons, rule adoptions). Append-only; history is sacred. See article §4e.
 >
 > The most common mistake is collapsing them — appending lessons into the design-system cheat-sheet bloats it with time-bound stories, signal decays. See article §2.5 for the memory taxonomy.
 >
 > Ready to scaffold both layers? Run `/hd:setup`.
 
-**Q: "How do I know when to graduate a lesson into a rule?"**
+**Q: "How do I know when to write a lesson as a rule into a rule?"**
 
 Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 
 > Three criteria (article §4e): the situation has shown up 3+ times across different designers; the lesson has a clean imperative ("always X unless Y"); the team agrees via RFC, review, or PR conversation.
 >
-> On graduation: the original lesson stays (history is sacred), a new rule lands in `AGENTS.md` under "Graduated rules," and a meta-entry lands in `docs/knowledge/graduations.md` linking lesson → rule + date.
+> On rule adoption: the original lesson stays (history is sacred), a new rule lands in `AGENTS.md` under "Rules," and a meta-entry lands in `docs/knowledge/changelog.md` linking lesson → rule + date.
 >
-> The `/hd:maintain` skill proposes graduations when it detects matching lessons (≥3 same-topic occurrences). Run `/hd:maintain graduate-propose <topic>` to start.
+> The `/hd:maintain` skill proposes rule adoptions when it detects matching lessons (≥3 same-topic occurrences). Run `/hd:maintain rule-propose <topic>` to start.
 
 ## What this skill does NOT do
 

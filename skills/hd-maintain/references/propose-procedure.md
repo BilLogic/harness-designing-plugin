@@ -7,33 +7,33 @@ loaded_by: hd-maintain
 
 ## Purpose
 
-Step-by-step procedure for `/hd:maintain graduate-propose <topic>`: score candidate clusters, draft the rule + graduations.md entry, compute a deterministic plan hash via `scripts/compute-plan-hash.sh`, and persist a `.hd/propose-<prefix>.json` artifact so Apply survives context compaction. No writes to tracked files. Invoked by the propose-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:maintain rule-propose <topic>`: score candidate clusters, draft the rule + changelog.md entry, compute a deterministic plan hash via `scripts/compute-plan-hash.sh`, and persist a `.hd/propose-<prefix>.json` artifact so Apply survives context compaction. No writes to tracked files. Invoked by the propose-mode workflow checklist in `../SKILL.md`.
 
 ## Steps
 
-**Step 1 — Parse topic.** From argument or conversation context. If missing, ask: *"Which topic are we graduating? Give me a tag or keyword."*
+**Step 1 — Parse topic.** From argument or conversation context. If missing, ask: *"Which topic are we promoting? Give me a tag or keyword."*
 
 **Step 2 — Run scorer.** Invoke:
 
 ```
-Task design-harnessing:analysis:graduation-candidate-scorer(
+Task design-harnessing:analysis:rule-candidate-scorer(
   lessons_root: "docs/knowledge/lessons/",
   topic_filter: <topic>,
-  graduated_log: "docs/knowledge/graduations.md"
+  rules_log: "docs/knowledge/changelog.md"
 )
 ```
 
-The scorer returns clusters with scores. See [`graduation-criteria.md`](graduation-criteria.md) for the 3-dimension scoring.
+The scorer returns clusters with scores. See [`rule-adoption-criteria.md`](rule-adoption-criteria.md) for the 3-dimension scoring.
 
 **Step 3 — Filter.** Keep clusters scoring ≥ 3.5. If none:
 
-> "Found N matching lessons scoring <3.5. Graduation needs ≥3 occurrences + clean imperative + team agreement. Add more lessons as the pattern recurs."
+> "Found N matching lessons scoring <3.5. Rule adoption needs ≥3 occurrences + clean imperative + team agreement. Add more lessons as the pattern recurs."
 
 Abort cleanly. Don't silently proceed.
 
 **Step 4 — Draft rule + entry.** For each ready cluster:
 - **Rule text** (for AGENTS.md): `[YYYY-MM-DD] <clean imperative>. Source: docs/knowledge/lessons/<primary-lesson>.md`
-- **Graduations.md entry**: per [`../assets/graduation-entry.md.template`](../assets/graduation-entry.md.template) — title, lesson sources list, rule text, reviewed-by (user), date
+- **Rules.md entry**: per [`../assets/rule-entry.md.template`](../assets/rule-entry.md.template) — title, lesson sources list, rule text, reviewed-by (user), date
 
 **Step 5 — Assemble structured inputs.** Build the JSON payload for the hash script:
 
@@ -44,7 +44,7 @@ Abort cleanly. Don't silently proceed.
     "<source-lesson-1>",
     "<source-lesson-2>",
     "AGENTS.md",
-    "docs/knowledge/graduations.md"
+    "docs/knowledge/changelog.md"
   ],
   "date": "<YYYY-MM-DD today>",
   "author": "<approver>",
@@ -81,22 +81,22 @@ This artifact makes Apply survive context compaction. Do **not** add `.hd/` to t
 **Step 8 — Emit plan + hash to stdout.** Same format as before:
 
 ```
-## Graduation Plan: <title>
+## Rule adoption Plan: <title>
 
 ### Sources
 - [lesson-slug](path)
 
-### Proposed rule (append to AGENTS.md § Graduated rules)
+### Proposed rule (append to AGENTS.md § Rules)
 > [YYYY-MM-DD] <rule>. Source: <path-to-primary-lesson>
 
-### Proposed graduations.md entry
+### Proposed changelog.md entry
 > [complete entry body]
 
 ### Plan hash
 `<64-char-hex>`  (artifact: .hd/propose-<prefix>.json)
 
 ### To apply
-/hd:maintain graduate-apply --hash <prefix>
+/hd:maintain rule-apply --hash <prefix>
 ```
 
 **Confirm zero writes to tracked files.** `git status` should show no tracked-file changes — only the untracked `.hd/` directory (which the user should gitignore).

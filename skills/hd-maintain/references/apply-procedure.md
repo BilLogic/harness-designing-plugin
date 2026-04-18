@@ -7,12 +7,12 @@ loaded_by: hd-maintain
 
 ## Purpose
 
-Step-by-step procedure for `/hd:maintain graduate-apply --hash <prefix>`: locate the persisted `.hd/propose-<hash>.json` artifact, re-run `scripts/compute-plan-hash.sh` against its structured inputs, and — on byte-for-byte match — atomically append to `AGENTS.md` and prepend to `docs/knowledge/graduations.md`. On successful apply, move `.hd/propose-<hash>.json` → `.hd/applied/<hash>.json`. On mismatch, abort with drift diagnosis. Invoked by the apply-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:maintain rule-apply --hash <prefix>`: locate the persisted `.hd/propose-<hash>.json` artifact, re-run `scripts/compute-plan-hash.sh` against its structured inputs, and — on byte-for-byte match — atomically append to `AGENTS.md` and prepend to `docs/knowledge/changelog.md`. On successful apply, move `.hd/propose-<hash>.json` → `.hd/applied/<hash>.json`. On mismatch, abort with drift diagnosis. Invoked by the apply-mode workflow checklist in `../SKILL.md`.
 
 ## Steps
 
 **Step 1 — Locate propose artifact.** Require `--hash <prefix>` (8+ hex chars). Glob `.hd/propose-<prefix>*.json`:
-- Zero matches → abort: *"No matching propose artifact for `<prefix>`. Run `/hd:maintain graduate-propose <topic>` first, or widen the prefix."*
+- Zero matches → abort: *"No matching propose artifact for `<prefix>`. Run `/hd:maintain rule-propose <topic>` first, or widen the prefix."*
 - Multiple matches → abort: *"Ambiguous `<prefix>` — matched N files. Re-invoke with a longer prefix."*
 - Exactly one match → continue. This decouples Apply from conversation context: a propose from a prior / compacted session still works.
 
@@ -28,8 +28,8 @@ jq '{title, paths, date, author, diff_summary}' .hd/propose-<prefix>.json \
 **Step 4 — Compare.** Fresh hash vs artifact's stored `sha256`, byte-for-byte.
 
 **Step 5a — Match: atomic writes.**
-1. Append to `AGENTS.md` under "Graduated rules": `- [YYYY-MM-DD] <rule>. Source: <primary lesson path>`
-2. Prepend to `docs/knowledge/graduations.md` above the "Add new graduations above this line" marker: proposed entry body
+1. Append to `AGENTS.md` under "Rules": `- [YYYY-MM-DD] <rule>. Source: <primary lesson path>`
+2. Prepend to `docs/knowledge/changelog.md` above the "Add new rule adoptions above this line" marker: proposed entry body
 
 Both writes use temp file + `mv` (atomic on POSIX). If second write fails, roll back first: `git checkout HEAD -- AGENTS.md`.
 
@@ -42,7 +42,7 @@ Expected (from artifact): <stored-sha256>
 Computed (fresh):         <current-sha256>
 The plan input has drifted since propose (likely: one of the source files or
 targets changed, or the artifact was hand-edited). Re-run
-`/hd:maintain graduate-propose <topic>` to regenerate the plan + hash.
+`/hd:maintain rule-propose <topic>` to regenerate the plan + hash.
 ```
 
 **Step 6 — Cleanup.** On successful apply, move the artifact:
@@ -54,13 +54,13 @@ mv .hd/propose-<prefix>*.json .hd/applied/
 
 Keeps a receipt trail for audit while clearing the "pending" slot.
 
-**Step 7 — Post-write verify.** `git status` should show exactly 2 modified tracked files (AGENTS.md, docs/knowledge/graduations.md). Untracked `.hd/applied/…` entry is fine. Any other tracked diff → roll back + abort with integrity error.
+**Step 7 — Post-write verify.** `git status` should show exactly 2 modified tracked files (AGENTS.md, docs/knowledge/changelog.md). Untracked `.hd/applied/…` entry is fine. Any other tracked diff → roll back + abort with integrity error.
 
 **Step 8 — Summarize.**
 ```
 Graduated: "<rule text>"
 Source lesson preserved: <path>
-AGENTS.md updated; graduations.md updated.
+AGENTS.md updated; changelog.md updated.
 Artifact archived: .hd/applied/<prefix>.json
 Next: commit + optional `/hd:review audit` to check the harness with new rule.
 ```

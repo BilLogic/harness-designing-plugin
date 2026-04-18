@@ -44,7 +44,7 @@ Budget-check script emits `skill_md_lines` map for every SKILL.md in `skills/`; 
 **Total `docs/knowledge/lessons/`:** no cap (lessons are append-only episodic memory; growth is expected). But:
 
 - Rate: 1-5 lessons per quarter is healthy
-- 50+ lessons tagged with same topic + 0 graduations → P2 drift (graduation drought)
+- 50+ lessons tagged with same topic + 0 rule adoptions → P2 drift (rule-adoption drought)
 - No new lessons in 6+ months with active development → P2 drift (capture discipline lapsed)
 
 ## Single-file bloat rules
@@ -60,7 +60,7 @@ A single file is "bloated" when:
 - Tier 3 archives intentionally exceeding 500 lines (they're not loaded by default)
 - Well-structured reference files with clear TOC (Anthropic allows longer files if they have a TOC per best-practices doc)
 - Plan files in `docs/plans/` — these are historical records, not runtime context
-- `docs/knowledge/graduations.md` accumulating entries over years (it's a log)
+- `docs/knowledge/changelog.md` accumulating entries over years (it's a log)
 
 ## Ancillary checks
 

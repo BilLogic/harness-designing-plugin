@@ -12,7 +12,7 @@ A style guide is a PDF that goes stale. A harness is running code the AI uses ev
 
 ## 3. How is this different from Every's compound-engineering-plugin?
 
-Same move (codify practice so it compounds), different domain. Compound is engineering — PRs, tests, reviews, worktrees. This plug-in is design — mockups, rubrics, critique, graduation. The two coexist without namespace fights. See [coexistence-with-compound.md](coexistence-with-compound.md) for the isolation rules, and article §3 for the positioning argument.
+Same move (codify practice so it compounds), different domain. Compound is engineering — PRs, tests, reviews, worktrees. This plug-in is design — mockups, rubrics, critique, rule adoption. The two coexist without namespace fights. See [coexistence-with-compound.md](coexistence-with-compound.md) for the isolation rules, and article §3 for the positioning argument.
 
 ## 4. Do I need all five layers?
 
@@ -26,9 +26,9 @@ Inside your repo. The harness is version-controlled alongside the code and desig
 
 `/hd:setup` detects it and classifies the content against the five layers. It proposes an unpacking with a diff preview *before any write* — your original file is never destroyed without explicit approval. See article §4a for how Context Engineering handles existing setups.
 
-## 7. What's a "graduation"?
+## 7. What's a "rule"?
 
-When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Graduated rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/graduations.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:maintain` proposes graduations; `/hd:graduate` is *not* a separate skill (folded into compound — single verb family).
+When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/changelog.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:maintain` proposes rule adoptions; `/hd:graduate` is *not* a separate skill (folded into compound — single verb family).
 
 ## 8. Do I need Claude Code, or does this work elsewhere?
 
@@ -36,7 +36,7 @@ v0 is Claude-native but **submits to three marketplaces**: Claude Code, Codex CL
 
 ## 9. Should I use this solo or wait until I have a team?
 
-Solo is fine — Layer 5 graduation machinery can wait. `/hd:setup` has a `solo` prompt answer that defers team-specific patterns. But the compounding value grows with team size; 5–20 person teams are the primary persona. See article §3 for the scaling argument.
+Solo is fine — Layer 5 rule-adoption machinery can wait. `/hd:setup` has a `solo` prompt answer that defers team-specific patterns. But the compounding value grows with team size; 5–20 person teams are the primary persona. See article §3 for the scaling argument.
 
 ## 10. Where does this plug-in come from?
 
@@ -56,7 +56,7 @@ Collapsing L1+L2 loses the noun/verb distinction. Collapsing L4+L1 loses the che
 
 ## 12. I already have CLAUDE.md or .agent/ — do I still need this?
 
-Yes, but additive-only. As of graduated rule 2026-04-18, `/hd:setup` defaults to **skip L1/L2/L3, scaffold L4/L5 only** when `.agent/` or `.claude/` with content is detected. Existing harness is respected as Layer 1+2 authority; hd-* adds rubric checks (L4) + episodic knowledge capture (L5) on top. Zero modifications to pre-existing files (6/6 pilots confirmed). See `AGENTS.md § Graduated rules` for the rule.
+Yes, but additive-only. As of rule 2026-04-18, `/hd:setup` defaults to **skip L1/L2/L3, scaffold L4/L5 only** when `.agent/` or `.claude/` with content is detected. Existing harness is respected as Layer 1+2 authority; hd-* adds rubric checks (L4) + episodic knowledge capture (L5) on top. Zero modifications to pre-existing files (6/6 pilots confirmed). See `AGENTS.md § Rules` for the rule.
 
 ## 13. How do I customize the starter rubrics for my team?
 

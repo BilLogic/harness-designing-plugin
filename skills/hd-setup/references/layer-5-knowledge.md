@@ -1,6 +1,6 @@
 # Layer 5 — Knowledge (depth reference)
 
-**Loaded by:** `SKILL.md` Step 8 when scaffolding or critiquing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the 5-memory-type model, domain-grouped-lessons convention, INDEX pattern, and graduation handoff.
+**Loaded by:** `SKILL.md` Step 8 when scaffolding or critiquing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the 5-memory-type model, domain-grouped-lessons convention, INDEX pattern, and rule-adoption handoff.
 
 **Concept explainer:** [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md)
 
@@ -20,7 +20,7 @@ docs/knowledge/
     └── ...               # split threshold ~15 entries per file
 ```
 
-`graduations.md` — **memory_type: meta-log** — is NOT scaffolded at setup time. Created on first graduation (`/hd:maintain graduate-apply`) to avoid empty-file noise. When it appears, it lives at `docs/knowledge/graduations.md`.
+`changelog.md` — **memory_type: meta-log** — is NOT scaffolded at setup time. Created on first rule adoption (`/hd:maintain rule-apply`) to avoid empty-file noise. When it appears, it lives at `docs/knowledge/changelog.md`.
 
 Templates for the 6 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/).
 
@@ -33,7 +33,7 @@ Templates for the 6 scaffolded files: [`../assets/knowledge-skeleton/`](../asset
 | **semantic-taste** | `preferences.md` | Mutable with team agreement | Stable taste calls |
 | **speculative** | `ideations.md` | Append-only; cross off (don't delete) when idea decided | Open questions, unchosen paths |
 | **temporal** | `changelog.md` | Append-only | When harness-structural changes happened |
-| **meta-log** | `graduations.md` | Append-only; created on first graduation | Which episodic lessons became AGENTS.md rules |
+| **meta-log** | `changelog.md` | Append-only; created on first rule adoption | Which episodic lessons became AGENTS.md rules |
 
 The 5+1 taxonomy comes from agent-memory research (OpenClaw / MemGPT / Generative Agents). Article §2.5 covers the broader harness-memory mapping.
 
@@ -59,7 +59,7 @@ split_threshold: 15
 ---
 ```
 
-Individual entries follow with per-entry YAML (title, date, tags, graduation_candidate, importance). See [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) for the entry schema.
+Individual entries follow with per-entry YAML (title, date, tags, rule_candidate, importance). See [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) for the entry schema.
 
 ## Seeded starter lesson (first capture post-setup)
 
@@ -73,15 +73,15 @@ If the user does, `/hd:maintain capture`:
 
 This single pattern — domain file created on-first-capture — applies for all future captures too.
 
-## Graduation workflow (Layer 5 → AGENTS.md)
+## Rule adoption workflow (Layer 5 → AGENTS.md)
 
 When an episodic-lesson pattern recurs 3+ times on the same topic:
 
-1. User runs `/hd:maintain graduate-propose <topic>`
-2. Sub-agent `design-harnessing:analysis:graduation-candidate-scorer` evaluates clusters on 3 dimensions (recurrence × clean-imperative × team-agreement)
+1. User runs `/hd:maintain rule-propose <topic>`
+2. Sub-agent `design-harnessing:analysis:rule-candidate-scorer` evaluates clusters on 3 dimensions (recurrence × clean-imperative × team-agreement)
 3. Clusters scoring ≥ 3.5 get a proposed rule + SHA-256 plan hash
-4. User reviews, runs `/hd:maintain graduate-apply --plan-hash <sha>`
-5. Rule lands in `AGENTS.md` under "Graduated rules"; meta-entry in `graduations.md`; **source entries untouched — history is sacred**
+4. User reviews, runs `/hd:maintain rule-apply --plan-hash <sha>`
+5. Rule lands in `AGENTS.md` under "Rules"; meta-entry in `changelog.md`; **source entries untouched — history is sacred**
 
 This workflow is owned by `/hd:maintain`; Layer 5 setup only prepares the directory structure + informs the user that compounding happens via that skill.
 
@@ -93,19 +93,19 @@ This workflow is owned by `/hd:maintain`; Layer 5 setup only prepares the direct
 ## Audit signals (hd:review audit surfaces these)
 
 Layer 5 drift signals:
-- **Graduation drought** — 10+ entries with same tag across lessons/* + 0 graduations (team captures but never promotes)
+- **Rule-adoption drought** — 10+ entries with same tag across lessons/* + 0 rule adoptions (team captures but never promotes)
 - **Missing tags** — entries without `tags:` field (hard to cluster)
 - **Stale INDEX** — INDEX.md entry counts don't match actual file contents (re-sync needed)
 - **Burst-capture** — all entries in a file from a single week then nothing (no ongoing discipline)
 - **Oversized domain file** — >15 entries without a sub-domain split
 
-The `graduation-candidate-scorer` sub-agent quantifies these signals for `hd:review audit`.
+The `rule-candidate-scorer` sub-agent quantifies these signals for `hd:review audit`.
 
 ## See also
 
 - [layer-1-context.md](layer-1-context.md) — context/knowledge separation (different memory types, different lifecycles)
 - [hd-learn/references/layer-5-knowledge.md](../../hd-learn/references/layer-5-knowledge.md) — concept explainer
 - [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) — entry authoring + domain-file schema
-- [`../../hd-maintain/references/graduation-criteria.md`](../../hd-maintain/references/graduation-criteria.md) — 3-criterion rule for graduation-readiness
+- [`../../hd-maintain/references/rule-adoption-criteria.md`](../../hd-maintain/references/rule-adoption-criteria.md) — 3-criterion rule for rule-readiness
 - [`../../hd-maintain/references/plan-hash-protocol.md`](../../hd-maintain/references/plan-hash-protocol.md) — SHA-256 proof-of-consent spec
 - Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/knowledge](https://github.com/BilLogic/plus-uno/tree/main/docs/knowledge)

@@ -67,16 +67,16 @@ Task design-harnessing:review:skill-quality-auditor(
 
 Aggregate per-skill findings into the audit report's Layer 2 section. Each finding cites the rubric section number (1–9).
 
-**Step 5 — Graduation drift (L5 check).**
+**Step 5 — Rule adoption drift (L5 check).**
 
 ```
-Task design-harnessing:analysis:graduation-candidate-scorer(
+Task design-harnessing:analysis:rule-candidate-scorer(
   lessons_root: "docs/knowledge/lessons/",
-  graduated_log: "docs/knowledge/graduations.md"
+  rules_log: "docs/knowledge/changelog.md"
 )
 ```
 
-Ready-to-graduate clusters become drift findings — "10 lessons on X topic, 0 graduated — drought signal."
+Ready-to-graduate clusters become drift findings — "10 lessons on X topic, 0 promoted — drought signal."
 
 **Step 6 — Deterministic data.** Run:
 
@@ -96,7 +96,7 @@ For each agent in `review_agents`, invoke via Task tool (fully-qualified names p
 Task compound-engineering:research:learnings-researcher(
   "Audit the design-harness setup at <worktree-path>. Check for past
    documented lessons relevant to current state, docs/solutions/ matches
-   from compound, graduation drought signals. Inventory + budget data
+   from compound, rule-adoption drought signals. Inventory + budget data
    attached. Return findings with severity (p1/p2/p3)."
 )
 

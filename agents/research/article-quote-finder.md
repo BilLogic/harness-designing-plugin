@@ -76,7 +76,7 @@ quotes:
     location_hint: "article part 1, 'Memory Taxonomy' subsection"
   - section: "§4e"
     role: definition
-    text: "Knowledge is episodic memory — dated narratives of what happened (decisions, lessons, graduations). Append-only; history is sacred."
+    text: "Knowledge is episodic memory — dated narratives of what happened (decisions, lessons, rule adoptions). Append-only; history is sacred."
     location_hint: "article part 2, 'Layer 5: Knowledge Compounding' opening"
   - section: "§2.5"
     role: principle

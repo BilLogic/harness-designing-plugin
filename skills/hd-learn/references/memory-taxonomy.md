@@ -10,7 +10,7 @@ Four kinds of memory, each mapping to a different part of the harness. Collapsin
 
 | Type | What it is | Example | Where it lives | Mutability |
 |---|---|---|---|---|
-| **Procedural** | How we work | "Always ask before changing the shared button component." | `AGENTS.md` + Layer 3 orchestration + graduated rules from Layer 5 | Curated; edits overwrite prior versions |
+| **Procedural** | How we work | "Always ask before changing the shared button component." | `AGENTS.md` + Layer 3 orchestration + rules from Layer 5 | Curated; edits overwrite prior versions |
 | **Semantic** | What we know | "Our design system uses 3 button variants: primary / secondary / ghost." | Layer 1 context — `docs/context/design-system/` etc. | Mutable, revised with the product |
 | **Episodic** | What happened | "On 2026-02-14, we tried a 4th variant for marketing. Reverted after launch." | Layer 5 knowledge — `docs/knowledge/lessons/YYYY-MM-DD-*.md` | **Append-only — history is sacred** |
 | **Working** | Right now | Current conversation turn; mid-task handoffs. | Context window + (optional) `.agent/handoffs/` | Ephemeral |
@@ -39,7 +39,7 @@ A typical design task reads from all four:
 3. **Episodic** (Layer 5) loads on demand — the agent reads relevant past lessons only when the task resembles a past situation.
 4. **Working** — the current conversation.
 
-When a task finishes, any genuine learning becomes a new **episodic** entry. If that learning recurs 3+ times across the team, it graduates to **procedural** (added to AGENTS.md) — and the original episodic narrative stays put.
+When a task finishes, any genuine learning becomes a new **episodic** entry. If that learning recurs 3+ times across the team, it is promoted to **procedural** (added to AGENTS.md) — and the original episodic narrative stays put.
 
 ## Derivative types (operational refinements)
 
@@ -47,7 +47,7 @@ Two additional types we use across the plug-in. They live *inside* Layer 5 along
 
 ### Speculative memory
 
-Hypotheses, open questions, "what-if" ideations. Stored in `docs/knowledge/ideations.md` (Layer 5). Not facts, not decisions — forks that might become decisions with evidence. When a speculation accumulates evidence and gets adopted, it graduates to procedural (rule) or semantic (context). When refuted, it's annotated as closed but retained — a rejected hypothesis is still signal.
+Hypotheses, open questions, "what-if" ideations. Stored in `docs/knowledge/ideations.md` (Layer 5). Not facts, not decisions — forks that might become decisions with evidence. When a speculation accumulates evidence and gets adopted, it is promoted to procedural (rule) or semantic (context). When refuted, it's annotated as closed but retained — a rejected hypothesis is still signal.
 
 ### Temporal memory
 

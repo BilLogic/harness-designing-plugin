@@ -12,7 +12,7 @@ Canonical definitions for terms used across the design harness framework. `hd:le
 | **Handoff** | The connector between skills in a workflow; working-memory artifact passed forward. | §4c |
 | **Gate** | A quality check between workflow steps. Usually pulls from Layer 4 rubrics. | §4c |
 | **Graduation** | Promotion of a Layer 5 lesson (episodic) to a Layer 3/AGENTS.md rule (procedural). Requires 3+ occurrences + clean imperative + team agreement. The original lesson is never deleted. | §4e |
-| **Procedural memory** | How we work. Lives in `AGENTS.md` + Layer 3 orchestration + graduated rules from Layer 5. | §2.5 |
+| **Procedural memory** | How we work. Lives in `AGENTS.md` + Layer 3 orchestration + rules from Layer 5. | §2.5 |
 | **Semantic memory** | What we know. Lives in Layer 1 context (`docs/context/`). | §2.5 |
 | **Episodic memory** | What happened. Lives in Layer 5 knowledge (`docs/knowledge/lessons/*.md`). | §2.5 |
 | **Working memory** | Right now — current conversation turn. Also includes ephemeral handoffs. | §2.5 |

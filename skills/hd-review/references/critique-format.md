@@ -91,13 +91,13 @@ Proposal adds three new button variants for the Q4 marketing campaign. One varia
 
 ### Prose
 
-The Q4 button refresh proposal is partially ready — two of three variants compose cleanly, but `primary-gradient` introduces an unapproved token. Token additions should flow through `docs/knowledge/decisions/` as an RFC first, then graduate to `docs/context/design-system/` once approved. Defer the gradient variant; ship the other two.
+The Q4 button refresh proposal is partially ready — two of three variants compose cleanly, but `primary-gradient` introduces an unapproved token. Token additions should flow through `docs/knowledge/decisions/` as an RFC first, then promote to `docs/context/design-system/` once approved. Defer the gradient variant; ship the other two.
 
 Component-budget finding (P2) is worth surfacing at review: three variants in one cycle is above the informal quota. Consider phasing.
 
 ### Next step
 
-This critique surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:maintain capture` to log a lesson. After ≥3 similar lessons, `/hd:maintain graduate-propose` could formalize the rule.
+This critique surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:maintain capture` to log a lesson. After ≥3 similar lessons, `/hd:maintain rule-propose` could formalize the rule.
 ```
 
 ## Rubric attribution
