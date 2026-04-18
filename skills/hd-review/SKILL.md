@@ -47,7 +47,7 @@ Ambiguous → ask: *"Audit the harness itself, or critique a specific work item?
 ```
 hd:review audit Progress:
 - [ ] Step 1: Load agent list from hd-config.md; run budget-check.sh
-- [ ] Step 2: BATCH 1 (parallel) — harness-auditor × 5 (one per layer 1-5)
+- [ ] Step 2: BATCH 1 (parallel) — harness-auditor × 5 (one per layer 1–5)
 - [ ] Step 3: BATCH 2 (parallel) — rubric-recommender + lesson-retriever + (conditional) coexistence-analyzer
 - [ ] Step 4: Inline parse budget-check.sh JSON
 - [ ] Step 5: Synthesize findings + cross-check against <protected_artifacts>
@@ -118,9 +118,9 @@ Each dispatch batch stays ≤5 agents (compound v2.39.0 convention: 6+ parallel 
 
 - [assets/audit-report.md.template](assets/audit-report.md.template) — audit output format
 - [assets/critique-response.md.template](assets/critique-response.md.template) — critique output format
-- [assets/starter-rubrics/](assets/starter-rubrics/) — 12 shipped rubrics:
+- [assets/starter-rubrics/](assets/starter-rubrics/) — 14 shipped rubrics (each with `## Scope & Grounding` per 3i.8):
   - `accessibility-wcag-aa.md` — WCAG 2.1 AA + Fluent 2 + Material 3 a11y
-  - `design-system-compliance.md` — token + variant adherence
+  - `design-system-compliance.md` — token + variant adherence (managed-DS pre-fills: antd, chakra, mui, mantine)
   - `component-budget.md` — new-primitive RFC gate
   - `skill-quality.md` — 9-point Layer 2 skill health check (applied by `skill-quality-auditor` sub-agent)
   - `interaction-states.md` — loading / empty / error / success state coverage
@@ -131,7 +131,9 @@ Each dispatch batch stays ≤5 agents (compound v2.39.0 convention: 6+ parallel 
   - `motion-design.md` — reduced-motion + duration + easing + purpose
   - `ux-writing.md` — error/empty/success copy + voice + banned phrases
   - `responsive-design.md` — mobile-first + fluid + touch targets + safe area
-  - Users extend by authoring new rubric check files at `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content)
+  - `telemetry-display.md` — IoT / hardware / real-time-data (freshness, device-state, alerts)
+  - `i18n-cjk.md` — bilingual / CJK-primary products (dual-script, IME states, fontstack)
+  - Users extend by authoring new rubric check files at `docs/rubrics/<name>.md`. See `references/rubric-authoring-guide.md`.
 
 ## Scripts
 

@@ -16,7 +16,7 @@ Answer questions about the five-layer framework with accurate citations to the S
 ## Trigger phrases
 
 - "What is a design harness?"
-- "Explain Layer N" (where N is 1-5 or a layer name)
+- "Explain Layer N" (where N is 1–5 or a layer name)
 - "What's the difference between context and knowledge?"
 - "How do I know if I need Layer 4?"
 - "/hd:learn [topic]"
@@ -93,7 +93,7 @@ Load [layer-1-context.md](references/layer-1-context.md), [layer-5-knowledge.md]
 >
 > Ready to scaffold both layers? Run `/hd:setup`.
 
-**Q: "How do I know when to write a lesson as a rule into a rule?"**
+**Q: "How do I know when to promote a lesson into a rule?"**
 
 Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 
