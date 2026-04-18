@@ -95,31 +95,31 @@ Only offer MCPs from the known table. Never recommend unknown packages. Never us
 
 Semantic memory: product, user, design system, conventions. Walk the per-layer cycle; scaffold writes under `docs/context/` using the context skeleton, link writes pointer files with 3–5 line extracted summaries, critique applies bloat-detection.
 
-→ See [references/step-4-layer-1-context.md](references/step-4-layer-1-context.md) for full procedure.
+→ See [references/layer-1-context.md](references/layer-1-context.md) for full procedure.
 
 ## Step 5 — Layer 2 (Skills)
 
 Procedural memory: AI capabilities the team codifies. Default is **skip** unless external skills exist (**critique**) or `.agent/skills/` is present (**link**).
 
-→ See [references/step-5-layer-2-skills.md](references/step-5-layer-2-skills.md) for full procedure.
+→ See [references/layer-2-skills.md](references/layer-2-skills.md) for full procedure.
 
 ## Step 6 — Layer 3 (Orchestration)
 
 How skills and handoffs flow across PM tools, diagrams, and CI. Default is **link** when a PM tool is detected; **skip** when fewer than 3 Layer 2 skills exist.
 
-→ See [references/step-6-layer-3-orchestration.md](references/step-6-layer-3-orchestration.md) for full procedure.
+→ See [references/layer-3-orchestration.md](references/layer-3-orchestration.md) for full procedure.
 
 ## Step 7 — Layer 4 (Rubrics)
 
 Taste embedded as explicit checks. If existing AI-docs exceed 200 lines, **critique + extract** implicit rubrics; otherwise **scaffold** from the 12 starter rubrics. Rubrics live in `docs/rubrics/`, not `docs/context/design-system/`.
 
-→ See [references/step-7-layer-4-rubrics.md](references/step-7-layer-4-rubrics.md) for full procedure.
+→ See [references/layer-4-rubrics.md](references/layer-4-rubrics.md) for full procedure.
 
 ## Step 8 — Layer 5 (Knowledge)
 
 Episodic memory + procedural rules. Default is **critique** (via `rule-candidate-scorer`) when `has_plans_convention`, else **scaffold** an empty lessons directory.
 
-→ See [references/step-8-layer-5-knowledge.md](references/step-8-layer-5-knowledge.md) for full procedure.
+→ See [references/layer-5-knowledge.md](references/layer-5-knowledge.md) for full procedure.
 
 ## Step 9 — Write `hd-config.md`
 
@@ -174,9 +174,8 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 ## Reference files
 
 - [per-layer-procedure.md](references/per-layer-procedure.md) — shared FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + checkpoint
-- Step procedures: [step-4-layer-1-context.md](references/step-4-layer-1-context.md), [step-5-layer-2-skills.md](references/step-5-layer-2-skills.md), [step-6-layer-3-orchestration.md](references/step-6-layer-3-orchestration.md), [step-7-layer-4-rubrics.md](references/step-7-layer-4-rubrics.md), [step-8-layer-5-knowledge.md](references/step-8-layer-5-knowledge.md)
-- Layer depth guides: [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns), [layer-2-skills.md](references/layer-2-skills.md), [layer-3-orchestration.md](references/layer-3-orchestration.md), [layer-4-rubrics.md](references/layer-4-rubrics.md) (INDEX.md template), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML)
-- Shared: [tier-budget-model.md](references/tier-budget-model.md), [coexistence-checklist.md](references/coexistence-checklist.md), [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
+- Layer guides (concept + procedure + depth): [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns + Tier-1 budget model + Step 4 procedure), [layer-2-skills.md](references/layer-2-skills.md) (+ Step 5 procedure), [layer-3-orchestration.md](references/layer-3-orchestration.md) (+ Step 6 procedure), [layer-4-rubrics.md](references/layer-4-rubrics.md) (INDEX.md template + Step 7 procedure), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML + Step 8 procedure)
+- Shared: [coexistence-checklist.md](references/coexistence-checklist.md), [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
 
 ## Assets
 

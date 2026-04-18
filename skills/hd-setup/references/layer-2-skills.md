@@ -50,7 +50,32 @@ Required reading before a user authors their own first skill:
 
 Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill compliance checklist distill these into a compliance checklist.
 
+## Procedure — Step 5
+
+**Frame:** "Layer 2 — Skills. AI capabilities your team codifies. Procedural memory (article §4b)."
+
+**Show:** `has_external_skills`, `has_claude_dir`, `.agent/skills/` presence.
+
+**Propose default:**
+- `has_external_skills: true` → **critique** via skill-quality rubric
+- `.agent/skills/` → **link**
+- Nothing → **skip** (Layer 2 is premature for most teams)
+
+**Execute — critique:** per-skill invocation:
+
+```
+Task design-harnessing:review:skill-quality-auditor(
+  skill_md_path: "<path>/SKILL.md"
+)
+```
+
+Aggregate findings. Present to user. Don't modify anything.
+
+**Execute — scaffold:** seed questions: (1) workflow explained 3+ times last month? (2) repetitive task worth automating? Point user at the "What good Layer 2 looks like" section above for authoring discipline.
+
+→ Return to [../SKILL.md § Step 5 — Layer 2 (Skills)](../SKILL.md#step-5--layer-2-skills)
+
 ## See also
 
-- [tier-budget-model.md](tier-budget-model.md) — how skills interact with context budget
+- [layer-1-context.md](layer-1-context.md) — Tier-1 budget model (how skills interact with context budget)
 - hd-learn [layer-2-skills.md](../../hd-learn/references/layer-2-skills.md) — conceptual version

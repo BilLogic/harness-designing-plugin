@@ -101,6 +101,35 @@ Layer 5 drift signals:
 
 The `rule-candidate-scorer` sub-agent quantifies these signals for `hd:review audit`.
 
+## Procedure — Step 8
+
+**Frame:** "Layer 5 — Knowledge. What the team has learned. Episodic memory + procedural (article §4e)."
+
+**Show:** `has_plans_convention` + count, existing lessons count, rule adoption count, `team_tooling.docs` (for retros) and `team_tooling.pm` (for closed-issue decisions).
+
+**Propose default:**
+- `has_plans_convention: true` → **critique** — invoke `rule-candidate-scorer` on existing lessons
+- `team_tooling.docs` + MCP live → **scaffold** + offer to pull retro/post-mortem/decision-labeled pages
+- Nothing → **scaffold** empty lessons dir from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
+
+**Execute — critique:** invoke:
+
+```
+Task design-harnessing:analysis:rule-candidate-scorer(
+  lessons_root: "docs/knowledge/lessons/",
+  rules_log: "docs/knowledge/changelog.md"
+)
+```
+
+Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for each.
+
+**Execute — scaffold:**
+- Use the five-memory-type model + domain-grouped-lessons sections above for L5 depth
+- Seed questions: (1) 3 decisions in last 6 months new hire should know? (2) mistake you want to prevent recurring? (3) pattern across 3+ projects worth formalizing?
+- Write `docs/knowledge/INDEX.md`, `docs/knowledge/changelog.md`, 1 starter lesson
+
+→ Return to [../SKILL.md § Step 8 — Layer 5 (Knowledge)](../SKILL.md#step-8--layer-5-knowledge)
+
 ## See also
 
 - [layer-1-context.md](layer-1-context.md) — context/knowledge separation (different memory types, different lifecycles)

@@ -85,5 +85,5 @@ This is NOT declared at v0.MVP (we don't have `hd:review` yet) — but v0.MVP AG
 ## See also
 
 - [hd-config-schema.md](hd-config-schema.md) — `hd-config.md` format
-- [good-agents-md-patterns.md](good-agents-md-patterns.md) — coexistence section in healthy AGENTS.md
+- [layer-1-context.md § Good AGENTS.md patterns](layer-1-context.md#good-agentsmd-patterns) — coexistence section in healthy AGENTS.md
 - [../../hd-learn/references/coexistence-with-compound.md](../../hd-learn/references/coexistence-with-compound.md) — user-facing Q&A version

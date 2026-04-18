@@ -52,6 +52,21 @@ Audit flags Layer 3 gaps when:
 - Handoffs are happening informally (in Slack, comments) instead of as artifacts
 - No quality gates — workflows skip rubric checks entirely
 
+## Procedure — Step 6
+
+**Frame:** "Layer 3 — Orchestration. How skills + handoffs flow. Procedural memory (article §4c)."
+
+**Show:** `team_tooling.pm` (linear / github_issues / jira), `team_tooling.diagramming`, GitHub Actions in `.github/workflows/`.
+
+**Propose default:**
+- `team_tooling.pm` present → **link** (orchestration lives in PM tool labels)
+- `team_tooling.diagramming` → **link** to sequence/state diagrams
+- Fewer than 3 Layer 2 skills → **skip**
+
+**Execute — scaffold:** seed questions: (1) 3–5 steps from idea to shipped? (2) most common handoff that breaks? Use the "What to scaffold when L3 is active" + "Workflow design patterns" sections above for depth.
+
+→ Return to [../SKILL.md § Step 6 — Layer 3 (Orchestration)](../SKILL.md#step-6--layer-3-orchestration)
+
 ## See also
 
 - [layer-2-skills.md](layer-2-skills.md) — prerequisite layer
