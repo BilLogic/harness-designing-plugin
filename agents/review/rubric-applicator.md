@@ -171,13 +171,50 @@ When in doubt between two starters, prefer `null` (novel) over a weak match — 
 
 Per candidate:
 
-1. **`candidate_id`** — kebab-case id derived from the rule intent (≤ 40 chars, no trailing dash). Examples: `no-hardcoded-design-values`, `cheat-sheet-is-law`, `no-alt-ui-frameworks`.
-2. **`rule_statement`** — distill the imperative into one sentence starting with the verb. Stay faithful to source wording; do not paraphrase away nuance.
+1. **`candidate_id`** — derive deterministically from the rule statement (see "candidate_id derivation rule" below). Examples: `no-hardcoded-design-values`, `cheat-sheet-is-law`, `no-alt-ui-frameworks`.
+2. **`rule_statement`** — distill the imperative into one sentence starting with the verb. Stay faithful to source wording; do not paraphrase away nuance. **Punctuation:** use `:` (colon) to separate rule heading from elaboration (`"Never hallucinate layouts: when building a new page, read ..."`). Use `;` only when chaining two independent imperatives. When in doubt, colon.
 3. **`suggested_severity`** — apply the severity keyword map below. Record the matched keyword in `severity_rationale`.
 4. **`pass_example` / `fail_example`** — apply the attribution rules below. Never fabricate.
-5. **`applies_to`** — cite the exact source section. Format: `<file-path> § <heading>`. Do NOT infer broader scope (e.g. "applies to all CSS"); scope is the source-heading's scope, period.
-6. **`source_citation`** — `<file-path>:<line-range>` for direct grep-back.
+5. **`applies_to`** — cite the exact source section in repo-relative form (see "path-format rule" below). Format: `<repo-relative-path> § <heading>`. Do NOT infer broader scope (e.g. "applies to all CSS"); scope is the source-heading's scope, period.
+6. **`source_citation`** — `<repo-relative-path>:<line-range>` for direct grep-back. Repo-relative per the same rule as `applies_to`.
 7. **`evidence`** — one or two verbatim snippets from the source that justify the rule. Quote exactly.
+
+#### `candidate_id` derivation rule
+
+Deterministic recipe — same rule statement → same id, regardless of session:
+
+1. Take the **first imperative verb** in the rule statement from this allowlist: `must | never | always | don't | do not | avoid | prefer | require | forbid | ensure | use | follow | skip`.
+2. Take the **first noun phrase** after that verb (up to 3 words, lowercase). Stop at: punctuation (`,`, `:`, `;`, `.`), conjunction (`and`, `or`, `but`, `—`), or relative clause marker (`that`, `which`, `when`, `if`).
+3. If the verb is **negative** (`never`, `don't`, `do not`, `avoid`, `forbid`, `skip`), drop the verb and prefix the noun phrase with `no-`.
+4. Kebab-case the result. Strip articles (`the`, `a`, `an`). Lowercase. Cap at **40 chars** (truncate at the last word boundary).
+5. **Collision rule:** if two candidates produce the same id, suffix `-2`, `-3`, … by source-line order (earliest gets the unsuffixed id).
+
+**Worked examples:**
+
+| Rule statement | Verb + noun-phrase | Final id |
+|---|---|---|
+| "Never hardcode colors, spacing, typography, radius, or elevation" | `never` + `hardcode colors` (negative → drop verb, prefix `no-`) | `no-hardcoded-colors` |
+| "Use PLUS components first; only fall back to generic React-Bootstrap" | `use` + `plus components` | `use-plus-components` |
+| "Never hallucinate layouts: when building a new page, read the cheat sheet" | `never` + `hallucinate layouts` (negative) | `no-hallucinate-layouts` |
+| "Follow the full implement-design workflow when Figma input exists" | `follow` + `implement-design workflow` | `follow-implement-design-workflow` |
+
+#### Path-format rule (for `applies_to` and `source_citation`)
+
+Both fields MUST use **repo-relative paths** from the target repo's root — not absolute paths, not paths relative to the agent's cwd.
+
+1. If the caller passed `source:` as an absolute path: find the nearest `.git/` ancestor directory; treat that as the repo root; strip the repo-root prefix from emitted citations.
+2. If the caller passed `source:` as already-relative: pass through unchanged.
+3. If no `.git/` ancestor is detectable (rare — e.g., source in `/tmp` without a git init): fall back to the **basename** of the source file.
+
+**Worked examples:**
+
+| Input `source:` | Repo root found at | Emitted `source_citation` |
+|---|---|---|
+| `/tmp/hd-real-test/plus-uno/AGENTS.md` | `/tmp/hd-real-test/plus-uno/` | `AGENTS.md:26-26` |
+| `docs/rubrics/accessibility.md` (already relative) | (n/a) | `docs/rubrics/accessibility.md:15-20` |
+| `/tmp/standalone-file.md` (no `.git/` ancestor) | (n/a) | `standalone-file.md:3-3` |
+
+Same rule for `applies_to` — the `<file-path>` portion uses the repo-relative form.
 
 #### Severity keyword map
 
@@ -196,8 +233,8 @@ This is a **hard rule**: the agent must not invent pass/fail snippets that do no
 
 - **`pass_example:`** — populate ONLY if the source contains an explicit positive example (code block, inline snippet, "e.g." demo). Otherwise write exactly: `"(see source § <section>; no explicit positive example provided)"`.
 - **`fail_example:`** — same rule. If absent, write: `"(see source § <section>; no explicit negative example provided)"`.
-- **`applies_to:`** — MUST be the exact source-file heading. Format: `"<file-path> § <heading>"` (e.g., `"plus-uno/AGENTS.md § Forbidden Patterns"`). Do not infer broader file-type scope; that is the calling skill's job during materialization.
-- **`source_citation:`** — required on every candidate, format `"<file-path>:<line-range>"` (e.g., `"AGENTS.md:42-47"`). Enables direct grep-back for reviewers.
+- **`applies_to:`** — MUST be the exact source-file heading, path in **repo-relative form** per the path-format rule above. Format: `"<repo-relative-path> § <heading>"` (e.g., `"AGENTS.md § Forbidden Patterns"`, not `"/tmp/hd-real-test/plus-uno/AGENTS.md § ..."`). Do not infer broader file-type scope; that is the calling skill's job during materialization.
+- **`source_citation:`** — required on every candidate, format `"<repo-relative-path>:<line-range>"` (e.g., `"AGENTS.md:42-47"`). Repo-relative per the path-format rule. Enables direct grep-back for reviewers.
 
 **Never fabricate examples.** A placeholder like `"// TODO: add example"` or a plausible-looking invented snippet is a spec violation. If the source does not contain the example, say so with the sentinel string above — never invent.
 
