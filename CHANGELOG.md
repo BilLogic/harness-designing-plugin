@@ -5,6 +5,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3g — remaining backlog
+
+Completed per [`docs/plans/2026-04-18-003-refactor-phase-3g-remaining-backlog-plan.md`](docs/plans/2026-04-18-003-refactor-phase-3g-remaining-backlog-plan.md). Closes all 6 items deferred from Phase 3f via 7 parallel subagents (G1–G5 + G6-Run-A + G6-Run-B). All 4 SKILL.md files now pass the 200-line soft cap; `budget-check.sh` exits 0 with 0 violations.
+
+**G5 — `workflows/` vocabulary reconciliation** (`bb396098`): AGENTS.md Semantic split vocabulary was internally inconsistent ("no workflows/ inside skills" rule but vocabulary listed workflows/ = FOLLOW). Reconciled to repo policy: dropped workflows/ entry; added assets/ entry; added paragraph explaining per-mode procedures live in SKILL.md inline OR references/`<mode>`-procedure.md (cites F5 pattern). 3 hd-onboard refs updated to drop stale workflows/ subdir convention.
+
+**G2 — `article-quote-finder` corpus** (`cb2ed19d`): ships `agents/research/article-quote-finder-corpus.md` as structured default corpus (6 article sections with `{{TBD}}` URL placeholders since Bill's Substack article is unpublished). Agent unions corpus + `hd-config.md article_sources` override; sentinel-filter drops `{{TBD}}` entries; emits graceful structured empty when resolved set is empty (`corpus_status: not-configured`). No invented quotes. Fixes happy-path-unreachable bug.
+
+**G3 — `detect.py --include-user-mcps` flag** (`c83859a7`): opt-in user-level MCP scoping. Default unchanged (repo-scoped). When flag set, reads `~/.claude/mcp.json` + `~/.codex/mcp.json`, unions + dedupes into `mcp_servers`, records provenance via new `signals.user_mcp_sources` + `signals.user_mcps_included`. Malformed user config: stderr warn, skip, continue (never crash). hd-setup Step 1 asks once before invoking detect; passes flag if user opts in. Surfaces the plus-uno pilot's Figma + Notion MCP gap (previously invisible).
+
+**G4 — `harness-health-analyzer mode: quick` wiring** (`73db7161`): agent's quick-mode was defined in spec but hardcoded to `full` at dispatch. `audit-procedure.md` +50 lines (152→202): new `## Inputs` section declares `mode: "full" | "quick"` (default full); new `## Mode: quick` section with 4-step abbreviated-scan procedure (detect.py + hd-config.md only; dispatches analyzer with `mode: "quick"`; emits top-3-per-layer inline report; no file write). `hd-review/SKILL.md` +2 lines: one-paragraph quick-mode callout. Full-mode behavior unchanged. Harness-health-analyzer.md unchanged (its existing Phase 2 "skipped in quick" spec already matched the wired scope).
+
+**G6 — True two-session extract-mode regression** (`9aa957fb`): two independently dispatched subagents with fresh contexts ran `rubric-applicator mode: extract` against plus-uno AGENTS.md. **9/9 structural axes byte-identical** (total=13, severity p1:11 p2:2, phases followed, matches_starter breakdown, zero fabrication, keyword rationale list, sentinel examples). Surface drift cosmetic only: candidate_id phrasing (5/13 differ), path format (absolute vs relative), rule_statement punctuation (: vs ;). **SHIP verdict confirmed** under stronger evidence than the same-turn Phase 3f regression. 3h candidates (purely cosmetic): pin candidate_id derivation, pin path format, pin punctuation.
+
+**G1 — `hd-setup/SKILL.md` slimming** (`c3dc2ef8`): last SKILL.md over the 200-line soft cap. 420 → **200** (at cap). 6 new reference files house per-step procedures: `per-layer-procedure.md` (FRAME→SHOW→PROPOSE→ASK→EXECUTE cycle + default-action table + link-mode contract), `step-4-layer-1-context.md`, `step-5-layer-2-skills.md`, `step-6-layer-3-orchestration.md`, `step-7-layer-4-rubrics.md`, `step-8-layer-5-knowledge.md`. Critical preservations verified: Guardrail section (additive-only when harness detected) kept verbatim, default action table with guardrail rows moved with per-layer-procedure, link-mode 3-5 line extracted-summary contract, all fully-qualified Task invocations.
+
+**Budget-check final state:** all 4 SKILL.md pass (hd-compound 124, hd-onboard 124, hd-review 146, hd-setup 200); Tier 1 tracked at 198/200; exit 0, violations=0.
+
+**Deferred to Phase 3h (cosmetic, optional):**
+- Pin `rubric-applicator` `candidate_id` derivation rule (collapses 5-candidate phrasing drift)
+- Pin `applies_to` / `source_citation` path format (relative from repo root)
+- Pin `rule_statement` punctuation (lowest-value; only if downstream consumers care)
+
 ### Phase 3f — skill-test findings
 
 Completed per [`docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-plan.md`](docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-plan.md). Batches findings from 3 parallel skill-test audits (hd-onboard, hd-compound, hd-review + 6 sub-agents) + the Phase 3e E5 synthetic extract-mode first-fire. Six F-units + regression + doc sync.

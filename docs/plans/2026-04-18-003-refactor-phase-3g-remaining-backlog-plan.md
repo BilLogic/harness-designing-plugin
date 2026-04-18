@@ -1,7 +1,7 @@
 ---
 title: "Phase 3g — remaining backlog: hd-setup slimming, article corpus, MCP scoping, mode:quick wiring, vocabulary reconciliation, two-session regression"
 type: refactor
-status: active
+status: completed
 date: 2026-04-18
 origin: docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-plan.md
 ---
