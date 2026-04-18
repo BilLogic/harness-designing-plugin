@@ -15,6 +15,7 @@ Sections below match ideation doc
 
 from __future__ import annotations
 
+import argparse
 import datetime
 import json
 import os
@@ -84,6 +85,22 @@ def detect_other_harnesses() -> dict:
 # --- C2: MCP configuration detection ------------------------------------------
 
 
+def _parse_mcp_file(path: Path) -> set[str] | None:
+    """Parse one MCP config file; return server-name set, or None if malformed.
+
+    Returns empty set if file has no mcpServers key but is valid JSON.
+    Returns None on JSON/Unicode error (caller may warn).
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return None
+    mcp_servers = data.get("mcpServers") or data.get("mcp_servers") or {}
+    if isinstance(mcp_servers, dict):
+        return set(mcp_servers.keys())
+    return set()
+
+
 def detect_mcp_servers() -> list[str]:
     """Parse every mcp.json in the repo; return sorted unique server names."""
     candidates = [
@@ -97,14 +114,36 @@ def detect_mcp_servers() -> list[str]:
         p = REPO / rel
         if not p.is_file():
             continue
-        try:
-            data = json.loads(p.read_text(encoding="utf-8", errors="replace"))
-        except (json.JSONDecodeError, UnicodeDecodeError):
+        names = _parse_mcp_file(p)
+        if names is None:
             continue
-        mcp_servers = data.get("mcpServers") or data.get("mcp_servers") or {}
-        if isinstance(mcp_servers, dict):
-            servers.update(mcp_servers.keys())
+        servers.update(names)
     return sorted(servers)
+
+
+def detect_user_mcp_servers() -> tuple[list[str], list[str]]:
+    """Parse user-level mcp.json files. Return (sorted server names, sources read).
+
+    Reads ~/.claude/mcp.json and ~/.codex/mcp.json. Emits a stderr warn line
+    for each malformed file. Missing files are silent (not an error).
+    """
+    user_candidates = [
+        os.path.expanduser("~/.claude/mcp.json"),
+        os.path.expanduser("~/.codex/mcp.json"),
+    ]
+    servers: set[str] = set()
+    sources: list[str] = []
+    for path_str in user_candidates:
+        p = Path(path_str)
+        if not p.is_file():
+            continue
+        names = _parse_mcp_file(p)
+        if names is None:
+            sys.stderr.write(f"warn: malformed user MCP config at {path_str}\n")
+            continue
+        servers.update(names)
+        sources.append(path_str)
+    return sorted(servers), sources
 
 
 # --- C3: external-tool category detection -------------------------------------
@@ -565,9 +604,28 @@ def decide_mode(v1: dict, other_h: dict) -> tuple[str, int]:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Deterministic harness + tooling detection for hd:setup.",
+    )
+    parser.add_argument(
+        "--include-user-mcps",
+        action="store_true",
+        help=(
+            "Also scan user-level MCP configs (~/.claude/mcp.json, "
+            "~/.codex/mcp.json). Default: repo-scoped only."
+        ),
+    )
+    args = parser.parse_args()
+
     v1 = detect_v1_signals()
     other_h = detect_other_harnesses()
     mcp_servers = detect_mcp_servers()
+    user_mcp_sources: list[str] = []
+    if args.include_user_mcps:
+        user_names, user_mcp_sources = detect_user_mcp_servers()
+        if user_names:
+            merged = set(mcp_servers) | set(user_names)
+            mcp_servers = sorted(merged)
     team_tooling = detect_team_tooling()
     config_sot = detect_config_sot()
     deps = collect_package_deps()
@@ -613,6 +671,9 @@ def main() -> int:
         "layers_present": maturity["layers_present"],
         # E2.2 — managed DS
         "managed_design_system": managed_ds,
+        # G3 — user-level MCP scoping (opt-in via --include-user-mcps)
+        "user_mcps_included": args.include_user_mcps,
+        "user_mcp_sources": user_mcp_sources,
     }
 
     output = {

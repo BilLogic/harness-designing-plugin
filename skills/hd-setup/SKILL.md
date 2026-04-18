@@ -56,7 +56,14 @@ This is a graduated rule (see [AGENTS.md § Graduated rules](../../AGENTS.md#gra
 
 ## Step 1 — Detect
 
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
+Before running detect, ask once:
+
+> "Also scan your user-level MCPs (`~/.claude/mcp.json`, `~/.codex/mcp.json`)? This surfaces team-independent MCPs like your personal Figma/Notion integrations.
+> **Default: no** — keeps detection repo-scoped. Say `yes` to include."
+
+If the user says `yes`, invoke `python3 scripts/detect.py --include-user-mcps`. Otherwise invoke `python3 scripts/detect.py` (repo-scoped, unchanged default).
+
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`. When `--include-user-mcps` was passed, also retain `signals.user_mcps_included` + `signals.user_mcp_sources` so provenance can be recorded in `hd-config.md`.
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 

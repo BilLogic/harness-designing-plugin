@@ -211,6 +211,27 @@ files_written:
 ---
 ```
 
+## `detect.py` CLI flags & output signals (informational)
+
+`detect.py` is the scanner that feeds `hd:setup`. Its flags and emitted signals are not part of the `hd-config.md` schema, but several signals map 1:1 into config fields — so they're documented here for reference.
+
+**Flags:**
+
+| Flag | Default | Effect |
+|---|---|---|
+| `--include-user-mcps` | off | Also read `~/.claude/mcp.json` and `~/.codex/mcp.json`. Opt-in: default behavior stays repo-scoped so team-independent MCPs don't pollute the team config. |
+
+**Output signals added for user-MCP scoping (G3):**
+
+| Signal path | Type | Notes |
+|---|---|---|
+| `signals.user_mcps_included` | bool | `true` iff `--include-user-mcps` was passed. Absent/false by default. |
+| `signals.user_mcp_sources` | string list | Absolute paths of the user-level MCP files actually read + parsed successfully. Empty list if flag absent or no files present. |
+
+When the flag is passed, any MCP server names found in user-level files are **unioned (deduped by name)** into the top-level `mcp_servers` list alongside repo-level detections. `hd:setup` records provenance by writing `user_mcp_sources` into the hd-config prose body so the team can see which MCPs came from personal configs.
+
+**Error handling:** if a user config file exists but is malformed JSON, detect skips it and writes a single line to stderr: `warn: malformed user MCP config at <path>`. Detect never crashes on user-config errors.
+
 ## Coexistence note
 
 This file is OURS (`hd-config.md`). NOT to be confused with compound's `compound-engineering.local.md`. If both plug-ins are installed, two config files coexist at repo root. See [coexistence-checklist.md](coexistence-checklist.md).
