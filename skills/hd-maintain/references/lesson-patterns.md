@@ -1,6 +1,6 @@
 # Lesson patterns
 
-**Purpose:** authoring discipline for Layer 5 entries. Loaded by `hd:compound capture` when drafting a new entry.
+**Purpose:** authoring discipline for Layer 5 entries. Loaded by `hd:maintain capture` when drafting a new entry.
 
 ## File organization — date-slug, one file per lesson event
 
@@ -65,7 +65,7 @@ Decisions / preferences / ideations / changelog use their own per-file formats, 
 - `docs/knowledge/ideations.md` — prompt + options + current thinking + needed-to-decide
 - `docs/knowledge/changelog.md` — changed / before / after / why
 
-`/hd:compound capture` classifies the entry to the right memory type at Step 1 and targets the right file.
+`/hd:maintain capture` classifies the entry to the right memory type at Step 1 and targets the right file.
 
 ## Good example
 
@@ -148,4 +148,4 @@ Tags drive graduation detection — ≥3 matching-tag lessons → propose gradua
 
 - [graduation-criteria.md](graduation-criteria.md) — when a lesson crosses the graduation threshold
 - [plan-hash-protocol.md](plan-hash-protocol.md) — proof-of-consent mechanism for the graduation write
-- [hd-onboard `layer-5-knowledge.md`](../../hd-onboard/references/layer-5-knowledge.md) — conceptual framing of Layer 5
+- [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md) — conceptual framing of Layer 5

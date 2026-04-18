@@ -42,7 +42,7 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 
 **Severity:** P2. Not structural (nothing broken), but the compounding machinery isn't running.
 
-**What to suggest:** "Consider `/hd:compound graduate-propose <tag>` for this topic."
+**What to suggest:** "Consider `/hd:maintain graduate-propose <tag>` for this topic."
 
 ## Front-loaded capture
 
@@ -116,4 +116,4 @@ These are all low-severity — teams have valid reasons for any of these states 
 
 - [audit-criteria.md](audit-criteria.md) — priority framework + cross-cutting checks
 - [bloat-detection.md](bloat-detection.md) — complementary (bloat is volume-based; drift is time- and relation-based)
-- `../../hd-compound/references/graduation-criteria.md` — when drought can be addressed via graduation
+- `../../hd-maintain/references/graduation-criteria.md` — when drought can be addressed via graduation

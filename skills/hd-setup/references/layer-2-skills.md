@@ -2,7 +2,7 @@
 
 **Loaded by:** `SKILL.md` Step 5 when scaffolding or critiquing Layer 2. Seed questions + decision defaults live in SKILL.md; this file provides the "what good looks like" criteria and skill-authoring resources.
 
-**Concept explainer:** [hd-onboard `layer-2-skills.md`](../../hd-onboard/references/layer-2-skills.md) — "what IS Layer 2?"
+**Concept explainer:** [hd-learn `layer-2-skills.md`](../../hd-learn/references/layer-2-skills.md) — "what IS Layer 2?"
 
 ## hd:setup does NOT author skills for users
 
@@ -53,4 +53,4 @@ Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill complia
 ## See also
 
 - [tier-budget-model.md](tier-budget-model.md) — how skills interact with context budget
-- hd-onboard [layer-2-skills.md](../../hd-onboard/references/layer-2-skills.md) — conceptual version
+- hd-learn [layer-2-skills.md](../../hd-learn/references/layer-2-skills.md) — conceptual version

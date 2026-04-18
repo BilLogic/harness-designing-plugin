@@ -1,13 +1,13 @@
 ---
 title: Propose-mode procedure
-loaded_by: hd-compound
+loaded_by: hd-maintain
 ---
 
 # Propose mode — full procedure (READ-ONLY — writes NOTHING to tracked files)
 
 ## Purpose
 
-Step-by-step procedure for `/hd:compound graduate-propose <topic>`: score candidate clusters, draft the rule + graduations.md entry, compute a deterministic plan hash via `scripts/compute-plan-hash.sh`, and persist a `.hd/propose-<prefix>.json` artifact so Apply survives context compaction. No writes to tracked files. Invoked by the propose-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:maintain graduate-propose <topic>`: score candidate clusters, draft the rule + graduations.md entry, compute a deterministic plan hash via `scripts/compute-plan-hash.sh`, and persist a `.hd/propose-<prefix>.json` artifact so Apply survives context compaction. No writes to tracked files. Invoked by the propose-mode workflow checklist in `../SKILL.md`.
 
 ## Steps
 
@@ -57,7 +57,7 @@ Order in `paths` doesn't matter — the script sorts with `LC_ALL=C sort`.
 **Step 6 — Compute hash.** Invoke the reference implementation:
 
 ```bash
-echo "$propose_json" | skills/hd-compound/scripts/compute-plan-hash.sh
+echo "$propose_json" | skills/hd-maintain/scripts/compute-plan-hash.sh
 ```
 
 Never compute the hash any other way. Two sessions "reasoning" their way to a hash will diverge; the script is the only authoritative source.
@@ -96,7 +96,7 @@ This artifact makes Apply survive context compaction. Do **not** add `.hd/` to t
 `<64-char-hex>`  (artifact: .hd/propose-<prefix>.json)
 
 ### To apply
-/hd:compound graduate-apply --hash <prefix>
+/hd:maintain graduate-apply --hash <prefix>
 ```
 
 **Confirm zero writes to tracked files.** `git status` should show no tracked-file changes — only the untracked `.hd/` directory (which the user should gitignore).

@@ -1,15 +1,15 @@
 ---
 name: graduation-candidate-scorer
-description: "Clusters docs/knowledge/lessons/ and scores each cluster for graduation-readiness (Layer 5 → AGENTS.md rule). Use from hd:compound propose-graduation and hd:review audit drift."
+description: "Clusters docs/knowledge/lessons/ and scores each cluster for graduation-readiness (Layer 5 → AGENTS.md rule). Use from hd:maintain propose-graduation and hd:review audit drift."
 color: purple
 model: inherit
 ---
 
 # graduation-candidate-scorer
 
-Analyze a lesson corpus under `docs/knowledge/lessons/` and surface which patterns are ripe for graduation from **episodic** (narrative lesson) to **procedural** (AGENTS.md rule). You produce structured data the calling skill uses to either propose a graduation to the user (hd:compound) or surface drift (hd:review audit).
+Analyze a lesson corpus under `docs/knowledge/lessons/` and surface which patterns are ripe for graduation from **episodic** (narrative lesson) to **procedural** (AGENTS.md rule). You produce structured data the calling skill uses to either propose a graduation to the user (hd:maintain) or surface drift (hd:review audit).
 
-Returns a ranked list of graduation candidates with rationale per cluster. Used by `hd:compound propose-graduation` and by `hd:review audit` drift-signal detection.
+Returns a ranked list of graduation candidates with rationale per cluster. Used by `hd:maintain propose-graduation` and by `hd:review audit` drift-signal detection.
 
 ## Inputs
 
@@ -83,7 +83,7 @@ summary:
 - Never reads outside `lessons_root` + `graduated_log`.
 - Never writes to `docs/solutions/` (compound's namespace).
 - When called from `hd:review audit`, the output feeds the drift-detection section of the audit report.
-- When called from `hd:compound propose-graduation`, the ready-scoring-≥-3.5 cluster becomes the proposed graduation passed to the plan-hash step.
+- When called from `hd:maintain propose-graduation`, the ready-scoring-≥-3.5 cluster becomes the proposed graduation passed to the plan-hash step.
 
 ## Failure modes
 
@@ -93,6 +93,6 @@ summary:
 
 ## See also
 
-- `skills/hd-compound/references/graduation-criteria.md` — the 3-criterion rule this agent operationalizes
-- `skills/hd-compound/references/lesson-patterns.md` — lesson authoring discipline (used to score cluster quality)
-- `skills/hd-compound/references/plan-hash-protocol.md` — what the calling skill does AFTER this agent returns ready clusters
+- `skills/hd-maintain/references/graduation-criteria.md` — the 3-criterion rule this agent operationalizes
+- `skills/hd-maintain/references/lesson-patterns.md` — lesson authoring discipline (used to score cluster quality)
+- `skills/hd-maintain/references/plan-hash-protocol.md` — what the calling skill does AFTER this agent returns ready clusters

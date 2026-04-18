@@ -37,7 +37,7 @@
 {{SUGGESTED_NEXT}}
 
 <!-- One concrete suggestion:
-- "Capture this? Run `/hd:compound capture`" (when a learning emerged)
+- "Capture this? Run `/hd:maintain capture`" (when a learning emerged)
 - "Address P1 findings before approval" (when blocked)
 - "Ready for approval" (when all findings ≤ P3)
 - "Review rubric X with team" (when findings suggest the rubric itself needs revision)

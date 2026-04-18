@@ -29,9 +29,9 @@ The plug-in walks you through each layer, detects what you already have, and off
 
 | Command | Verb | Use it to… |
 |---|---|---|
-| [`/hd:onboard`](skills/hd-onboard/SKILL.md) | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references (one per layer + glossary + FAQ + coexistence + memory-taxonomy), article § citations when the corpus is configured. No writes. |
+| [`/hd:learn`](skills/hd-learn/SKILL.md) | **learn** | Ask questions about the harness concept. Article-backed Q&A, 10 atomic references (one per layer + glossary + FAQ + coexistence + memory-taxonomy), article § citations when the corpus is configured. No writes. |
 | [`/hd:setup`](skills/hd-setup/SKILL.md) | **setup** | Walk the five layers in order. Detect existing harnesses (`.agent/`, `.claude/`, `AGENTS.md`, compound-engineering artifacts) and external tooling (6 team-tool categories, MCP configs at repo- and optionally user-level). Offer per-layer link / critique / scaffold / skip. Write `hd-config.md` recording every decision. |
-| [`/hd:compound`](skills/hd-compound/SKILL.md) | **maintain** | Capture lessons (episodic memory; one dated file per event). Propose graduations from narrative lesson to team rule in AGENTS.md. **Destructive graduations require SHA-256 plan-hash proof-of-consent** — compute on propose, persist to `.hd/propose-<hash>.json`, verify on apply. Survives context compaction. |
+| [`/hd:maintain`](skills/hd-maintain/SKILL.md) | **maintain** | Capture lessons (episodic memory; one dated file per event). Propose graduations from narrative lesson to team rule in AGENTS.md. **Destructive graduations require SHA-256 plan-hash proof-of-consent** — compute on propose, persist to `.hd/propose-<hash>.json`, verify on apply. Survives context compaction. |
 | [`/hd:review`](skills/hd-review/SKILL.md) | **improve** | `audit` harness health via multi-agent orchestration (parallel/serial auto-switch at 6+ agents) — full mode or `mode:quick` (~30s preflight). `critique` work items against rubrics. `<protected_artifacts>` declared so `/ce:review` and friends never flag our outputs. |
 
 ---
@@ -168,11 +168,11 @@ design-harness/
 │   └── workflow/harness-health-analyzer.md
 │
 └── skills/
-    ├── hd-onboard/                    # LEARN — SKILL.md + 10 atomic references
+    ├── hd-learn/                    # LEARN — SKILL.md + 10 atomic references
     ├── hd-setup/                      # SETUP — SKILL.md + ~15 references (per-layer + step-N-*)
     │   ├── assets/                    # context + knowledge + rubrics skeletons
     │   └── scripts/detect.py          # schema-v2 detection
-    ├── hd-compound/                   # MAINTAIN — SKILL.md + per-mode references + plan-hash
+    ├── hd-maintain/                   # MAINTAIN — SKILL.md + per-mode references + plan-hash
     │   └── scripts/compute-plan-hash.sh  # deterministic canonical-string hasher
     └── hd-review/                     # IMPROVE — SKILL.md + audit/critique procedures
         ├── assets/starter-rubrics/    # 14 starters
@@ -187,7 +187,7 @@ Per-mode procedures live in `references/<mode>-procedure.md` files (F5 conventio
 
 **Phases 3a–3h shipped.** Validated across a 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno) with two parallel-subagent pilot runs + four regression lessons. Budget-check clean on the full skill set (all 4 SKILL.md under 200 lines, Tier 1 at 198/200, zero violations). Full history in [CHANGELOG.md](./CHANGELOG.md).
 
-The plug-in dogfoods itself — every `docs/knowledge/lessons/*.md` in this repo was captured by `/hd:compound capture`, every plan was written through `/ce:plan` → `/ce:work`, every extraction test validated by `rubric-applicator mode: extract` against real AGENTS.md files.
+The plug-in dogfoods itself — every `docs/knowledge/lessons/*.md` in this repo was captured by `/hd:maintain capture`, every plan was written through `/ce:plan` → `/ce:work`, every extraction test validated by `rubric-applicator mode: extract` against real AGENTS.md files.
 
 ---
 

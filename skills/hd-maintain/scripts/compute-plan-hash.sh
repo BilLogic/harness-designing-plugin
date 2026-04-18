@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# compute-plan-hash.sh — deterministic SHA-256 plan-hash for /hd:compound graduations.
+# compute-plan-hash.sh — deterministic SHA-256 plan-hash for /hd:maintain graduations.
 #
 # Reference implementation for the plan-hash protocol. This is the single source
 # of truth for the canonical-string format; no other process (including Claude

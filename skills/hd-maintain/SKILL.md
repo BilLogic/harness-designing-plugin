@@ -1,10 +1,10 @@
 ---
-name: hd:compound
+name: hd:maintain
 description: Captures design lessons and proposes graduations from narrative to rule. Use when capturing a decision or promoting a recurring pattern to AGENTS.md.
 argument-hint: "capture | graduate-propose <topic> | graduate-apply --hash <prefix>"
 ---
 
-# hd:compound — maintain your harness (capture + graduate)
+# hd:maintain — maintain your harness (capture + graduate)
 
 ## Interaction method
 
@@ -18,9 +18,9 @@ Append a dated lesson to `docs/knowledge/lessons/` (capture) OR promote a patter
 
 | User says… / invokes… | Mode | Safety |
 |---|---|---|
-| "Save this lesson" / `/hd:compound capture` | **capture** | 1 atomic write to lessons dir |
-| "Graduate this" / `/hd:compound graduate-propose <topic>` | **propose** (writes `.hd/propose-<prefix>.json` only) | 0 writes to tracked files; emits plan + hash |
-| `/hd:compound graduate-apply --hash <prefix>` | **apply** (destructive) | Hash-verified writes to AGENTS.md + graduations.md |
+| "Save this lesson" / `/hd:maintain capture` | **capture** | 1 atomic write to lessons dir |
+| "Graduate this" / `/hd:maintain graduate-propose <topic>` | **propose** (writes `.hd/propose-<prefix>.json` only) | 0 writes to tracked files; emits plan + hash |
+| `/hd:maintain graduate-apply --hash <prefix>` | **apply** (destructive) | Hash-verified writes to AGENTS.md + graduations.md |
 
 Ambiguous → ask. Never auto-dispatch across modes.
 
@@ -31,7 +31,7 @@ Pick ONE checklist based on detected mode:
 ### Capture mode
 
 ```
-hd:compound capture Progress:
+hd:maintain capture Progress:
 - [ ] Step 1: Identify subject + memory type (episodic / decision / preference / ideation / changelog)
 - [ ] Step 2: Resolve target file (lessons/YYYY-MM-DD-<slug>.md, or decisions/preferences/ideations/changelog.md)
 - [ ] Step 3: Optional — retrieve relevant past lessons (sub-agent)
@@ -48,7 +48,7 @@ Classify memory type → resolve target (new date-slugged file for episodic, app
 ### Propose mode
 
 ```
-hd:compound propose Progress:
+hd:maintain propose Progress:
 - [ ] Step 1: Parse topic
 - [ ] Step 2: Run graduation-candidate-scorer sub-agent
 - [ ] Step 3: Filter to clusters scoring ≥ 3.5 (graduation-ready)
@@ -65,7 +65,7 @@ Score clusters → filter ≥3.5 → draft rule + graduations entry → compute 
 ### Apply mode
 
 ```
-hd:compound apply Progress:
+hd:maintain apply Progress:
 - [ ] Step 1: Parse --hash <prefix> argument; glob `.hd/propose-<prefix>*.json` (unique match required)
 - [ ] Step 2: Read structured inputs from the persisted artifact (survives context compaction)
 - [ ] Step 3: Re-run `scripts/compute-plan-hash.sh` with those inputs
@@ -81,7 +81,7 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 
 ## What this skill does NOT do
 
-- **Concept questions** → `/hd:onboard`
+- **Concept questions** → `/hd:learn`
 - **Harness scaffolding** → `/hd:setup`
 - **Harness audit** → `/hd:review`
 - **Modify source lessons** — Layer 5 is append-only

@@ -1,2 +1,2 @@
-# hd-compound propose artifacts (ephemeral)
+# hd-maintain propose artifacts (ephemeral)
 .hd/

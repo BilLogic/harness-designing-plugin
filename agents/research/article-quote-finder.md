@@ -1,13 +1,13 @@
 ---
 name: article-quote-finder
-description: "Finds verbatim quotes + §-citations from the five-layer harness article series for a concept question. Use from hd:onboard to ground answers in source instead of paraphrasing."
+description: "Finds verbatim quotes + §-citations from the five-layer harness article series for a concept question. Use from hd:learn to ground answers in source instead of paraphrasing."
 color: yellow
 model: inherit
 ---
 
 # article-quote-finder
 
-Return verbatim article quotes with section citations for a given concept question. Grounds answers in the source material instead of relying on model memory. Enables grounded, source-cited answers; used by `hd:onboard` to enrich responses with verbatim article quotes instead of paraphrasing.
+Return verbatim article quotes with section citations for a given concept question. Grounds answers in the source material instead of relying on model memory. Enables grounded, source-cited answers; used by `hd:learn` to enrich responses with verbatim article quotes instead of paraphrasing.
 
 ## Inputs
 
@@ -43,7 +43,7 @@ Never guess URLs. Never fabricate quotes.
 concept_question: "<original question>"
 quotes: []
 corpus_status: "not-configured"
-note: "Article corpus has placeholder URLs (article series publication TBD). To populate, either update agents/research/article-quote-finder-corpus.md OR add article_sources to your hd-config.md. See skills/hd-onboard/references/ for offline concept content in the meantime."
+note: "Article corpus has placeholder URLs (article series publication TBD). To populate, either update agents/research/article-quote-finder-corpus.md OR add article_sources to your hd-config.md. See skills/hd-learn/references/ for offline concept content in the meantime."
 ```
 
 ### Phase 2: locate relevant § sections
@@ -96,11 +96,11 @@ If sources resolve but don't contain relevant material, return empty `quotes[]` 
 
 - READ-ONLY. Never modifies any file or the article source.
 - If article sources are URLs, use fetch tool with appropriate caching; do NOT refetch the same URL more than once per invocation.
-- When the calling skill is `hd:onboard`, this agent supplements (does not replace) `skills/hd-onboard/references/*.md` — the static reference files are the primary answer source; article quotes enrich citations.
+- When the calling skill is `hd:learn`, this agent supplements (does not replace) `skills/hd-learn/references/*.md` — the static reference files are the primary answer source; article quotes enrich citations.
 
 ## When this agent is overkill
 
-For the 10 FAQ questions in `skills/hd-onboard/references/faq.md`, the answers + section citations are already baked in. Only invoke this agent when the user asks a question NOT covered by the static FAQ/references, OR when they explicitly want verbatim quotes.
+For the 10 FAQ questions in `skills/hd-learn/references/faq.md`, the answers + section citations are already baked in. Only invoke this agent when the user asks a question NOT covered by the static FAQ/references, OR when they explicitly want verbatim quotes.
 
 ## Failure modes
 

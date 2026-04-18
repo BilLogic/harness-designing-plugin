@@ -11,7 +11,7 @@ Run the coexistence overlay when `~/.claude/plugins/cache/compound-engineering-p
 | Compound's | Ours | Check |
 |---|---|---|
 | `/ce:*` commands | `/hd:*` commands | All our skill `name:` frontmatter fields start with `hd:`; never bare |
-| `docs/solutions/` | `docs/design-solutions/` | We NEVER write to `docs/solutions/`. `docs/design-solutions/` is our reserved namespace for future distilled pattern-solutions; `hd:compound` currently writes lessons to `docs/knowledge/lessons/` |
+| `docs/solutions/` | `docs/design-solutions/` | We NEVER write to `docs/solutions/`. `docs/design-solutions/` is our reserved namespace for future distilled pattern-solutions; `hd:maintain` currently writes lessons to `docs/knowledge/lessons/` |
 | `compound-engineering.local.md` | `hd-config.md` | We create/read ONLY `hd-config.md`; leave theirs alone |
 | `ce-*` skill prefix | `hd-*` skill prefix | All our skill dirs are `hd-*` |
 
@@ -55,7 +55,7 @@ No "rivalry" wording in skill output:
 - **Bad:** "This conflicts with compound." / "Don't use ce:review alongside."
 - **Good:** "Works alongside compound-engineering. See `coexistence-with-compound.md` for isolation rules."
 
-`hd:onboard` reinforces the message; `hd:setup` shouldn't repeat it adversarially.
+`hd:learn` reinforces the message; `hd:setup` shouldn't repeat it adversarially.
 
 ## User-facing confirmation message
 
@@ -86,4 +86,4 @@ This is NOT declared at v0.MVP (we don't have `hd:review` yet) — but v0.MVP AG
 
 - [hd-config-schema.md](hd-config-schema.md) — `hd-config.md` format
 - [good-agents-md-patterns.md](good-agents-md-patterns.md) — coexistence section in healthy AGENTS.md
-- [../../hd-onboard/references/coexistence-with-compound.md](../../hd-onboard/references/coexistence-with-compound.md) — user-facing Q&A version
+- [../../hd-learn/references/coexistence-with-compound.md](../../hd-learn/references/coexistence-with-compound.md) — user-facing Q&A version

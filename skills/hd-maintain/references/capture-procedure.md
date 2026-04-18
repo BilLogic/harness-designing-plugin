@@ -1,13 +1,13 @@
 ---
 title: Capture-mode procedure
-loaded_by: hd-compound
+loaded_by: hd-maintain
 ---
 
 # Capture mode — full procedure
 
 ## Purpose
 
-Step-by-step procedure for `/hd:compound capture`: classify the memory type, resolve target file (date-slugged `lessons/YYYY-MM-DD-<slug>.md` for episodic, or the appropriate shared memory file), draft, approve, atomic-write, and surface graduation signals. Invoked by the capture-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:maintain capture`: classify the memory type, resolve target file (date-slugged `lessons/YYYY-MM-DD-<slug>.md` for episodic, or the appropriate shared memory file), draft, approve, atomic-write, and surface graduation signals. Invoked by the capture-mode workflow checklist in `../SKILL.md`.
 
 ## Steps
 
@@ -58,6 +58,6 @@ Entry body — 4 sections, each 1–3 sentences: **Context / Decision / Result /
 
 **Step 7 — Atomic write.** For episodic: write the full file to a temp path then `mv` it to `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md`. For non-episodic shared files: append entry with `---` separator, temp file + `mv`. Always update `docs/knowledge/INDEX.md` entry count + last-updated.
 
-**Step 8 — Summarize.** Report target file + tag-cluster signal (if any). Next-step suggestion: `/hd:compound graduate-propose <topic>` when ≥ 3 lesson files share a tag.
+**Step 8 — Summarize.** Report target file + tag-cluster signal (if any). Next-step suggestion: `/hd:maintain graduate-propose <topic>` when ≥ 3 lesson files share a tag.
 
 → Return to [../SKILL.md § capture-mode](../SKILL.md#capture-mode)

@@ -29,20 +29,20 @@ Each memory type has a different *lifecycle*:
 
 Mixing them in one big `lessons.md` collapses the lifecycles — you can't tell what to append to, what to revise, what to delete.
 
-## How `/hd:compound` interacts
+## How `/hd:maintain` interacts
 
-- **`/hd:compound capture`** appends to the right file based on content type:
+- **`/hd:maintain capture`** appends to the right file based on content type:
   - Lesson-about-what-happened → `lessons/<domain>.md`
   - Decision-we-made → `decisions.md`
   - Taste-we-hold → `preferences.md`
   - Idea-we-might-pursue → `ideations.md`
   - User picks if ambiguous; skill auto-infers from tags when clear.
-- **`/hd:compound graduate-propose <topic>`** reads `lessons/<domain>.md` files; proposes graduation when ≥ 3 same-topic episodes with a clean imperative.
-- **`/hd:compound graduate-apply --plan-hash <sha>`** writes the rule to `AGENTS.md` + meta-entry to `graduations.md`. Source lessons are never touched.
+- **`/hd:maintain graduate-propose <topic>`** reads `lessons/<domain>.md` files; proposes graduation when ≥ 3 same-topic episodes with a clean imperative.
+- **`/hd:maintain graduate-apply --plan-hash <sha>`** writes the rule to `AGENTS.md` + meta-entry to `graduations.md`. Source lessons are never touched.
 
 ## Split threshold
 
-When any file exceeds ~15 entries, consider splitting by sub-domain. `/hd:compound capture` surfaces the split suggestion when a file is approaching the threshold.
+When any file exceeds ~15 entries, consider splitting by sub-domain. `/hd:maintain capture` surfaces the split suggestion when a file is approaching the threshold.
 
 ## Article cross-references
 

@@ -2,7 +2,7 @@
 
 **Loaded by:** `SKILL.md` Step 8 when scaffolding or critiquing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the 5-memory-type model, domain-grouped-lessons convention, INDEX pattern, and graduation handoff.
 
-**Concept explainer:** [hd-onboard `layer-5-knowledge.md`](../../hd-onboard/references/layer-5-knowledge.md)
+**Concept explainer:** [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md)
 
 ## Shape under `docs/knowledge/` (plus-uno-derived)
 
@@ -20,7 +20,7 @@ docs/knowledge/
     └── ...               # split threshold ~15 entries per file
 ```
 
-`graduations.md` — **memory_type: meta-log** — is NOT scaffolded at setup time. Created on first graduation (`/hd:compound graduate-apply`) to avoid empty-file noise. When it appears, it lives at `docs/knowledge/graduations.md`.
+`graduations.md` — **memory_type: meta-log** — is NOT scaffolded at setup time. Created on first graduation (`/hd:maintain graduate-apply`) to avoid empty-file noise. When it appears, it lives at `docs/knowledge/graduations.md`.
 
 Templates for the 6 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/).
 
@@ -47,7 +47,7 @@ The 5+1 taxonomy comes from agent-memory research (OpenClaw / MemGPT / Generativ
 
 Plus-uno precedent: lessons grouped by DOMAIN into single files (`lessons/ds-compliance.md`, `lessons/integration.md`, `lessons/agent-patterns.md`, `lessons/ui-patterns.md`), each file holding multiple entries separated by `---`.
 
-**Rationale:** per-date files accumulate as noise. Grouping by domain keeps related episodes together; retrieval is more coherent. Split threshold (~15 entries) prevents any file from becoming unwieldy; `/hd:compound capture` proposes sub-domain split when the threshold approaches.
+**Rationale:** per-date files accumulate as noise. Grouping by domain keeps related episodes together; retrieval is more coherent. Split threshold (~15 entries) prevents any file from becoming unwieldy; `/hd:maintain capture` proposes sub-domain split when the threshold approaches.
 
 Each domain file has YAML frontmatter:
 
@@ -59,13 +59,13 @@ split_threshold: 15
 ---
 ```
 
-Individual entries follow with per-entry YAML (title, date, tags, graduation_candidate, importance). See [`../../hd-compound/references/lesson-patterns.md`](../../hd-compound/references/lesson-patterns.md) for the entry schema.
+Individual entries follow with per-entry YAML (title, date, tags, graduation_candidate, importance). See [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) for the entry schema.
 
 ## Seeded starter lesson (first capture post-setup)
 
-If `/hd:setup` creates the `docs/knowledge/` scaffold fresh, the starter lesson is NOT pre-written. Instead, `/hd:setup` Step 10 suggests: *"Capture your first lesson now — the setup session itself is a lesson. Run `/hd:compound capture`."*
+If `/hd:setup` creates the `docs/knowledge/` scaffold fresh, the starter lesson is NOT pre-written. Instead, `/hd:setup` Step 10 suggests: *"Capture your first lesson now — the setup session itself is a lesson. Run `/hd:maintain capture`."*
 
-If the user does, `/hd:compound capture`:
+If the user does, `/hd:maintain capture`:
 1. Classifies the subject (likely episodic with domain like `harness-setup` or `meta`)
 2. Creates `lessons/<domain>.md` with YAML frontmatter
 3. Appends the first entry
@@ -77,13 +77,13 @@ This single pattern — domain file created on-first-capture — applies for all
 
 When an episodic-lesson pattern recurs 3+ times on the same topic:
 
-1. User runs `/hd:compound graduate-propose <topic>`
+1. User runs `/hd:maintain graduate-propose <topic>`
 2. Sub-agent `design-harnessing:analysis:graduation-candidate-scorer` evaluates clusters on 3 dimensions (recurrence × clean-imperative × team-agreement)
 3. Clusters scoring ≥ 3.5 get a proposed rule + SHA-256 plan hash
-4. User reviews, runs `/hd:compound graduate-apply --plan-hash <sha>`
+4. User reviews, runs `/hd:maintain graduate-apply --plan-hash <sha>`
 5. Rule lands in `AGENTS.md` under "Graduated rules"; meta-entry in `graduations.md`; **source entries untouched — history is sacred**
 
-This workflow is owned by `/hd:compound`; Layer 5 setup only prepares the directory structure + informs the user that compounding happens via that skill.
+This workflow is owned by `/hd:maintain`; Layer 5 setup only prepares the directory structure + informs the user that compounding happens via that skill.
 
 ## Coexistence
 
@@ -104,8 +104,8 @@ The `graduation-candidate-scorer` sub-agent quantifies these signals for `hd:rev
 ## See also
 
 - [layer-1-context.md](layer-1-context.md) — context/knowledge separation (different memory types, different lifecycles)
-- [hd-onboard/references/layer-5-knowledge.md](../../hd-onboard/references/layer-5-knowledge.md) — concept explainer
-- [`../../hd-compound/references/lesson-patterns.md`](../../hd-compound/references/lesson-patterns.md) — entry authoring + domain-file schema
-- [`../../hd-compound/references/graduation-criteria.md`](../../hd-compound/references/graduation-criteria.md) — 3-criterion rule for graduation-readiness
-- [`../../hd-compound/references/plan-hash-protocol.md`](../../hd-compound/references/plan-hash-protocol.md) — SHA-256 proof-of-consent spec
+- [hd-learn/references/layer-5-knowledge.md](../../hd-learn/references/layer-5-knowledge.md) — concept explainer
+- [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) — entry authoring + domain-file schema
+- [`../../hd-maintain/references/graduation-criteria.md`](../../hd-maintain/references/graduation-criteria.md) — 3-criterion rule for graduation-readiness
+- [`../../hd-maintain/references/plan-hash-protocol.md`](../../hd-maintain/references/plan-hash-protocol.md) — SHA-256 proof-of-consent spec
 - Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/knowledge](https://github.com/BilLogic/plus-uno/tree/main/docs/knowledge)

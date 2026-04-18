@@ -41,7 +41,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 │       └── harness-health-analyzer.md
 │
 └── skills/
-    ├── hd-onboard/                # LEARN (Q&A)
+    ├── hd-learn/                # LEARN (Q&A)
     │   ├── SKILL.md
     │   └── references/            # 10 atomic concept files
     ├── hd-setup/                  # SETUP (walk the five layers)
@@ -52,7 +52,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
     │   └── scripts/
     │       ├── detect.py
     │       └── detect-mode.sh
-    ├── hd-compound/               # MAINTAIN (capture + graduate)
+    ├── hd-maintain/               # MAINTAIN (capture + graduate)
     │   ├── SKILL.md
     │   ├── references/
     │   └── assets/
@@ -103,9 +103,9 @@ Never bare names — compound 2.35.0 lesson: bare names get re-prefixed wrong.
 
 All commands use `hd:` prefix (two letters — *harness design*; secondary read *high-definition design*).
 
-- `/hd:onboard` — Q&A about the harness concept (LEARN)
+- `/hd:learn` — Q&A about the harness concept (LEARN)
 - `/hd:setup` — walk the five layers (SETUP)
-- `/hd:compound` — capture lessons, graduate to rules (MAINTAIN)
+- `/hd:maintain` — capture lessons, graduate to rules (MAINTAIN)
 - `/hd:review` — audit harness health, critique work items (IMPROVE)
 
 Never ship bare command names. Always namespaced (compound 2.38.0 rename-pain lesson).

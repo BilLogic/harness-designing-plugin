@@ -1,6 +1,6 @@
 # `hd-config.md` schema
 
-**Purpose:** machine-parseable spec for the local config file every hd-* skill reads and writes. LOCKED for v0.MVP — subsequent skills (hd-compound v0.5, hd-review v1) depend on stability.
+**Purpose:** machine-parseable spec for the local config file every hd-* skill reads and writes. LOCKED for v0.MVP — subsequent skills (hd-maintain v0.5, hd-review v1) depend on stability.
 
 ## File location
 

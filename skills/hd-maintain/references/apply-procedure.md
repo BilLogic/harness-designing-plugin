@@ -1,18 +1,18 @@
 ---
 title: Apply-mode procedure
-loaded_by: hd-compound
+loaded_by: hd-maintain
 ---
 
 # Apply mode — full procedure (destructive; hash-verified)
 
 ## Purpose
 
-Step-by-step procedure for `/hd:compound graduate-apply --hash <prefix>`: locate the persisted `.hd/propose-<hash>.json` artifact, re-run `scripts/compute-plan-hash.sh` against its structured inputs, and — on byte-for-byte match — atomically append to `AGENTS.md` and prepend to `docs/knowledge/graduations.md`. On successful apply, move `.hd/propose-<hash>.json` → `.hd/applied/<hash>.json`. On mismatch, abort with drift diagnosis. Invoked by the apply-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:maintain graduate-apply --hash <prefix>`: locate the persisted `.hd/propose-<hash>.json` artifact, re-run `scripts/compute-plan-hash.sh` against its structured inputs, and — on byte-for-byte match — atomically append to `AGENTS.md` and prepend to `docs/knowledge/graduations.md`. On successful apply, move `.hd/propose-<hash>.json` → `.hd/applied/<hash>.json`. On mismatch, abort with drift diagnosis. Invoked by the apply-mode workflow checklist in `../SKILL.md`.
 
 ## Steps
 
 **Step 1 — Locate propose artifact.** Require `--hash <prefix>` (8+ hex chars). Glob `.hd/propose-<prefix>*.json`:
-- Zero matches → abort: *"No matching propose artifact for `<prefix>`. Run `/hd:compound graduate-propose <topic>` first, or widen the prefix."*
+- Zero matches → abort: *"No matching propose artifact for `<prefix>`. Run `/hd:maintain graduate-propose <topic>` first, or widen the prefix."*
 - Multiple matches → abort: *"Ambiguous `<prefix>` — matched N files. Re-invoke with a longer prefix."*
 - Exactly one match → continue. This decouples Apply from conversation context: a propose from a prior / compacted session still works.
 
@@ -22,7 +22,7 @@ Step-by-step procedure for `/hd:compound graduate-apply --hash <prefix>`: locate
 
 ```bash
 jq '{title, paths, date, author, diff_summary}' .hd/propose-<prefix>.json \
-  | skills/hd-compound/scripts/compute-plan-hash.sh
+  | skills/hd-maintain/scripts/compute-plan-hash.sh
 ```
 
 **Step 4 — Compare.** Fresh hash vs artifact's stored `sha256`, byte-for-byte.
@@ -42,7 +42,7 @@ Expected (from artifact): <stored-sha256>
 Computed (fresh):         <current-sha256>
 The plan input has drifted since propose (likely: one of the source files or
 targets changed, or the artifact was hand-edited). Re-run
-`/hd:compound graduate-propose <topic>` to regenerate the plan + hash.
+`/hd:maintain graduate-propose <topic>` to regenerate the plan + hash.
 ```
 
 **Step 6 — Cleanup.** On successful apply, move the artifact:

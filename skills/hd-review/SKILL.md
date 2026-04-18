@@ -81,8 +81,8 @@ Parse target + rubric → resolve rubric path → dispatch applicator sub-agent 
 ## What this skill does NOT do
 
 - **Scaffold harness** → `/hd:setup`
-- **Concept Q&A** → `/hd:onboard`
-- **Capture lessons** → `/hd:compound capture` (suggestion, not invocation)
+- **Concept Q&A** → `/hd:learn`
+- **Capture lessons** → `/hd:maintain capture` (suggestion, not invocation)
 - **Modify source work items** during critique (read-only)
 - **Modify rubric files** (both modes — rubrics are team-owned)
 - **Write to `docs/solutions/`** (compound's namespace)

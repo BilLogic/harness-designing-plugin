@@ -151,7 +151,7 @@ Audit complete: <report-path>
 Next step:
   1. Review: <report-path>
   2. Address P1 before next ship
-  3. (Optional) Capture recurring pattern: /hd:compound capture
+  3. (Optional) Capture recurring pattern: /hd:maintain capture
 ```
 
 → Return to [../SKILL.md § audit-mode](../SKILL.md#audit-mode)

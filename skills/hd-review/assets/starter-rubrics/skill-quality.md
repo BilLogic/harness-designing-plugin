@@ -40,7 +40,7 @@ The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own s
 | Could be broken into smaller skills if it grew past ~3 workflows | p2 |
 | Plays nicely with other skills (composable — suggests, doesn't invoke directly) | p2 |
 
-**Pass example:** `hd:onboard` — single job: answer questions, read-only.
+**Pass example:** `hd:learn` — single job: answer questions, read-only.
 **Fail example:** one skill that captures lessons, graduates them, audits the harness, AND critiques work items.
 
 ## 3. Instructions
@@ -108,7 +108,7 @@ The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own s
 | Not so broad that it triggers on unrelated queries | p2 |
 | `disable-model-invocation: true` set ONLY when skill is genuinely manual-only | p2 |
 
-**Pass example:** `hd:onboard` (Q&A) vs `hd:setup` (scaffolding) — clean verb split, zero overlap.
+**Pass example:** `hd:learn` (Q&A) vs `hd:setup` (scaffolding) — clean verb split, zero overlap.
 **Fail example:** two skills named `hd:review-harness` and `hd:audit-harness` with near-identical descriptions.
 
 ## 8. Scalability & maintainability
@@ -136,7 +136,7 @@ The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own s
 | Allows fallback to default model behavior when out of scope | p2 |
 | Handles malformed inputs with clear error + recovery path | p1 |
 
-**Pass example:** `hd:compound apply` aborts with "Missing --plan-hash. Run graduate-propose first." and points to the recovery command.
+**Pass example:** `hd:maintain apply` aborts with "Missing --plan-hash. Run graduate-propose first." and points to the recovery command.
 **Fail example:** skill crashes silently on malformed input; user gets no signal.
 
 ## How to apply this rubric

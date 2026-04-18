@@ -27,7 +27,7 @@ Task design-harnessing:analysis:graduation-candidate-scorer(
 )
 ```
 
-Surface ready clusters to user. Suggest `/hd:compound graduate-propose <topic>` for each.
+Surface ready clusters to user. Suggest `/hd:maintain graduate-propose <topic>` for each.
 
 **Execute — scaffold:**
 - Load [`layer-5-knowledge.md`](layer-5-knowledge.md) for L5 depth

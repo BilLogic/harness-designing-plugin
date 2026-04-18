@@ -2,7 +2,7 @@
 
 **Loaded by:** `SKILL.md` Step 6 when scaffolding or critiquing Layer 3. Seed questions + decision defaults live in SKILL.md; this file provides orchestration patterns + prerequisite checks used during execution.
 
-**Concept explainer:** [hd-onboard `layer-3-orchestration.md`](../../hd-onboard/references/layer-3-orchestration.md)
+**Concept explainer:** [hd-learn `layer-3-orchestration.md`](../../hd-learn/references/layer-3-orchestration.md)
 
 ## When NOT to scaffold Layer 3
 
@@ -55,4 +55,4 @@ Audit flags Layer 3 gaps when:
 ## See also
 
 - [layer-2-skills.md](layer-2-skills.md) — prerequisite layer
-- hd-onboard [layer-3-orchestration.md](../../hd-onboard/references/layer-3-orchestration.md) — conceptual version
+- hd-learn [layer-3-orchestration.md](../../hd-learn/references/layer-3-orchestration.md) — conceptual version

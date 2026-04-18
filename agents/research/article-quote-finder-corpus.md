@@ -14,12 +14,12 @@ This file is the default article corpus consulted by the `article-quote-finder` 
 
 | Section | URL | Memory Type Focus | Layer Focus |
 |---|---|---|---|
-| Introduction / Thesis (§1–§2) | `{{TBD}}` | overview | all five layers — see `skills/hd-onboard/references/concept-overview.md` |
-| Layer 1 — Context (§4a) | `{{TBD}}` | semantic | `skills/hd-onboard/references/layer-1-context.md` |
-| Layer 2 — Skills (§4b) | `{{TBD}}` | procedural | `skills/hd-onboard/references/layer-2-skills.md` |
-| Layer 3 — Orchestration (§4c) | `{{TBD}}` | procedural (meta) | `skills/hd-onboard/references/layer-3-orchestration.md` |
-| Layer 4 — Rubrics (§4d) | `{{TBD}}` | evaluative | `skills/hd-onboard/references/layer-4-rubrics.md` |
-| Layer 5 — Knowledge (§4e) | `{{TBD}}` | episodic | `skills/hd-onboard/references/layer-5-knowledge.md` |
+| Introduction / Thesis (§1–§2) | `{{TBD}}` | overview | all five layers — see `skills/hd-learn/references/concept-overview.md` |
+| Layer 1 — Context (§4a) | `{{TBD}}` | semantic | `skills/hd-learn/references/layer-1-context.md` |
+| Layer 2 — Skills (§4b) | `{{TBD}}` | procedural | `skills/hd-learn/references/layer-2-skills.md` |
+| Layer 3 — Orchestration (§4c) | `{{TBD}}` | procedural (meta) | `skills/hd-learn/references/layer-3-orchestration.md` |
+| Layer 4 — Rubrics (§4d) | `{{TBD}}` | evaluative | `skills/hd-learn/references/layer-4-rubrics.md` |
+| Layer 5 — Knowledge (§4e) | `{{TBD}}` | episodic | `skills/hd-learn/references/layer-5-knowledge.md` |
 
 ## Populating this corpus
 
@@ -44,4 +44,4 @@ The agent detects placeholder state by scanning the URL column for the literal s
 
 - If a row's URL is `{{TBD}}` AND no user override in `hd-config.md article_sources` covers the same section → skip that row (do not attempt retrieval, do not fabricate a URL).
 - If ALL rows resolve to `{{TBD}}` with no overrides → emit the graceful empty response (`corpus_status: not-configured`) documented in `article-quote-finder.md` and exit cleanly.
-- Never invent URLs, never fabricate quotes. When the corpus is not configured, direct callers to `skills/hd-onboard/references/` for offline concept content instead.
+- Never invent URLs, never fabricate quotes. When the corpus is not configured, direct callers to `skills/hd-learn/references/` for offline concept content instead.

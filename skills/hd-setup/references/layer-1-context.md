@@ -2,7 +2,7 @@
 
 **Loaded by:** `SKILL.md` Step 4 when scaffolding or critiquing Layer 1. Seed questions + top-level procedure live in SKILL.md; this file provides the per-sub-file detail needed during scaffolding.
 
-**Concept explainer:** [`hd-onboard/references/layer-1-context.md`](../../hd-onboard/references/layer-1-context.md) — "what IS Context?"
+**Concept explainer:** [`hd-learn/references/layer-1-context.md`](../../hd-learn/references/layer-1-context.md) — "what IS Context?"
 
 ## Baseline shape under `docs/context/` (plus-uno-derived)
 
@@ -67,7 +67,7 @@ If over, propose moving non-critical product lines to `features.md` / `flows.md`
 
 ## Healthy AGENTS.md
 
-Pattern library: [good-agents-md-patterns.md](good-agents-md-patterns.md). Key properties: concise, imperatively-worded, links to context layers, has a "Graduated rules" section for hd:compound writes.
+Pattern library: [good-agents-md-patterns.md](good-agents-md-patterns.md). Key properties: concise, imperatively-worded, links to context layers, has a "Graduated rules" section for hd:maintain writes.
 
 ## When existing content is present
 
@@ -91,5 +91,5 @@ Diff preview before any write (F4 safety in SKILL.md). If source content is in a
 
 - [tier-budget-model.md](tier-budget-model.md) — three-tier budget model + rationale
 - [good-agents-md-patterns.md](good-agents-md-patterns.md) — healthy AGENTS.md shape
-- [hd-onboard/references/layer-1-context.md](../../hd-onboard/references/layer-1-context.md) — concept explainer
+- [hd-learn/references/layer-1-context.md](../../hd-learn/references/layer-1-context.md) — concept explainer
 - Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/context](https://github.com/BilLogic/plus-uno/tree/main/docs/context)

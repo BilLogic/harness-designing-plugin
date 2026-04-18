@@ -1,6 +1,6 @@
 # Glossary
 
-Canonical definitions for terms used across the design harness framework. `hd:onboard` answers questions about any term here — this file is the single source of truth.
+Canonical definitions for terms used across the design harness framework. `hd:learn` answers questions about any term here — this file is the single source of truth.
 
 | Term | Definition | Article § |
 |---|---|---|

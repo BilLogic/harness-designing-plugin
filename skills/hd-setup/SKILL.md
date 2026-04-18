@@ -26,7 +26,7 @@ User drives every decision. Skill never merges, absorbs, or overwrites external 
 ```
 hd:setup Progress:
 - [ ] Step 1: Detect — run detect.py; parse JSON
-- [ ] Step 2: Onboard check — suggest /hd:onboard if first-time user (soft)
+- [ ] Step 2: Onboard check — suggest /hd:learn if first-time user (soft)
 - [ ] Step 3: Tool discovery — surface detected + ask per category
 - [ ] Step 4: Layer 1 (Context) — link / critique / scaffold / skip
 - [ ] Step 5: Layer 2 (Skills) — link / critique / scaffold / skip
@@ -77,7 +77,7 @@ Use for deeper audit-style analysis; skip for standard flows.
 If `hd-config.md` does not exist AND user hasn't shown framework familiarity:
 
 > "New to the five-layer frame?
-> A. Run `/hd:onboard` first (5-min intro)
+> A. Run `/hd:learn` first (5-min intro)
 > B. Proceed — I'll explain as we go
 > C. Already know it — skip the preamble"
 
@@ -140,7 +140,7 @@ Report:
 - **Tier 1 budget snapshot** (`wc -l AGENTS.md docs/context/product/one-pager.md | tail -1`)
 - **Other-tool harnesses respected** (paths untouched)
 - **Next step** tuned to outcome:
-  - Mostly scaffold → `/hd:compound capture` to record first lesson
+  - Mostly scaffold → `/hd:maintain capture` to record first lesson
   - Mostly link → `/hd:review audit` to audit the combined harness
   - Mostly critique → address findings; re-run `/hd:review audit`
 
@@ -162,7 +162,7 @@ When invoked on a repo that has `hd-config.md`:
 
 ## What this skill does NOT do
 
-- Concept Q&A → `/hd:onboard`; lesson capture → `/hd:compound`; audit → `/hd:review`
+- Concept Q&A → `/hd:learn`; lesson capture → `/hd:maintain`; audit → `/hd:review`
 - Invoke other hd skills directly — always suggest, never invoke
 - Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/` — strict coexistence
 - Write to `docs/solutions/` (compound's namespace) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)

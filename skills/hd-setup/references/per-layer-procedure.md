@@ -47,7 +47,7 @@ After executing an action at a layer, offer before moving on:
 ```
 Layer N [link | critique | scaffold | skip] complete. Before Layer N+1:
   A. Review what landed — /hd:review critique <path> on it
-  B. Capture a lesson — /hd:compound capture if something surprised you
+  B. Capture a lesson — /hd:maintain capture if something surprised you
   C. Inspect manually — open the file, look around
   D. Continue to Layer N+1
 ```

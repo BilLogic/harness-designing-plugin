@@ -1,13 +1,13 @@
 ---
 name: lesson-retriever
-description: "Retrieves past lessons from docs/knowledge/lessons/ relevant to a topic, weighted by recency × importance × frequency. Use from hd:compound capture and hd:review audit/critique."
+description: "Retrieves past lessons from docs/knowledge/lessons/ relevant to a topic, weighted by recency × importance × frequency. Use from hd:maintain capture and hd:review audit/critique."
 color: cyan
 model: inherit
 ---
 
 # lesson-retriever
 
-Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:compound capture` (Phase 1 research) and by `hd:review audit`/`critique` to surface relevant historical context.
+Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:maintain capture` (Phase 1 research) and by `hd:review audit`/`critique` to surface relevant historical context.
 
 Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads compound-engineering's `docs/solutions/` namespace.
 
@@ -86,5 +86,5 @@ If no lessons score above 2.0, return empty `retrieved_lessons[]` and set `summa
 
 ## See also
 
-- `skills/hd-compound/references/lesson-patterns.md` — what well-formed lessons look like (scoring assumes this shape)
+- `skills/hd-maintain/references/lesson-patterns.md` — what well-formed lessons look like (scoring assumes this shape)
 - `agents/analysis/graduation-candidate-scorer.md` — sibling agent for cluster-level analysis

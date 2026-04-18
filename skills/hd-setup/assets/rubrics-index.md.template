@@ -30,7 +30,7 @@ Layer 4 (rubrics) is **not** Layer 1 (design-system source content). Layer 1 des
 
 ## Extending this rubric library
 
-See `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this rubric` for the pattern to author a new rubric. When a rubric criterion recurs across lessons in `docs/knowledge/`, consider graduating it via `/hd:compound graduate-propose`.
+See `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this rubric` for the pattern to author a new rubric. When a rubric criterion recurs across lessons in `docs/knowledge/`, consider graduating it via `/hd:maintain graduate-propose`.
 
 ## How rubrics are applied
 
@@ -47,4 +47,4 @@ Or interactively: `/hd:review critique <path>` — the skill picks matching rubr
 
 - Layer 4 in the five-layer model: article §4d
 - `/hd:review` skill — runs rubrics against work items
-- `/hd:compound graduate-propose` — when a rubric criterion recurs across lessons, it can graduate into this INDEX
+- `/hd:maintain graduate-propose` — when a rubric criterion recurs across lessons, it can graduate into this INDEX

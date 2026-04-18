@@ -2,7 +2,7 @@
 
 **Loaded by:** `SKILL.md` Step 7 when scaffolding or critiquing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
 
-**Concept explainer:** [hd-onboard `layer-4-rubrics.md`](../../hd-onboard/references/layer-4-rubrics.md)
+**Concept explainer:** [hd-learn `layer-4-rubrics.md`](../../hd-learn/references/layer-4-rubrics.md)
 
 ## The distributed-behavior pattern (load-bearing)
 
@@ -73,6 +73,6 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 ## See also
 
 - [layer-1-context.md](layer-1-context.md) — where design-system SOURCE content lives (distinct from rubric checks)
-- [hd-onboard/references/layer-4-rubrics.md](../../hd-onboard/references/layer-4-rubrics.md) — concept explainer
+- [hd-learn/references/layer-4-rubrics.md](../../hd-learn/references/layer-4-rubrics.md) — concept explainer
 - [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) — 12 starter rubrics shipped
 - [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) — 5 shipped starters (a11y, design-system, component-budget, interaction-states, skill-quality)

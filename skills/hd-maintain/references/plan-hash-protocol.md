@@ -73,7 +73,7 @@ Pass `--print-canonical` to emit the canonical string instead of the hash — us
 Always via the script. Propose mode runs it after drafting the plan; Apply mode re-runs it against the persisted propose artifact (`.hd/propose-<prefix>.json`) to re-verify.
 
 ```bash
-echo "$propose_json" | skills/hd-compound/scripts/compute-plan-hash.sh
+echo "$propose_json" | skills/hd-maintain/scripts/compute-plan-hash.sh
 ```
 
 ## Propose output (what the user sees)
@@ -101,7 +101,7 @@ a1b2c3d4e5f6... (64 hex chars)
 
 ### To apply this graduation
 
-/hd:compound graduate-apply --plan-hash a1b2c3d4e5f6...
+/hd:maintain graduate-apply --plan-hash a1b2c3d4e5f6...
 
 The command requires the hash verbatim. Re-running `graduate-propose` emits a new hash (different invocation ⇒ potentially different inputs). If any source lesson, AGENTS.md, or graduations.md changes between propose and apply, the hash will mismatch and apply will abort.
 ```
@@ -114,7 +114,7 @@ The command requires the hash verbatim. Re-running `graduate-propose` emits a ne
 
 1. **Parse argument.** Require `--hash <hex-prefix>` (8 chars recommended; full 64 accepted). Glob `.hd/propose-<prefix>*.json`; exactly one match required. Abort on zero / multiple matches with clear error:
 
-   > "No matching propose artifact for `--hash <prefix>`. Run `/hd:compound graduate-propose <topic>` first, or widen the prefix."
+   > "No matching propose artifact for `--hash <prefix>`. Run `/hd:maintain graduate-propose <topic>` first, or widen the prefix."
 
 2. **Re-load inputs from the artifact.** The persisted `.hd/propose-<prefix>.json` carries `title`, `paths`, `date`, `author`, `diff_summary`, `canonical_string`, and `sha256`. No dependency on conversation context — survives compaction.
 3. **Re-run the script.** Feed the artifact's structured fields back into `compute-plan-hash.sh`; capture fresh hash.
@@ -125,7 +125,7 @@ The command requires the hash verbatim. Re-running `graduate-propose` emits a ne
    > "Hash mismatch. Expected `<user-hash>`, computed `<current-hash>`.
    > Drift detected in: <file-path>
    > (path changed between propose and apply).
-   > Run `/hd:compound graduate-propose <topic>` again to get a fresh plan."
+   > Run `/hd:maintain graduate-propose <topic>` again to get a fresh plan."
 
 ## Atomic write (on verified match)
 
@@ -148,10 +148,10 @@ Both writes use temp-file + `mv` (atomic on POSIX). If the second write fails, r
 ### Example 1: Clean apply (happy path)
 
 ```
-User:  /hd:compound graduate-propose no-future-version-stubs
+User:  /hd:maintain graduate-propose no-future-version-stubs
 Skill: <emits plan + hash a1b2c3...>
 
-User:  /hd:compound graduate-apply --plan-hash a1b2c3...
+User:  /hd:maintain graduate-apply --plan-hash a1b2c3...
 Skill: Hash verified. Writing AGENTS.md line 47. Writing graduations.md entry. Done.
        Graduated: "Don't ship future-version skill stubs..."
        Source lesson preserved: docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md
@@ -161,12 +161,12 @@ Skill: Hash verified. Writing AGENTS.md line 47. Writing graduations.md entry. D
 ### Example 2: Drift detected (file changed between propose and apply)
 
 ```
-User:  /hd:compound graduate-propose no-future-version-stubs
+User:  /hd:maintain graduate-propose no-future-version-stubs
 Skill: <emits plan + hash a1b2c3...>
 
 # (user or another process edits AGENTS.md between propose and apply)
 
-User:  /hd:compound graduate-apply --plan-hash a1b2c3...
+User:  /hd:maintain graduate-apply --plan-hash a1b2c3...
 Skill: Hash mismatch.
        Expected: a1b2c3...
        Computed: d4e5f6...
@@ -177,11 +177,11 @@ Skill: Hash mismatch.
 ### Example 3: Bad or missing hash
 
 ```
-User:  /hd:compound graduate-apply
+User:  /hd:maintain graduate-apply
 Skill: Missing --plan-hash argument.
-       Run `/hd:compound graduate-propose <topic>` first to generate the plan + hash.
+       Run `/hd:maintain graduate-propose <topic>` first to generate the plan + hash.
 
-User:  /hd:compound graduate-apply --plan-hash not-a-real-hash
+User:  /hd:maintain graduate-apply --plan-hash not-a-real-hash
 Skill: Malformed --plan-hash. Expected 64 lowercase hex chars. Got 13 chars.
 ```
 

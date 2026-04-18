@@ -97,7 +97,7 @@ Component-budget finding (P2) is worth surfacing at review: three variants in on
 
 ### Next step
 
-This critique surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:compound capture` to log a lesson. After ≥3 similar lessons, `/hd:compound graduate-propose` could formalize the rule.
+This critique surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:maintain capture` to log a lesson. After ≥3 similar lessons, `/hd:maintain graduate-propose` could formalize the rule.
 ```
 
 ## Rubric attribution
@@ -112,9 +112,9 @@ Every finding attributes its rubric. This lets users:
 
 Critique ends with one concrete suggestion. Common patterns:
 
-- **Findings include a pattern worth capturing** → "Consider `/hd:compound capture` to log this as a lesson"
+- **Findings include a pattern worth capturing** → "Consider `/hd:maintain capture` to log this as a lesson"
 - **All P1 findings are design-system violations** → "Review your design-system/cheat-sheet.md with the team"
-- **Work item passed** → "Ready for approval; consider documenting decisions as a `/hd:compound capture`"
+- **Work item passed** → "Ready for approval; consider documenting decisions as a `/hd:maintain capture`"
 
 Never suggest `/ce:*` commands — coexistence rule (stay in our verb namespace in user-facing output).
 

@@ -1,9 +1,9 @@
 ---
-name: hd:onboard
+name: hd:learn
 description: Answers questions about the five-layer design harness framework. Use when learning concepts, asking about a layer, or orienting before setup.
 ---
 
-# hd:onboard — learn the design harness concept
+# hd:learn — learn the design harness concept
 
 ## Interaction method
 
@@ -19,14 +19,14 @@ Answer questions about the five-layer framework with accurate citations to the S
 - "Explain Layer N" (where N is 1-5 or a layer name)
 - "What's the difference between context and knowledge?"
 - "How do I know if I need Layer 4?"
-- "/hd:onboard [topic]"
+- "/hd:learn [topic]"
 
 ## Workflow
 
 Copy this checklist and track progress:
 
 ```
-hd:onboard Progress:
+hd:learn Progress:
 - [ ] Step 1: Identify topic (concept / specific layer / glossary term / FAQ)
 - [ ] Step 2: Load matching reference file
 - [ ] Step 3: Answer with article § citations
@@ -101,7 +101,7 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 >
 > On graduation: the original lesson stays (history is sacred), a new rule lands in `AGENTS.md` under "Graduated rules," and a meta-entry lands in `docs/knowledge/graduations.md` linking lesson → rule + date.
 >
-> The `/hd:compound` skill proposes graduations when it detects matching lessons (≥3 same-topic occurrences). Run `/hd:compound graduate-propose <topic>` to start.
+> The `/hd:maintain` skill proposes graduations when it detects matching lessons (≥3 same-topic occurrences). Run `/hd:maintain graduate-propose <topic>` to start.
 
 ## What this skill does NOT do
 

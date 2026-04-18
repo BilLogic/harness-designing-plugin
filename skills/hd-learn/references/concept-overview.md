@@ -30,9 +30,9 @@ This plug-in exposes four skills, one per lifecycle phase:
 
 | Verb | Skill | Phase | Ships |
 |---|---|---|---|
-| **learn** | `/hd:onboard` | any | v0.MVP |
+| **learn** | `/hd:learn` | any | v0.MVP |
 | **setup** | `/hd:setup` | one-time | v0.MVP |
-| **maintain** | `/hd:compound` | ongoing | v0.5 |
+| **maintain** | `/hd:maintain` | ongoing | v0.5 |
 | **improve** | `/hd:review` | periodic | v1 |
 
 You're reading output from the first skill right now.
