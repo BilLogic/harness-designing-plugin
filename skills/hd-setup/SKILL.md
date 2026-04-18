@@ -39,6 +39,21 @@ hd:setup Progress:
 
 Steps 4–8 each follow the same per-layer procedure documented below.
 
+## Guardrail — additive-only when existing harness detected
+
+Before Step 1 completes, check: does this repo already have an AI harness?
+
+**Positive-harness signals (any one triggers guardrail):** `.agent/` with ≥1 skill or rule file, `.claude/` with skills or settings, `AGENTS.md` ≥ 20 lines of real content, `docs/context/` populated, `docs/knowledge/` populated, compound-engineering artifacts (`compound-engineering.local.md` OR `docs/solutions/`).
+
+If any signal fires:
+
+1. **Announce additive-only mode.** Say: *"Detected existing harness at `<paths>`. I'll operate additive-only — won't modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, or any existing `docs/context/`, `docs/knowledge/`, `docs/rubrics/` file. New files only."*
+2. **Adjust per-layer defaults** for Steps 4/5/6: pre-select **skip** (the existing harness IS Layer 1/2/3). User can override to critique/scaffold per layer, but the friction is flipped.
+3. **Keep Steps 7/8 defaults** (Layer 4 rubrics + Layer 5 knowledge) — these are typically the genuine gap.
+4. **Emit into `hd-config.md`** `other_tool_harnesses_detected: [{path, owner: user, policy: respect}, ...]` listing every pre-existing artifact so future `/hd:review` calls can parse + respect.
+
+This is a graduated rule (see [AGENTS.md § Graduated rules](../../AGENTS.md#graduated-rules)), confirmed across 4 pilots (plus-marketing, oracle-chat, lightning, plus-uno) with 6-pilot additive-only discipline intact.
+
 ## Step 1 — Detect
 
 Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
@@ -114,6 +129,8 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 
 | Condition | Default |
 |---|---|
+| **Guardrail fired** (existing `.agent/` or `.claude/` with content) + layer is L1/L2/L3 | **skip** (existing harness IS this layer) |
+| **Guardrail fired** + layer is L4/L5 | scaffold (typical genuine gap) |
 | Nothing detected at this layer + no external tooling mentioned | scaffold |
 | Team tool detected (e.g., notion for L1) + MCP live in session | scaffold + MCP-pull |
 | Team tool detected + MCP not in session | link + install-walkthrough |

@@ -157,6 +157,8 @@ Rules that earned their place here via episodic→procedural graduation (see [do
 
 <!-- Add new graduated rules above this line. -->
 
+- [2026-04-18] When `.agent/` or `.claude/` is detected with ≥1 skill or rule file, `/hd:setup` defaults to: skip L1/L2/L3 prompts and scaffold only L4 (rubrics) and L5 (knowledge). The existing harness is treated as Layer 1+2 authority; hd-* adds Layer 4+5 on top. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno).
+- [2026-04-18] `/hd:setup` is **additive-only** when any existing harness is detected. Never modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or compound-engineering artifacts. New files only. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (6 confirmations across full pilot matrix).
 - [2026-04-16] Don't ship future-version skill stubs with `disable-model-invocation: true` at current version. Wait to author the skill when it's being built. Stubs with fake trigger text + the flag make the skill surface actively worse than if it didn't exist. Source: [docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md](docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md)
 
 ## Pre-commit checklist
