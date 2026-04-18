@@ -1,7 +1,7 @@
 ---
 title: "Phase 3h — cosmetic pins: candidate_id derivation, path format, rule_statement punctuation"
 type: refactor
-status: active
+status: completed
 date: 2026-04-18
 origin: docs/knowledge/lessons/2026-04-18-extract-mode-two-session-regression.md
 ---

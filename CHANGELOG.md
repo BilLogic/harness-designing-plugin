@@ -5,6 +5,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3h — cosmetic pins (extract-mode drift axes)
+
+Completed per [`docs/plans/2026-04-18-004-refactor-phase-3h-cosmetic-pins-plan.md`](docs/plans/2026-04-18-004-refactor-phase-3h-cosmetic-pins-plan.md). Single file, single commit. Closes the 3 surface-drift items from the Phase 3g G6 true-two-session regression.
+
+**H1/H2/H3 pins** (`11bfa196`, single file: `agents/review/rubric-applicator.md`):
+
+- **H1 — `candidate_id` derivation rule:** new 5-step deterministic recipe (first imperative verb from fixed allowlist → first noun phrase up to 3 words → negative prefixing → kebab-case → collision suffix). 4 worked examples. Collapses the 5-of-13 phrasing drift seen in G6 (`prefer-plus-components` vs `plus-components-first`).
+- **H2 — path-format rule:** `applies_to` + `source_citation` MUST use repo-relative paths. Absolute input paths get stripped to the nearest `.git/` ancestor; already-relative pass through; no-ancestor fallback is basename. 3 worked examples. Collapses the absolute/relative drift (`/tmp/hd-real-test/plus-uno/AGENTS.md` vs `AGENTS.md`).
+- **H3 — `rule_statement` punctuation:** use `:` (colon) to separate rule heading from elaboration; use `;` only when chaining independent imperatives. One-line spec addition. Collapses the Run A vs Run B punctuation drift.
+
+Phase 3 Structure output-ownership rules also updated to reference the repo-relative path-format rule, keeping the anti-fabrication contract and the pinning rules consistent.
+
+Mental trace against G6 inputs confirms all 3 drift axes collapse.
+
+Phase 3h is the **first phase with no deferred items** — the extract-mode spec is now as deterministic as a single-file spec can make it. Any further stability work would be agent-runtime determinism (temperature settings, beam search, etc.), not spec tightening.
+
 ### Phase 3g — remaining backlog
 
 Completed per [`docs/plans/2026-04-18-003-refactor-phase-3g-remaining-backlog-plan.md`](docs/plans/2026-04-18-003-refactor-phase-3g-remaining-backlog-plan.md). Closes all 6 items deferred from Phase 3f via 7 parallel subagents (G1–G5 + G6-Run-A + G6-Run-B). All 4 SKILL.md files now pass the 200-line soft cap; `budget-check.sh` exits 0 with 0 violations.
