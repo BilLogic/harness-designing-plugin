@@ -18,6 +18,36 @@ source:
 
 Copy quality across the product. Every word earns its place; no filler, no jargon, no apology-for-its-own-sake. Voice + tone calibrated by context per [`../../hd-setup/assets/context-skeleton/design-system/foundations/content-voice.md`](../../../hd-setup/assets/context-skeleton/design-system/foundations/content-voice.md) when scaffolded.
 
+## Scope & Grounding
+
+Grounded in pbakaus/impeccable's ux-writing reference (button labels, error messages, empty states) and Fluent 2's content guidance.
+
+### Personas
+- **Recovering-from-error user** — just hit a failure state. Pain: "Oops! Something went wrong" tells them nothing actionable.
+- **First-time user** — encountering an empty state or unfamiliar field. Pain: blank "No items" or technical labels ("UUID") leave them stuck.
+- **Localization engineer** — translating copy into another language. Pain: apologetic filler ("We're sorry for the inconvenience") triples string length and distorts tone in translation.
+- **Brand / content steward** — maintains voice consistency. Pain: celebratory tone on errors ("Yay! Something broke!") or icy success ("Operation complete") both miss the mark.
+
+### User stories
+- As a **recovering user**, I need **error messages that name what failed + propose a fix** so that **I can recover without support**.
+- As a **first-time user**, I need **empty states with illustration + explanation + CTA** so that **I know what to do first**.
+- As any **user**, I need **verb-first button labels ("Save draft", "Publish post")** so that **I know what the click will do**.
+- As any **user**, I need **destructive actions to name the consequence** so that **"Are you sure?" isn't the whole prompt**.
+- As a **localization engineer**, I need **no apologetic filler** so that **translated strings stay tight across locales**.
+
+### Realistic scenarios
+- **Diagnostic error** — "Couldn't save — your internet dropped. [Try again]". Why it matters: canonical impeccable error-message pattern.
+- **Empty cart** — illustration + "Your cart is empty." + [Browse items]. Why it matters: the three-part empty-state shape.
+- **Destructive confirmation** — "Delete this project? All its data and settings will be removed." [Keep] [Delete]. Why it matters: named consequence over "Are you sure?".
+- **Success toast** — "Draft saved" or "Order placed — confirmation sent to you@example.com". Why it matters: success-confirmation-specific.
+
+### Anti-scenarios (common failure modes)
+- **"Something went wrong"** — non-diagnostic error. Symptom: user has no signal on what failed or how to fix it.
+- **"OK" on destructive action** — generic confirm button. Symptom: user doesn't know whether OK means "yes delete" or "dismiss".
+- **Empty state with blank whitespace** — or bare "No items". Symptom: first-time user bounces.
+- **"Oops! We're sorry..."** — apologetic filler. Symptom: wastes words; distorts in translation; reads as anxious.
+- **Technical leak in labels** — "UUID" or "Invalid JSON syntax" in user-facing copy. Symptom: implementation leaking into UX.
+
 ## Criteria
 
 ### button-labels-verb-object

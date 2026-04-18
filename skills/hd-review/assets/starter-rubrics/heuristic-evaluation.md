@@ -20,6 +20,36 @@ source:
 
 Jakob Nielsen's 10 usability heuristics, adapted as an actionable rubric. These are the most widely-used heuristic lens for UI quality — every critique session should at least run this rubric.
 
+## Scope & Grounding
+
+Grounded in Nielsen Norman Group's original 10 heuristics (1994, updated 2020) plus Material 3 and Fluent 2 foundations. This rubric is the baseline pass for any UI critique.
+
+### Personas
+- **Novice user** — first time using the product; needs recognition over recall and clear system status. Pain: invisible state after clicking submit leads to duplicate actions.
+- **Power user** — knows the product; wants shortcuts, efficient paths, and predictable standards. Pain: novice-only wizards with no keyboard shortcuts force them through long flows every time.
+- **Recovering-from-error user** — just hit an error state and needs to understand and fix it. Pain: "Error 422" tells them nothing actionable.
+- **Mistake-maker user** — clicked the wrong button, needs a clearly-marked emergency exit. Pain: destructive actions without undo lose their work.
+
+### User stories
+- As a **novice user**, I need **immediate feedback on every action** so that **I know the system heard me**.
+- As a **power user**, I need **keyboard shortcuts and efficient paths** so that **I'm not stuck in novice wizards**.
+- As a **recovering user**, I need **error messages in plain language with a proposed fix** so that **I can resolve the problem myself**.
+- As a **mistake-maker**, I need **Cancel / Undo / Back on every destructive or long flow** so that **one wrong click doesn't cost me my work**.
+- As any **user**, I need **consistency across screens** so that **I don't re-learn patterns on every page**.
+
+### Realistic scenarios
+- **Submit with async feedback** — button shows loading spinner within 100ms; success toast names what succeeded. Why it matters: visibility-of-system-status is the single most-violated heuristic.
+- **Destructive action with undo** — Delete triggers a toast "Item deleted [Undo]" with a 5-second window. Why it matters: user-control-and-freedom without modal friction.
+- **Consistent Save pattern** — Save is primary-positioned + primary-styled on every screen; never "Submit" or "Apply" for the same verb. Why it matters: consistency-and-standards compounds across the product.
+- **Diagnostic error** — "Email already registered — [Sign in instead] or [Use a different email]". Why it matters: help-users-recognize-diagnose-recover.
+
+### Anti-scenarios (common failure modes)
+- **Silent submit** — button shows no feedback; user clicks again; duplicate submission. Symptom: violates visibility-of-system-status.
+- **"Are you sure?" modal** — existential prompt with OK/Cancel, no named consequence. Symptom: user doesn't know what "sure" means; violates error-prevention + user-control.
+- **Dashboard with 20 equal widgets** — no hierarchy, user can't tell what matters. Symptom: violates aesthetic-and-minimalist-design.
+- **HTTP codes in user-facing errors** — "422 Unprocessable Entity". Symptom: violates match-between-system-and-real-world AND help-recognize-diagnose-recover.
+- **Memory-required wizards** — step 4 requires recall of step 2 inputs. Symptom: violates recognition-rather-than-recall.
+
 ## Criteria
 
 ### visibility-of-system-status

@@ -20,6 +20,36 @@ source:
 
 Purposeful animation. Motion should reinforce hierarchy + signal causality + delight — not distract, slow, or pressure. Badly-used motion fatigues users; well-used motion makes interfaces feel alive + responsive.
 
+## Scope & Grounding
+
+Grounded in pbakaus/impeccable's motion-design reference (easing curves, staggering, reduced motion) and Material 3 motion foundations.
+
+### Personas
+- **Vestibular-disorder user** — triggered by large or rapid motion. Pain: parallax and auto-play cause nausea; `prefers-reduced-motion` ignored.
+- **Power user** — clicks fast; wants snap response and no animation-blocking. Pain: 300ms modal-in animations block interaction on a CTA they already know is coming.
+- **Attention-fatigued user** — working long sessions. Pain: multiple always-on loopers (pulsing badges, shimmering placeholders) make nothing feel important.
+- **First-time user** — needs motion to signal causality (this came from there, that replaced this). Pain: instant state changes feel jittery and lose continuity.
+
+### User stories
+- As a **vestibular-sensitive user**, I need **`prefers-reduced-motion` respected** so that **non-essential motion is disabled**.
+- As a **power user**, I need **motion to not block input** so that **I can click the CTA the moment it's visible**.
+- As any **user**, I need **motion to signal causality** so that **state changes feel continuous, not jarring**.
+- As any **user**, I need **feedback within 100ms** so that **interactions feel instant**.
+- As any **user**, I need **duration to scale with travel distance** so that **small animations feel snappy and large ones don't feel hurried**.
+
+### Realistic scenarios
+- **Modal enter** — 300ms slide-in with ease-out; CTA clickable at ~150ms (not blocked for full duration). Why it matters: the impeccable rule — ease-out for appearing.
+- **List stagger-in** — 6 dropdown items with 50ms stagger (total < 400ms). Why it matters: intentional cascade beats all-at-once or slow-stagger.
+- **Button press feedback** — scale or color change within 16ms (next frame). Why it matters: the 100ms perceived-as-instant threshold.
+- **Reduced-motion mode** — global `animation-duration: 0.01ms` when media query matches; essential spinners replaced with static indicators. Why it matters: a11y-first default.
+
+### Anti-scenarios (common failure modes)
+- **Uniform 300ms everywhere** — tooltip, modal, page-transition all the same. Symptom: small feels sluggish, large feels hurried.
+- **Motion blocks interaction** — modal can't be clicked until its 300ms animation completes. Symptom: power users' clicks feel ignored.
+- **Always-on loopers everywhere** — pulsing badges, shimmering cards, spinning hero. Symptom: nothing feels important; attention fatigue.
+- **Reduced-motion ignored** — animations run regardless of OS setting. Symptom: vestibular users get motion sick.
+- **No feedback within 100ms** — submit has no visible response for 500ms. Symptom: user double-clicks; duplicate submission.
+
 ## Criteria
 
 ### reduced-motion-respected

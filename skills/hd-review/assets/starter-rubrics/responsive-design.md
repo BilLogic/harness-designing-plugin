@@ -19,6 +19,36 @@ source:
 
 Quality of cross-viewport experience. A good responsive design isn't just "works on phone" — it's "feels native on every size," with content priority, density, and interaction patterns that adapt purposefully.
 
+## Scope & Grounding
+
+Grounded in pbakaus/impeccable's responsive-design reference (mobile-first, fluid design, container queries) and Material 3 window-size-class foundations.
+
+### Personas
+- **Mobile-primary user** — 70%+ of consumer traffic. Pain: desktop-first CSS stuffs everything into a 375px viewport as an afterthought.
+- **Touch user on any viewport** — iPad, touch-capable laptop, phone. Pain: hover-only nav dropdowns are unreachable; 24px icon buttons miss.
+- **Wide-desktop user** — 1920px+ monitors. Pain: content pinned at 1200px max-width with acres of empty margin OR scaled to fill with 120-character line lengths.
+- **iPhone notch / Android gesture-bar user** — bottom-fixed CTAs collide with system chrome. Pain: FAB sits on top of the home indicator, unreachable.
+
+### User stories
+- As a **mobile-primary user**, I need **mobile-first CSS** so that **my viewport is the default, not the fallback**.
+- As a **touch user**, I need **every hover pattern to have a tap equivalent** so that **I can reach dropdowns and tooltips**.
+- As a **touch user**, I need **44×44pt tap targets** so that **I don't misfire on adjacent buttons**.
+- As any **viewport user**, I need **layout to scale fluidly between breakpoints** so that **there are no awkward tweener states**.
+- As a **notched-device user**, I need **safe-area insets respected** so that **CTAs aren't hidden behind system chrome**.
+
+### Realistic scenarios
+- **Mobile-first card** — `.card { padding: 16px } @media (min-width: 768px) { .card { padding: 24px } }`. Why it matters: the canonical impeccable pattern; everything else is layered on top.
+- **Progressive disclosure** — desktop: content + sidebar + detail; mobile: collapses sidebar to hamburger, detail to bottom sheet. Why it matters: content-priority-per-breakpoint.
+- **Fluid type** — `font-size: clamp(1rem, 1rem + 0.5vw, 1.25rem)`. Why it matters: no breakpoint jumps between sizes.
+- **Safe-area footer** — `padding-bottom: env(safe-area-inset-bottom)` on fixed CTA. Why it matters: iPhone home indicator doesn't hide the button.
+
+### Anti-scenarios (common failure modes)
+- **Desktop-first CSS** — `max-width` queries throughout. Symptom: mobile feels like an afterthought; default styles are desktop.
+- **Hover-only nav** — dropdowns trigger on hover with no tap handler. Symptom: touch users can't reach nav at all.
+- **Horizontal scroll at 320px** — rigid 600px element. Symptom: whole page scrolls sideways; layout is broken.
+- **12px body on mobile** — text too small to read. Symptom: user pinch-zooms; a11y failure.
+- **FAB over home indicator** — no safe-area handling. Symptom: button partially hidden, tap misfires into system gesture.
+
 ## Criteria
 
 ### mobile-first-design

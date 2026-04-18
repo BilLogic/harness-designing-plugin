@@ -14,6 +14,34 @@ severity_defaults:
 
 Foundation-level accessibility checks against WCAG 2.1 AA standards. Non-exhaustive — covers the criteria most frequently violated during design. Teams should extend with domain-specific checks (motion safety, cognitive load, localization).
 
+## Scope & Grounding
+
+### Personas
+- **Low-vision keyboard user** — navigates primarily by keyboard at 200% zoom with high-contrast OS preferences. Pain: invisible focus rings and low-contrast disabled states strand them mid-flow.
+- **Screen-reader user (JAWS/NVDA/VoiceOver)** — consumes the UI linearly via assistive tech. Pain: unlabeled icon buttons and placeholder-only inputs announce as "edit text" with no context.
+- **Motor-impaired touch user** — hits small targets inaccurately and benefits from generous hit areas. Pain: 16px icon buttons with no padding cause repeated misfires.
+- **Vestibular-disorder user** — triggered by parallax, auto-play, and large sweeping motion. Pain: animations that ignore `prefers-reduced-motion` cause nausea.
+
+### User stories
+- As a **keyboard user**, I need **every interactive element reachable and focus-visible** so that **I can complete tasks without a mouse**.
+- As a **screen-reader user**, I need **every input labeled and headings in semantic order** so that **rotor navigation lands on meaningful targets**.
+- As a **low-vision user**, I need **text and UI contrast ≥ 4.5:1 / 3:1** so that **I can read body copy and see button borders without zooming past 200%**.
+- As a **motor-impaired user**, I need **tap targets ≥ 44×44pt** so that **I can activate controls without repeated misclicks**.
+- As a **vestibular-sensitive user**, I need **animations to respect reduced-motion** so that **parallax and auto-play don't trigger symptoms**.
+
+### Realistic scenarios
+- **Primary CTA on a marketing page** — approved token pair yields 7.2:1 contrast; focus ring is visible. Why it matters: the most-seen control sets the a11y baseline for the whole product.
+- **Modal dialog with a form** — focus trapped inside, Escape closes, every input has a `<label>`. Why it matters: modals are where a11y regressions accumulate fastest.
+- **Icon-only toolbar** — 24px icons with 44×44pt hit areas via padding, each with `aria-label`. Why it matters: icon-only UIs fail silently for both screen-reader and motor users.
+- **Data-loaded dashboard** — skeletons on load, error state with diagnostic copy, `aria-live` for status. Why it matters: dynamic content is invisible to AT without live regions.
+
+### Anti-scenarios (common failure modes)
+- **Global `outline: none`** — focus rings removed with no replacement. Symptom: keyboard users lose track of focus entirely.
+- **Placeholder-as-label** — input uses `placeholder="Email"` with no `<label>`. Symptom: screen reader announces "edit text"; placeholder disappears on type.
+- **Gray-on-gray body text** — `--text-muted on --bg-subtle` at 2.8:1. Symptom: low-vision users can't read the copy at normal zoom.
+- **Auto-play hero with parallax** — no reduced-motion fallback. Symptom: vestibular-disorder users get motion sick on first visit.
+- **Headings skipped for styling** — h1 then h4 because "h2 looked too big". Symptom: screen-reader rotor navigation jumps levels and misrepresents structure.
+
 ## Criteria
 
 ### contrast-text

@@ -14,6 +14,34 @@ Evaluates a Layer 2 skill (SKILL.md + its references / workflows / templates / s
 
 The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own skill evaluations. Each section lists criteria, a default severity, and pass/fail examples. Severity can be overridden per-repo in `hd-config.md`.
 
+## Scope & Grounding
+
+This rubric is self-referential: it's the rubric we apply to our own Layer 2 skills during `hd:review audit`. Grounded in Anthropic's skill-authoring guidance and the 9-section checklist Bill uses for every `hd-*` skill.
+
+### Personas
+- **Skill author** — writing or editing a `SKILL.md`. Pain: bloated 800-line SKILL.md with references inlined; progressive disclosure collapses; context window suffers.
+- **Skill reviewer / auditor** — running `hd:review audit` across every skill in `skills/`. Pain: no consistent rubric, so reviews drift by reviewer.
+- **New contributor** — shipping their first skill. Pain: doesn't know the 9-section shape; misses "what this skill does NOT do" and triggers on everything.
+- **Skill consumer (the model itself)** — loading the skill at invocation. Pain: vague descriptions and overlapping triggers cause wrong-skill activation.
+
+### User stories
+- As a **skill author**, I need **SKILL.md under 500 lines with references progressively loaded** so that **context stays clean**.
+- As a **reviewer**, I need **the 9-section checklist as a rubric** so that **audits are reproducible across reviewers**.
+- As a **new contributor**, I need **a "what this skill does NOT do" section modeled** so that **my skill doesn't over-trigger**.
+- As the **model**, I need **descriptions naming the one job with concrete triggers** so that **I select the right skill**.
+
+### Realistic scenarios
+- **`hd:onboard`** — 150-line SKILL.md router + 10 atomic reference files. Description: "Answers questions about the five-layer design harness framework." One job; non-overlapping with setup / compound / review. Why it matters: canonical well-shaped skill.
+- **`hd:setup` with detect script** — deterministic `scripts/detect-mode.sh` emits JSON; router reads JSON, branches, references per-mode procedures. Why it matters: scalability-and-maintainability section; separation of router / script / references.
+- **Self-critique before shipping** — author walks sections 1, 2, 3, 5 on their draft. Why it matters: these four catch the most common ship-blockers.
+
+### Anti-scenarios (common failure modes)
+- **800-line SKILL.md with everything inlined** — no references, no progressive disclosure. Symptom: section 5 (context design) fails immediately; model's context window pays the tax.
+- **Vague description** — "Helps you with design-harness stuff". Symptom: section 1 fails; skill triggers on unrelated prompts or doesn't trigger at all.
+- **Grab-bag skill** — captures lessons + graduates + audits + critiques, all in one. Symptom: section 2 (scope) fails; skill should split.
+- **Missing "what this skill does NOT do"** — over-triggers on adjacent prompts. Symptom: section 9 (failure handling) fails.
+- **Future-version stub with `disable-model-invocation: true`** — fake trigger text + disabled flag. Symptom: the 2026-04-16 lesson; strictly worse than no skill at all.
+
 ## 1. Skill definition
 
 **Check:** frontmatter `description:` clearly states *what the skill does* AND *when to use it*, with specific triggers.
@@ -136,7 +164,7 @@ The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own s
 | Allows fallback to default model behavior when out of scope | p2 |
 | Handles malformed inputs with clear error + recovery path | p1 |
 
-**Pass example:** `hd:maintain apply` aborts with "Missing --plan-hash. Run graduate-propose first." and points to the recovery command.
+**Pass example:** `hd:maintain apply` aborts with "Missing --plan-hash. Run rule-propose first." and points to the recovery command.
 **Fail example:** skill crashes silently on malformed input; user gets no signal.
 
 ## How to apply this rubric

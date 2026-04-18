@@ -12,6 +12,32 @@ severity_defaults:
 
 Checks whether a design proposal respects the team's primitive-component budget. **New primitive components require an RFC** — this rubric enforces that gate. Compound extensions of existing primitives (different props, composition) are not governed here; only new primitives that would expand the design-system surface area.
 
+## Scope & Grounding
+
+Grounded in the plus-uno pilot: **cheat-sheet-is-law** + **no-duplicate-components** were the two rules that prevented a 30-component drift into chaos. This rubric codifies both.
+
+### Personas
+- **Design-system steward** — owns the cheat-sheet and the primitive inventory. Pain: primitives proliferate when contributors don't search for existing solutions before proposing new ones.
+- **Feature designer** — needs UI building blocks for a flow they're scoping. Pain: staff DS reviews feel like gatekeeping when they're actually preventing parallel-primitive drift.
+- **New contributor** — joined recently, unsure what primitives already exist. Pain: ships a `StepIndicator` next to an existing `Stepper` simply because they didn't know.
+
+### User stories
+- As a **feature designer**, I need **to compose existing primitives first and document why they're insufficient** so that **I don't fork the system out of ignorance**.
+- As a **DS steward**, I need **every new primitive to ship with an RFC, a migration plan, and sensible defaults** so that **the system's surface area only grows for justified reasons**.
+- As a **new contributor**, I need **the cheat-sheet to be the first stop** so that **I find the existing `Stepper` before writing `StepIndicator`**.
+- As a **tech lead**, I need **a quarterly primitive budget** so that **the system's growth rate is bounded and intentional**.
+
+### Realistic scenarios
+- **Proposing a `<Stepper>` primitive** — RFC documents failed composition of Card + Button + ProgressBar, quantifies the 40-line-to-4-line reduction, includes migration plan for 3 existing ad-hoc patterns. Why it matters: the plus-uno pattern — every primitive earns its place.
+- **Adding a `ghost` variant to `<Button>`** — NOT governed by this rubric (variant within existing primitive). Routed to `design-system-compliance`. Why it matters: the rubric scope-check prevents over-triggering.
+- **Hitting the quarterly budget** — team declared 2/quarter; this would be the 4th. Defer or cut. Why it matters: budget math makes the trade-off explicit instead of implicit.
+
+### Anti-scenarios (common failure modes)
+- **New primitive without RFC** — ships straight to the library. Symptom: nobody remembers why it exists six months later; parallel primitive emerges.
+- **Insufficiency not documented** — RFC jumps to spec without addressing "why not compose existing?". Symptom: duplicate primitive ships; DS steward discovers it in review.
+- **No migration plan** — new primitive ships but ad-hoc predecessors stay forever. Symptom: three patterns for the same UX live in the codebase indefinitely.
+- **Over-configurable primitive** — requires 8 explicit props to render anything sensible. Symptom: every use site is a 20-line configuration block; nobody uses it.
+
 ## What counts as a "primitive"
 
 A primitive is a reusable visual building block that the team would add to the design system library — Button, Input, Card, Badge, Modal, Tooltip, etc.

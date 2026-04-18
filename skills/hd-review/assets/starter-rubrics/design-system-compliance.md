@@ -14,6 +14,34 @@ severity_defaults:
 
 Checks whether a work item adheres to the team's design-system definitions in `docs/context/design-system/cheat-sheet.md`. This rubric is **repo-specific by design** — the criteria below are generic; the actual approved token sets / variant lists come from the user's cheat-sheet.
 
+## Scope & Grounding
+
+Grounded in Material 3 + Fluent 2 token discipline plus the managed-DS pre-fills below (AntD, Chakra, MUI, Mantine) surfaced by the caricature + lightning pilots.
+
+### Personas
+- **Design-system steward** — maintains the token set and variant catalog. Pain: one-off hex values and unapproved variants (`primary-gradient`) appear in PRs and fork the system silently.
+- **Feature engineer** — implementing a screen, reaches for the nearest value that "looks right". Pain: Figma exports lose token references; pixel-peeping yields 13px paddings that break the 8-point rhythm.
+- **Managed-DS adopter (AntD / MUI / Chakra / Mantine)** — working within a third-party system and its theme API. Pain: raw `.ant-*` className overrides and mixed v5/v6 APIs cause silent visual regressions.
+- **Dark-mode maintainer** — needs semantic tokens so theming is a token-flip, not a component rewrite. Pain: structural names like `--gray-500` used as text colors don't re-theme.
+
+### User stories
+- As a **feature engineer**, I need **every color / type / spacing value to come from an approved token** so that **design-system updates propagate without hunting literals**.
+- As a **DS steward**, I need **variants restricted to the approved set** so that **`<Button variant="primary-gradient">` doesn't ship**.
+- As a **managed-DS adopter**, I need **a single `<ConfigProvider>` / `<ThemeProvider>` / `<MantineProvider>` at root** so that **theming is centralized and version-upgrade-safe**.
+- As a **dark-mode maintainer**, I need **semantic token names (`--text-primary`) not structural (`--gray-900`)** so that **re-theming is a value change, not a component change**.
+
+### Realistic scenarios
+- **Card padding** — `padding: var(--space-4)` (16px on the 8-point grid). Why it matters: on-grid spacing is the most-violated criterion and the easiest to catch.
+- **AntD theme config** — `<ConfigProvider theme={{ token: { colorPrimary: '#0051FF' } }}>` at root; no `.ant-btn` overrides anywhere. Why it matters: v5 → v6 migrations break when components override internals.
+- **Dark-mode token flip** — `--text-primary` resolves to different values in light/dark; no component re-writes. Why it matters: the whole point of semantic tokens.
+
+### Anti-scenarios (common failure modes)
+- **Hex literal drift** — `#0060FF` instead of the approved `#0051FF`. Symptom: near-match colors proliferate; brand looks off-key.
+- **Off-grid spacing** — `padding: 13px`. Symptom: pixel-peeped from a Figma export that lost its token references.
+- **Unapproved variant** — `<Button variant="primary-gradient">`. Symptom: one-off visual shipped past review; variant sprawl begins.
+- **Raw AntD class overrides** — `.ant-btn { border-radius: 0 }` in global CSS. Symptom: v5 → v6 upgrade silently breaks buttons across the app.
+- **Structural tokens as semantic** — `color: var(--gray-900)` on body text. Symptom: dark-mode re-theme requires component-level rewrites instead of a token flip.
+
 ## Criteria
 
 ### approved-color-tokens

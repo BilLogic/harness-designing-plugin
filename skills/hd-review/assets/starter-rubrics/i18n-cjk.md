@@ -20,6 +20,35 @@ source:
 
 Addendum rubric for bilingual or CJK-primary products (Chinese / Japanese / Korean). Standard typography and UX-writing rubrics are English-centric and miss CJK-specific failures: wrong line-height, halfwidth commas in hanzi runs, IME composition breaking Enter-to-submit, and missing CJK font stacks. Apply this **alongside** `typography.md` and `ux-writing.md`, not instead.
 
+## Scope & Grounding
+
+Grounded in the caricature pilot (zh-CN primary) and the lightning pilot (zh-EN bilingual, Phase 3e) where English-centric defaults produced shipped bugs.
+
+### Personas
+- **zh-CN-primary end user** — reads product entirely in Simplified Chinese on PingFang SC (macOS/iOS) or SimSun-fallback (Windows). Pain: `font-family: Inter, sans-serif` yields SimSun-serif on Windows, making the product look like a different app on every OS.
+- **Bilingual operator** — switches zh / en locales throughout the day. Pain: register drift — formal Chinese (您 / 请) next to breezy English ("Hey!") reveals the UI was translated, not localized.
+- **IME-typing user** — composing hanzi via Pinyin IME; Enter during composition means "commit character", not "submit form". Pain: single-Enter submits half-typed messages; IME candidate popup occludes the send button.
+- **Localization engineer** — owns the locale files and font stack. Pain: halfwidth `,` `.` copy-pasted from en into zh strings is the most common localization bug and the hardest to grep for.
+
+### User stories
+- As a **zh-CN user**, I need **an explicit CJK font stack** so that **the product renders consistently across macOS, Windows, and Linux**.
+- As an **IME user**, I need **Enter-during-composition to commit, not submit** so that **my in-progress hanzi doesn't fire the form**.
+- As a **zh reader**, I need **line-height ~1.75 on CJK blocks** so that **hanzi don't look crushed**.
+- As a **bilingual user**, I need **register parity across locales** so that **the product has one voice, not two**.
+- As a **localization engineer**, I need **fullwidth punctuation in zh strings** so that **sentences look native, not translated**.
+
+### Realistic scenarios
+- **zh-CN dashboard card** — `lang="zh"`, `line-height: 1.75`, `word-break: keep-all`, PingFang SC / Noto Sans CJK SC / Source Han Sans SC font stack. Why it matters: the lightning pilot's device cards were crushed until these four rules landed together.
+- **Bilingual send button** — IME dashed-underline on composition, [发送 / Send] button stays visible below the candidate popup, double-Enter required (commit then submit). Why it matters: single-Enter submission is the top CJK bug in chat products.
+- **Timestamp in zh-CN** — `2026年4月18日 14:32` not `2026-04-18T14:32:00Z`. Why it matters: raw ISO leaks from API to UI and reads as untranslated.
+
+### Anti-scenarios (common failure modes)
+- **Halfwidth punctuation in hanzi** — `设备已连接, 当前温度 22°C.` Symptom: sentence reads as translated, not localized; fullwidth spacing rhythm broken.
+- **Missing CJK font stack** — `font-family: Inter, sans-serif`. Symptom: macOS renders PingFang, Windows renders SimSun-serif, Linux renders something else entirely — three products from one stylesheet.
+- **Single global line-height** — `line-height: 1.4` everywhere. Symptom: zh paragraphs look crushed; radical-stacking overlaps on dense hanzi.
+- **IME-Enter submits form** — no composition-state handling. Symptom: users fire half-typed messages when selecting candidates.
+- **Register mismatch** — zh formal (`请您确认`) + en slangy ("Yo, you sure?"). Symptom: bilingual users notice immediately; product feels bolted together.
+
 ## Criteria
 
 ### dual-script-line-height

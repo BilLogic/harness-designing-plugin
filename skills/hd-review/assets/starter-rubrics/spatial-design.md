@@ -19,6 +19,36 @@ source:
 
 How elements are spaced, grouped, and hierarchically arranged. Good spatial design makes interfaces feel intentional; bad spatial design makes them feel cobbled together.
 
+## Scope & Grounding
+
+Grounded in pbakaus/impeccable's spatial-design reference (spacing systems, grids, visual hierarchy) and Material 3 spacing + layout foundations.
+
+### Personas
+- **Design-system steward** — owns the spacing scale and grid. Pain: off-scale values (13px, 22px) from Figma exports break the rhythm and multiply across the codebase.
+- **Feature designer** — composing a new layout. Pain: related elements drift apart visually (label 24px from input) while unrelated elements cluster — proximity cues get scrambled.
+- **Scanning user** — reading a dashboard or list in under 5 seconds. Pain: no hierarchy through spacing, everything equally weighted, can't find what matters.
+- **Cross-breakpoint user** — viewing on tablet / medium viewport. Pain: mobile layout stretches too wide before desktop kicks in; awkward tweener state.
+
+### User stories
+- As a **DS steward**, I need **every margin / padding / gap from the spacing scale** so that **the 8-point rhythm stays intact**.
+- As a **feature designer**, I need **proximity to encode relationship** so that **label / input / helper / error group unambiguously**.
+- As a **scanning user**, I need **hierarchy through spacing** so that **important content has breathing room and I can find it**.
+- As any **user**, I need **like-components with like-padding** so that **the page doesn't read as neglected**.
+- As a **cross-breakpoint user**, I need **breakpoints where content actually breaks** so that **there are no awkward tweener states**.
+
+### Realistic scenarios
+- **Form field group** — label / input / helper / error at 4–8px gaps; next field 24–32px away. Why it matters: proximity-groups-related is the canonical spatial rule.
+- **Page title** — 48px margin-below provides breathing room before dense content. Why it matters: hierarchy-through-spacing.
+- **Card inventory** — every `<Card>` uses `--space-4` (16px); compact variant is explicit, not ad hoc. Why it matters: padding-consistent-within-similar.
+- **Optically aligned icon** — down-arrow nudged 1–2px up to feel centered with text baseline. Why it matters: optical-over-mathematical alignment.
+
+### Anti-scenarios (common failure modes)
+- **Off-scale values** — `padding: 13px; margin: 22px`. Symptom: eyeballed from Figma export; breaks the 8-point rhythm.
+- **Scrambled proximity** — label 24px from input, error 4px from next field. Symptom: user can't tell which error belongs to which field.
+- **No hierarchy** — title immediately followed by dense content, no margin-below. Symptom: title gets lost; user scans past it.
+- **Inconsistent card padding** — A is 16px, B is 20px, C is 14px. Symptom: reads as design neglect.
+- **Inconsistent grid** — sections at 1200 / 1280 / 1320 max-widths. Symptom: page rhythm breaks across sections.
+
 ## Criteria
 
 ### spacing-on-scale

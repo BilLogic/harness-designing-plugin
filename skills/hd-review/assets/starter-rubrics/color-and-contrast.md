@@ -21,6 +21,34 @@ source:
 
 Color system quality: palette coherence, contrast for accessibility, dark-mode strategy, tinted neutrals. Distinct from the pure-a11y rubric (which focuses on minimum contrast + ARIA); this rubric also covers aesthetic + design-system-level color decisions.
 
+## Scope & Grounding
+
+### Personas
+- **Design-system steward** — owns the token set and dark-mode strategy. Pain: one-off hex literals in product code fork the system and make dark-mode re-theming intractable.
+- **Colorblind end user (red-green, ~8% of men)** — relies on icon + text, not hue, to decode status. Pain: error states differentiated only by red text look identical to normal text.
+- **Long-form reader** — reads articles or docs for minutes at a time. Pain: body text at exactly 4.5:1 is legal but fatiguing on long sessions.
+- **Dark-mode user** — runs OS-dark by default, often in low-light environments. Pain: naive `filter: invert()` dark-mode causes halation and makes accent colors unusable.
+
+### User stories
+- As a **design-system steward**, I need **components to reference semantic tokens** so that **dark mode and theming change one place, not every component**.
+- As a **colorblind user**, I need **status conveyed by icon + text, not color alone** so that **I can tell errors from normals**.
+- As a **long-form reader**, I need **critical reading surfaces at AAA (≥ 7:1) contrast** so that **I don't fatigue over sustained reading**.
+- As a **dark-mode user**, I need **a deliberately tuned dark palette, not flipped light** so that **surfaces don't halate and accents stay legible**.
+- As a **brand designer**, I need **neutrals tinted toward the brand hue** so that **the UI feels integrated rather than a brand slab on gray chrome**.
+
+### Realistic scenarios
+- **Primary palette in OKLCH** — brand hue + tinted neutrals + one accent, all derived in OKLCH with documented lightness ladder. Why it matters: honest contrast math + tractable dark-mode theming.
+- **Error form field** — red border + warning-triangle icon + "Error:" prefix + helper text naming the problem. Why it matters: colorblind-safe and screen-reader-friendly simultaneously.
+- **Article body surface** — near-black on near-white at ~18:1, line-length 65ch. Why it matters: critical-reading surfaces earn AAA.
+- **Dark-mode re-theme** — surfaces use lifted dark tones (not pure black), accents shift chroma, neutrals tuned independently. Why it matters: naive inversion is a known anti-pattern.
+
+### Anti-scenarios (common failure modes)
+- **Hex literals throughout components** — `color: #0051FF` scattered in 7 files. Symptom: dark-mode + theming forks; single color change requires global find-replace.
+- **Required field marker color-only** — red border + red "*required*" with no icon. Symptom: red-green colorblind users see no difference between required and optional.
+- **Palette bloat** — 8 "brand colors", 5 "accents", no usage guidance. Symptom: designers pick at random; product looks like three products.
+- **Pure `#000` dark-mode background** — causes halation on OLED. Symptom: text appears to vibrate; long sessions fatigue users.
+- **`filter: invert()` dark mode** — flipped light theme instead of re-theme. Symptom: brand colors become alien complements; illustrations look broken.
+
 ## Criteria
 
 ### uses-oklch-or-equivalent

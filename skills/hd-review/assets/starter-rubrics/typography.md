@@ -20,6 +20,36 @@ source:
 
 Typographic quality: font choice, hierarchy, scale, spacing, OpenType. A good type system makes interfaces easier to scan + more pleasant to read; a bad one creates cognitive friction even when users don't consciously notice.
 
+## Scope & Grounding
+
+Grounded in pbakaus/impeccable's typography reference (modular scales, OpenType), Material 3 type-scale foundations, and Matthew Butterick's *Practical Typography* (reading-ease + line-length).
+
+### Personas
+- **Long-form reader** — reads articles, docs, or chat threads for minutes at a time. Pain: line-length over 100ch and body line-height 1.2 cause eye fatigue and line-loss.
+- **Scanning user** — surveys a dashboard or list in seconds. Pain: insufficient weight contrast (400 / 500 / 600 ladder) makes hierarchy illegible; nothing stands out.
+- **Screen-reader user** — navigates by heading rotor. Pain: headings skipped for styling (h1 → h3) misrepresent structure.
+- **Data viewer** — reads tables with numeric columns. Pain: proportional numerals cause digits to misalign across rows.
+
+### User stories
+- As a **long-form reader**, I need **line-height 1.4–1.6 and line-length 60–75ch** so that **I don't fatigue over sustained reading**.
+- As a **scanning user**, I need **three distinct weights (400 / 600 / 700)** so that **hierarchy is immediately legible**.
+- As a **screen-reader user**, I need **semantic heading order (h1 > h2 > h3, no skips)** so that **rotor navigation reflects structure**.
+- As a **data viewer**, I need **tabular numerals on data columns** so that **digits align vertically across rows**.
+- As any **user**, I need **no layout shift on font load** so that **the page doesn't jump as fonts swap in**.
+
+### Realistic scenarios
+- **Article body** — body 16px / line-height 1.5 / line-length 65ch; h1 line-height 1.1. Why it matters: the canonical reading surface from Butterick + impeccable.
+- **Modular scale** — 12 / 14 / 16 / 20 / 24 / 32 / 48 at 1.25 ratio. Why it matters: every text token lands on the scale; no off-scale 13 / 17 / 23 values.
+- **Data table** — `font-feature-settings: 'tnum'` on numeric columns. Why it matters: impeccable's OpenType-features-used criterion.
+- **Code / body pairing** — DM Sans + Geist Mono. Distinct roles. Why it matters: font-pairing-coherent.
+
+### Anti-scenarios (common failure modes)
+- **Line-height 1.0 on body** — cramped paragraphs, descenders touch ascenders. Symptom: unreadable long-form text.
+- **Heading skips for styling** — h1 then h3 because "h2 looked too big". Symptom: screen-reader rotor jumps levels; semantic structure lies to AT.
+- **Weight ladder with no contrast** — 400 / 450 / 500 / 550. Symptom: visual hierarchy invisible.
+- **Line-length > 100ch** — article body spans full 1920px viewport. Symptom: readers lose line position; eye fatigue within minutes.
+- **Proportional numerals in tables** — digits misalign. Symptom: scanning columnar data becomes harder than it should be.
+
 ## Criteria
 
 ### font-choice-purposeful

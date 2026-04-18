@@ -20,6 +20,37 @@ source:
 
 Rubric for IoT, hardware dashboards, and real-time-data products. Telemetry UI carries risks that standard CRUD rubrics miss: stale data masquerading as live, silent disconnects, binary payloads shown as raw integers, and alert fatigue from undifferentiated severity. Surfaced by the lightning pilot — smart-lighting platform with 53 binary message types and a device gateway, where zero existing starter rubrics applied.
 
+## Scope & Grounding
+
+Grounded in the lightning pilot's 53-binary-message-type system (device gateway, zero starter coverage gap) plus Material 3 state-indicator patterns and Fluent 2 offline/reconnection guidance.
+
+### Personas
+- **Facility operator** — monitoring 400+ devices across a campus from a live dashboard. Pain: stale data rendered as live leads to acting on 10-minute-old readings.
+- **On-call engineer** — gets paged by alarms; needs to distinguish critical from noise at a glance. Pain: all alerts share one red toast; critical overheating alarm vanishes in 3s during a phone call.
+- **Protocol engineer** — debugging a binary message stream. Pain: raw `[3, 22, 225, 0, ...]` in the log; must decode bytes by hand against the spec.
+- **Field installer** — walking the site on a laptop with flaky connectivity. Pain: websocket drops silently; numbers keep rendering; no way to know the data is cached.
+
+### User stories
+- As an **operator**, I need **every live value to show "as of <timestamp>"** so that **I can tell live from stale**.
+- As an **operator**, I need **explicit offline banner + cached-data labeling** so that **dropped transports don't masquerade as live**.
+- As an **on-call engineer**, I need **severity tiers (critical / warning / info) with separate acknowledge + dismiss** so that **critical alarms don't auto-dismiss**.
+- As a **protocol engineer**, I need **decoded enum names + field labels with a hex toggle** so that **I'm not translating bytes by hand**.
+- As a **field installer**, I need **device states (online / offline / error / unknown) distinguishable by icon + text, not color** so that **I can read status in sunlight or colorblind**.
+
+### Realistic scenarios
+- **Live device card** — "Updated 4s ago" in live state; flips to amber "Stale — 2m ago" after threshold. Why it matters: the lightning-pilot pattern surfaced this as the top coverage gap.
+- **Transport drop** — "You are offline — showing data cached at 14:28. [Retry]" banner; cards render with cached ribbon. Why it matters: never silent.
+- **Message log** — "Mode: HEATING (0x03) · Setpoint: 22.5°C [View hex]". Why it matters: decoded-by-default with hex opt-in.
+- **Critical alarm** — red banner, persistent until acknowledged, separate [Acknowledge] and [Dismiss]. Why it matters: never auto-dismiss on timer.
+- **Device map** — 400 devices cluster into ~12 numbered circles at city zoom; pin click opens side drawer keeping map visible. Why it matters: map-as-canvas pattern.
+
+### Anti-scenarios (common failure modes)
+- **Number with no timestamp** — live-looking value with no freshness marker. Symptom: user acts on yesterday's data.
+- **Silent disconnect** — websocket drops; numbers keep rendering unchanged. Symptom: cached data masquerades as live.
+- **Color-only device state** — red / green / gray dots with no icon or text. Symptom: colorblind users see a uniform gray blob.
+- **Bare integers for enum** — `state: 3` shown raw. Symptom: operators translate bytes against a spec sheet.
+- **Undifferentiated alerts** — all alarms one red toast with 3s auto-dismiss. Symptom: critical overheating alarm vanishes during a phone call.
+
 ## Criteria
 
 ### realtime-freshness-indicators
