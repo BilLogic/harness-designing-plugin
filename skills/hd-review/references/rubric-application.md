@@ -79,7 +79,7 @@ Order of rubric application:
 
 ## Custom rubric authoring
 
-Users extend by authoring new rubric files. Location: `docs/context/design-system/<rubric-name>.md` OR `docs/rubrics/<rubric-name>.md`.
+Users extend by authoring new rubric files. Location: `docs/rubrics/<rubric-name>.md` (canonical; rubrics are CHECKS separate from design-system source content).
 
 Requirements:
 
@@ -137,7 +137,7 @@ If a design proposal references 5 other files, critique applies to the top-level
 
 ### Rubric applies but work item missing required context
 
-Example: design-system-compliance rubric checks "uses approved color tokens," but the user's repo has no design-system/cheat-sheet.md yet. Rubric aborts with: "Can't apply — missing `docs/context/design-system/cheat-sheet.md`. Run `/hd:setup` to scaffold Layer 1 first."
+Example: design-system-compliance rubric checks "uses approved color tokens," but the user's repo has no design-system/components/cheat-sheet.md yet. Rubric aborts with: "Can't apply — missing `docs/context/design-system/components/cheat-sheet.md`. Run `/hd:setup` to scaffold Layer 1 first."
 
 ## Cross-reference
 

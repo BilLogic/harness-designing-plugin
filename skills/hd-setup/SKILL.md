@@ -245,17 +245,17 @@ Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A
      mode: "extract"
    )
    ```
-2. Present extracted candidates to user as a list: *"I see 5 implicit rubrics in your copilot-instructions.md: (a) approved color tokens, (b) React Aria for a11y, (c) component-budget gate for new primitives, (d) storybook-first pattern, (e) no-hex-codes. Want to promote any to explicit rubric files under `docs/context/design-system/`?"*
-3. For each candidate the user approves: copy the matching starter rubric from [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/), pre-fill with the extracted content, show the user the result, atomic write on confirmation.
+2. Present extracted candidates to user as a list: *"I see 5 implicit rubrics in your copilot-instructions.md: (a) approved color tokens, (b) React Aria for a11y, (c) component-budget gate for new primitives, (d) storybook-first pattern, (e) no-hex-codes. Want to promote any to explicit rubric files under `docs/rubrics/`?"*
+3. For each candidate the user approves: copy the matching starter rubric from [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/) to `docs/rubrics/<name>.md`, pre-fill with the extracted content, show the user the result, atomic write on confirmation.
 4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
 5. Never modify the source AI-doc file. Extraction is read-only on the source.
 
 **Execute — scaffold** (conditions 2/3/4):
-- Load [`references/layer-4-rubrics.md`](references/layer-4-rubrics.md) for L4 depth (why distributed, INDEX.md pattern)
+- Load [`references/layer-4-rubrics.md`](references/layer-4-rubrics.md) for L4 depth (distributed-behavior rationale, 12-starter enumeration, INDEX.md pattern)
 - Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?
-- If "no clear criteria yet" → offer baselines: Material 3 / Fluent 2 / awesome-design-md / starters in [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/)
+- If "no clear criteria yet" → offer the 12 starter rubrics at [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/) (distilled from Impeccable + Nielsen + Material 3 + Fluent 2) + fallback baselines
 - Write `docs/rubrics/INDEX.md` from [`assets/rubrics-index.md.template`](assets/rubrics-index.md.template)
-- Copy user-selected starters into `docs/context/design-system/` or `docs/rubrics/` for customization
+- Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
 
 **Execute — critique** (targeted, when user explicitly points at a work item): invoke:
 

@@ -216,7 +216,7 @@ Next step:
 **Step 2 — Resolve rubric.**
 
 Resolution order:
-1. `--rubric <name>` explicit → look in `docs/context/design-system/<name>.md`, then `docs/rubrics/<name>.md`, then `skills/hd-review/assets/starter-rubrics/<name>.md`
+1. `--rubric <name>` explicit → look in `docs/rubrics/<name>.md` first, then `docs/context/design-system/<name>.md` (legacy or team-specific overlay), then `skills/hd-review/assets/starter-rubrics/<name>.md`
 2. No explicit → infer from work item type (see [`references/rubric-application.md`](references/rubric-application.md)):
    - `.tsx` / `.jsx` / `.html` / `.css` → `design-system-compliance`
    - `SKILL.md` → `skill-quality`
@@ -302,13 +302,20 @@ When context budget is tight:
 
 - [assets/audit-report.md.template](assets/audit-report.md.template) — audit output format
 - [assets/critique-response.md.template](assets/critique-response.md.template) — critique output format
-- [assets/starter-rubrics/](assets/starter-rubrics/) — 5 shipped rubrics:
-  - `accessibility-wcag-aa.md` — a11y (applies to design-file, html, css)
+- [assets/starter-rubrics/](assets/starter-rubrics/) — 12 shipped rubrics:
+  - `accessibility-wcag-aa.md` — WCAG 2.1 AA + Fluent 2 + Material 3 a11y
   - `design-system-compliance.md` — token + variant adherence
   - `component-budget.md` — new-primitive RFC gate
-  - `skill-quality.md` — 9-point Layer 2 skill health check
+  - `skill-quality.md` — 9-point Layer 2 skill health check (applied by `skill-quality-auditor` sub-agent)
   - `interaction-states.md` — loading / empty / error / success state coverage
-  - Users extend by authoring new rubrics in `docs/context/design-system/` or `docs/rubrics/`
+  - `heuristic-evaluation.md` — Nielsen 10 usability heuristics
+  - `typography.md` — type scale + pairing + hierarchy + OpenType
+  - `color-and-contrast.md` — OKLCH + contrast + tinted neutrals + dark-mode
+  - `spatial-design.md` — spacing + proximity + grids + rhythm
+  - `motion-design.md` — reduced-motion + duration + easing + purpose
+  - `ux-writing.md` — error/empty/success copy + voice + banned phrases
+  - `responsive-design.md` — mobile-first + fluid + touch targets + safe area
+  - Users extend by authoring new rubric check files at `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content)
 
 ## Scripts
 
