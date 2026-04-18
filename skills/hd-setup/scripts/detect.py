@@ -47,11 +47,25 @@ def detect_other_harnesses() -> dict:
         "has_plans_convention": False,
     }
 
+    # Count actual skill files (SKILL.md OR top-level .md) under each skills dir.
+    # Previously counted directory entries, which over-reported (pilot #5 lightning
+    # has 5 skill .md files but 8 directory entries including worktrees/).
+    # Take max across sibling skills dirs — .cursor/skills is often a mirror of
+    # .claude/skills; summing would double-count. Count SKILL.md files plus
+    # bare top-level .md files (lightning pilot mixes both conventions).
     skill_md_count = 0
-    for base in (".claude/skills", ".cursor/skills"):
+    for base in (".claude/skills", ".codex/skills", ".cursor/skills"):
         p = REPO / base
-        if p.is_dir():
-            skill_md_count += sum(1 for _ in p.rglob("SKILL.md"))
+        if not p.is_dir():
+            continue
+        skill_mds = list(p.rglob("SKILL.md"))
+        bare_mds = [f for f in p.iterdir() if f.is_file() and f.suffix == ".md"]
+        local = len(skill_mds) + len(bare_mds)
+        if not skill_mds and not bare_mds:
+            # deeper flat convention (nested *.md files under the skills dir)
+            local = sum(1 for f in p.rglob("*.md") if f.is_file())
+        if local > skill_md_count:
+            skill_md_count = local
     signals["has_external_skills"] = skill_md_count >= 1
     signals["external_skills_count"] = skill_md_count
 
@@ -252,10 +266,15 @@ A11Y_FRAMEWORK_PATTERNS = [
     # react-spectrum family
     re.compile(r"^react-spectrum(-|$)"),
     re.compile(r"^@adobe/react-spectrum"),
-    # radix-ui family
+    # radix-ui family (E2.3)
     re.compile(r"^@radix-ui/"),
-    # headlessui family
+    re.compile(r"^radix-ui$"),
+    # headlessui family (E2.3)
     re.compile(r"^@headlessui/"),
+    # reach-ui (E2.3)
+    re.compile(r"^@reach/"),
+    # react-bootstrap (E2.3)
+    re.compile(r"^react-bootstrap$"),
     # reakit
     re.compile(r"^reakit(-|$)"),
     # base-ui / MUI headless primitives
@@ -267,30 +286,70 @@ A11Y_FRAMEWORK_PATTERNS = [
     re.compile(r"^@ariakit/"),
 ]
 
+# E2.2: managed design-system detection. First match wins.
+MANAGED_DS_PATTERNS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"^antd$"), "ant-design"),
+    (re.compile(r"^@ant-design/"), "ant-design"),
+    (re.compile(r"^@chakra-ui/"), "chakra"),
+    (re.compile(r"^@mantine/"), "mantine"),
+    (re.compile(r"^@mui/material$"), "mui"),
+    (re.compile(r"^@mui/"), "mui"),
+]
 
-def detect_a11y_framework() -> dict:
-    """Parse package.json dependencies + devDependencies for a11y framework signals.
+PKG_JSON_SKIP = {
+    "node_modules", "dist", "build", ".next", "__pycache__", ".git",
+    ".turbo", "coverage", ".venv", "venv",
+}
+
+
+def collect_package_deps() -> set[str]:
+    """Walk the repo (depth-limited) collecting dependency names from every
+    package.json — top-level AND nested workspace roots (e.g. oracle-chat/web/).
+
+    Capped at 5 package.json files to stay fast.
+    """
+    deps: set[str] = set()
+    count = 0
+    for candidate in REPO.rglob("package.json"):
+        rel_parts = candidate.relative_to(REPO).parts
+        if any(part in PKG_JSON_SKIP for part in rel_parts):
+            continue
+        if len(rel_parts) > 4:
+            continue
+        try:
+            data = json.loads(candidate.read_text(encoding="utf-8", errors="replace"))
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError):
+            continue
+        for field in ("dependencies", "devDependencies", "peerDependencies"):
+            d = data.get(field) or {}
+            if isinstance(d, dict):
+                deps.update(d.keys())
+        count += 1
+        if count >= 5:
+            break
+    return deps
+
+
+def detect_managed_design_system(deps: set[str]) -> str | None:
+    """E2.2: return library key of first matched managed DS, else None."""
+    for dep in sorted(deps):
+        for pat, key in MANAGED_DS_PATTERNS:
+            if pat.match(dep):
+                return key
+    return None
+
+
+def detect_a11y_framework(deps: set[str]) -> dict:
+    """Match collected deps against A11Y_FRAMEWORK_PATTERNS.
 
     Emits a11y_framework_in_use: bool + detected_a11y_packages: [pkg-name, ...]
     Used by Layer 4 default to elevate accessibility-wcag-aa rubric rationale.
     """
-    pkg_json = REPO / "package.json"
-    if not pkg_json.is_file():
+    if not deps:
         return {"a11y_framework_in_use": False, "detected_a11y_packages": []}
-
-    try:
-        data = json.loads(pkg_json.read_text(encoding="utf-8", errors="replace"))
-    except (json.JSONDecodeError, UnicodeDecodeError):
-        return {"a11y_framework_in_use": False, "detected_a11y_packages": []}
-
-    all_deps: set[str] = set()
-    for field in ("dependencies", "devDependencies", "peerDependencies"):
-        deps = data.get(field) or {}
-        if isinstance(deps, dict):
-            all_deps.update(deps.keys())
 
     detected: list[str] = []
-    for dep in sorted(all_deps):
+    for dep in sorted(deps):
         for pat in A11Y_FRAMEWORK_PATTERNS:
             if pat.match(dep):
                 detected.append(dep)
@@ -302,6 +361,101 @@ def detect_a11y_framework() -> dict:
         "a11y_framework_in_use": len(detected) > 0,
         "detected_a11y_packages": detected,
     }
+
+
+# --- E2.1: L4/L5 maturity signals ---------------------------------------------
+
+# Match `memory_type:` or `type:` (fallback) in YAML frontmatter
+_MEMORY_TYPE_RE = re.compile(r"^(?:memory_type|type)\s*:\s*(\S+)", re.MULTILINE)
+
+
+def detect_maturity_signals(has_ai_docs: bool) -> dict:
+    """E2.1: L4 (rubrics/) + L5 (knowledge/) maturity signals."""
+    rubrics_dir = REPO / "docs" / "rubrics"
+    rubrics_mds: list[Path] = []
+    if rubrics_dir.is_dir():
+        rubrics_mds = [f for f in rubrics_dir.rglob("*.md") if f.is_file()]
+    has_rubrics_dir = len(rubrics_mds) >= 1
+
+    knowledge_dir = REPO / "docs" / "knowledge"
+    has_knowledge_dir = knowledge_dir.is_dir() and (
+        (knowledge_dir / "INDEX.md").is_file() or (knowledge_dir / "lessons").is_dir()
+    )
+    knowledge_mds: list[Path] = []
+    if knowledge_dir.is_dir():
+        knowledge_mds = [f for f in knowledge_dir.rglob("*.md") if f.is_file()]
+
+    memory_types: set[str] = set()
+    for f in knowledge_mds:
+        try:
+            if f.stat().st_size > 256 * 1024:
+                continue
+            text = f.read_text(encoding="utf-8", errors="replace")
+        except (OSError, UnicodeDecodeError):
+            continue
+        # only look inside leading YAML frontmatter block
+        if text.startswith("---"):
+            end = text.find("\n---", 3)
+            block = text[:end] if end != -1 else text[:1024]
+        else:
+            block = text[:1024]
+        for m in _MEMORY_TYPE_RE.finditer(block):
+            memory_types.add(m.group(1).strip().strip("\"'"))
+
+    layers: list[str] = []
+    if has_ai_docs:
+        layers.append("L1")
+    if (REPO / "docs" / "context").is_dir():
+        if "L1" not in layers:
+            layers.append("L1")
+    if has_rubrics_dir:
+        layers.append("L4")
+    if has_knowledge_dir:
+        layers.append("L5")
+
+    return {
+        "has_rubrics_dir": has_rubrics_dir,
+        "rubrics_file_count": len(rubrics_mds),
+        "has_knowledge_dir": has_knowledge_dir,
+        "knowledge_file_count": len(knowledge_mds),
+        "memory_types_present": sorted(memory_types),
+        "layers_present": layers,
+    }
+
+
+# --- E2.5: compound-engineering footprint enrichment --------------------------
+
+
+def detect_compound_footprint() -> dict:
+    """Replace `coexistence.compound_engineering: bool` with a richer dict."""
+    probe_paths = [
+        "docs/solutions",
+        "docs/ideation",
+        "docs/brainstorms",
+        "docs/plans",
+    ]
+    paths_found = [p for p in probe_paths if (REPO / p).is_dir()]
+    config_path = REPO / "compound-engineering.local.md"
+    config_file = "compound-engineering.local.md" if config_path.is_file() else None
+    present = bool(paths_found) or config_file is not None
+    return {
+        "present": present,
+        "paths_found": paths_found,
+        "config_file": config_file,
+    }
+
+
+# --- E2.6: markdown-todos PM signal -------------------------------------------
+
+_TODO_FILE_RE = re.compile(r"\d{3}-\w+.*\.md")
+
+
+def detect_markdown_todos() -> bool:
+    todos_dir = REPO / "todos"
+    if not todos_dir.is_dir():
+        return False
+    matches = [f for f in todos_dir.iterdir() if f.is_file() and _TODO_FILE_RE.match(f.name)]
+    return len(matches) >= 2
 
 
 # --- existing v1 signals (preserved for backward compat) ----------------------
@@ -416,12 +570,24 @@ def main() -> int:
     mcp_servers = detect_mcp_servers()
     team_tooling = detect_team_tooling()
     config_sot = detect_config_sot()
-    a11y = detect_a11y_framework()
+    deps = collect_package_deps()
+    a11y = detect_a11y_framework(deps)
+    managed_ds = detect_managed_design_system(deps)
+    maturity = detect_maturity_signals(v1["has_ai_docs"])
+    compound_footprint = detect_compound_footprint()
+
+    # E2.6: append markdown-todos to team_tooling.pm if signal fires
+    if detect_markdown_todos():
+        pm = list(team_tooling.get("pm", []))
+        if "markdown-todos" not in pm:
+            pm.append("markdown-todos")
+            pm.sort()
+        team_tooling["pm"] = pm
 
     mode, priority = decide_mode(v1, other_h)
     bloat_overlay = v1["has_bloat"] and mode == "scattered"
 
-    # Merge signal flags (v1 + C1 + C4 + a11y) into single signals dict
+    # Merge signal flags (v1 + C1 + C4 + a11y + E2.1/E2.2) into single signals dict
     signals = {
         "has_local_md": v1["has_local_md"],
         "has_placeholders": v1["has_placeholders"],
@@ -438,6 +604,15 @@ def main() -> int:
         "has_tokens_package": config_sot["has_tokens_package"],
         "a11y_framework_in_use": a11y["a11y_framework_in_use"],
         "has_figma_config": config_sot["has_figma_config"],
+        # E2.1 — L4/L5 maturity
+        "has_rubrics_dir": maturity["has_rubrics_dir"],
+        "rubrics_file_count": maturity["rubrics_file_count"],
+        "has_knowledge_dir": maturity["has_knowledge_dir"],
+        "knowledge_file_count": maturity["knowledge_file_count"],
+        "memory_types_present": maturity["memory_types_present"],
+        "layers_present": maturity["layers_present"],
+        # E2.2 — managed DS
+        "managed_design_system": managed_ds,
     }
 
     output = {
@@ -446,7 +621,9 @@ def main() -> int:
         "priority_matched": priority,
         "signals": signals,
         "coexistence": {
-            "compound_engineering": v1["compound_installed"],
+            # E2.5 — enriched compound-engineering footprint
+            "compound_engineering": compound_footprint,
+            "compound_installed": v1["compound_installed"],
         },
         "bloat_overlay": bloat_overlay,
         "mcp_servers": mcp_servers,
