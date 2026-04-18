@@ -1,6 +1,6 @@
 # Rubric application
 
-**Purpose:** how to apply a Layer 4 rubric to a specific work item. Loaded by `workflows/critique.md`.
+**Purpose:** how to apply a Layer 4 rubric to a specific work item. Loaded by [SKILL.md § Critique mode — procedure](../SKILL.md#critique-mode--procedure).
 
 ## Rubric file schema
 
@@ -143,4 +143,4 @@ Example: design-system-compliance rubric checks "uses approved color tokens," bu
 
 - [critique-format.md](critique-format.md) — output structure (pairs with application loop)
 - [`../templates/starter-rubrics/`](../templates/starter-rubrics/) — shipped rubric examples; canonical schema reference
-- [`../workflows/critique.md`](../workflows/critique.md) — step-by-step procedure using this mechanism
+- [`../SKILL.md § Critique mode — procedure`](../SKILL.md#critique-mode--procedure) — step-by-step procedure using this mechanism

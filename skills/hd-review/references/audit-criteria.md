@@ -1,6 +1,6 @@
 # Audit criteria
 
-**Purpose:** five-layer health criteria + priority framework + scope boundaries for harness audits. Loaded by `workflows/audit-parallel.md` and `workflows/audit-serial.md` as the canonical rubric for what "healthy harness" means.
+**Purpose:** five-layer health criteria + priority framework + scope boundaries for harness audits. Loaded by [SKILL.md § Audit mode — procedure](../SKILL.md#audit-mode--procedure) as the canonical rubric for what "healthy harness" means.
 
 ## Per-layer criteria
 

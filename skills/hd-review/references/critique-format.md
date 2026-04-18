@@ -1,6 +1,6 @@
 # Critique format
 
-**Purpose:** structured output shape for critique mode. Loaded by `workflows/critique.md`. Distinct from audit output (which writes a dated lesson file; critique is inline, read-only).
+**Purpose:** structured output shape for critique mode. Loaded by [SKILL.md § Critique mode — procedure](../SKILL.md#critique-mode--procedure). Distinct from audit output (which writes a dated lesson file; critique is inline, read-only).
 
 ## Output structure
 

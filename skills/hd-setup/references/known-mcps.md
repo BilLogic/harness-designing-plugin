@@ -1,8 +1,8 @@
 # External tooling — categories, known MCPs, fallback seeds
 
-**Purpose:** reference spec consulted during the tool-discovery phase of `workflows/five-layer-walk.md`. Lists the 6 tool categories `hd:setup` cares about, the known-installable MCP table (the only MCPs we recommend), and fallback seed sources for teams without external sources.
+**Purpose:** reference spec consulted during the tool-discovery phase of [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery). Lists the 6 tool categories `hd:setup` cares about, the known-installable MCP table (the only MCPs we recommend), and fallback seed sources for teams without external sources.
 
-**Loaded by:** `workflows/five-layer-walk.md` during tool discovery (ordered procedural steps live there — this file is reference material only).
+**Loaded by:** [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery) and [SKILL.md § Per-layer procedure](../SKILL.md#per-layer-procedure-applied-to-layers-15) during tool discovery (ordered procedural steps live there — this file is reference material only).
 
 ## Universal principle
 
@@ -27,7 +27,7 @@ Not every team uses every category. Users tag which tools matter; skill records 
 
 ## Integration-path triage table
 
-When the tool-discovery step (in `workflows/five-layer-walk.md`) encounters a tool, one of four integration paths applies:
+When the tool-discovery step (in [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery)) encounters a tool, one of four integration paths applies:
 
 | Condition | Path | Action |
 |---|---|---|
@@ -185,6 +185,6 @@ The starter rubrics shipped in `skills/hd-review/templates/starter-rubrics/` alr
 ## See also
 
 - [`hd-config-schema.md`](hd-config-schema.md) — where `team_tooling` + `mcp_servers_at_setup` land
-- [`../workflows/five-layer-walk.md`](../workflows/five-layer-walk.md) — per-layer integration step uses this reference
+- [`../SKILL.md § Per-layer procedure`](../SKILL.md#per-layer-procedure-applied-to-layers-15) — per-layer integration step uses this reference
 - [`../scripts/detect.py`](../scripts/detect.py) — emits raw detection data this reference interprets
 - Ideation doc [`docs/plans/2026-04-17-009-v1.1-skill-ideation.md`](../../../docs/plans/2026-04-17-009-v1.1-skill-ideation.md) C5 / C6 — rationale for this spec

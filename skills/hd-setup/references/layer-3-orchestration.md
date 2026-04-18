@@ -10,7 +10,7 @@ Orchestration requires ≥1 Layer 2 skill to orchestrate. If the team has zero s
 
 ## What to scaffold when L3 is active
 
-Three paths inside `docs/orchestration/`:
+User repo example (user's own layout) — three paths inside `docs/orchestration/`:
 
 ```
 docs/orchestration/
