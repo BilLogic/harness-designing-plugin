@@ -2,6 +2,8 @@
 
 **Distilled from:** Substack article §2.5.
 
+Our knowledge layer uses 6 memory types. The 4 classical types (below) come from the memory literature; 2 derivative types (speculative, temporal) are operational refinements for designer workflows.
+
 Four kinds of memory, each mapping to a different part of the harness. Collapsing them is the single most common mistake — it's the reason so many AI-context setups rot after a few months.
 
 ## The four memory types
@@ -38,6 +40,18 @@ A typical design task reads from all four:
 4. **Working** — the current conversation.
 
 When a task finishes, any genuine learning becomes a new **episodic** entry. If that learning recurs 3+ times across the team, it graduates to **procedural** (added to AGENTS.md) — and the original episodic narrative stays put.
+
+## Derivative types (operational refinements)
+
+Two additional types we use across the plug-in. They live *inside* Layer 5 alongside episodic memory — not as separate layers.
+
+### Speculative memory
+
+Hypotheses, open questions, "what-if" ideations. Stored in `docs/knowledge/ideations.md` (Layer 5). Not facts, not decisions — forks that might become decisions with evidence. When a speculation accumulates evidence and gets adopted, it graduates to procedural (rule) or semantic (context). When refuted, it's annotated as closed but retained — a rejected hypothesis is still signal.
+
+### Temporal memory
+
+Time-ordered sequences: changelog entries, release markers, decision-date tracking. Stored in `docs/knowledge/changelog.md` (Layer 5). Distinct from episodic (which captures WHAT happened) — temporal captures WHEN. Episodic entries often reference temporal markers ("after the 2026-03 release we started seeing…"), but the two are kept in separate files so the timeline stays queryable without narrative noise.
 
 ## See also
 

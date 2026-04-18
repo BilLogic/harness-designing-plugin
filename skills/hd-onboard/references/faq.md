@@ -42,6 +42,32 @@ Solo is fine — Layer 5 graduation machinery can wait. `/hd:setup` has a `solo`
 
 Extracted from plus-uno (Bill's personal working implementation at [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)) and structurally mimics [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin). Companion to a Substack article series making the thesis (§2, §3, §4a-e, §6).
 
+## 11. Why five layers specifically? Why not 3 or 7?
+
+Each layer maps to a distinct memory/cognition mechanism, and collapsing or splitting loses mechanism coverage. Concretely:
+
+- **L1 Context** = *semantic memory* (what's always true about the product)
+- **L2 Skills** = *procedural memory* (how to do repeated tasks)
+- **L3 Orchestration** = *procedural memory of procedures* (when to invoke which skill)
+- **L4 Rubrics** = *semantic checks* (how to judge quality)
+- **L5 Knowledge** = *episodic + temporal memory* (what happened, when, with consequences)
+
+Collapsing L1+L2 loses the noun/verb distinction. Collapsing L4+L1 loses the checks-vs-source-content separation (a bug we fixed in Phase 3d). Splitting L5 into episodic-vs-temporal-vs-speculative proved too granular in practice — the 5 memory types live *inside* L5, not as separate layers. See article § layer-overview.
+
+## 12. I already have CLAUDE.md or .agent/ — do I still need this?
+
+Yes, but additive-only. As of graduated rule 2026-04-18, `/hd:setup` defaults to **skip L1/L2/L3, scaffold L4/L5 only** when `.agent/` or `.claude/` with content is detected. Existing harness is respected as Layer 1+2 authority; hd-* adds rubric checks (L4) + episodic knowledge capture (L5) on top. Zero modifications to pre-existing files (6/6 pilots confirmed). See `AGENTS.md § Graduated rules` for the rule.
+
+## 13. How do I customize the starter rubrics for my team?
+
+Three paths, depending on how different your needs are:
+
+1. **Copy-and-edit:** `cp skills/hd-review/assets/starter-rubrics/<name>.md docs/rubrics/<name>.md`, then edit severities, examples, criteria to match your team. Change the `source:` field to `source: "starter + <team-name> customizations"`.
+2. **Extend in place:** add criteria to an existing rubric under an `## Extension: <team-name>` section. Keep the starter criteria untouched.
+3. **New rubric:** author from scratch following `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this rubric`. Must cite a `source:` derivation (pattern we adopted from the 12-starter library).
+
+All three paths coexist. `/hd:review critique <rubric-name>` uses your customized version in `docs/rubrics/` over the shipped starter.
+
 ## See also
 
 - [concept-overview.md](concept-overview.md) — the framework in 200 words
