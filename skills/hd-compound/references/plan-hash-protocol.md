@@ -23,51 +23,58 @@ SHA-256 plan-hash provides all three with a single 64-char string.
 
 ## Hash input format (canonical, byte-stable)
 
-The hash input is a deterministic string built from 7 lines. Every field is mandatory (missing → abort with error):
+The **reference implementation** is [`../scripts/compute-plan-hash.sh`](../scripts/compute-plan-hash.sh). Claude MUST invoke this script; never compute the hash "in its head". Two sessions computing the hash independently will diverge on trailing newlines, quoting, or locale-sorted path order — which would make apply-mismatch indistinguishable from honest drift.
+
+The script accepts a JSON object on stdin (preferred) or equivalent flags:
+
+```json
+{
+  "title": "<graduation title verbatim>",
+  "paths": ["<source lesson paths + AGENTS.md + graduations.md>"],
+  "date": "YYYY-MM-DD",
+  "author": "<approver>",
+  "diff_summary": "<one-line summary of proposed change>"
+}
+```
+
+All five fields are mandatory; `paths` must be a non-empty array.
+
+### Canonical string
+
+The script normalizes and concatenates fields in a fixed order, with `\n` (LF-only) separators and **no trailing newline**:
 
 ```
-graduation-title: <title verbatim>
-source-lessons:
-<sorted-path>:<sha256-of-content>
-<sorted-path>:<sha256-of-content>
-target-agents-md: <repo-root>/AGENTS.md:<sha256-of-content>
-target-graduations-md: <repo-root>/docs/knowledge/graduations.md:<sha256-of-content>
-rule-text-sha256: <sha256-of-rule-text>
-graduations-entry-sha256: <sha256-of-graduations-entry-text>
+<title>\n<date>\n<author>\n<sorted_paths_joined_with_|>\n<diff_summary>
 ```
 
-**Rules:**
+Normalization rules (enforced by the script):
 
-- `source-lessons` paths **sorted alphabetically** before hashing (deterministic order across invocations)
-- Each content hash is SHA-256 of the file's **exact byte content** (no normalization, no trailing-newline stripping)
-- `rule-text-sha256` hashes the proposed rule body only (not including the date prefix that AGENTS.md adds)
-- `graduations-entry-sha256` hashes the complete proposed graduations.md entry
-- Use UTF-8 encoding throughout
-- Newlines in the canonical string are `\n` (LF only; no CRLF)
+- Strip carriage returns (`\r`) from every field
+- Strip leading/trailing whitespace (spaces, tabs, newlines) on every field
+- Sort `paths` with `LC_ALL=C sort` (byte order, locale-independent)
+- Drop empty paths after whitespace trim
+- Join sorted paths with a single `|` character
+- UTF-8 throughout
+
+### Hash computation
+
+```bash
+printf '%s' "$canonical" | shasum -a 256 | cut -d' ' -f1
+```
+
+(Falls back to `sha256sum` on Linux.) Result: 64 lowercase hex characters.
+
+### Debug: print canonical string
+
+Pass `--print-canonical` to emit the canonical string instead of the hash — useful when a hash mismatch needs forensic inspection.
 
 ## Computing the hash
 
-Pseudo-code:
+Always via the script. Propose mode runs it after drafting the plan; Apply mode re-runs it against the persisted propose artifact (`.hd/propose-<prefix>.json`) to re-verify.
 
 ```bash
-# For each source lesson:
-for lesson in source_lessons_sorted; do
-  echo "$lesson:$(sha256sum <"$lesson" | cut -d' ' -f1)"
-done
-
-# For targets:
-echo "target-agents-md: AGENTS.md:$(sha256sum <AGENTS.md | cut -d' ' -f1)"
-echo "target-graduations-md: docs/knowledge/graduations.md:$(sha256sum <docs/knowledge/graduations.md | cut -d' ' -f1)"
-
-# For proposed content:
-echo "rule-text-sha256: $(echo -n "$RULE_TEXT" | sha256sum | cut -d' ' -f1)"
-echo "graduations-entry-sha256: $(echo -n "$ENTRY_TEXT" | sha256sum | cut -d' ' -f1)"
-
-# Build canonical string with \n separators, hash it:
-PLAN_HASH=$(printf '%s\n' "<canonical string>" | sha256sum | cut -d' ' -f1)
+echo "$propose_json" | skills/hd-compound/scripts/compute-plan-hash.sh
 ```
-
-The result is 64 lowercase hex characters.
 
 ## Propose output (what the user sees)
 
@@ -103,21 +110,17 @@ The command requires the hash verbatim. Re-running `graduate-propose` emits a ne
 
 ## Apply verification procedure
 
-`apply-graduation --plan-hash <sha>`:
+`apply-graduation --hash <prefix>`:
 
-1. **Parse argument.** Require `--plan-hash <64-char-hex>`. Abort if missing, malformed, or non-hex with clear error:
+1. **Parse argument.** Require `--hash <hex-prefix>` (8 chars recommended; full 64 accepted). Glob `.hd/propose-<prefix>*.json`; exactly one match required. Abort on zero / multiple matches with clear error:
 
-   > "Missing or malformed `--plan-hash`. Run `/hd:compound graduate-propose <topic>` first to generate the plan and its hash."
+   > "No matching propose artifact for `--hash <prefix>`. Run `/hd:compound graduate-propose <topic>` first, or widen the prefix."
 
-2. **Re-load all inputs.** Read:
-   - Source lesson files (paths from context — the conversation should carry them; if not, abort)
-   - Current `AGENTS.md`
-   - Current `docs/knowledge/graduations.md`
-3. **Re-compute canonical string.** Use the exact same algorithm as propose. Same sorting, same encoding, same content-hash computation.
-4. **Re-hash.** SHA-256 of the canonical string.
-5. **Compare.** Compare byte-for-byte against the `--plan-hash` argument.
-6. **On match:** proceed to atomic write (see below).
-7. **On mismatch:** abort. Print drift diagnosis:
+2. **Re-load inputs from the artifact.** The persisted `.hd/propose-<prefix>.json` carries `title`, `paths`, `date`, `author`, `diff_summary`, `canonical_string`, and `sha256`. No dependency on conversation context — survives compaction.
+3. **Re-run the script.** Feed the artifact's structured fields back into `compute-plan-hash.sh`; capture fresh hash.
+4. **Compare.** Byte-for-byte vs the `sha256` stored in the artifact (and vs the `--hash` prefix provided).
+5. **On match:** proceed to atomic write (see below). Then `mv .hd/propose-<hash>.json .hd/applied/<hash>.json` (creating `.hd/applied/` as needed).
+6. **On mismatch:** abort. Print drift diagnosis:
 
    > "Hash mismatch. Expected `<user-hash>`, computed `<current-hash>`.
    > Drift detected in: <file-path>
@@ -196,5 +199,6 @@ Plan-hash IS sufficient for the threat model we care about: preventing **acciden
 
 - [graduation-criteria.md](graduation-criteria.md) — when a graduation is appropriate (plan-hash protects the mechanism; criteria protect the content)
 - [lesson-patterns.md](lesson-patterns.md) — lesson authoring discipline
-- `../workflows/propose-graduation.md` — emits the hash
-- `../workflows/apply-graduation.md` — verifies the hash
+- [`../SKILL.md` § Propose mode](../SKILL.md) — emits the hash + writes `.hd/propose-<prefix>.json`
+- [`../SKILL.md` § Apply mode](../SKILL.md) — verifies the hash against the persisted artifact
+- [`../scripts/compute-plan-hash.sh`](../scripts/compute-plan-hash.sh) — reference implementation

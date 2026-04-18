@@ -2,31 +2,32 @@
 
 **Purpose:** authoring discipline for Layer 5 entries. Loaded by `hd:compound capture` when drafting a new entry.
 
-## File organization — domain-grouped, not per-date
+## File organization — date-slug, one file per lesson event
 
-Lessons live in `docs/knowledge/lessons/<domain>.md` — each file groups multiple ENTRIES by domain (not per-date one-entry-per-file). Plus-uno precedent: `lessons/ds-compliance.md`, `lessons/integration.md`, `lessons/agent-patterns.md`. Split threshold: ~15 entries per file; `/hd:compound capture` surfaces a split prompt when approached.
+Lessons live in `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md` — **one file per lesson event**, not one file per domain. The `<slug>` is kebab-case, derived from the lesson's primary tag or a user-supplied short title. Examples from this plug-in's own corpus:
 
-Each domain file has a YAML frontmatter declaring its memory type:
+- `lessons/2026-04-16-no-future-version-stubs.md`
+- `lessons/2026-04-17-pilot-figma-sds.md`
+- `lessons/2026-04-18-parallel-pilots-3-6-consolidated.md`
+
+**Tags (not filenames) are the organizing dimension.** Cross-domain retrieval happens via tag search; the `design-harnessing:research:lesson-retriever` sub-agent ranks on tag overlap + recency, not on directory structure.
+
+### Why date-slug, not domain-grouped
+
+Date-slug files are append-only in spirit: each file is frozen once captured. Domain-grouped files (`lessons/ds-compliance.md` with 15 entries) require editing existing files on every capture — more contention, more merge conflicts, worse git blame. Date-slug is also what every existing lesson in this plug-in already is.
+
+A "domain-grouped" escape hatch may graduate later if per-domain volume gets heavy enough to warrant a separate index. **Not yet adopted.** Until then: one file per event.
+
+### Per-file YAML frontmatter
+
+Each lesson file begins with a single YAML block declaring its memory type:
 
 ```yaml
 ---
-memory_type: episodic
-domain: <name>
-split_threshold: 15
----
-```
-
-Then individual entries follow, separated by `---`.
-
-## Entry YAML (per-entry, inside a domain file)
-
-Every entry begins with:
-
-```yaml
----
-title: "Short title of the entry"       # required; 3-10 words; descriptive
-date: YYYY-MM-DD                        # required; ISO date of capture
+title: "Short title of the lesson"      # required; 3-10 words; descriptive
+date: YYYY-MM-DD                        # required; ISO date of capture; must match filename prefix
 tags: [tag-a, tag-b, tag-c]             # required; 1-5 tags; kebab-case
+memory_type: episodic                   # episodic | procedural-chosen | semantic-taste | speculative | temporal
 graduation_candidate: true | false      # required for episodic; ready to graduate soon?
 graduated_to: null                      # optional; filled post-graduation w/ AGENTS.md entry ref
 importance: 3                           # optional 1-5; used by lesson-retriever weighting
@@ -35,7 +36,7 @@ importance: 3                           # optional 1-5; used by lesson-retriever
 
 `title` is byte-stable (used in plan-hash computation at graduation time). Don't change it after capture.
 
-`tags` drive graduation-candidate detection: when ≥ 3 entries across the domain file (or sibling domain files) share a tag, that tag becomes a graduation topic.
+`tags` drive graduation-candidate detection: when ≥ 3 lesson files share a tag, that tag becomes a graduation topic. Cross-referencing happens at tag-search time (via `lesson-retriever`), not by filename.
 
 ## Body structure (episodic)
 
@@ -53,7 +54,7 @@ Four sections, always in this order:
 **Graduation-readiness:** Yes / No / too-early-to-tell. One sentence of rationale.
 ```
 
-Total body: 5–10 sentences typical. Long entries are rare; most are a paragraph per section. Separator `---` between entries inside the file.
+Total body: 5–10 sentences typical. Long entries are rare; most are a paragraph per section. Since each lesson lives in its own file, there is no in-file separator between entries.
 
 ## Non-episodic entries
 
@@ -68,11 +69,14 @@ Decisions / preferences / ideations / changelog use their own per-file formats, 
 
 ## Good example
 
+Filename: `docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md`
+
 ```markdown
 ---
 title: "Don't ship future-version skill stubs with disable-model-invocation"
 date: 2026-04-16
 tags: [skill-authoring, stubs, disable-model-invocation, anti-pattern]
+memory_type: episodic
 graduation_candidate: true
 ---
 

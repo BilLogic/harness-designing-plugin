@@ -1,0 +1,2 @@
+# hd-compound propose artifacts (ephemeral)
+.hd/

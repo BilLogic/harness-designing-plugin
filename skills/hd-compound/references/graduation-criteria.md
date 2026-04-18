@@ -1,6 +1,6 @@
 # Graduation criteria
 
-**Purpose:** rules for when a Layer 5 lesson graduates to a Layer 1 / AGENTS.md rule. Loaded by `workflows/propose-graduation.md` before drafting a graduation plan.
+**Purpose:** rules for when a Layer 5 lesson graduates to a Layer 1 / AGENTS.md rule. Loaded by [`../SKILL.md` § Propose mode](../SKILL.md) before drafting a graduation plan.
 
 ## The three criteria (all must hold)
 
@@ -93,4 +93,5 @@ The original graduated rule's AGENTS.md line is removed (we edit Tier 1); the or
 
 - [lesson-patterns.md](lesson-patterns.md) — authoring lessons well sets up good graduations
 - [plan-hash-protocol.md](plan-hash-protocol.md) — the mechanism that protects the destructive AGENTS.md write
-- `../workflows/propose-graduation.md` — the workflow that applies these criteria
+- [`../SKILL.md` § Propose mode](../SKILL.md) — the procedure that applies these criteria
+- [`../scripts/compute-plan-hash.sh`](../scripts/compute-plan-hash.sh) — reference implementation of the hash
