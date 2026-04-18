@@ -1,0 +1,20 @@
+# Tech stack
+
+One-line inventory of the tools powering this repo. Useful for agents choosing which patterns to follow.
+
+| Layer | Choice |
+|---|---|
+| Framework | {{Next.js_App_Router_/_Rails_8_/_...}} |
+| Language | {{TypeScript_/_Ruby_/_Python_/_...}} |
+| Styling | {{Tailwind_v4_/_CSS_modules_/_...}} |
+| Components | {{shadcn_UI_/_Radix_/_...}} |
+| Design tokens | {{tokens_package_path_/_CSS_vars_location}} |
+| Testing | {{vitest_/_jest_/_rspec_/_pytest}} |
+| Deployment | {{Netlify_/_Vercel_/_Fly_/_...}} |
+| Database | {{Postgres_via_Supabase_/_SQLite_/_...}} |
+| Background jobs | {{none_/_BullMQ_/_Sidekiq_/_...}} |
+
+## Versions worth pinning in memory
+
+- {{Framework_version_and_why_we_chose_this}}
+- {{...}}

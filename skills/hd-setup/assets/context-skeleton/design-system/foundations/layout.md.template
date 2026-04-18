@@ -1,0 +1,29 @@
+# Layout foundations
+
+The structural patterns that define how pages and screens are composed.
+
+## Grid
+
+- **Base unit:** {{4pt_/_8pt_/_...}}
+- **Max content width:** {{e.g._1280px_for_marketing,_unbounded_for_app}}
+- **Column system:** {{12-column_/_flexbox-only_/_...}}
+
+## Breakpoints
+
+| Name | Width | Behavior |
+|---|---|---|
+| sm | {{640px}} | {{mobile,_single-column}} |
+| md | {{768px}} | {{tablet,_2-column_layouts_become_available}} |
+| lg | {{1024px}} | {{desktop,_full_layout}} |
+| xl | {{1280px}} | {{wide_desktop,_more_breathing_room}} |
+
+## Page-level patterns
+
+- **Header:** {{fixed?_sticky?_static?_height?}}
+- **Navigation:** {{top-bar,_side-rail,_tab-bar}}
+- **Main content:** {{max-width,_margins,_padding}}
+- **Footer:** {{presence,_content,_height}}
+
+## Spacing conventions
+
+Spacing values come from the scale in [`../styles/spacing.md`](../styles/spacing.md). Don't invent off-scale values.

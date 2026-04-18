@@ -1,0 +1,30 @@
+# Components inventory
+
+Complete list of components in the design system. This is the canonical "does this exist yet" check.
+
+## Primitives
+
+- {{Button}} — {{ui/button.tsx}} — {{variants_—_primary,_secondary,_ghost,_destructive}}
+- {{Input}} — {{ui/input.tsx}} — {{states_—_default,_error,_disabled}}
+- {{...}}
+
+## Composite
+
+- {{Form}} — {{ui/form.tsx}} — composes Input + Label + FormField + validation
+- {{...}}
+
+## Layout
+
+- {{Card}} — {{ui/card.tsx}} — {{...}}
+- {{Dialog}} — {{ui/dialog.tsx}} — {{...}}
+- {{...}}
+
+## Experimental (use with caution)
+
+- {{ComponentX}} — {{path}} — {{why_experimental,_when_to_promote}}
+
+## Deprecated
+
+- {{OldComponent}} — {{deprecated_YYYY-MM_in_favor_of_NewComponent}}
+
+<!-- Keep this file current. If a component exists in src/ but not here, add it or remove it. -->

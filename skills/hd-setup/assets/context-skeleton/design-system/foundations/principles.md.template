@@ -1,0 +1,18 @@
+# Design principles
+
+The philosophical commitments behind design choices in this product. Principles resolve ties; if two approaches look equally good, the one more aligned with a principle wins.
+
+## Principle 1 — {{NAME}}
+
+**Statement:** {{ONE_SENTENCE}}
+**Why we hold it:** {{RATIONALE}}
+**Example of honoring it:** {{CONCRETE_DESIGN_CHOICE}}
+**Example of violating it:** {{WHAT_WE_SAID_NO_TO}}
+
+## Principle 2 — {{...}}
+
+<!-- 3–5 principles max. More than 5 and none of them are really principles. -->
+
+## Trade-off preferences (when principles conflict)
+
+- When {{Principle_X}} conflicts with {{Principle_Y}}, prefer: {{which_and_why}}

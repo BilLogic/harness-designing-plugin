@@ -1,0 +1,45 @@
+# Components cheat-sheet
+
+Fast reference for "what component handles this use case." Agent + human uses this first before reaching for custom composition.
+
+## Actions
+
+| Use case | Component | Import |
+|---|---|---|
+| Primary action | `<Button variant="primary">` | {{@/components/ui/button}} |
+| Secondary action | `<Button variant="secondary">` | {{...}} |
+| Destructive action | `<Button variant="destructive">` | {{...}} |
+| Icon-only action | `<IconButton>` | {{...}} |
+
+## Inputs
+
+| Use case | Component | Import |
+|---|---|---|
+| Text input | `<Input>` | {{...}} |
+| Textarea | `<Textarea>` | {{...}} |
+| Select | `<Select>` | {{...}} |
+| Checkbox | `<Checkbox>` | {{...}} |
+| Radio | `<RadioGroup>` | {{...}} |
+
+## Feedback
+
+| Use case | Component | Import |
+|---|---|---|
+| Success / error toast | `<Toast>` | {{...}} |
+| Inline validation | `<FormField>` + error state | {{...}} |
+| Empty state | `<EmptyState>` | {{...}} |
+| Loading | `<Skeleton>` | {{...}} |
+
+## Layout
+
+| Use case | Component | Import |
+|---|---|---|
+| Card surface | `<Card>` | {{...}} |
+| Modal dialog | `<Dialog>` | {{...}} |
+| Side sheet | `<Sheet>` | {{...}} |
+| Tooltip | `<Tooltip>` | {{...}} |
+
+## When to compose vs add a new primitive
+
+- **Compose** when the use case is a combination of existing primitives (e.g., a card with a button = `<Card>` + `<Button>`)
+- **Add a new primitive** only when (a) the composition would recur 3+ times, (b) there's clear semantic meaning, (c) an RFC has been reviewed — see [`../../docs/rubrics/component-budget.md`](../../docs/rubrics/component-budget.md) if present.

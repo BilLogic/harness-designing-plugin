@@ -1,0 +1,32 @@
+# Color
+
+Palette, semantic tokens, and usage rules. All color values come from the authoritative token source in [`../foundations/tokens.md`](../foundations/tokens.md).
+
+## Primitive scale
+
+- **Brand hue:** {{OKLCH_hue_value_/_hex}}
+- **Neutral scale:** {{e.g._gray_50-950,_11_steps}}
+- **Semantic accents:** {{success_/_warning_/_danger_/_info_—_each_with_a_scale}}
+
+## Semantic tokens (what components reference)
+
+| Token | Purpose | Notes |
+|---|---|---|
+| `--color-text-primary` | Default text | Must meet WCAG AA against background |
+| `--color-text-muted` | De-emphasized text | Still ≥ 4.5:1 |
+| `--color-bg` | Default background | — |
+| `--color-surface` | Elevated surfaces | Cards, panels |
+| `--color-border` | Default hairline | — |
+| `--color-primary` | Brand / primary action | — |
+| {{...}} | {{...}} | {{...}} |
+
+## Dark mode
+
+- **Strategy:** {{tinted_neutrals_/_plain_dark_/_OKLCH_theme_switch}}
+- **Which tokens swap:** {{all_semantic_/_subset}}
+
+## Rules
+
+- Never use raw hex in components; always reference a token
+- Accessibility: contrast ratios verified in [`../foundations/accessibility.md`](../foundations/accessibility.md)
+- New tokens require design review + usage justification

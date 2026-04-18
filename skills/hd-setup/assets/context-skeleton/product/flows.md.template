@@ -1,0 +1,14 @@
+# Key user flows
+
+End-to-end scenarios that cover the most-used paths. Include entry point, key decision moments, and success / failure outcomes.
+
+## Flow 1 — {{FLOW_NAME}}
+
+**Entry:** {{WHERE_USER_STARTS}}
+**Steps:** {{3-5_BULLETS}}
+**Success:** {{WHAT_SUCCESS_LOOKS_LIKE}}
+**Failure modes:** {{COMMON_FAILURES_AND_RECOVERY}}
+
+## Flow 2 — {{...}}
+
+<!-- Keep each flow tight. Link to detailed mockups / designs instead of embedding. -->

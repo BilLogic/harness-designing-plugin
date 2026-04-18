@@ -1,0 +1,26 @@
+# Spacing
+
+Spacing scale + usage rules. All spacing values come from the scale.
+
+## Scale
+
+Based on {{4pt_/_8pt}} grid. Tokens:
+
+| Token | Value | Typical use |
+|---|---|---|
+| `--space-0` | 0 | — |
+| `--space-1` | {{4px}} | tight icon gaps |
+| `--space-2` | {{8px}} | inline padding |
+| `--space-3` | {{12px}} | {{...}} |
+| `--space-4` | {{16px}} | default padding |
+| `--space-6` | {{24px}} | section gap |
+| `--space-8` | {{32px}} | container padding |
+| `--space-12` | {{48px}} | major section break |
+| `--space-16` | {{64px}} | page margins |
+| {{...}} | {{...}} | {{...}} |
+
+## Rules
+
+- Off-grid values (e.g., 13px, 22px) forbidden
+- Use semantic token classes (e.g., Tailwind `p-4`, `gap-6`) — never inline px
+- Padding vs margin: prefer padding for component-internal; margin for layout composition

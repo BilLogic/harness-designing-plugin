@@ -1,0 +1,13 @@
+# Integrations
+
+How this repo connects to external services. Environment variables, auth patterns, fallback behavior.
+
+## {{SERVICE_1_NAME}} — {{what_it_does_for_us}}
+
+- **Env vars:** {{LIST_WITH_PURPOSE}}
+- **Where used:** {{paths_in_the_repo}}
+- **Failure behavior:** {{what_happens_when_service_is_down}}
+
+## {{SERVICE_2_NAME}}
+
+<!-- Add a section per integration. Keep failure-behavior explicit — agents get this wrong most often. -->

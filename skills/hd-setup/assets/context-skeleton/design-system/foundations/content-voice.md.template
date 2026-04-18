@@ -1,0 +1,29 @@
+# Content voice
+
+How the product sounds when it talks to users. Guides copy choices across UI, empty states, errors.
+
+## Voice attributes
+
+- **{{ADJECTIVE_1}}** — {{what_this_looks_like_in_practice}}
+- **{{ADJECTIVE_2}}** — {{...}}
+- **{{ADJECTIVE_3}}** — {{...}}
+
+## Tone spectrum (adjusts by context)
+
+- **Error states:** {{how_we_frame_failures_—_empathetic?_factual?}}
+- **Success states:** {{celebratory?_understated?}}
+- **Empty states:** {{coaching?_humorous?}}
+- **Admin / settings:** {{terse?_thorough?}}
+
+## Banned phrases
+
+- {{"Oops!"}}
+- {{"Something went wrong"}} (always specify what)
+- {{"We're sorry"}} (without follow-up action)
+- {{...}}
+
+## Voice examples by UI pattern
+
+- **Button labels:** prefer verbs (`Save`, `Publish`) over generic (`OK`, `Submit`)
+- **Empty states:** lead with action not apology
+- **Errors:** state what happened, state what the user can do

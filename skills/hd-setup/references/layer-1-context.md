@@ -4,44 +4,66 @@
 
 **Concept explainer:** [`hd-onboard/references/layer-1-context.md`](../../hd-onboard/references/layer-1-context.md) — "what IS Context?"
 
-## Four sub-files under `docs/context/`
+## Baseline shape under `docs/context/` (plus-uno-derived)
 
 ```
 docs/context/
-├── agent-persona.md          # how AI should behave — voice, defaults, escalation
-├── product/
-│   └── one-pager.md          # what the product is, for whom, core thesis
-├── design-system/
-│   └── cheat-sheet.md        # components, tokens, variants, escape-hatch rules
-└── conventions/
-    └── how-we-work.md        # commits, reviews, naming, file conventions
+├── product/                    # What the product IS
+│   ├── app.md                  # elevator pitch + core thesis + current stage
+│   ├── features.md             # 3–5 features, one paragraph each
+│   ├── flows.md                # end-to-end user flows
+│   ├── users.md                # 1–3 personas (goals, constraints, success signal)
+│   └── pillars.md              # 3–5 non-negotiable principles
+├── conventions/                # How work happens
+│   ├── coding.md               # language, tooling, patterns, anti-patterns
+│   ├── integrations.md         # external services + env vars + failure behavior
+│   ├── tech-stack.md           # one-line inventory
+│   └── terminology.md          # team's vocabulary
+└── design-system/              # What "good design" looks like, structurally
+    ├── foundations/            # non-negotiable baselines
+    │   ├── accessibility.md    # WCAG target + non-negotiables + tooling
+    │   ├── content-voice.md    # voice attributes + tone spectrum + banned phrases
+    │   ├── layout.md           # grid, breakpoints, page patterns
+    │   ├── principles.md       # philosophical commitments
+    │   └── tokens.md           # authoritative token source + governance
+    ├── styles/                 # look + feel per category
+    │   ├── color.md
+    │   ├── elevation.md        # shadows + radius scales
+    │   ├── iconography.md
+    │   ├── spacing.md
+    │   └── typography.md
+    ├── components/             # primitives + patterns inventory
+    │   ├── cheat-sheet.md      # "which component for this use case"
+    │   ├── components-index.json
+    │   ├── inventory.md        # complete list with paths + status
+    │   ├── layout-cheat-sheet.md
+    │   └── patterns.md         # composition patterns + anti-patterns
+    └── index-manifest.json     # federated index pointing at token/patterns/etc JSON indexes
 ```
 
-Templates: [`../assets/context-skeleton/`](../assets/context-skeleton/) (one `.template` per sub-file).
+Templates for all 21 files: [`../assets/context-skeleton/`](../assets/context-skeleton/). Each is a thin `.template` with `{{PLACEHOLDER}}` prompts guiding the user to fill with their actual content.
 
-## Per-sub-file scaffold detail
+**Design principle:** this baseline reproduces the shape Bill uses in plus-uno — the reference implementation. The foundations / styles / components triad under design-system mirrors how mature design systems (Material 3, Ant Design, Atlassian, Fluent 2) organize. Starting with this shape means less re-structuring later as the design system matures.
 
-### `agent-persona.md`
-Ask: voice guidelines? default behavior when unclear — ask / assume reasonable / escalate? Fill placeholders; mark unknowns `{{TODO: …}}`.
+## Escape hatch — "simple mode"
 
-### `product/one-pager.md`
-Ask: product in one sentence for a new teammate? user in one sentence? core thesis? Keep under 30 lines — this is Tier 1 (every-task) context.
+Some users don't need the full plus-uno baseline — they want a lightweight scaffold. At Step 4, if user indicates "simple / minimal / just the basics," offer a reduced set:
 
-### `design-system/cheat-sheet.md`
-Ask: do you have a design system? If yes, point me at it (Figma / tokens package / Storybook); if no, scaffold a starter. Starter has 4 sections: **foundations / styles / components / escape hatches**. Mark starter content `{{TODO}}` — user fills incrementally.
+- `product/app.md` (elevator pitch only)
+- `conventions/tech-stack.md` (tech inventory only)
+- `design-system/foundations/tokens.md` + `design-system/components/cheat-sheet.md` (no foundations/styles subfolders)
 
-### `conventions/how-we-work.md`
-Ask: style guide or "how we work" notes? Include **commits / reviews / naming / file conventions**.
+User can graduate to full baseline later by re-running `/hd:setup` and picking "full scaffold".
 
 ## Tier budget
 
-Tier 1 combined ≤200 lines = `AGENTS.md` + `product/one-pager.md`. After scaffolding, verify:
+Tier 1 combined ≤ 200 lines = `AGENTS.md` + `docs/context/product/app.md`. After scaffolding, verify:
 
 ```bash
-wc -l AGENTS.md docs/context/product/one-pager.md | tail -1
+wc -l AGENTS.md docs/context/product/app.md | tail -1
 ```
 
-If over, propose moving non-critical product lines to `docs/context/product/details.md` (Tier 2). Full tier model + rationale: [tier-budget-model.md](tier-budget-model.md).
+If over, propose moving non-critical product lines to `features.md` / `flows.md` / `pillars.md` — those sibling files ARE Tier 2 and don't count against the budget. Full tier model + rationale: [tier-budget-model.md](tier-budget-model.md).
 
 ## Healthy AGENTS.md
 
@@ -49,16 +71,25 @@ Pattern library: [good-agents-md-patterns.md](good-agents-md-patterns.md). Key p
 
 ## When existing content is present
 
-Classify-don't-overwrite. Map existing content to Layer 1 sub-paths (rules → AGENTS.md or conventions; product description → product/one-pager; component list → design-system/cheat-sheet). Diff preview before any write (F4 safety in SKILL.md).
+Classify-don't-overwrite. Map existing content to the baseline sub-paths:
+
+- Rules → AGENTS.md root (imperatives) or `conventions/coding.md`
+- Product description → `product/app.md` + `product/features.md`
+- User personas → `product/users.md`
+- Design system cheat-sheet → split across `design-system/foundations/`, `styles/`, `components/`
+- Tech stack list → `conventions/tech-stack.md`
+
+Diff preview before any write (F4 safety in SKILL.md). If source content is in another tool (Notion / Figma), Step 4 prefers **link mode** with extract+pointer (per `assets/pointer-file.md.template`) over scaffold-duplicate.
 
 ## Scenario edge cases
 
-- **S2 single-file AGENTS.md** — classify sections, unpack, never destroy original
-- **S3 DESIGN.md pattern** — decompose into `design-system/` sub-structure
-- **S6 bloated docs** — Tier 1 budget enforcement; propose tier promotion
+- **S2 single-file AGENTS.md** — classify sections into the baseline tree; never destroy original
+- **S3 DESIGN.md pattern** — decompose into `design-system/foundations/` + `styles/` + `components/`
+- **S6 bloated docs** — enforce Tier 1 budget; non-Tier-1 content moves to sibling files in same subdir
 
 ## See also
 
 - [tier-budget-model.md](tier-budget-model.md) — three-tier budget model + rationale
 - [good-agents-md-patterns.md](good-agents-md-patterns.md) — healthy AGENTS.md shape
 - [hd-onboard/references/layer-1-context.md](../../hd-onboard/references/layer-1-context.md) — concept explainer
+- Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/context](https://github.com/BilLogic/plus-uno/tree/main/docs/context)

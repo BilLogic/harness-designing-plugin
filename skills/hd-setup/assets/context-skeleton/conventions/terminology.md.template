@@ -1,0 +1,15 @@
+# Terminology
+
+The team's shared vocabulary. If you're unsure what a word means in this codebase, check here first.
+
+| Term | What it means in this repo | Where defined |
+|---|---|---|
+| {{TERM_1}} | {{One-line_definition_—_distinct_from_generic_usage}} | {{path_or_link}} |
+| {{TERM_2}} | {{...}} | {{...}} |
+
+## Terms to avoid
+
+- {{e.g._"user"_—_too_vague;_use_"student"_/_"tutor"}}
+- {{...}}
+
+<!-- Re-read this file every time new vocabulary enters the repo (PR naming, design doc, etc.). -->

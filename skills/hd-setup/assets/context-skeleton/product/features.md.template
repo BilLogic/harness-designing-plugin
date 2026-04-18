@@ -1,0 +1,13 @@
+# Features
+
+The 3–5 features that define what this product does. One paragraph each.
+
+## {{FEATURE_1_NAME}}
+
+{{ONE_PARAGRAPH_WHAT_IT_DOES_AND_WHY_IT_MATTERS}}
+
+## {{FEATURE_2_NAME}}
+
+{{...}}
+
+<!-- Add more features as needed. Keep this file scannable — if it grows past ~20 features, split by domain. -->

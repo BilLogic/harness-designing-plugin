@@ -152,11 +152,14 @@ Default after silence is D. Users never feel railroaded.
 **Propose default** per table above.
 
 **Execute — scaffold:**
-- Load [`references/layer-1-context.md`](references/layer-1-context.md) for L1 depth (includes healthy-AGENTS.md patterns)
-- Seed questions: (1) product in one sentence? (2) user in one sentence? (3) biggest design constraint? (4) design-system source of truth?
-- If "I don't know" → offer Material 3 / Fluent 2 / awesome-design-md baselines + user's README/package.json
-- Write 4 sub-files from [`assets/context-skeleton/`](assets/context-skeleton/) templates
-- Enforce Tier 1 budget per [`references/tier-budget-model.md`](references/tier-budget-model.md): `AGENTS.md` + `product/one-pager.md` combined ≤ 200 lines
+- Load [`references/layer-1-context.md`](references/layer-1-context.md) for L1 depth (baseline shape + healthy-AGENTS.md patterns)
+- Ask scaffold depth: **full baseline** (21 files across product/conventions/design-system — matches plus-uno) vs **simple mode** (~4 files — just app.md + tech-stack.md + tokens.md + components/cheat-sheet.md). Default: full baseline for team repos, simple mode for solo.
+- Seed questions for product/: (1) product in one sentence? (2) user in one sentence? (3) biggest design constraint? (4) top 3 features?
+- Seed questions for conventions/: (1) primary language + framework? (2) 3 most important coding rules?
+- Seed questions for design-system/: (1) token source of truth (Figma / tokens package / CSS vars)? (2) existing component library (shadcn / Radix / custom)? (3) a11y target (WCAG AA baseline)?
+- If "I don't know" on design-system → offer Material 3 / Fluent 2 / awesome-design-md baselines + user's README/package.json
+- Copy the chosen template set from [`assets/context-skeleton/`](assets/context-skeleton/) under `docs/context/`, pre-filling `{{PLACEHOLDER}}` with user answers
+- Enforce Tier 1 budget per [`references/tier-budget-model.md`](references/tier-budget-model.md): `AGENTS.md` + `docs/context/product/app.md` combined ≤ 200 lines (non-Tier-1 content like features/flows/pillars lives in sibling files — doesn't count against budget)
 
 **Execute — link:** write pointer files under `docs/context/<subtopic>/` using [`assets/pointer-file.md.template`](assets/pointer-file.md.template). Each pointer file must include a 3–5 line **extracted summary** of the source content, not just the bare link. Goal: pointer file is Tier 1 useful standalone; source has full detail.
 

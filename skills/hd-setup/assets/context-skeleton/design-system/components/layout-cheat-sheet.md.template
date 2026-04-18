@@ -1,0 +1,51 @@
+# Layout patterns cheat-sheet
+
+Common page / screen shapes. Fast reference for "how do I build a page that does X."
+
+## Pattern — List + detail
+
+```
+[Sidebar list   ] [ Detail pane        ]
+[ filter        ] [                    ]
+[ item 1        ] [   selected item    ]
+[ item 2        ] [                    ]
+```
+
+**When to use:** settings pages, inbox-style flows.
+**Key components:** {{<Sidebar>_+_<DetailPane>_/_tailwind_grid_2-col}}
+
+## Pattern — Dashboard
+
+```
+[ Top bar                         ]
+[ Metric cards in row             ]
+[ Primary chart        | Sidebar  ]
+[ Secondary content    | charts   ]
+```
+
+**When to use:** analytics, overview screens.
+
+## Pattern — Form flow
+
+```
+[ Step indicator      ]
+[                     ]
+[   Form fields       ]
+[                     ]
+[ [Cancel] [Continue] ]
+```
+
+**When to use:** onboarding, multi-step submission.
+
+## Pattern — Empty state-first
+
+```
+[ Illustration      ]
+[ Headline          ]
+[ Supporting copy   ]
+[ [Primary CTA]     ]
+```
+
+**When to use:** first-run experience, zero-data screens.
+
+<!-- Add more patterns as they emerge. Each pattern is a composition of primitives; don't turn patterns into components unless they recur 3+ times. -->
