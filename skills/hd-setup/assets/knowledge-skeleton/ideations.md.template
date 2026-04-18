@@ -1,0 +1,41 @@
+---
+memory_type: speculative
+domain: ideations
+split_threshold: 20
+---
+<!-- Tier: 3 (open questions — loaded on demand) -->
+# Ideations
+
+Open questions, unchosen paths, ideas worth revisiting. Append-only; cross off (don't delete) when an idea either graduates to a decision or gets rejected.
+
+## How to use
+
+- **When in doubt about whether to document something:** if it's a "what if we…" or "should we…", it goes here
+- **Don't confuse with decisions.md:** decisions are things we've committed to; ideations are things we're thinking about
+- **Cross off, don't delete:** when an idea graduates or is rejected, mark it (~~strikethrough~~ + annotation) so the history survives
+
+## Format
+
+```markdown
+## YYYY-MM-DD — <short-question-or-idea>
+
+**Prompt:** <what made this come up>
+**Options on the table:** <what we're considering>
+**Current thinking:** <if any; may be empty>
+**Needed to decide:** <data, user research, team discussion, ship-then-measure>
+```
+
+## Entries
+
+<!-- Add new ideations above this line. -->
+
+<!--
+Example:
+
+## 2026-04-16 — Should we add a 4th button variant?
+
+**Prompt:** Marketing requested a "primary-gradient" button variant for CTAs.
+**Options on the table:** (a) approve as new variant, (b) reject and use primary, (c) scope to marketing pages only.
+**Current thinking:** lean (b); adding variants costs consistency.
+**Needed to decide:** PM input on marketing's goal; 1-week test of primary-only.
+-->

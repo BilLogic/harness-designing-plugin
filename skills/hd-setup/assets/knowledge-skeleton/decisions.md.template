@@ -1,0 +1,37 @@
+---
+memory_type: procedural-chosen
+domain: decisions
+split_threshold: 15
+---
+<!-- Tier: 2 (append-only ADR log) -->
+# Decisions
+
+ADR-style: "we chose X over Y because Z." Append-only — supersede with new entries, never edit old ones (the audit trail matters).
+
+## Format
+
+```markdown
+## YYYY-MM-DD — <short-decision-title>
+
+**Context:** <what prompted this decision>
+**Options considered:** <A, B, C — brief>
+**Chosen:** <which and why>
+**Trade-offs accepted:** <what we gave up>
+**Supersedes:** <date of prior decision this replaces, if any>
+```
+
+## Entries
+
+<!-- Add new decisions above this line, most recent first. -->
+
+<!--
+Example (uncomment when first decision lands):
+
+## 2026-04-16 — OKLCH over HSL for color tokens
+
+**Context:** Need a theme system that supports dark-mode via hue-only changes.
+**Options considered:** HSL, OKLCH, LAB.
+**Chosen:** OKLCH — perceptually uniform, easier contrast math, supported in modern browsers.
+**Trade-offs accepted:** Slightly less intuitive to author; tooling catches up.
+**Supersedes:** N/A (first color-system decision).
+-->

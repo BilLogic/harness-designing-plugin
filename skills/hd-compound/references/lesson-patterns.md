@@ -1,31 +1,48 @@
 # Lesson patterns
 
-**Purpose:** authoring discipline for Layer 5 lesson entries. Loaded by `workflows/capture.md` when drafting a new lesson.
+**Purpose:** authoring discipline for Layer 5 entries. Loaded by `hd:compound capture` when drafting a new entry.
 
-## YAML frontmatter schema (required)
+## File organization — domain-grouped, not per-date
 
-Every lesson file begins with:
+Lessons live in `docs/knowledge/lessons/<domain>.md` — each file groups multiple ENTRIES by domain (not per-date one-entry-per-file). Plus-uno precedent: `lessons/ds-compliance.md`, `lessons/integration.md`, `lessons/agent-patterns.md`. Split threshold: ~15 entries per file; `/hd:compound capture` surfaces a split prompt when approached.
+
+Each domain file has a YAML frontmatter declaring its memory type:
 
 ```yaml
 ---
-title: "Short title of the lesson"    # required; 3-10 words; descriptive
-date: YYYY-MM-DD                      # required; ISO date of capture
-tags: [tag-a, tag-b, tag-c]           # required; 1-5 tags; kebab-case; topic + domain + status
-graduation_candidate: true | false    # required; is this ready to graduate soon?
-graduated_to: null                    # optional; filled in post-graduation with AGENTS.md entry reference
+memory_type: episodic
+domain: <name>
+split_threshold: 15
+---
+```
+
+Then individual entries follow, separated by `---`.
+
+## Entry YAML (per-entry, inside a domain file)
+
+Every entry begins with:
+
+```yaml
+---
+title: "Short title of the entry"       # required; 3-10 words; descriptive
+date: YYYY-MM-DD                        # required; ISO date of capture
+tags: [tag-a, tag-b, tag-c]             # required; 1-5 tags; kebab-case
+graduation_candidate: true | false      # required for episodic; ready to graduate soon?
+graduated_to: null                      # optional; filled post-graduation w/ AGENTS.md entry ref
+importance: 3                           # optional 1-5; used by lesson-retriever weighting
 ---
 ```
 
 `title` is byte-stable (used in plan-hash computation at graduation time). Don't change it after capture.
 
-`tags` drive graduation-candidate detection: when ≥3 lessons share a tag, that tag becomes a graduation topic.
+`tags` drive graduation-candidate detection: when ≥ 3 entries across the domain file (or sibling domain files) share a tag, that tag becomes a graduation topic.
 
-## Body structure (required)
+## Body structure (episodic)
 
 Four sections, always in this order:
 
 ```markdown
-# Lesson
+# <Entry title>
 
 **Context:** What was happening? 1-2 sentences.
 
@@ -36,7 +53,18 @@ Four sections, always in this order:
 **Graduation-readiness:** Yes / No / too-early-to-tell. One sentence of rationale.
 ```
 
-Total body: 5-10 sentences typical. Long lessons are rare; most are a paragraph per section.
+Total body: 5–10 sentences typical. Long entries are rare; most are a paragraph per section. Separator `---` between entries inside the file.
+
+## Non-episodic entries
+
+Decisions / preferences / ideations / changelog use their own per-file formats, documented in each file's template:
+
+- `docs/knowledge/decisions.md` — ADR-style (context / options / chosen / trade-offs / supersedes)
+- `docs/knowledge/preferences.md` — bullet list (preference — rationale)
+- `docs/knowledge/ideations.md` — prompt + options + current thinking + needed-to-decide
+- `docs/knowledge/changelog.md` — changed / before / after / why
+
+`/hd:compound capture` classifies the entry to the right memory type at Step 1 and targets the right file.
 
 ## Good example
 

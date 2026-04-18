@@ -32,13 +32,14 @@ Pick ONE checklist based on detected mode:
 
 ```
 hd:compound capture Progress:
-- [ ] Step 1: Identify the lesson subject
-- [ ] Step 2: Optional — retrieve relevant past lessons (sub-agent)
-- [ ] Step 3: Draft YAML frontmatter + body
-- [ ] Step 4: Compute slug + target path; check for collision
-- [ ] Step 5: Show user the drafted lesson; get approval
-- [ ] Step 6: Atomic write
-- [ ] Step 7: Summarize with graduation-candidate signal
+- [ ] Step 1: Identify subject + memory type (episodic / decision / preference / ideation / changelog)
+- [ ] Step 2: Resolve target file (lessons/<domain>.md, or decisions/preferences/ideations/changelog.md)
+- [ ] Step 3: Optional — retrieve relevant past lessons (sub-agent)
+- [ ] Step 4: Draft the entry
+- [ ] Step 5: Check split threshold (≥ 15 entries → propose sub-domain split)
+- [ ] Step 6: Show user the drafted entry + target file; get approval
+- [ ] Step 7: Atomic append (preserve existing entries; update INDEX.md)
+- [ ] Step 8: Summarize with graduation-candidate signal
 ```
 
 ### Propose mode
@@ -71,9 +72,25 @@ hd:compound apply Progress:
 
 ## Capture mode — procedure
 
-**Step 1 — Identify subject.** Extract from conversation. If thin/ambiguous, ask: *"What's the lesson? Answer in one sentence."* Then follow up for Context / Decision / Result.
+**Step 1 — Identify subject + memory type.** Extract from conversation. Classify:
+- "What happened during this work?" → **episodic** → `docs/knowledge/lessons/<domain>.md`
+- "What did we choose, and why?" → **procedural-chosen** → `docs/knowledge/decisions.md`
+- "What taste/workflow call are we standardizing?" → **semantic-taste** → `docs/knowledge/preferences.md`
+- "What idea are we exploring / deferring?" → **speculative** → `docs/knowledge/ideations.md`
+- "What harness-structural change happened?" → **temporal** → `docs/knowledge/changelog.md`
 
-**Step 2 — Optional retrieval.** If context budget permits, invoke:
+If thin/ambiguous, ask: *"What's the lesson? Answer in one sentence."* Then: *"Is this (a) episodic what-happened, (b) a decision we made, (c) a preference we hold, (d) an idea to explore, or (e) a harness-structural change?"* Default when unclear: episodic lesson.
+
+**Step 2 — Resolve target file.**
+
+**If episodic (most common):** determine domain:
+1. If lesson tags clearly match an existing `lessons/<domain>.md` file → target that file (APPEND mode)
+2. Else ask: *"Which domain? Existing: [list from grep lessons/*.md]. Or new domain name (kebab-case)."*
+3. If new domain → create `lessons/<new-domain>.md` with YAML frontmatter (`memory_type: episodic`, `domain: <name>`, `split_threshold: 15`)
+
+**If non-episodic:** target is one of the shared files (`decisions.md`, `preferences.md`, `ideations.md`, `changelog.md`). These files always exist post-setup; append the new entry.
+
+**Step 3 — Optional retrieval.** If context budget permits, invoke:
 
 ```
 Task design-harnessing:research:lesson-retriever(
@@ -83,23 +100,24 @@ Task design-harnessing:research:lesson-retriever(
 )
 ```
 
-to surface similar past lessons. Findings enrich the new lesson's rationale + flag graduation-candidacy. Skip in compact-safe mode.
+to surface similar past lessons. Findings enrich the new entry's rationale + flag graduation-candidacy. Skip in compact-safe mode.
 
-**Step 3 — Draft.** Use [`assets/lesson.md.template`](assets/lesson.md.template) as scaffolding. YAML frontmatter per [`references/lesson-patterns.md`](references/lesson-patterns.md):
-- `title` — 3–10 word imperative
+**Step 4 — Draft the entry.** Use [`assets/lesson.md.template`](assets/lesson.md.template) as the per-entry shape (for episodic lessons). Other memory types have per-file formats documented in each file's template — see `knowledge-skeleton/decisions.md.template`, `ideations.md.template`, etc.
+
+Entry YAML (episodic):
 - `date` — today's ISO date
-- `tags` — 1–5 kebab-case; grep existing lessons to avoid tag-drift
+- `tags` — 1–5 kebab-case; grep existing entries in this file + sibling domain files to avoid tag-drift
 - `graduation_candidate` — `true` / `false` / `too-early-to-tell`
 
-Body — 4 sections, each 1–3 sentences: **Context / Decision / Result / Graduation-readiness.**
+Entry body — 4 sections, each 1–3 sentences: **Context / Decision / Result / Graduation-readiness.**
 
-**Step 4 — Slug + path.** Slug = kebab-case, 3–7 words, derived from title (not date). Target: `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md`. On collision → ask user: edit existing / append suffix `-001` / abort.
+**Step 5 — Check split threshold.** If the target domain file already has ≥ 15 entries, surface to user: *"`lessons/<domain>.md` has N entries (threshold 15). Options: (a) append anyway, (b) split into `lessons/<domain>-<sub>.md` — which sub-domain for this new entry?"*
 
-**Step 5 — Approval.** Show the drafted lesson verbatim. User approves (Y), edits (E), or aborts (A). Never write without explicit Y/E.
+**Step 6 — Approval.** Show the drafted entry verbatim + target file (append location). User approves (Y), edits (E), or aborts (A). Never write without explicit Y/E.
 
-**Step 6 — Atomic write.** Temp file + `mv`. Never silent overwrite.
+**Step 7 — Atomic append.** Append the new entry to the target file with a `---` separator between entries. Temp file + `mv`. Preserve existing entries; append only. Update `docs/knowledge/INDEX.md` entry count + last-updated column for this domain.
 
-**Step 7 — Summarize.** Report the file path, graduation-candidate signal (if any), and next-step suggestion (`/hd:compound graduate-propose <topic>` when ≥ 3 related lessons exist).
+**Step 8 — Summarize.** Report target file + entry count + graduation-candidate signal (if any). Next-step suggestion: `/hd:compound graduate-propose <topic>` when target file has ≥ 3 entries with shared tags.
 
 ## Propose mode — procedure (READ-ONLY — writes NOTHING)
 
