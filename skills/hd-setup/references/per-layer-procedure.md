@@ -14,10 +14,12 @@ For each of Steps 4–8, run this 5-part cycle:
 ```
 FRAME → explain the layer in one sentence + article § reference
 SHOW  → present detect.py signals relevant to this layer
-PROPOSE → default action (link / critique / scaffold / skip) per the table below
+PROPOSE → default action from Phase A's pre-computed proposal table (see SKILL.md § Phase A)
 ASK   → user picks action; record in layer_decisions
 EXECUTE → perform chosen action; checkpoint after (optional review / capture / continue)
 ```
+
+**PROPOSE step sourcing.** The default action shown to the user at each layer is looked up from the Phase A synthesis table (Batch 1 `harness-auditor × 5` + Batch 2 `rubric-recommender`). No new agent dispatch happens at the PROPOSE step. The per-detection default table below is the *fallback* when Phase A was skipped (e.g., non-Claude host that can't run Task dispatch) OR when the Phase A agent returned inconclusive.
 
 ### Default action per detection
 

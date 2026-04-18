@@ -35,7 +35,7 @@ See `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this 
 ## How rubrics are applied
 
 ```
-Task design-harnessing:review:rubric-applicator(
+Task design-harnessing:review:rubric-applier(
   work_item_path: "<path to PR diff, component, or screen>",
   rubric_path: "docs/rubrics/<rubric-name>.md"
 )

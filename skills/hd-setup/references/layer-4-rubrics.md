@@ -67,8 +67,8 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 
 - **Scaffold** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
 - **Link** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
-- **Critique + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-applicator` in extract mode against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
-- **Critique** (when user points at a specific work item) — invoke `design-harnessing:review:rubric-applicator` against that work item with a named rubric
+- **Critique + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
+- **Critique** (when user points at a specific work item) — hand off to `/hd:review critique <path>`, which dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
 
 ## Procedure — Step 7
 
@@ -90,11 +90,10 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
 
 **Execute — critique + extract** (condition 1):
-1. Invoke the rubric-applicator sub-agent against each existing AI-doc with a "meta-extract" target: find rule-like statements that could become explicit rubric criteria.
+1. Invoke the rubric-extractor sub-agent against each existing AI-doc (batch-parallel ≤5; serial at 6+ per compound v2.39.0): find rule-like statements that could become explicit rubric criteria.
    ```
-   Task design-harnessing:review:rubric-applicator(
-     work_item_path: ".github/copilot-instructions.md",
-     rubric_path: "skills/hd-review/assets/starter-rubrics/skill-quality.md",
+   Task design-harnessing:review:rubric-extractor(
+     source_path: ".github/copilot-instructions.md",
      mode: "extract"
    )
    ```
@@ -110,14 +109,7 @@ Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A
 - Write `docs/rubrics/INDEX.md` from [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template)
 - Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
 
-**Execute — critique** (targeted, when user explicitly points at a work item): invoke:
-
-```
-Task design-harnessing:review:rubric-applicator(
-  work_item_path: <user-provided>,
-  rubric_path: <rubric file>
-)
-```
+**Execute — critique** (targeted, when user explicitly points at a work item): hand off to `/hd:review critique <path>`. That command dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
 
 → Return to [../SKILL.md § Step 7 — Layer 4 (Rubrics)](../SKILL.md#step-7--layer-4-rubrics)
 

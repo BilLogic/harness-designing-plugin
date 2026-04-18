@@ -24,7 +24,7 @@ Resolution order:
 
 If ambiguous, ask: *"Which rubric? Available: [list]"*
 
-**Step 3 — Dispatch.** Specialized handling for SKILL.md targets; generic for everything else:
+**Step 3 — Dispatch.** Specialized handling for SKILL.md targets; generic for everything else. Fully-qualified Task names (compound 2.35.0).
 
 ### Target is a SKILL.md + rubric is skill-quality
 
@@ -34,14 +34,20 @@ Task design-harnessing:review:skill-quality-auditor(
 )
 ```
 
+If multiple SKILL.md paths were passed, dispatch in a single parallel batch (up to 5; serial at 6+ per compound 2.39.0).
+
 ### Any other target
 
 ```
-Task design-harnessing:review:rubric-applicator(
+Task design-harnessing:review:rubric-applier(
   work_item_path: <path>,
   rubric_path: <rubric file>
 )
 ```
+
+If multiple rubrics apply to one target, dispatch one `rubric-applier` per rubric in a single parallel batch (up to 5; serial at 6+).
+
+Note: `rubric-applier` is apply-mode only. For extract-mode (surfacing implicit rubric criteria from an AI-doc corpus) use `design-harnessing:review:rubric-extractor` — that path is owned by `/hd:setup` Step 7 and `/hd:maintain rule-propose` Step 4b, not by `/hd:review critique`.
 
 **Step 4 — Aggregate per [`critique-format.md`](critique-format.md).**
 

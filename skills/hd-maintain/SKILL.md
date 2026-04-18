@@ -53,6 +53,7 @@ hd:maintain propose Progress:
 - [ ] Step 2: Run rule-candidate-scorer sub-agent
 - [ ] Step 3: Filter to clusters scoring ≥ 3.5 (rule-ready)
 - [ ] Step 4: Draft proposed rule + changelog.md entry per cluster
+- [ ] Step 4b: If any source lesson has ≥4 imperative statements → dispatch rubric-extractor (optional, conditional)
 - [ ] Step 5: Assemble structured inputs (title, paths, date, author, diff_summary)
 - [ ] Step 6: Invoke `scripts/compute-plan-hash.sh` (JSON on stdin) → SHA-256
 - [ ] Step 7: Write `.hd/propose-<prefix>.json` artifact (creates `.hd/` if missing)
@@ -120,5 +121,9 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 
 ## Sub-agents invoked
 
+All dispatch uses fully-qualified `design-harnessing:<category>:<agent>` Task names (compound 2.35.0 convention — bare names get re-prefixed wrong).
+
 - `design-harnessing:research:lesson-retriever` — Phase 1 research (capture, optional)
 - `design-harnessing:analysis:rule-candidate-scorer` — cluster scoring (propose, required)
+- `design-harnessing:review:rubric-extractor` — optional; dispatched in propose mode when a source lesson contains ≥4 imperative statements (may be promotable to a rubric in its own right)
+- `rule-apply` mode runs inline — no agent; `scripts/compute-plan-hash.sh` is authoritative

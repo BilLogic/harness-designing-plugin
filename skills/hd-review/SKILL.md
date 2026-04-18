@@ -46,31 +46,28 @@ Ambiguous → ask: *"Audit the harness itself, or critique a specific work item?
 
 ```
 hd:review audit Progress:
-- [ ] Step 1: Load agent list from hd-config.md
-- [ ] Step 2: Count agents; auto-switch to serial if ≥6
-- [ ] Step 3: Run harness-health-analyzer sub-agent (opens the report)
-- [ ] Step 4: Run skill-quality-auditor per skill (L2 health check)
-- [ ] Step 5: Run rule-candidate-scorer (L5 drift check)
-- [ ] Step 6: Run budget-check.sh for deterministic budget data
-- [ ] Step 7: Dispatch review agents (parallel or serial)
-- [ ] Step 8: Synthesize findings + cross-check against <protected_artifacts>
-- [ ] Step 9: Render report per template
-- [ ] Step 10: Atomic write to docs/knowledge/lessons/harness-audit-YYYY-MM-DD.md
-- [ ] Step 11: Summarize + suggest next
+- [ ] Step 1: Load agent list from hd-config.md; run budget-check.sh
+- [ ] Step 2: BATCH 1 (parallel) — harness-auditor × 5 (one per layer 1-5)
+- [ ] Step 3: BATCH 2 (parallel) — rubric-recommender + lesson-retriever + (conditional) coexistence-analyzer
+- [ ] Step 4: Inline parse budget-check.sh JSON
+- [ ] Step 5: Synthesize findings + cross-check against <protected_artifacts>
+- [ ] Step 6: Render report per template
+- [ ] Step 7: Atomic write to docs/knowledge/lessons/<date>-harness-audit.md
+- [ ] Step 8: Summarize + suggest next
 ```
 
-Load-from-config → dispatch sub-agents (parallel ≤5 / serial ≥6) → synthesize with protected-artifacts cross-check → atomic write one dated audit lesson → summarize.
+Two-batch parallel dispatch, each batch ≤5 agents (compound 2.39.0 convention: ≥6 parallel crashes context; we split into 2 batches to stay safe). Batch 1 fans out across layers; Batch 2 covers rubric gaps + lesson corpus + optional coexistence. Inline `budget-check.sh` parse. Synthesize with protected-artifacts cross-check → atomic write one dated audit lesson.
 → See [references/audit-procedure.md](references/audit-procedure.md) for full procedure
 
-**Quick mode:** `/hd:review audit mode:quick` — ~30s scan based on `detect.py` signals + `hd-config.md` only (no deep file reads, no file writes). Use as preflight before a full audit or as a CI check. See [references/audit-procedure.md § Mode: quick](references/audit-procedure.md#mode-quick).
+**Quick mode:** `/hd:review audit mode:quick` — ~30s scan based on `detect.py` signals + `hd-config.md` only (no deep file reads, no file writes). Dispatches a single `harness-auditor` in aggregate mode. Use as preflight before a full audit or as a CI check. See [references/audit-procedure.md § Mode: quick](references/audit-procedure.md#mode-quick).
 
 ### Critique mode
 
 ```
 hd:review critique Progress:
-- [ ] Step 1: Parse target work item + optional --rubric
+- [ ] Step 1: Parse target work item(s) + optional --rubric
 - [ ] Step 2: Resolve rubric path (starter / user-defined)
-- [ ] Step 3: Dispatch appropriate applicator (skill-quality-auditor OR rubric-applicator)
+- [ ] Step 3: Dispatch — SKILL.md target → skill-quality-auditor; otherwise → rubric-applier (batch-parallel ≤5 if multiple)
 - [ ] Step 4: Aggregate findings per critique-format.md
 - [ ] Step 5: Emit inline; zero file writes
 ```
@@ -99,15 +96,19 @@ Parse target + rubric → resolve rubric path → dispatch applicator sub-agent 
 ## Compact-safe mode
 
 When context budget is tight:
-- Audit → auto-switch to serial (≥ 3 agents → serial in compact mode)
+- Audit → collapse to `mode:quick` (single `harness-auditor` aggregate, no deep reads)
 - Critique → apply fewer rubrics (skip ones requiring deep file reads)
 - Hash mechanisms: N/A (hd-review doesn't use plan-hash; read-mostly)
 
+## Parallel→serial auto-switch
+
+Each dispatch batch stays ≤5 agents (compound v2.39.0 convention: 6+ parallel crashes context). Audit splits into two batches of ≤5 to stay under the cap; critique batches up to 5 rubric-applier calls in parallel and falls back to serial at 6+.
+
 ## Reference files
 
-- [references/audit-procedure.md](references/audit-procedure.md) — full audit-mode step sequence (Steps 1–11)
+- [references/audit-procedure.md](references/audit-procedure.md) — full audit-mode step sequence (2-batch dispatch)
 - [references/critique-procedure.md](references/critique-procedure.md) — full critique-mode step sequence (Steps 1–5)
-- [references/audit-criteria.md](references/audit-criteria.md) — five-layer health criteria + severity framework
+- [references/audit-criteria-l1-context.md](references/audit-criteria-l1-context.md) through `audit-criteria-l5-knowledge.md` + `audit-criteria-coexistence.md` + `audit-criteria-budget.md` — per-scope health criteria + severity framework
 - [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds + scripts
 - [references/drift-detection.md](references/drift-detection.md) — stale-file + rule-adoption-drought signals
 - [references/critique-format.md](references/critique-format.md) — critique output shape
@@ -138,9 +139,22 @@ When context budget is tight:
 
 ## Sub-agents invoked
 
-- `design-harnessing:workflow:harness-health-analyzer` — narrative 5-layer health (audit Step 3)
-- `design-harnessing:review:skill-quality-auditor` — per-skill rubric (audit Step 4 + critique on SKILL.md)
-- `design-harnessing:analysis:rule-candidate-scorer` — L5 drift detection (audit Step 5)
-- `design-harnessing:review:rubric-applicator` — generic rubric → work item (critique default)
-- `compound-engineering:research:learnings-researcher` — always-run during audit (Step 7)
-- Other `compound-engineering:review:*` agents per user config (Step 7)
+All dispatch uses fully-qualified Task names (compound 2.35.0 convention). Cross-plug-in calls use the `compound-engineering:` prefix.
+
+**Audit mode — BATCH 1 (parallel, 5 agents):**
+- `design-harnessing:analysis:harness-auditor` × 5 — one per layer (`layer: 1` through `layer: 5`), `scenario: audit`
+
+**Audit mode — BATCH 2 (parallel, 2–3 agents):**
+- `design-harnessing:analysis:rubric-recommender` — L4 gap finding (`scenario: audit-gap-finding`)
+- `design-harnessing:research:lesson-retriever` — L5 cluster corpus scan
+- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `coexistence.compound_engineering: true` or other-tool harnesses are detected
+
+**Audit mode — quick:**
+- Single `design-harnessing:analysis:harness-auditor` in aggregate mode (reads `detect.py` JSON + `hd-config.md` only)
+
+**Critique mode:**
+- `design-harnessing:review:skill-quality-auditor` — targets whose path ends in `SKILL.md` (batch-parallel if multiple SKILLs passed)
+- `design-harnessing:review:rubric-applier` — all other targets (batch-parallel ≤5 if multiple rubrics)
+
+**Cross-plug-in (optional user config):**
+- `compound-engineering:research:learnings-researcher`, other `compound-engineering:review:*` agents — only dispatched if listed in `hd-config.md:review_agents`

@@ -7,7 +7,7 @@ loaded_by: hd-review
 
 ## Purpose
 
-Step-by-step procedure for `/hd:review audit`: load agent list from `hd-config.md`, dispatch review sub-agents (parallel or serial), synthesize findings cross-checked against protected artifacts, and write a single dated harness-audit lesson. Invoked by the audit-mode workflow checklist in `../SKILL.md`.
+Step-by-step procedure for `/hd:review audit`: parallel-dispatch isolated sub-agents across the five layers and cross-cutting concerns in two batches, synthesize findings cross-checked against protected artifacts, and write a single dated harness-audit lesson. Invoked by the audit-mode workflow checklist in `../SKILL.md`.
 
 ## Inputs
 
@@ -15,122 +15,96 @@ Step-by-step procedure for `/hd:review audit`: load agent list from `hd-config.m
 
 If `mode: "quick"`, jump to [§ Mode: quick](#mode-quick) below; otherwise continue with the full procedure.
 
+## Parallel→serial auto-switch
+
+Each batch below contains ≤5 agents. Compound CHANGELOG 2.39.0 documents that 6+ parallel Task dispatches crash context. We stay safe by splitting audit into two batches (5 + 2–3) rather than fanning out a single 7-agent burst.
+
+If a user adds extra `review_agents` to `hd-config.md` that would push a batch to ≥6, auto-switch that batch to serial and surface:
+
+> "Running Batch N in serial mode (6+ agents configured). Use `--parallel` to override."
+
 ## Steps
 
-**Step 1 — Load agent list.** Read `hd-config.md` YAML frontmatter field `review_agents`. Expected format:
-
-```yaml
-review_agents:
-  - compound-engineering:research:learnings-researcher
-  - compound-engineering:review:pattern-recognition-specialist
-  - compound-engineering:review:code-simplicity-reviewer
-  - compound-engineering:review:agent-native-reviewer
-```
-
-If missing, use defaults (audit-critical trio):
-- `compound-engineering:research:learnings-researcher`
-- `compound-engineering:review:pattern-recognition-specialist`
-- `compound-engineering:review:code-simplicity-reviewer`
-
-Users extend by adding more agents to the config.
-
-**Step 2 — Count + auto-switch.**
-
-```bash
-agent_count=$(yq '.review_agents | length' hd-config.md)
-```
-
-- **count ≤ 5** → parallel dispatch
-- **count ≥ 6** → serial dispatch; surface notice:
-
-  > "Running audit in serial mode (6+ agents configured). Use `--parallel` to override."
-
-Compound CHANGELOG 2.39.0: 6+ parallel agents crash context.
-
-**Step 3 — Run harness-health-analyzer.** Opens the audit report with a narrative 5-layer health assessment:
-
-```
-Task design-harnessing:workflow:harness-health-analyzer(
-  repo_root: ".",
-  detect_json: <output from hd:setup's scripts/detect.py>,
-  mode: "full"
-)
-```
-
-**Step 4 — Per-skill health (L2 check).** For each `skills/*/SKILL.md`:
-
-```
-Task design-harnessing:review:skill-quality-auditor(
-  skill_md_path: "<path>/SKILL.md"
-)
-```
-
-Aggregate per-skill findings into the audit report's Layer 2 section. Each finding cites the rubric section number (1–9).
-
-**Step 5 — Rule adoption drift (L5 check).**
-
-```
-Task design-harnessing:analysis:rule-candidate-scorer(
-  lessons_root: "docs/knowledge/lessons/",
-  rules_log: "docs/knowledge/changelog.md"
-)
-```
-
-Ready-to-graduate clusters become drift findings — "10 lessons on X topic, 0 promoted — drought signal."
-
-**Step 6 — Deterministic data.** Run:
+**Step 1 — Preflight.** Read `hd-config.md` frontmatter (`review_agents`, `coexistence.compound_engineering`, `other_tool_harnesses_detected`). Run:
 
 ```bash
 bash skills/hd-review/scripts/budget-check.sh > /tmp/hd-budget.json
 ```
 
-Output tier-1 line counts, per-skill SKILL.md sizes, violations. Authoritative for bloat findings.
+JSON is authoritative for bloat findings; parsed inline in Step 4. Also load `scripts/detect.py` JSON from a prior `/hd:setup` run (or rerun `python skills/hd-setup/scripts/detect.py > /tmp/hd-detect.json` if stale).
 
-**Step 7 — Dispatch review agents.**
+**Step 2 — BATCH 1 (parallel, 5 agents): per-layer `harness-auditor`.**
 
-### Parallel (count ≤ 5)
-
-For each agent in `review_agents`, invoke via Task tool (fully-qualified names per compound 2.35.0 requirement). All agents receive the same context: harness-health-analyzer output + budget-check.sh output + the inventory table from detect.py:
+Dispatch 5 isolated-context sub-agents in a single parallel burst (one Task call per agent, all in the same response):
 
 ```
-Task compound-engineering:research:learnings-researcher(
-  "Audit the design-harness setup at <worktree-path>. Check for past
-   documented lessons relevant to current state, docs/solutions/ matches
-   from compound, rule-adoption drought signals. Inventory + budget data
-   attached. Return findings with severity (p1/p2/p3)."
+Task design-harnessing:analysis:harness-auditor(
+  repo_root: ".",
+  layer: 1,
+  scenario: "audit",
+  detect_json: <contents of /tmp/hd-detect.json>,
+  budget_json: <contents of /tmp/hd-budget.json>
 )
 
-Task compound-engineering:review:pattern-recognition-specialist("...")
-Task compound-engineering:review:code-simplicity-reviewer("...")
-[...additional configured agents]
+Task design-harnessing:analysis:harness-auditor(layer: 2, scenario: "audit", ...)
+Task design-harnessing:analysis:harness-auditor(layer: 3, scenario: "audit", ...)
+Task design-harnessing:analysis:harness-auditor(layer: 4, scenario: "audit", ...)
+Task design-harnessing:analysis:harness-auditor(layer: 5, scenario: "audit", ...)
 ```
 
-Dispatch ALL in a single parallel burst (one tool call per agent, all in the same response).
+Each layer-auditor uses its own `audit-criteria-l<N>-*.md` reference (per-scope criteria from Phase 3i.7 split). Each returns severity-tagged findings (P1/P2/P3) scoped to its layer.
 
-### Serial (count ≥ 6)
+**Step 3 — BATCH 2 (parallel, 2–3 agents): cross-cutting.**
 
-Same agents as parallel, but one at a time. Wait for each to complete before starting the next. Use this when 6+ agents are configured (context safety).
+After Batch 1 completes, dispatch the second batch in parallel:
 
-**Step 8 — Synthesize + cross-check.**
+```
+Task design-harnessing:analysis:rubric-recommender(
+  repo_root: ".",
+  scenario: "audit-gap-finding",
+  detect_json: <contents of /tmp/hd-detect.json>
+)
+
+Task design-harnessing:research:lesson-retriever(
+  lessons_root: "docs/knowledge/lessons/",
+  rules_log: "docs/knowledge/changelog.md",
+  scenario: "audit-drift-scan"
+)
+```
+
+Conditional third dispatch (same batch) — only when `coexistence.compound_engineering: true` OR `other_tool_harnesses_detected` is non-empty:
+
+```
+Task design-harnessing:analysis:coexistence-analyzer(
+  repo_root: ".",
+  detect_json: <contents of /tmp/hd-detect.json>
+)
+```
+
+Cross-plug-in compound review agents (if any in `hd-config.md:review_agents`) also join Batch 2 as long as the batch stays ≤5.
+
+**Step 4 — Inline: parse `budget-check.sh` JSON.** Extract tier-1 line counts, per-skill SKILL.md sizes, violations. These become deterministic P1 findings (no agent required).
+
+**Step 5 — Synthesize + cross-check.**
 
 1. **Deduplicate** — same issue from multiple agents merges into one finding (note "flagged by N agents")
-2. **Categorize** — P1/P2/P3 per [`audit-criteria.md`](audit-criteria.md)
-3. **Source-attribute** — every finding tags which agent(s) flagged it
+2. **Categorize** — P1/P2/P3 per the appropriate `audit-criteria-<scope>.md`
+3. **Source-attribute** — every finding tags which agent(s) flagged it (e.g., `layer-3-auditor + rubric-recommender`)
 4. **Protected-artifacts cross-check** — discard any finding recommending deletion/gitignore of a protected path. Pattern from compound's `ce-review/SKILL.md`.
 
-**Step 9 — Render report.** Load [`../assets/audit-report.md.template`](../assets/audit-report.md.template). Fill placeholders:
+**Step 6 — Render report.** Load [`../assets/audit-report.md.template`](../assets/audit-report.md.template). Fill placeholders:
 - `{{DATE}}`, `{{TOP_3_PRIORITIES}}`, `{{INVENTORY_TABLE}}`
 - `{{P1_FINDINGS}}` / `{{P2_FINDINGS}}` / `{{P3_FINDINGS}}`
-- `{{LAYER_2_SKILL_QUALITY_FINDINGS}}` (from Step 4)
-- `{{LAYER_5_DRIFT_FINDINGS}}` (from Step 5)
-- `{{SUGGESTED_ACTIONS}}`, `{{AGENT_LIST}}`, `{{EXECUTION_MODE}}`
+- `{{LAYER_N_FINDINGS}}` × 5 (from Batch 1)
+- `{{RUBRIC_GAPS}}` (from rubric-recommender), `{{LESSON_DRIFT}}` (from lesson-retriever), `{{COEXISTENCE_FINDINGS}}` (if dispatched)
+- `{{BUDGET_VIOLATIONS}}` (from Step 4), `{{SUGGESTED_ACTIONS}}`, `{{AGENT_LIST}}`, `{{EXECUTION_MODE}}`
 
-**Step 10 — Atomic write.** Single file: `docs/knowledge/lessons/harness-audit-YYYY-MM-DD.md`.
+**Step 7 — Atomic write.** Single file: `docs/knowledge/lessons/$(date -u +%Y-%m-%d)-harness-audit.md`.
 
 Collision handling (multiple audits same day):
 
 ```bash
-date_stem="docs/knowledge/lessons/harness-audit-$(date -u +%Y-%m-%d)"
+date_stem="docs/knowledge/lessons/$(date -u +%Y-%m-%d)-harness-audit"
 seq=1
 target="${date_stem}.md"
 while [ -f "$target" ]; do
@@ -141,12 +115,13 @@ done
 
 Atomic: temp file + `mv`. Post-write: `git status` must show only the new audit file. Any other diff → rollback + abort.
 
-**Step 11 — Summarize.**
+**Step 8 — Summarize.**
 
 ```
 Audit complete: <report-path>
   Findings: <N total> — <P1> P1, <P2> P2, <P3> P3
   Top 3 priorities: [...]
+  Dispatch: Batch 1 (5 layer-auditors) + Batch 2 (rubric-recommender + lesson-retriever [+ coexistence-analyzer])
 
 Next step:
   1. Review: <report-path>
@@ -158,7 +133,7 @@ Next step:
 
 ## Mode: quick
 
-A ~30s preflight scan. Only signals from `detect.py` JSON and `hd-config.md` contents — no deep file reads (no walking SKILL.md bodies, no full lesson-corpus scan, no per-skill rubric dispatch). Useful as a pre-flight before a full audit, or as a CI check.
+A ~30s preflight scan. Single `harness-auditor` call in aggregate mode — reads `detect.py` JSON + `hd-config.md` frontmatter only. No deep file reads; no per-layer fan-out; no file writes. Useful as a pre-flight before a full audit, or as a CI check.
 
 **Steps (quick mode):**
 
@@ -170,17 +145,18 @@ A ~30s preflight scan. Only signals from `detect.py` JSON and `hd-config.md` con
 
 2. **Read `hd-config.md`** — frontmatter only (no body drill-down).
 
-3. **Dispatch harness-health-analyzer in quick mode** — with a smaller budget:
+3. **Dispatch `harness-auditor` in aggregate mode** — with a smaller budget:
 
    ```
-   Task design-harnessing:workflow:harness-health-analyzer(
+   Task design-harnessing:analysis:harness-auditor(
      repo_root: ".",
-     detect_json: <contents of /tmp/hd-detect.json>,
-     mode: "quick"
+     layer: "aggregate",
+     scenario: "audit-quick",
+     detect_json: <contents of /tmp/hd-detect.json>
    )
    ```
 
-   Agent skips Phase 2 per-layer reads and returns the YAML summary + cross-cutting observations only.
+   Agent returns the YAML summary + cross-cutting observations only (no per-layer deep reads).
 
 4. **Abbreviated report** — emit inline (no file write). Format:
 
@@ -199,4 +175,4 @@ A ~30s preflight scan. Only signals from `detect.py` JSON and `hd-config.md` con
 
    Top 3 per layer; skip narrative paragraphs. Zero file writes — quick mode is read-only and does not produce a dated lesson.
 
-Target: ~30s wall time. If the analyzer reports it had to read layer files (i.e., quick-mode budget was insufficient), surface that as a hint to run a full audit instead.
+Target: ~30s wall time. If the auditor reports it had to read layer files (i.e., quick-mode budget was insufficient), surface that as a hint to run a full audit instead.

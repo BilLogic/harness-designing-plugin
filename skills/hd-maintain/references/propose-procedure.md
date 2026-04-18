@@ -35,6 +35,17 @@ Abort cleanly. Don't silently proceed.
 - **Rule text** (for AGENTS.md): `[YYYY-MM-DD] <clean imperative>. Source: docs/knowledge/lessons/<primary-lesson>.md`
 - **Rules.md entry**: per [`../assets/rule-entry.md.template`](../assets/rule-entry.md.template) — title, lesson sources list, rule text, reviewed-by (user), date
 
+**Step 4b — (Optional, conditional) Rubric-extractor handoff.** If any source lesson in the cluster contains ≥4 imperative statements ("must", "always", "never", "should"), the lesson may itself be rubric-promotable. Dispatch:
+
+```
+Task design-harnessing:review:rubric-extractor(
+  source_path: "<lesson file path>",
+  mode: "extract"
+)
+```
+
+Surface extracted candidates alongside the rule proposal. User decides whether to promote independently (the normal rule adoption still proceeds). Skip when no source lesson clears the ≥4-imperative threshold.
+
 **Step 5 — Assemble structured inputs.** Build the JSON payload for the hash script:
 
 ```json

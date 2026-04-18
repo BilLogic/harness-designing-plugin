@@ -60,17 +60,7 @@ Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`referen
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
-**Optional depth:** for long narrative analysis of the repo's full harness state, invoke:
-
-```
-Task design-harnessing:workflow:harness-health-analyzer(
-  repo_root: ".",
-  detect_json: <output from detect.py>,
-  mode: "full"
-)
-```
-
-Use for deeper audit-style analysis; skip for standard flows.
+Deep analysis is handled by Phase A (below), not here — Step 1 is the deterministic signal dump only.
 
 ## Step 2 — Onboard check
 
@@ -83,43 +73,36 @@ If `hd-config.md` does not exist AND user hasn't shown framework familiarity:
 
 Default to B on silence. Never block.
 
+## Phase A — parallel pre-analysis
+
+Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / critique / scaffold / skip) so Phase B (Steps 4–8) feels informed rather than interrogative.
+
+- **Batch 1** (parallel, 5 agents): `design-harnessing:analysis:harness-auditor` × 5 — one per layer, `scenario: setup-pre-analysis`
+- **Batch 2** (parallel, 1 agent): `design-harnessing:analysis:rubric-recommender` — rubric-gap ranking + starter-trio recommendation
+
+Each batch stays ≤5 agents (compound v2.39.0: 6+ parallel crashes context). Outputs synthesize into a per-layer default table consumed by Phase B. Non-Claude hosts skip Phase A and fall back to the per-detection default table in [`per-layer-procedure.md`](references/per-layer-procedure.md).
+
+→ See [`references/phase-a-pre-analysis.md`](references/phase-a-pre-analysis.md) for full dispatch detail, synthesis schema, and Guardrail interaction.
+
 ## Step 3 — Tool discovery
 
 Surface detected `team_tooling` + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note once: *"compound-engineering detected — we coexist by default; won't touch its namespace."*
+
+Solo-dispatch `design-harnessing:research:lesson-retriever` with `topic: "tool-discovery"` to surface past tool-adoption lessons. Skip when `docs/knowledge/lessons/` is empty.
 
 Ask **one batched question** across all 6 categories (docs/wiki, design, diagramming, analytics, PM/issues, comms) with the detected list and category examples. Use "you (or contributors)" framing. Parse free-text reply; map to categories via [`references/known-mcps.md`](references/known-mcps.md). For each confirmed tool, triage per that file's integration-path table: **active** / **start-server** / **install-walkthrough** / **pointer-only**.
 
 Only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
 
-## Step 4 — Layer 1 (Context)
+## Phase B — Steps 4–8 (interactive, inline)
 
-Semantic memory: product, user, design system, conventions. Walk the per-layer cycle; scaffold writes under `docs/context/` using the context skeleton, link writes pointer files with 3–5 line extracted summaries, critique applies bloat-detection.
+Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatches for the default; execution is inline. Targeted dispatches live in per-layer references.
 
-→ See [references/layer-1-context.md](references/layer-1-context.md) for full procedure.
-
-## Step 5 — Layer 2 (Skills)
-
-Procedural memory: AI capabilities the team codifies. Default is **skip** unless external skills exist (**critique**) or `.agent/skills/` is present (**link**).
-
-→ See [references/layer-2-skills.md](references/layer-2-skills.md) for full procedure.
-
-## Step 6 — Layer 3 (Orchestration)
-
-How skills and handoffs flow across PM tools, diagrams, and CI. Default is **link** when a PM tool is detected; **skip** when fewer than 3 Layer 2 skills exist.
-
-→ See [references/layer-3-orchestration.md](references/layer-3-orchestration.md) for full procedure.
-
-## Step 7 — Layer 4 (Rubrics)
-
-Taste embedded as explicit checks. If existing AI-docs exceed 200 lines, **critique + extract** implicit rubrics; otherwise **scaffold** from the 12 starter rubrics. Rubrics live in `docs/rubrics/`, not `docs/context/design-system/`.
-
-→ See [references/layer-4-rubrics.md](references/layer-4-rubrics.md) for full procedure.
-
-## Step 8 — Layer 5 (Knowledge)
-
-Episodic memory + procedural rules. Default is **critique** (via `rule-candidate-scorer`) when `has_plans_convention`, else **scaffold** an empty lessons directory.
-
-→ See [references/layer-5-knowledge.md](references/layer-5-knowledge.md) for full procedure.
+- **Step 4 — Layer 1 (Context).** Semantic memory. Scaffold under `docs/context/`; link writes pointer files with 3–5 line extracted summaries; critique applies bloat-detection. → [layer-1-context.md](references/layer-1-context.md)
+- **Step 5 — Layer 2 (Skills).** Procedural memory. Default typically **skip** or **critique** via `review:skill-quality-auditor`. → [layer-2-skills.md](references/layer-2-skills.md)
+- **Step 6 — Layer 3 (Orchestration).** Handoffs across PM tools. Default **link** when PM tool detected, **skip** when <3 skills. → [layer-3-orchestration.md](references/layer-3-orchestration.md)
+- **Step 7 — Layer 4 (Rubrics).** Default from `rubric-recommender`: if AI-docs > 200 lines → **critique + extract** via `review:rubric-extractor` (batch ≤5); else **scaffold** starter trio. `rubric-applier` (apply-mode) is `/hd:review critique` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
+- **Step 8 — Layer 5 (Knowledge).** Default from Phase A's L5 auditor; deep critique re-uses `analysis:rule-candidate-scorer` (solo) when `has_plans_convention`. → [layer-5-knowledge.md](references/layer-5-knowledge.md)
 
 ## Step 9 — Write `hd-config.md`
 
@@ -193,7 +176,13 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Sub-agents invoked
 
-- `design-harnessing:workflow:harness-health-analyzer` — deep narrative analysis (Step 1 optional)
-- `design-harnessing:analysis:rule-candidate-scorer` — L5 cluster scoring (Step 8 critique)
-- `design-harnessing:review:skill-quality-auditor` — L2 skill audit (Step 5 critique)
-- `design-harnessing:review:rubric-applicator` — L4 rubric application (Step 7 critique)
+Fully-qualified `design-harnessing:<category>:<agent>` Task names only (compound 2.35.0). Each parallel batch stays ≤5 (compound v2.39.0).
+
+- **Phase A Batch 1** — `analysis:harness-auditor` × 5 (one per layer, `scenario: setup-pre-analysis`)
+- **Phase A Batch 2** — `analysis:rubric-recommender` (scenario: setup-pre-analysis)
+- **Step 3** — `research:lesson-retriever` (solo, topic: tool-discovery)
+- **Step 5 critique** — `review:skill-quality-auditor` (solo or batch ≤5)
+- **Step 7 critique+extract** — `review:rubric-extractor` (batch ≤5 across AI-doc targets)
+- **Step 8 critique** — `analysis:rule-candidate-scorer` (solo, when `has_plans_convention`)
+
+`review:rubric-applier` is NOT dispatched here — `/hd:review critique` owns apply-mode.

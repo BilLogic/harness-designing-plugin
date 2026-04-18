@@ -110,6 +110,12 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 - **Does not access the user's repo state** (no reads of their `docs/` etc.)
 - **Does not invoke other skills directly** — always suggest, never invoke
 
+## Sub-agents invoked
+
+Fully-qualified Task names only (compound 2.35.0 convention).
+
+- `design-harnessing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus
+
 ## Reference files
 
 - [concept-overview.md](references/concept-overview.md) — the framework in 200 words
