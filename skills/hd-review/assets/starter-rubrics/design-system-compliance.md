@@ -79,6 +79,54 @@ Semantic names decouple values from meaning; supports theming (light/dark) and f
 **Example pass:** `--text-primary: #1A1A1A; --text-muted: #666;`
 **Example fail:** `--gray-900: #1A1A1A; --gray-500: #666;` — used directly as text colors.
 
+## Managed-DS pre-fills
+
+When `detect.py` reports a managed design-system (`managed_design_system: "ant-design" | "chakra" | "mui" | "mantine"`), apply the matching sub-block below **in addition to** the generic criteria above. These are DS-specific supplements, not replacements. Source: caricature pilot (AntD), lightning pilot (AntD), Phase 3e plan.
+
+<details>
+<summary><strong>ant-design (v5 / v6)</strong></summary>
+
+- **Theme-token names over hex literals** — design references cite `theme.token.colorPrimary`, `colorText`, `colorBgContainer`, etc., not hex values. (severity: p2)
+- **Single `<ConfigProvider theme={...}>` at root** — theme is set once at the app shell, not per-component or per-page. (severity: p2)
+- **v5 ↔ v6 mixing flagged** — codebase on AntD v5 must not import v6-only APIs (and vice-versa); breaking API changes cause silent visual regressions. (severity: p1)
+- **No raw `.ant-*` className overrides** — component customization goes through `theme.components.<Component>.token` or `ConfigProvider` algorithm, not global CSS targeting `.ant-btn`. (severity: p1)
+
+*Detection hook:* `grep -rE "(#[0-9a-fA-F]{3,8})" src/ | grep -v "theme\\.token"` — hex literals outside theme config; `grep -rE "\\.ant-[a-z-]+\\s*\\{" src/` — raw AntD class overrides.
+</details>
+
+<details>
+<summary><strong>chakra-ui</strong></summary>
+
+- **`useColorMode` hook for theme toggling** — no manual `document.documentElement.classList.toggle("dark")` or direct DOM manipulation. (severity: p1)
+- **Tokens from `@chakra-ui/system` theme object** — spacing / color / radius values pulled from the theme, not hardcoded. (severity: p2)
+- **Style props over `css={}` for reusable patterns** — prefer Chakra's style-prop API (`<Box p={4} bg="gray.100">`) over emotion `css={}` for consistency and theme-awareness. (severity: p3)
+- **Theme extended via `extendTheme({...})`** — no global CSS overrides; customization lives in the theme object. (severity: p2)
+
+*Detection hook:* `grep -rE "classList\\.(add|toggle|remove)\\(['\"]dark" src/` — manual dark-mode toggle; `grep -rE "css=\\{\\{[^}]*(padding|margin|color):" src/` — inline CSS where style props suffice.
+</details>
+
+<details>
+<summary><strong>mui (Material UI)</strong></summary>
+
+- **Single `<ThemeProvider theme={...}>` at root** — no per-page or nested ThemeProviders with divergent themes. (severity: p2)
+- **`styled()` from `@mui/material/styles` over inline `sx=` for reused styles** — `sx` is fine for one-offs; anything reused across components should be a `styled()` component. (severity: p3)
+- **`theme.palette.*` tokens in `sx` — no hex literals** — `sx={{ color: theme.palette.primary.main }}` not `sx={{ color: "#1976d2" }}`. (severity: p2)
+- **No remaining `makeStyles` / JSS in v5+** — v5 → v6 migration requires removing legacy JSS; `makeStyles` is deprecated and breaks SSR + strict mode. (severity: p1)
+
+*Detection hook:* `grep -rE "makeStyles|createStyles" src/` — legacy JSS; `grep -rE "sx=\\{\\{[^}]*#[0-9a-fA-F]{3,8}" src/` — hex in `sx` prop.
+</details>
+
+<details>
+<summary><strong>mantine</strong></summary>
+
+- **Single `<MantineProvider theme={...}>` at root** — provider wraps the app once; no nested providers. (severity: p2)
+- **CSS-variable tokens in custom styles** — use `var(--mantine-color-blue-6)`, `var(--mantine-spacing-md)` in custom CSS rather than duplicating literal values. (severity: p2)
+- **`rem()` / `em()` helpers for spacing** — no bare `px` values in component styles; Mantine's size helpers keep rhythm consistent across density modes. (severity: p3)
+- **`useMantineTheme()` for JS theme access** — don't duplicate token values in JS; read them from the hook. (severity: p3)
+
+*Detection hook:* `grep -rE "(padding|margin|gap):\\s*\\d+px" src/` — bare px values in component styles; `grep -rE "var\\(--mantine-" src/` — confirms CSS-variable usage (low count = probable drift).
+</details>
+
 ## Extending this rubric
 
 The core criteria apply to most design systems. Customize by:
