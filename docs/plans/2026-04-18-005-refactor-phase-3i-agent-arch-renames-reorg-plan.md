@@ -1,7 +1,7 @@
 ---
 title: "Phase 3i — agent architecture, skill renames, memory-term rename, reference reorg, README rewrite"
 type: refactor
-status: active
+status: completed
 date: 2026-04-18
 ---
 

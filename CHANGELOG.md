@@ -5,6 +5,57 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3i — agent architecture, skill renames, memory-term rename, reference reorg, README rewrite
+
+Completed per [`docs/plans/2026-04-18-005-refactor-phase-3i-agent-arch-renames-reorg-plan.md`](docs/plans/2026-04-18-005-refactor-phase-3i-agent-arch-renames-reorg-plan.md). Eleven work units. Origin: six rounds of in-session design dialogue 2026-04-18.
+
+**3i.0 — Repo pollution fix** (history rewrite via `git filter-repo`): stripped a `Desktop/Vibe Coding/Lightning/README.md` path dragged in from the shared home-dir git repo. 70 commits → 67 after empty-commit prune. Force-pushed to `dh/main` + `dh/claude/elegant-euclid`. Safety tag `backup/pre-3i-0-2026-04-18` preserved locally.
+
+**3i.1 — Skill renames** (breaking; unpublished):
+- `skills/hd-onboard/` → `skills/hd-learn/`, frontmatter `name: hd:onboard` → `hd:learn`.
+- `skills/hd-compound/` → `skills/hd-maintain/`, frontmatter `name: hd:compound` → `hd:maintain`.
+- 41 living files swept. `compound-engineering` mentions preserved verbatim (16 total).
+
+**3i.2 — Memory-term rename to "rules"**: `graduation` / `graduated` → `rule` / `rules`. `graduation_candidate` → `rule_candidate`. `/hd:maintain` modes `graduate-propose` / `graduate-apply` → `rule-propose` / `rule-apply`. `AGENTS.md § Graduated rules` → `§ Rules`. `docs/knowledge/graduations.md` deleted (adoption events flow into `changelog.md` as temporal events). 44 files, 89-pattern sed + 7 narrative hand-edits. File renames: `graduation-candidate-scorer.md` → `rule-candidate-scorer.md`, `graduation-criteria.md` → `rule-adoption-criteria.md`, `graduation-entry.md.template` → `rule-entry.md.template`.
+
+**3i.3 — Agent reorg part 1**:
+- Split `agents/review/rubric-applicator.md` (303 lines, two modes) → `rubric-applier.md` (109 lines, apply-only) + `rubric-extractor.md` (257 lines, extract-only). All H1/H2/H3 pins from 3h preserved in `rubric-extractor.md` verbatim.
+- Deleted `agents/workflow/harness-health-analyzer.md` (superseded by new `harness-auditor`).
+- Dropped `agents/workflow/` directory. Three categories remain: `analysis/`, `research/`, `review/`.
+- AGENTS.md repo-layout tree updated.
+
+**3i.4 — New agents** (3 new in `agents/analysis/`):
+- `harness-auditor.md` (140 lines, desc 171 chars): `layer: 1|2|3|4|5` param, `scenario: audit|setup-pre-analysis`, `mode: full|quick`. Dispatched 5× parallel by `/hd:review audit` Batch 1 and reused by `/hd:setup` Phase A.
+- `rubric-recommender.md` (124 lines, desc 161 chars): ranks which starters to scaffold or flag as gaps from `detect.py` signals + `package.json` + existing rubric set.
+- `coexistence-analyzer.md` (155 lines, desc 161 chars): all-tools coexistence report (`.agent/`, `.claude/`, `.codex/`, compound-engineering). Existence + metadata only; never reads external skill bodies.
+
+**3i.5 — Skill rewire (parallel dispatch + context isolation)**:
+- `/hd:review audit` 2-batch parallel: BATCH 1 = `harness-auditor × 5`; BATCH 2 = `rubric-recommender` + `lesson-retriever` + optional `coexistence-analyzer`. Parallel→serial auto-switch at 6+ (per compound v2.39.0); our design stays ≤5 per batch.
+- `/hd:setup` NEW **Phase A** (parallel pre-analysis, between Step 2 and Step 3): `harness-auditor × 5` + `rubric-recommender` pre-compute per-layer proposals before Phase B interactive walk.
+- `/hd:maintain rule-propose` dispatches `rule-candidate-scorer` then conditional `rubric-extractor` if source lesson has ≥4 imperatives.
+- All 4 SKILL.md ≤200 lines; budget-check clean.
+
+**3i.6 — hd-setup reference reorg 16 → 9**: merged 5 `step-N-*.md` + `good-agents-md-patterns.md` + `tier-budget-model.md` into the 5 `layer-N-*.md` files (each now concept + procedure + depth). Seven files deleted.
+
+**3i.7 — hd-review audit-criteria split 1 → 7**: monolithic `audit-criteria.md` split into `audit-criteria-l1-context` through `-l5-knowledge`, plus `-coexistence` and `-budget`. Enables per-layer context isolation during parallel `harness-auditor` dispatch. 45 criteria preserved across the splits.
+
+**3i.8 — Rubric scope-and-grounding**: added `## Scope & Grounding` section (personas, user stories, realistic scenarios, anti-scenarios, each grounded in source material) to all 14 starters. NEW `skills/hd-review/references/rubric-authoring-guide.md` (50 lines) documents the 4-block schema + `rubric-applier` consumption contract + authoring checklist.
+
+**3i.9 — README rewrite**: 13 sections, 162 lines. Name: "Harness Designing Plugin" (matches GitHub repo). Thesis + 5-layer memory-type table preserved. NEW Credits section with hyperlinks (compound-engineering: [@dhh](https://twitter.com/dhh), [@kieranklaassen](https://twitter.com/kieranklaassen); [pbakaus/impeccable](https://github.com/pbakaus/impeccable) [@paulbakaus](https://twitter.com/paulbakaus); Nielsen Norman Group; Material 3; Fluent 2; Anthropic). No marketing adjectives. Tables-first. Internal `design-harnessing:` namespace unchanged.
+
+**3i.10 — `/every-style-editor` pass + flag resolutions**:
+- Auto-applied: 2 hyphen → en-dash fixes (`1-5` → `1–5`) for numeric ranges.
+- Flag A: fixed `hd-review/SKILL.md` rubric count 12 → 14 + added `telemetry-display` and `i18n-cjk` to the starter enumeration (omitted since Phase 3e E3).
+- Flag B: fixed `hd-learn/SKILL.md` FAQ grammar artifact from the 3i.2 sed rename ("write a lesson as a rule into a rule" → "promote a lesson into a rule").
+
+**Post-Phase-3i state:**
+- 4 skills: `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review`. All SKILL.md ≤200 lines.
+- 9 agents across 3 categories (`analysis/` 4, `research/` 2, `review/` 3).
+- 14 starter rubrics, each with `## Scope & Grounding`.
+- 3 scripts (`detect.py`, `compute-plan-hash.sh`, `budget-check.sh`).
+- Budget-check: violations 0; Tier-1 198/200.
+- Repo history clean on `dh/main`.
+
 ### Phase 3h — cosmetic pins (extract-mode drift axes)
 
 Completed per [`docs/plans/2026-04-18-004-refactor-phase-3h-cosmetic-pins-plan.md`](docs/plans/2026-04-18-004-refactor-phase-3h-cosmetic-pins-plan.md). Single file, single commit. Closes the 3 surface-drift items from the Phase 3g G6 true-two-session regression.
