@@ -31,7 +31,7 @@ Layer 3 requires at least one Layer 2 skill to orchestrate. `hd:setup` blocks La
 
 ## What does NOT belong here
 
-- **Single-skill procedures** — those are in the skill's own `workflows/` subdir, not Layer 3
+- **Single-skill procedures** — those live inline in the skill's `SKILL.md` or in `references/<mode>-procedure.md`, not Layer 3.
 - **The skill definitions themselves** — those are Layer 2
 - **Why we chose this workflow** — that's a Layer 5 lesson
 

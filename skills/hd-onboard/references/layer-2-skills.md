@@ -11,7 +11,7 @@ Reusable capabilities your harness offers. A **skill** is a named, versioned pie
 - A single job ("review this design against our rubric")
 - A clear trigger ("when a PR touches UI")
 - Bounded scope (not a catch-all)
-- Its own `references/` / `workflows/` / `templates/` / `scripts/` per progressive disclosure
+- Its own `references/` / `templates/` / `scripts/` per progressive disclosure
 
 ## Examples of real skills
 

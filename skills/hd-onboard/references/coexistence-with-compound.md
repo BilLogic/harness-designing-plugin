@@ -53,7 +53,7 @@ This plug-in's *structure* mirrors compound's verbatim where it makes sense:
 
 - `.claude-plugin/plugin.json` manifest format
 - SKILL.md router pattern with `name: hd:verb` exposing as `/hd:verb`
-- `references/` / `workflows/` / `templates/` / `scripts/` skill subdir convention
+- `references/` / `templates/` / `scripts/` skill subdir convention
 - Keep-a-changelog CHANGELOG format
 - `AGENTS.md` as canonical contributor doc
 

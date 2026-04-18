@@ -132,9 +132,11 @@ Full checklist (YAML frontmatter rules, reference-link rules, budgets, writing s
 When describing skill components, use these exact verbs:
 
 - **`references/`** = READ (loaded into context on demand)
-- **`workflows/`** = FOLLOW (step-by-step procedures)
 - **`templates/`** = COPY + FILL (scaffolding files for user's repo)
 - **`scripts/`** = EXECUTE (bash/python tools; output consumed, source not loaded)
+- **`assets/`** = ASSETS (templates + starters + skeletons; referenced by skill logic)
+
+Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `audit-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills graduate to sub-agents in `agents/<category>/`.
 
 ## Skill authoring references
 
