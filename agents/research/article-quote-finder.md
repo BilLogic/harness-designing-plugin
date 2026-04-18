@@ -17,17 +17,34 @@ Return verbatim article quotes with section citations for a given concept questi
 
 ## Expected sources
 
-The Substack article series lives across multiple posts + source drafts. Known local copies and canonical URLs are documented in the user's `hd-config.md` under `article_sources:` if configured. If not configured, ask the calling skill; do NOT guess URLs.
+Source list comes from two places, merged in this order:
 
-Typical sources:
-- `article_part_1_thesis` — §1 (why this matters), §2 (five-layer overview), §2.5 (memory taxonomy)
-- `article_part_2_layers` — §4a Context, §4b Skills, §4c Orchestration, §4d Rubrics, §4e Knowledge
-- `article_part_3_practice` — §5 case study, §6 scaling, §7 open questions
+1. **Default corpus** — `agents/research/article-quote-finder-corpus.md` (this repo). Always read first. While the article series is pre-publication, rows carry the `{{TBD}}` sentinel.
+2. **User overrides** — `hd-config.md` in the caller's repo, under `article_sources:`. User values WIN on key collision; new keys are appended to the resolved set.
+
+Typical source keys (corpus rows + common overrides):
+- `article_part_1_thesis` / `introduction_thesis` — §1 why-this-matters, §2 five-layer overview, §2.5 memory taxonomy
+- `layer_1_context` through `layer_5_knowledge` — per-layer deep dives
+- `article_part_3_practice` — §5 case study, §6 scaling, §7 open questions (if user configures)
+
+Never guess URLs. Never fabricate quotes.
 
 ## Procedure
 
 ### Phase 1: resolve source paths
-Read `hd-config.md` for `article_sources`. If absent, the calling skill should provide local paths or URLs via `article_sources` input. If still none → return empty + note.
+1. Read `agents/research/article-quote-finder-corpus.md` — parse its corpus table into `{section → url}`.
+2. Read `hd-config.md` for `article_sources` (if present). Merge: user keys override corpus keys with the same section; new user keys are appended.
+3. **Sentinel filter:** drop any entry whose URL equals `{{TBD}}` (the corpus placeholder) and has no user override.
+4. If the resolved set is empty after filtering → emit the graceful empty response below and exit.
+
+#### Graceful empty response (no valid URLs)
+
+```yaml
+concept_question: "<original question>"
+quotes: []
+corpus_status: "not-configured"
+note: "Article corpus has placeholder URLs (article series publication TBD). To populate, either update agents/research/article-quote-finder-corpus.md OR add article_sources to your hd-config.md. See skills/hd-onboard/references/ for offline concept content in the meantime."
+```
 
 ### Phase 2: locate relevant § sections
 Match `concept_question` keywords to section headings. Load ONLY the matching section(s) of the article (not the full corpus — progressive disclosure).
@@ -71,7 +88,9 @@ summary:
   notes: null
 ```
 
-If sources aren't available or don't contain relevant material, return empty `quotes[]` + `summary.notes: "no article source available — answer from concept references instead"`.
+If sources resolve but don't contain relevant material, return empty `quotes[]` + `summary.notes: "no article source available — answer from concept references instead"`. If sources don't resolve at all (all `{{TBD}}`, no overrides), emit the `corpus_status: not-configured` shape from Phase 1 instead.
+
+**Never invent quotes.** If retrieval fails or returns nothing, return empty — do not fabricate citations, section numbers, or verbatim text.
 
 ## Coexistence / security
 
@@ -85,6 +104,7 @@ For the 10 FAQ questions in `skills/hd-onboard/references/faq.md`, the answers +
 
 ## Failure modes
 
-- Sources not configured → empty return + instruction for the calling skill
+- Sources not configured (all `{{TBD}}`, no `hd-config.md` override) → emit `corpus_status: not-configured` empty response from Phase 1
+- Corpus file missing → treat as empty corpus; fall through to `hd-config.md` overrides only; if still empty, emit same graceful empty response
 - Network failure (URL fetch) → return any quotes already extracted + note the failed source
 - Verbose output (>1000 chars of quote) → truncate each quote to 3 sentences max
