@@ -33,12 +33,12 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 │   │   └── rule-candidate-scorer.md
 │   ├── research/
 │   │   ├── lesson-retriever.md
-│   │   └── article-quote-finder.md
-│   ├── review/
-│   │   ├── skill-quality-auditor.md
-│   │   └── rubric-applicator.md
-│   └── workflow/
-│       └── harness-health-analyzer.md
+│   │   ├── article-quote-finder.md
+│   │   └── article-quote-finder-corpus.md
+│   └── review/
+│       ├── skill-quality-auditor.md
+│       ├── rubric-applier.md
+│       └── rubric-extractor.md
 │
 └── skills/
     ├── hd-learn/                # LEARN (Q&A)
@@ -85,7 +85,6 @@ Categories mirror compound's convention (with some of ours):
 - `analysis/` — deterministic analysis (scoring, clustering)
 - `research/` — retrieval + citation finding
 - `review/` — rubric application + quality checks
-- `workflow/` — procedural helpers that span multiple skills
 
 **Invocation convention from skills:** fully-qualified Task names only. From inside our skills:
 ```

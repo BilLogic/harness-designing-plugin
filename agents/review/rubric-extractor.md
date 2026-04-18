@@ -1,107 +1,30 @@
 ---
-name: rubric-applicator
-description: "Applies any rubric (starter or user-defined) to one work item; returns structured severity findings + fixes. Use from hd:review critique when rubric isn't skill-quality."
+name: rubric-extractor
+description: "Extract implicit rubric rules from a source file; returns candidate rule list with severity + source citations. Used by /hd:setup L4 critique+extract and /hd:maintain rule-propose."
 color: orange
 model: inherit
 ---
 
-# rubric-applicator
+# rubric-extractor
 
-Apply one rubric to one work item. Return structured findings. Generic wrapper — the rubric file itself defines what to check; this agent orchestrates loading + applying + formatting.
+Run *inverted* rubric analysis: given an AI-doc with implicit rubric content (AGENTS.md, copilot-instructions.md, team convention docs), surface rule-like statements as candidate rubric criteria for a calling skill to materialize.
 
-Typical examples: `accessibility-wcag-aa` on a design file, `design-system-compliance` on CSS, `interaction-states` on a view component. For SKILL.md critique, use `skill-quality-auditor` instead (specialized logic).
+The calling skill (e.g. `hd:setup` Layer 4, `hd:maintain` rule-propose) presents candidates to the user, gets per-candidate approval, and materializes files from starter shapes. **This agent never writes files** — it returns candidates only.
 
-In `mode: extract` the agent runs *inverted*: given an AI-doc with implicit rubric content (AGENTS.md, copilot-instructions.md, team convention docs), surface rule-like statements as candidate rubric criteria for a calling skill to materialize.
+**Used by:** `hd:setup` Layer 4 "critique + extract" default when `has_ai_docs` + combined size > 200 lines; `hd:maintain` rule-propose.
 
 ## Parameters
 
-| Parameter | Required | Applies to | Description |
-|---|---|---|---|
-| `mode` | yes | both | `apply` (default) \| `extract` |
-| `source` | yes | both | In `apply`: path to the work item being critiqued (a.k.a. legacy `work_item_path`). In `extract`: path to the AI-doc being scanned (e.g. `AGENTS.md`, `.github/copilot-instructions.md`). |
-| `rubric_path` | yes (apply) | apply | Path to rubric definition file. |
-| `target_rubric_name` | yes (extract) | extract | Kebab-case name the calling skill wants the extracted rubric filed under (e.g. `plus-uno-forbidden-patterns`). Echoed in output metadata only — this agent does not write files. |
-| `output_dir` | no | extract | Informational only — where the calling skill intends to place materialized output. Agent echoes in output metadata. |
-| `output_shape` | no | extract | `yaml` (default) \| `markdown`. `yaml` emits a structured `extracted_candidates:` block for programmatic consumers. `markdown` emits a ready-to-paste starter-rubric-shape file. |
-| `rubric_overrides` | no | apply | Per-criterion severity overrides (typically from `hd-config.md`). |
-
-Legacy alias: older `apply`-mode callers pass `work_item_path` + `rubric_path`. Treat `work_item_path` as `source` when `mode: apply`.
-
-## Two modes
-
-### `mode: apply` (default — forward critique)
-
-Apply a known rubric to a work item. Produce findings that score the work item against the rubric's criteria. See "Procedure — apply mode" below (Phases 1–5).
-
-### `mode: extract` (inverse — find implicit rubrics)
-
-Read the source AI-doc, identify rule-like / check-like statements that could become explicit rubric criteria, and return them as structured candidates. **Used by:** `hd:setup` Layer 4 "critique + extract" default when `has_ai_docs` + combined size > 200 lines.
-
-The calling skill (`hd:setup`) presents candidates to the user, gets per-candidate approval, and materializes files from starter shapes. **This agent never writes files** — it returns candidates only. See "Procedure — extract mode" below (Phases 1–5).
+| Parameter | Required | Description |
+|---|---|---|
+| `source` | yes | Path to the AI-doc being scanned (e.g. `AGENTS.md`, `.github/copilot-instructions.md`). |
+| `target_rubric_name` | yes | Kebab-case name the calling skill wants the extracted rubric filed under (e.g. `plus-uno-forbidden-patterns`). Echoed in output metadata only — this agent does not write files. |
+| `output_dir` | no | Informational only — where the calling skill intends to place materialized output. Agent echoes in output metadata. |
+| `output_shape` | no | `yaml` (default) \| `markdown`. `yaml` emits a structured `extracted_candidates:` block for programmatic consumers. `markdown` emits a ready-to-paste starter-rubric-shape file. |
 
 ---
 
-## Procedure — apply mode
-
-### Phase 1: load rubric
-Read the rubric file. Parse:
-- YAML frontmatter: `rubric` name, `applies_to:` list, `severity_defaults`
-- Body: criteria sections. Each criterion has a **check** (what to look for), a **default severity**, and usually pass/fail examples.
-
-### Phase 2: verify applicability
-If `applies_to:` list doesn't include this work item's shape (e.g., rubric is for `design-file` and work item is a `.py` file), abort with `error: "rubric not applicable to this work item type"`.
-
-### Phase 3: read work item
-Load the target file. If the work item is a URL (Figma design file, etc.), use the appropriate MCP if available (figma-mcp for Figma files); otherwise abort with a note.
-
-### Phase 4: apply each criterion
-
-For each criterion in the rubric:
-1. Check the work item for compliance
-2. If non-compliant, produce a finding with:
-   - `criterion` — name from rubric
-   - `severity` — rubric default, potentially overridden
-   - `evidence` — file:line or exact quote showing the violation
-   - `suggested_fix` — concrete actionable change
-3. If compliant, no finding (silent pass)
-
-### Phase 5: aggregate
-Count findings by severity. Compute a composite verdict:
-- `critical_fail` — ≥ 1 p1 finding
-- `degraded` — ≥ 2 p2 findings
-- `healthy` — otherwise
-
-### Output — apply mode
-
-```yaml
-work_item: src/components/Button.tsx
-rubric: design-system-compliance
-rubric_path: skills/hd-review/assets/starter-rubrics/design-system-compliance.md
-composite: degraded
-findings:
-  - criterion: "approved-color-tokens"
-    severity: p1
-    evidence: "Button.tsx:24 — color: #0060FF (not in approved token set)"
-    suggested_fix: "Replace with var(--text-primary) or #0051FF if that color is intended"
-  - criterion: "approved-spacing"
-    severity: p2
-    evidence: "Button.tsx:31 — padding: 13px (off 8-point grid)"
-    suggested_fix: "Use var(--space-2) = 8px or var(--space-3) = 12px"
-  - criterion: "variant-within-approved-set"
-    severity: p1
-    evidence: "Button.tsx:8 — variant='primary-gradient' (not in approved set: primary, secondary, ghost)"
-    suggested_fix: "Either use an approved variant OR start an RFC to add 'primary-gradient' to the design system"
-summary:
-  total_findings: 3
-  p1_count: 2
-  p2_count: 1
-  p3_count: 0
-  recommendation: "Fix 2 p1 findings before merge. p2 is cleanup."
-```
-
----
-
-## Procedure — extract mode
+## Procedure
 
 Five numbered phases. Each has an **input**, an **output**, and a small worked example the agent can pattern-match against. Run phases in order; do not skip.
 
@@ -268,11 +191,10 @@ Emit one candidate per cluster.
 
 Regardless of shape, this agent **does not write files** — return content as the tool response; the calling skill owns the file-write step.
 
-### Output — extract mode
+### Output
 
 ```yaml
 source: AGENTS.md
-mode: extract
 target_rubric_name: team-forbidden-patterns
 output_shape: yaml
 extracted_candidates:
@@ -311,30 +233,25 @@ summary:
 
 ## Coexistence / security
 
-- READ-ONLY. Never modifies the work item OR the rubric OR the source AI-doc.
-- In `extract` mode: **never writes files** — output is returned to the calling skill, which owns materialization.
-- When the work item requires MCP access (Figma, Notion), only uses MCPs the calling skill provides access to — NEVER accesses the plug-in maintainer's own MCPs.
-- Scope is strictly the source/work item + the rubric (apply mode).
+- READ-ONLY. Never modifies the source AI-doc.
+- **Never writes files** — output is returned to the calling skill, which owns materialization.
+- When source access requires MCP (Notion, etc.), only uses MCPs the calling skill provides access to — NEVER accesses the plug-in maintainer's own MCPs.
+- Scope is strictly the source file.
 
 ## When NOT to use this agent
 
-- For **SKILL.md critique** — use `skill-quality-auditor` instead (specialized logic for YAML frontmatter parsing, per-section severity handling).
-- For **harness-wide audit** — use `hd:review audit` which dispatches this agent per-rubric.
-- For **non-rubric review** (e.g., "just tell me if this is ok") — that's a direct user conversation, not a rubric-applicator job.
+- For **applying a known rubric to a work item** — use `rubric-applier` instead.
+- For **SKILL.md critique** — use `skill-quality-auditor` instead.
 - For **writing the extracted rubric file to disk** — that's the calling skill's job (e.g., `hd:setup` Layer 4). This agent returns structured candidates or markdown content only.
 
 ## Failure modes
 
-- `rubric_path` missing (apply mode) → `error: "rubric not found"`
-- `source` / `work_item_path` missing → `error: "source not found"`
-- Rubric's `applies_to:` doesn't include work-item shape (apply mode) → `error: "rubric not applicable"`
-- Work item / source very large (>5000 lines) → apply/scan per-section; return partial results + note
-- MCP required for work item but unavailable → abort with clear error naming which MCP
-- Extract mode on a source with zero rule-like statements → return `extracted_candidates: []` with `recommendation: "no rule-like content detected; source may be narrative-only"`
+- `source` missing → `error: "source not found"`
+- Source very large (>5000 lines) → scan per-section; return partial results + note
+- MCP required for source but unavailable → abort with clear error naming which MCP
+- Source with zero rule-like statements → return `extracted_candidates: []` with `recommendation: "no rule-like content detected; source may be narrative-only"`
 
 ## See also
 
-- `skills/hd-review/references/rubric-application.md` — general rubric-application protocol
-- `skills/hd-review/references/critique-format.md` — apply-mode output shape
 - `skills/hd-review/assets/starter-rubrics/` — shipped starter rubrics (inventory used by Phase 2)
 - `docs/knowledge/lessons/2026-04-18-extract-mode-first-fire.md` — origin gap-report that drove the extract-mode procedure
