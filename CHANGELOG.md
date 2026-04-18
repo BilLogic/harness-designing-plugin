@@ -5,6 +5,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3f — skill-test findings
+
+Completed per [`docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-plan.md`](docs/plans/2026-04-18-002-refactor-phase-3f-skill-test-findings-plan.md). Batches findings from 3 parallel skill-test audits (hd-onboard, hd-compound, hd-review + 6 sub-agents) + the Phase 3e E5 synthetic extract-mode first-fire. Six F-units + regression + doc sync.
+
+**F1 — Agent description trimming** (`7a419d16`): all 6 sub-agent frontmatter `description:` fields trimmed to ≤180 chars (range was 237–352; now 166–179). Expository content moved into system-prompt bodies; no information loss.
+
+**F3 — hd-onboard FAQ polish** (`bd1bb037`):
+- `faq.md`: +3 Q&A entries (Q11 "Why five layers specifically?" defending arity via memory-mechanism distinctness; Q12 ".agent/ / CLAUDE.md coexistence" citing 2026-04-18 graduated rules; Q13 "customizing starter rubrics" with 3 paths).
+- `memory-taxonomy.md`: added "Derivative types" section with speculative + temporal entries; top-of-file clarifying sentence ("4 classical + 2 derivative"). Original 4-type table preserved verbatim.
+
+**F4 — `budget-check.sh` rewrite** (`0d7ae491`): 153 → 178 lines. All JSON construction via `jq -n` (17 invocations); `yq` dependency fully removed (grep -c yq = 0); `set -euo pipefail`; paths always quoted; edge-case guards for empty skill dirs, missing SKILL.md, missing description, quoted vs unquoted YAML values. Dead first loop deleted. `bash -n` passes; emits valid JSON; exit 0 healthy / exit 1 on violations.
+
+**F6 — Legacy `workflows/` ref cleanup** (`b955476c`): 7 refs across hd-review + hd-setup references replaced with `../SKILL.md#anchor` pointers. 1 ref in `hd-setup/references/layer-3-orchestration.md` preserved as illustrative user-repo example tree. Post-change: 0 in-scope hits. Extends Phase 3e E6.3 (hd-compound-only) to the rest of the plug-in.
+
+**F2 — `rubric-applicator` extract-mode ship-blocker fixes** (`7949621f`): closes 4 p1 gaps from E5 first-fire lesson. File grew 143 → 303 lines.
+- F2.1 Phase 1–5 explicit procedure (Scan → Classify → Structure → Dedupe → Materialize) with worked examples.
+- F2.2 3-prong rule-detection heuristic (imperative verb allowlist / numbered-list-under-titled-heading ≥8 words / inline severity/rule/policy frontmatter) + explicit discard list.
+- F2.3 Severity keyword map (4 rows); required `severity_rationale:` field; first-hit-wins.
+- F2.4 Anti-fabrication attribution contract: `pass_example`/`fail_example` use sentinel strings when source lacks explicit examples; `applies_to` must cite `<file> § <heading>`; new required `source_citation: <file>:<line-range>` field.
+- New `## Parameters` section documents `output_shape: yaml|markdown` (new). Apply-mode preserved verbatim.
+
+**F2 regression** (`2e0db704`): re-ran E5 synthetic test against plus-uno AGENTS.md twice. 7/7 byte-stable axes (candidate count, IDs, severity distribution, attribution presence, zero fabrication). All 4 p1 gaps verified closed. **Ship verdict: SHIP** for extract-mode. Residual: rule_statement prose paraphrasing not pinned (p2/p3); materialized output wants ~10min human editing pass to add concrete examples where source lacks them.
+
+**F5 — SKILL.md slimming** (`f0443e31`): brought hd-review + hd-compound under 200-line soft cap per skill-quality rubric §5.
+- `hd-review/SKILL.md` 331 → **144**
+- `hd-compound/SKILL.md` 311 → **124**
+- 5 new reference files house per-mode procedures: `{audit,critique}-procedure.md` (hd-review), `{capture,propose,apply}-procedure.md` (hd-compound).
+- Critical Phase 3e E6 preservations verified: `compute-plan-hash.sh` invocations, `.hd/propose-<hash>.json` persistence, capture date-slug convention.
+- Kept in SKILL.md: workflow checklists (runtime progress boxes), protected-artifacts block, interaction preamble, compact-safe mode. Cross-link integrity verified.
+- `hd-setup/SKILL.md` at 407 lines remains over cap — slimming parked for 3g (F5 scope excluded it).
+
+Budget-check post-Phase-3f: 3/4 SKILL.md files pass soft cap (124 / 124 / 144); only hd-setup (407) flagged.
+
+**Deferred to Phase 3g:**
+- `hd-setup/SKILL.md` slimming (407 → <200)
+- `article-quote-finder` article corpus (happy path still unreachable)
+- `detect.py` MCP user-level scoping
+- `harness-health-analyzer mode: quick` dispatch wiring
+- `workflows/` vocabulary reconciliation in `hd-onboard/references/` + AGENTS.md semantic-split section
+- True two-session (not same-turn-simulated) F2 regression as confidence booster
+
 ### Phase 3e — pilot consolidation (6-repo matrix)
 
 Completed per [`docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md`](docs/plans/2026-04-18-001-refactor-phase-3e-pilot-consolidation-plan.md). Findings from 4 new parallel pilots (caricature, oracle-chat, lightning, plus-uno) combined with prior pilots (sds, plus-marketing) consolidated in [`docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md`](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md).

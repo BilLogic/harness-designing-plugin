@@ -1,7 +1,7 @@
 ---
 title: "Phase 3f — skill-test findings: agent desc trimming, extract-mode p1 fixes, hd-onboard polish, budget-check rewrite, legacy cleanup"
 type: refactor
-status: active
+status: completed
 date: 2026-04-18
 origin: docs/knowledge/lessons/2026-04-18-extract-mode-first-fire.md
 ---
