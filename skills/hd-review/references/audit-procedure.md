@@ -9,6 +9,12 @@ loaded_by: hd-review
 
 Step-by-step procedure for `/hd:review audit`: load agent list from `hd-config.md`, dispatch review sub-agents (parallel or serial), synthesize findings cross-checked against protected artifacts, and write a single dated harness-audit lesson. Invoked by the audit-mode workflow checklist in `../SKILL.md`.
 
+## Inputs
+
+- `mode` — `"full"` (default) | `"quick"`. Parsed from the `/hd:review audit mode:<value>` invocation. If unspecified, defaults to `"full"`.
+
+If `mode: "quick"`, jump to [§ Mode: quick](#mode-quick) below; otherwise continue with the full procedure.
+
 ## Steps
 
 **Step 1 — Load agent list.** Read `hd-config.md` YAML frontmatter field `review_agents`. Expected format:
@@ -149,3 +155,48 @@ Next step:
 ```
 
 → Return to [../SKILL.md § audit-mode](../SKILL.md#audit-mode)
+
+## Mode: quick
+
+A ~30s preflight scan. Only signals from `detect.py` JSON and `hd-config.md` contents — no deep file reads (no walking SKILL.md bodies, no full lesson-corpus scan, no per-skill rubric dispatch). Useful as a pre-flight before a full audit, or as a CI check.
+
+**Steps (quick mode):**
+
+1. **Run `detect.py`** — capture JSON output:
+
+   ```bash
+   python skills/hd-setup/scripts/detect.py > /tmp/hd-detect.json
+   ```
+
+2. **Read `hd-config.md`** — frontmatter only (no body drill-down).
+
+3. **Dispatch harness-health-analyzer in quick mode** — with a smaller budget:
+
+   ```
+   Task design-harnessing:workflow:harness-health-analyzer(
+     repo_root: ".",
+     detect_json: <contents of /tmp/hd-detect.json>,
+     mode: "quick"
+   )
+   ```
+
+   Agent skips Phase 2 per-layer reads and returns the YAML summary + cross-cutting observations only.
+
+4. **Abbreviated report** — emit inline (no file write). Format:
+
+   ```
+   Quick audit — <repo_name>
+     Overall: <healthy | developing | needs_attention>
+     Layer 1: <top concern 1> / <top 2> / <top 3>
+     Layer 2: <top 3>
+     Layer 3: <top 3>
+     Layer 4: <top 3>
+     Layer 5: <top 3>
+     Cross-cutting: <one-line>
+
+   For full audit: /hd:review audit
+   ```
+
+   Top 3 per layer; skip narrative paragraphs. Zero file writes — quick mode is read-only and does not produce a dated lesson.
+
+Target: ~30s wall time. If the analyzer reports it had to read layer files (i.e., quick-mode budget was insufficient), surface that as a hint to run a full audit instead.

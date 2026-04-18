@@ -62,6 +62,8 @@ hd:review audit Progress:
 Load-from-config → dispatch sub-agents (parallel ≤5 / serial ≥6) → synthesize with protected-artifacts cross-check → atomic write one dated audit lesson → summarize.
 → See [references/audit-procedure.md](references/audit-procedure.md) for full procedure
 
+**Quick mode:** `/hd:review audit mode:quick` — ~30s scan based on `detect.py` signals + `hd-config.md` only (no deep file reads, no file writes). Use as preflight before a full audit or as a CI check. See [references/audit-procedure.md § Mode: quick](references/audit-procedure.md#mode-quick).
+
 ### Critique mode
 
 ```
