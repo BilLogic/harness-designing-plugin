@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 # budget-check.sh — deterministic Tier 1 line-count + SKILL.md budget enforcement.
-# Emits JSON to stdout. Exit 0 on success (even if budget violated — status in JSON).
-# Non-zero exit only on script error (file missing, malformed).
-#
-# Requires: bash 3.2+ (macOS/Linux default).
-# Call from user's repo root.
+# Dependencies: bash 4+, jq, awk, wc, grep, sed
+# Emits JSON to stdout. Exit 0 if no violations and Tier 1 within budget; exit 1 otherwise.
+# Call from repo root.
 
-set -eu
+set -euo pipefail
 
 # ──────────────────────────────────────────────────────────────────────
 # Thresholds (match references/bloat-detection.md)
@@ -19,135 +17,162 @@ DESC_SOFT=180                  # chars (description field target)
 DESC_HARD=1024                 # chars (Anthropic hard cap)
 
 # ──────────────────────────────────────────────────────────────────────
+# Helpers
+# ──────────────────────────────────────────────────────────────────────
+
+count_lines() {
+  # Count lines; 0 if file missing.
+  local f="$1"
+  if [ -f "$f" ]; then
+    wc -l < "$f" | tr -d ' '
+  else
+    echo 0
+  fi
+}
+
+extract_frontmatter() {
+  # Extract YAML frontmatter between the first pair of `---` fences.
+  local f="$1"
+  awk '/^---[[:space:]]*$/{n++; if (n==2) exit; next} n==1{print}' "$f"
+}
+
+extract_description() {
+  # Extract description field value from frontmatter. Handles:
+  #   description: value
+  #   description: "value"
+  #   description: 'value'
+  # Does NOT handle multi-line YAML block scalars (>, |); returns first-line only.
+  local f="$1"
+  extract_frontmatter "$f" \
+    | awk '/^description:[[:space:]]*/{sub(/^description:[[:space:]]*/, ""); print; exit}' \
+    | sed -E 's/^"(.*)"[[:space:]]*$/\1/; s/^'\''(.*)'\''[[:space:]]*$/\1/'
+}
+
+# ──────────────────────────────────────────────────────────────────────
 # Tier 1 check
 # ──────────────────────────────────────────────────────────────────────
 
-agents_md_lines=0
-one_pager_lines=0
-tier1_files_json='[]'
-
-if [ -f "AGENTS.md" ]; then
-  agents_md_lines=$(wc -l < AGENTS.md | tr -d ' ')
-fi
-
-if [ -f "docs/context/product/one-pager.md" ]; then
-  one_pager_lines=$(wc -l < docs/context/product/one-pager.md | tr -d ' ')
-fi
-
+agents_md_lines=$(count_lines "AGENTS.md")
+one_pager_lines=$(count_lines "docs/context/product/one-pager.md")
 tier1_total=$((agents_md_lines + one_pager_lines))
-tier1_status="pass"
-[ "$tier1_total" -gt "$TIER_1_BUDGET" ] && tier1_status="fail"
+
+tier_1_ok=true
+if [ "$tier1_total" -gt "$TIER_1_BUDGET" ]; then
+  tier_1_ok=false
+fi
 
 # ──────────────────────────────────────────────────────────────────────
-# SKILL.md scan
+# Collect skill data + violations
 # ──────────────────────────────────────────────────────────────────────
 
-skill_md_json="{}"
-violations_json="[]"
-violations_count=0
+# Build arrays via a portable temp-file approach to avoid subshell scoping.
+skills_json='[]'
+violations_json='[]'
 
 if [ -d "skills" ]; then
-  first_skill=true
-  skill_md_json="{"
   for skill_md in skills/*/SKILL.md; do
     [ -f "$skill_md" ] || continue
 
-    lines=$(wc -l < "$skill_md" | tr -d ' ')
-
-    # Extract description field (crude but deterministic)
-    desc=$(awk '/^description:/{sub(/^description: /, ""); print; exit}' "$skill_md" | sed 's/^"//;s/"$//')
+    lines=$(count_lines "$skill_md")
+    desc=$(extract_description "$skill_md" || true)
     desc_len=${#desc}
 
-    # JSON field for this skill
-    $first_skill || skill_md_json="$skill_md_json,"
-    first_skill=false
-    skill_md_json="$skill_md_json
-    \"$skill_md\": { \"lines\": $lines, \"description_chars\": $desc_len }"
+    # Per-skill violation list (strings for this skill only).
+    skill_violations='[]'
 
-    # Check thresholds
     if [ "$lines" -gt "$SKILL_MD_HARD" ]; then
-      violations_count=$((violations_count + 1))
-      [ "$violations_count" -gt 1 ] && violations_json="${violations_json%]},"
-      violations_json="${violations_json%]}[\"$skill_md: $lines lines (>$SKILL_MD_HARD hard)\"]"
+      v=$(jq -n \
+        --arg file "$skill_md" \
+        --arg rule "skill_md_hard_cap_${SKILL_MD_HARD}" \
+        --argjson actual "$lines" \
+        --arg severity "error" \
+        '{file:$file, rule:$rule, actual:$actual, severity:$severity}')
+      violations_json=$(jq -n --argjson acc "$violations_json" --argjson v "$v" '$acc + [$v]')
+      skill_violations=$(jq -n --argjson acc "$skill_violations" --argjson v "$v" '$acc + [$v]')
     elif [ "$lines" -gt "$SKILL_MD_SOFT" ]; then
-      # Soft violation — warn only, still counted
-      violations_count=$((violations_count + 1))
+      v=$(jq -n \
+        --arg file "$skill_md" \
+        --arg rule "skill_md_soft_cap_${SKILL_MD_SOFT}" \
+        --argjson actual "$lines" \
+        --arg severity "warn" \
+        '{file:$file, rule:$rule, actual:$actual, severity:$severity}')
+      violations_json=$(jq -n --argjson acc "$violations_json" --argjson v "$v" '$acc + [$v]')
+      skill_violations=$(jq -n --argjson acc "$skill_violations" --argjson v "$v" '$acc + [$v]')
     fi
 
     if [ "$desc_len" -gt "$DESC_HARD" ]; then
-      violations_count=$((violations_count + 1))
+      v=$(jq -n \
+        --arg file "$skill_md" \
+        --arg rule "description_hard_cap_${DESC_HARD}" \
+        --argjson actual "$desc_len" \
+        --arg severity "error" \
+        '{file:$file, rule:$rule, actual:$actual, severity:$severity}')
+      violations_json=$(jq -n --argjson acc "$violations_json" --argjson v "$v" '$acc + [$v]')
+      skill_violations=$(jq -n --argjson acc "$skill_violations" --argjson v "$v" '$acc + [$v]')
+    elif [ "$desc_len" -gt "$DESC_SOFT" ]; then
+      v=$(jq -n \
+        --arg file "$skill_md" \
+        --arg rule "description_soft_cap_${DESC_SOFT}" \
+        --argjson actual "$desc_len" \
+        --arg severity "warn" \
+        '{file:$file, rule:$rule, actual:$actual, severity:$severity}')
+      violations_json=$(jq -n --argjson acc "$violations_json" --argjson v "$v" '$acc + [$v]')
+      skill_violations=$(jq -n --argjson acc "$skill_violations" --argjson v "$v" '$acc + [$v]')
     fi
+
+    skill_entry=$(jq -n \
+      --arg path "$skill_md" \
+      --argjson lines "$lines" \
+      --argjson description_chars "$desc_len" \
+      --argjson violations "$skill_violations" \
+      '{path:$path, lines:$lines, description_chars:$description_chars, violations:$violations}')
+
+    skills_json=$(jq -n --argjson acc "$skills_json" --argjson s "$skill_entry" '$acc + [$s]')
   done
-  skill_md_json="$skill_md_json
-  }"
+fi
+
+# Tier 1 violation added to the global violations list.
+if [ "$tier_1_ok" = false ]; then
+  v=$(jq -n \
+    --arg file "AGENTS.md + docs/context/product/one-pager.md" \
+    --arg rule "tier_1_budget_${TIER_1_BUDGET}" \
+    --argjson actual "$tier1_total" \
+    --arg severity "error" \
+    '{file:$file, rule:$rule, actual:$actual, severity:$severity}')
+  violations_json=$(jq -n --argjson acc "$violations_json" --argjson v "$v" '$acc + [$v]')
 fi
 
 # ──────────────────────────────────────────────────────────────────────
-# Per-skill violations detail (simplified format for v0; iterate later)
+# Emit final JSON
 # ──────────────────────────────────────────────────────────────────────
 
-violations_detail='[]'
-if [ -d "skills" ]; then
-  first_v=true
-  violations_detail="["
-  for skill_md in skills/*/SKILL.md; do
-    [ -f "$skill_md" ] || continue
-    lines=$(wc -l < "$skill_md" | tr -d ' ')
-    desc=$(awk '/^description:/{sub(/^description: /, ""); print; exit}' "$skill_md" | sed 's/^"//;s/"$//')
-    desc_len=${#desc}
+violations_count=$(jq 'length' <<<"$violations_json")
+total_skills=$(jq 'length' <<<"$skills_json")
+tier_1_status="ok"
+[ "$tier_1_ok" = false ] && tier_1_status="over_budget"
 
-    if [ "$lines" -gt "$SKILL_MD_HARD" ]; then
-      $first_v || violations_detail="$violations_detail,"
-      first_v=false
-      violations_detail="$violations_detail
-    {\"file\": \"$skill_md\", \"type\": \"skill_md_over_hard_cap\", \"value\": $lines, \"threshold\": $SKILL_MD_HARD, \"severity\": \"p1\"}"
-    fi
+jq -n \
+  --argjson tier_1_ok "$([ "$tier_1_ok" = true ] && echo true || echo false)" \
+  --argjson tier_1_lines "$tier1_total" \
+  --argjson skills "$skills_json" \
+  --argjson violations "$violations_json" \
+  --argjson total_skills "$total_skills" \
+  --argjson violations_count "$violations_count" \
+  --arg tier_1_status "$tier_1_status" \
+  '{
+     tier_1_ok: $tier_1_ok,
+     tier_1_lines: $tier_1_lines,
+     skills: $skills,
+     violations: $violations,
+     summary: {
+       total_skills: $total_skills,
+       violations_count: $violations_count,
+       tier_1_status: $tier_1_status
+     }
+   }'
 
-    if [ "$desc_len" -gt "$DESC_HARD" ]; then
-      $first_v || violations_detail="$violations_detail,"
-      first_v=false
-      violations_detail="$violations_detail
-    {\"file\": \"$skill_md\", \"type\": \"description_over_hard_cap\", \"value\": $desc_len, \"threshold\": $DESC_HARD, \"severity\": \"p1\"}"
-    fi
-  done
-
-  # Tier 1 violation
-  if [ "$tier1_status" = "fail" ]; then
-    $first_v || violations_detail="$violations_detail,"
-    first_v=false
-    violations_detail="$violations_detail
-    {\"file\": \"AGENTS.md + docs/context/product/one-pager.md\", \"type\": \"tier_1_over_budget\", \"value\": $tier1_total, \"threshold\": $TIER_1_BUDGET, \"severity\": \"p1\"}"
-  fi
-
-  violations_detail="$violations_detail
-  ]"
+# Exit 1 if there are any violations OR tier 1 is over budget.
+if [ "$violations_count" -gt 0 ] || [ "$tier_1_ok" = false ]; then
+  exit 1
 fi
-
-checked_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-
-# ──────────────────────────────────────────────────────────────────────
-# Emit JSON
-# ──────────────────────────────────────────────────────────────────────
-
-cat <<EOF
-{
-  "schema_version": "1",
-  "tier_1": {
-    "files": ["AGENTS.md", "docs/context/product/one-pager.md"],
-    "agents_md_lines": $agents_md_lines,
-    "one_pager_lines": $one_pager_lines,
-    "combined_lines": $tier1_total,
-    "budget": $TIER_1_BUDGET,
-    "status": "$tier1_status"
-  },
-  "skill_md": $skill_md_json,
-  "thresholds": {
-    "skill_md_soft_lines": $SKILL_MD_SOFT,
-    "skill_md_hard_lines": $SKILL_MD_HARD,
-    "description_soft_chars": $DESC_SOFT,
-    "description_hard_chars": $DESC_HARD
-  },
-  "violations": $violations_detail,
-  "checked_at": "$checked_at"
-}
-EOF
+exit 0
