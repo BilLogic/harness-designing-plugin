@@ -261,6 +261,7 @@ A11Y_FRAMEWORK_PATTERNS = [
     # base-ui / MUI headless primitives
     re.compile(r"^@mui/base"),
     re.compile(r"^@base-ui-components/"),
+    re.compile(r"^@base-ui/"),
     # ariakit (successor to reakit)
     re.compile(r"^ariakit(-|$)"),
     re.compile(r"^@ariakit/"),
