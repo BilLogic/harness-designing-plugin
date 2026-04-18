@@ -45,7 +45,7 @@ See article §4d for the reasoning.
 
 To add: copy a starter from `skills/hd-review/assets/starter-rubrics/` into
 `docs/context/design-system/<rubric>.md` and customize. Then add to your
-`design-harnessing.local.md` under `critique_rubrics:` to make it the
+`hd-config.md` under `critique_rubrics:` to make it the
 default for `hd:review critique <path>`.
 ```
 

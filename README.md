@@ -97,7 +97,7 @@ design-harness/                        ← this repo IS the plug-in payload (fla
 
 ## Coexists with compound-engineering
 
-Runs alongside [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) without namespace fights. Our `/hd:*` vs their `/ce:*`; our `docs/design-solutions/` vs their `docs/solutions/`; our `design-harnessing.local.md` vs their `compound-engineering.local.md`. Our skills invoke compound's agents via fully-qualified Task names (e.g., `Task compound-engineering:research:learnings-researcher(…)`). See [AGENTS.md § Coexistence](./AGENTS.md#coexistence-with-compound-engineering) for full collision-avoidance rules.
+Runs alongside [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) without namespace fights. Our `/hd:*` vs their `/ce:*`; our `docs/design-solutions/` vs their `docs/solutions/`; our `hd-config.md` vs their `compound-engineering.local.md`. Our skills invoke compound's agents via fully-qualified Task names (e.g., `Task compound-engineering:research:learnings-researcher(…)`). See [AGENTS.md § Coexistence](./AGENTS.md#coexistence-with-compound-engineering) for full collision-avoidance rules.
 
 ## License
 

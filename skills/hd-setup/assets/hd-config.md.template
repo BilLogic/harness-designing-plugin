@@ -28,6 +28,6 @@ Set up on {{DATE}} in `{{SETUP_MODE}}` mode. Team size: `{{TEAM_SIZE}}`.
 
 ## Schema
 
-See [skills/hd-setup/references/local-md-schema.md](https://github.com/BilLogic/design-harnessing-plugin/blob/main/skills/hd-setup/references/local-md-schema.md) for the full schema spec.
+See [skills/hd-setup/references/hd-config-schema.md](https://github.com/BilLogic/design-harnessing-plugin/blob/main/skills/hd-setup/references/hd-config-schema.md) for the full schema spec.
 
 **Don't edit `schema_version`.** Migration happens via future plug-in updates when schema bumps.

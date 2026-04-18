@@ -86,7 +86,7 @@ Copy to `docs/context/design-system/interaction-states-<team>.md` and:
 
 1. Add team-specific state patterns (e.g., "we use Pulse component for all loading states")
 2. Override severity per criterion for your team's tolerance
-3. Reference in `design-harnessing.local.md` `critique_rubrics` list
+3. Reference in `hd-config.md` `critique_rubrics` list
 
 ## What this rubric does NOT check
 

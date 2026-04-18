@@ -47,4 +47,4 @@ Graduations log: [docs/knowledge/graduations.md](docs/knowledge/graduations.md)
 
 ---
 
-*Scaffolded by `/hd:setup` on {{DATE}}. Version-control it; evolve it with your team. See [design-harnessing.local.md](design-harnessing.local.md) for this repo's local config.*
+*Scaffolded by `/hd:setup` on {{DATE}}. Version-control it; evolve it with your team. See [hd-config.md](hd-config.md) for this repo's local config.*

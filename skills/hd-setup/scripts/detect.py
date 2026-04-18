@@ -2,7 +2,7 @@
 """detect.py — deterministic harness + tooling detection for hd:setup.
 
 Replaces the v1 detect-mode.sh. Emits JSON matching schema v2 (see
-`references/local-md-schema.md`). Exit 0 on success (even if no harness
+`references/hd-config-schema.md`). Exit 0 on success (even if no harness
 detected — "greenfield" is a valid result). Non-zero only on I/O failure.
 
 Usage:
@@ -308,7 +308,7 @@ def detect_a11y_framework() -> dict:
 
 def detect_v1_signals() -> dict:
     """Original detect-mode.sh v1 signals. Preserved byte-for-byte semantics."""
-    has_local_md = (REPO / "design-harnessing.local.md").is_file()
+    has_local_md = (REPO / "hd-config.md").is_file()
 
     # placeholders: {{UPPER_SNAKE_CASE}} in non-skill non-plan non-knowledge files
     placeholder_hits = 0

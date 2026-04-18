@@ -12,7 +12,7 @@ severity_defaults:
 
 Evaluates a Layer 2 skill (SKILL.md + its references / workflows / templates / scripts) against Anthropic's skill-authoring discipline and progressive-disclosure conventions. Apply this rubric during `hd:review audit` (every skill in `skills/` gets checked) or `hd:review critique skills/<name>/SKILL.md` (focused review on one).
 
-The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own skill evaluations. Each section lists criteria, a default severity, and pass/fail examples. Severity can be overridden per-repo in `design-harnessing.local.md`.
+The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own skill evaluations. Each section lists criteria, a default severity, and pass/fail examples. Severity can be overridden per-repo in `hd-config.md`.
 
 ## 1. Skill definition
 
@@ -151,7 +151,7 @@ The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own s
 /hd:review critique skills/hd-foo/SKILL.md --rubric skill-quality
 ```
 
-Produces inline structured critique per `references/critique-format.md`. Severity overrides from `design-harnessing.local.md` apply.
+Produces inline structured critique per `references/critique-format.md`. Severity overrides from `hd-config.md` apply.
 
 ### During skill authoring (pre-ship check)
 
@@ -163,7 +163,7 @@ Copy to `docs/context/skill-standards.md` in your repo and:
 
 1. Adjust severity defaults to match your team's tolerance
 2. Add team-specific criteria (e.g., "every skill must cite a PR or design doc")
-3. Reference in `design-harnessing.local.md` under `critique_rubrics`
+3. Reference in `hd-config.md` under `critique_rubrics`
 
 ## What this rubric does NOT check
 

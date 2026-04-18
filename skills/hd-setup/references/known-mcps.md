@@ -23,7 +23,7 @@ Explicitly: if the SKILL session has access to specific MCPs (for example `mcp__
 | **pm** | linear, jira, github_issues, asana, monday | Layer 3 (Orchestration), Layer 5 (Knowledge via decisions) |
 | **comms** | slack, discord, loom | Layer 5 (Knowledge via pinned threads, recordings) |
 
-Not every team uses every category. Users tag which tools matter; skill records per-category in `design-harnessing.local.md`.
+Not every team uses every category. Users tag which tools matter; skill records per-category in `hd-config.md`.
 
 ## Integration-path triage table
 
@@ -55,7 +55,7 @@ Portable install instructions per tool. Keep this table short and accurate — o
 
 1. Not offer an install (avoid recommending unknown packages)
 2. Record as pointer-only
-3. Note in `design-harnessing.local.md` under `team_tooling.<category>.<tool>` with `integration: pointer_only`
+3. Note in `hd-config.md` under `team_tooling.<category>.<tool>` with `integration: pointer_only`
 
 User can manually wire up MCP later and re-run `/hd:setup` to upgrade.
 
@@ -163,7 +163,7 @@ How discovered tools map into each layer during `five-layer-walk.md`:
 A valid answer. Default path:
 
 1. Record `team_tooling: {}` + proceed with scaffolding
-2. Note in `design-harnessing.local.md` prose section: "user was unsure about external tooling at setup; re-run `/hd:setup --discover-tools` when curious"
+2. Note in `hd-config.md` prose section: "user was unsure about external tooling at setup; re-run `/hd:setup --discover-tools` when curious"
 3. Do NOT block the layer walk on tool discovery
 
 ## Fallback seeds (when user has no external sources)
@@ -184,7 +184,7 @@ The starter rubrics shipped in `skills/hd-review/templates/starter-rubrics/` alr
 
 ## See also
 
-- [`local-md-schema.md`](local-md-schema.md) — where `team_tooling` + `mcp_servers_at_setup` land
+- [`hd-config-schema.md`](hd-config-schema.md) — where `team_tooling` + `mcp_servers_at_setup` land
 - [`../workflows/five-layer-walk.md`](../workflows/five-layer-walk.md) — per-layer integration step uses this reference
 - [`../scripts/detect.py`](../scripts/detect.py) — emits raw detection data this reference interprets
 - Ideation doc [`docs/plans/2026-04-17-009-v1.1-skill-ideation.md`](../../../docs/plans/2026-04-17-009-v1.1-skill-ideation.md) C5 / C6 — rationale for this spec

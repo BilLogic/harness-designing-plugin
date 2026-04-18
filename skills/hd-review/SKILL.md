@@ -24,7 +24,7 @@ This skill respects and declares the coexistence contract. Our output paths are 
 - docs/knowledge/**
 - docs/context/**
 - AGENTS.md
-- design-harnessing.local.md
+- hd-config.md
 - skills/**
 </protected_artifacts>
 ```
@@ -46,7 +46,7 @@ Ambiguous → ask: *"Audit the harness itself, or critique a specific work item?
 
 ```
 hd:review audit Progress:
-- [ ] Step 1: Load agent list from design-harnessing.local.md
+- [ ] Step 1: Load agent list from hd-config.md
 - [ ] Step 2: Count agents; auto-switch to serial if ≥6
 - [ ] Step 3: Run harness-health-analyzer sub-agent (opens the report)
 - [ ] Step 4: Run skill-quality-auditor per skill (L2 health check)
@@ -72,7 +72,7 @@ hd:review critique Progress:
 
 ## Audit mode — procedure
 
-**Step 1 — Load agent list.** Read `design-harnessing.local.md` YAML frontmatter field `review_agents`. Expected format:
+**Step 1 — Load agent list.** Read `hd-config.md` YAML frontmatter field `review_agents`. Expected format:
 
 ```yaml
 review_agents:
@@ -92,7 +92,7 @@ Users extend by adding more agents to the config.
 **Step 2 — Count + auto-switch.**
 
 ```bash
-agent_count=$(yq '.review_agents | length' design-harnessing.local.md)
+agent_count=$(yq '.review_agents | length' hd-config.md)
 ```
 
 - **count ≤ 5** → parallel dispatch

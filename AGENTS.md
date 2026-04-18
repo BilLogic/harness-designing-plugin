@@ -118,7 +118,7 @@ Most readers run `compound-engineering` alongside this plug-in. Hard rules:
 |---|---|
 | `/ce:*` commands | `/hd:*` commands |
 | `docs/solutions/` | `docs/design-solutions/` (activated v0.5) |
-| `compound-engineering.local.md` | `design-harnessing.local.md` |
+| `compound-engineering.local.md` | `hd-config.md` |
 | `ce-*` skill prefix | `hd-*` skill prefix |
 
 Invoke compound agents via fully-qualified Task names: `compound-engineering:review:pattern-recognition-specialist` (compound 2.35.0 fix). Bare names get re-prefixed incorrectly.

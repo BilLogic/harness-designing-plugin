@@ -12,7 +12,7 @@ Run the coexistence overlay when `~/.claude/plugins/cache/compound-engineering-p
 |---|---|---|
 | `/ce:*` commands | `/hd:*` commands | All our skill `name:` frontmatter fields start with `hd:`; never bare |
 | `docs/solutions/` | `docs/design-solutions/` | We NEVER write to `docs/solutions/`. `docs/design-solutions/` is our reserved namespace for future distilled pattern-solutions; `hd:compound` currently writes lessons to `docs/knowledge/lessons/` |
-| `compound-engineering.local.md` | `design-harnessing.local.md` | We create/read ONLY `design-harnessing.local.md`; leave theirs alone |
+| `compound-engineering.local.md` | `hd-config.md` | We create/read ONLY `hd-config.md`; leave theirs alone |
 | `ce-*` skill prefix | `hd-*` skill prefix | All our skill dirs are `hd-*` |
 
 ## Pre-scaffold check
@@ -35,7 +35,7 @@ After `hd:setup` writes files, verify coexistence held:
 find docs/solutions -newer AGENTS.md 2>/dev/null && echo "FAIL: wrote to compound's namespace"
 
 # We own our namespace
-[ -f design-harnessing.local.md ] && echo "PASS: design-harnessing.local.md exists"
+[ -f hd-config.md ] && echo "PASS: hd-config.md exists"
 [ ! -f compound-engineering.local.md ] || echo "OK: compound's config untouched"
 ```
 
@@ -61,7 +61,7 @@ No "rivalry" wording in skill output:
 
 During setup, when compound is detected, surface this once:
 
-> Detected `compound-engineering` plug-in installed. This plug-in runs alongside compound without namespace fights — `/hd:*` vs `/ce:*`, `docs/design-solutions/` vs `docs/solutions/`, `design-harnessing.local.md` vs `compound-engineering.local.md`. No conflict expected.
+> Detected `compound-engineering` plug-in installed. This plug-in runs alongside compound without namespace fights — `/hd:*` vs `/ce:*`, `docs/design-solutions/` vs `docs/solutions/`, `hd-config.md` vs `compound-engineering.local.md`. No conflict expected.
 
 Keep the message neutral. User picks whether to run both long-term; our job is just to not break their setup.
 
@@ -75,7 +75,7 @@ When `hd:review` ships at v1, its SKILL.md declares a `<protected_artifacts>` bl
 - docs/knowledge/**
 - docs/context/**
 - AGENTS.md
-- design-harnessing.local.md
+- hd-config.md
 - skills/**
 </protected_artifacts>
 ```
@@ -84,6 +84,6 @@ This is NOT declared at v0.MVP (we don't have `hd:review` yet) — but v0.MVP AG
 
 ## See also
 
-- [local-md-schema.md](local-md-schema.md) — `design-harnessing.local.md` format
+- [hd-config-schema.md](hd-config-schema.md) — `hd-config.md` format
 - [good-agents-md-patterns.md](good-agents-md-patterns.md) — coexistence section in healthy AGENTS.md
 - [../../hd-onboard/references/coexistence-with-compound.md](../../hd-onboard/references/coexistence-with-compound.md) — user-facing Q&A version

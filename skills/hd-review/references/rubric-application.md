@@ -74,7 +74,7 @@ Critique mode typically applies multiple rubrics to a single work item — a des
 Order of rubric application:
 
 1. User's `--rubric <name>` flag → only that rubric
-2. `design-harnessing.local.md` field `critique_rubrics` → that list, in order
+2. `hd-config.md` field `critique_rubrics` → that list, in order
 3. Default: all starter rubrics that match the work item's type
 
 ## Custom rubric authoring
@@ -84,7 +84,7 @@ Users extend by authoring new rubric files. Location: `docs/context/design-syste
 Requirements:
 
 - Follows the schema above
-- References the rubric in `design-harnessing.local.md` `critique_rubrics` list
+- References the rubric in `hd-config.md` `critique_rubrics` list
 - Criteria are concrete (pass/fail testable), not aspirational
 
 ### Example custom rubric skeleton

@@ -1,4 +1,4 @@
-# `design-harnessing.local.md` schema
+# `hd-config.md` schema
 
 **Purpose:** machine-parseable spec for the local config file every hd-* skill reads and writes. LOCKED for v0.MVP — subsequent skills (hd-compound v0.5, hd-review v1) depend on stability.
 
@@ -90,7 +90,7 @@ Any validation failure: skill surfaces error + refuses to proceed until fixed (d
 
 When a skill updates this file:
 
-- **Atomic writes only** — write to `design-harnessing.local.md.new`, then `mv` (prevents partial-write corruption)
+- **Atomic writes only** — write to `hd-config.md.new`, then `mv` (prevents partial-write corruption)
 - **Always update `setup_date`** — reflects latest mutation
 - **Never change `schema_version`** without a migration — contract for downstream skills
 - **Preserve prose section** — YAML frontmatter is machine territory; body is user's
@@ -174,9 +174,9 @@ install Notion MCP.
 
 ## Coexistence note
 
-This file is OURS (`design-harnessing.local.md`). NOT to be confused with compound's `compound-engineering.local.md`. If both plug-ins are installed, two config files coexist at repo root. See [coexistence-checklist.md](coexistence-checklist.md).
+This file is OURS (`hd-config.md`). NOT to be confused with compound's `compound-engineering.local.md`. If both plug-ins are installed, two config files coexist at repo root. See [coexistence-checklist.md](coexistence-checklist.md).
 
 ## See also
 
 - [coexistence-checklist.md](coexistence-checklist.md) — namespace isolation
-- `../templates/design-harnessing.local.md.template` — the actual file template hd:setup writes
+- `../templates/hd-config.md.template` — the actual file template hd:setup writes

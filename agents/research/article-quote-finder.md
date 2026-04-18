@@ -17,7 +17,7 @@ Return verbatim article quotes with section citations for a given concept questi
 
 ## Expected sources
 
-The Substack article series lives across multiple posts + source drafts. Known local copies and canonical URLs are documented in the user's `design-harnessing.local.md` under `article_sources:` if configured. If not configured, ask the calling skill; do NOT guess URLs.
+The Substack article series lives across multiple posts + source drafts. Known local copies and canonical URLs are documented in the user's `hd-config.md` under `article_sources:` if configured. If not configured, ask the calling skill; do NOT guess URLs.
 
 Typical sources:
 - `article_part_1_thesis` — §1 (why this matters), §2 (five-layer overview), §2.5 (memory taxonomy)
@@ -27,7 +27,7 @@ Typical sources:
 ## Procedure
 
 ### Phase 1: resolve source paths
-Read `design-harnessing.local.md` for `article_sources`. If absent, the calling skill should provide local paths or URLs via `article_sources` input. If still none → return empty + note.
+Read `hd-config.md` for `article_sources`. If absent, the calling skill should provide local paths or URLs via `article_sources` input. If still none → return empty + note.
 
 ### Phase 2: locate relevant § sections
 Match `concept_question` keywords to section headings. Load ONLY the matching section(s) of the article (not the full corpus — progressive disclosure).

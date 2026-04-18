@@ -17,7 +17,7 @@ Both are valid organizing moves. Teams running both get the union of benefits.
 |---|---|---|
 | `/ce:*` commands | `/hd:*` commands | Two-letter namespaces; unclaimed in 2026 registry |
 | `docs/solutions/` | `docs/design-solutions/` (v0.5+) | Prevents `ce-compound-refresh` from rewriting our entries |
-| `compound-engineering.local.md` | `design-harnessing.local.md` | Separate config files; no shared state |
+| `compound-engineering.local.md` | `hd-config.md` | Separate config files; no shared state |
 | `ce-*` skill prefix | `hd-*` skill prefix | Distinct, no collisions |
 
 ## Cross-plug-in invocation
@@ -40,7 +40,7 @@ At v1, `hd:review`'s SKILL.md will declare a `<protected_artifacts>` block listi
 - docs/knowledge/**
 - docs/context/**
 - AGENTS.md
-- design-harnessing.local.md
+- hd-config.md
 - skills/**
 </protected_artifacts>
 ```

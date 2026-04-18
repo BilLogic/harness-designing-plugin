@@ -33,7 +33,7 @@ hd:setup Progress:
 - [ ] Step 6: Layer 3 (Orchestration) — link / critique / scaffold / skip
 - [ ] Step 7: Layer 4 (Rubrics) — link / critique / scaffold / skip
 - [ ] Step 8: Layer 5 (Knowledge) — link / critique / scaffold / skip
-- [ ] Step 9: Write design-harnessing.local.md (schema v2)
+- [ ] Step 9: Write hd-config.md (schema v2)
 - [ ] Step 10: Summarize decisions + suggest next skill
 ```
 
@@ -41,7 +41,7 @@ Steps 4–8 each follow the same per-layer procedure documented below.
 
 ## Step 1 — Detect
 
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/local-md-schema.md`](references/local-md-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
@@ -59,7 +59,7 @@ Use for deeper audit-style analysis; skip for standard flows.
 
 ## Step 2 — Onboard check
 
-If `design-harnessing.local.md` does not exist AND user hasn't shown framework familiarity:
+If `hd-config.md` does not exist AND user hasn't shown framework familiarity:
 
 > "New to the five-layer frame?
 > A. Run `/hd:onboard` first (5-min intro)
@@ -244,7 +244,7 @@ Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A
    ```
 2. Present extracted candidates to user as a list: *"I see 5 implicit rubrics in your copilot-instructions.md: (a) approved color tokens, (b) React Aria for a11y, (c) component-budget gate for new primitives, (d) storybook-first pattern, (e) no-hex-codes. Want to promote any to explicit rubric files under `docs/context/design-system/`?"*
 3. For each candidate the user approves: copy the matching starter rubric from [`../hd-review/assets/starter-rubrics/`](../hd-review/assets/starter-rubrics/), pre-fill with the extracted content, show the user the result, atomic write on confirmation.
-4. For candidates the user rejects: record in `design-harnessing.local.md` prose section as "surfaced but declined" so re-runs don't re-propose.
+4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
 5. Never modify the source AI-doc file. Extraction is read-only on the source.
 
 **Execute — scaffold** (conditions 2/3/4):
@@ -290,9 +290,9 @@ Surface ready clusters to user. Suggest `/hd:compound graduate-propose <topic>` 
 - Seed questions: (1) 3 decisions in last 6 months new hire should know? (2) mistake you want to prevent recurring? (3) pattern across 3+ projects worth formalizing?
 - Write `docs/knowledge/INDEX.md`, `docs/knowledge/graduations.md`, 1 starter lesson
 
-## Step 9 — Write `design-harnessing.local.md`
+## Step 9 — Write `hd-config.md`
 
-Schema v2 spec: [`references/local-md-schema.md`](references/local-md-schema.md). Template: [`assets/design-harnessing.local.md.template`](assets/design-harnessing.local.md.template).
+Schema v2 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
 
 Populate:
 - `schema_version: "2"`, `setup_mode`, `setup_date`, `team_size`
@@ -315,7 +315,7 @@ Report:
 
 ## Re-run semantics
 
-When invoked on a repo that has `design-harnessing.local.md`:
+When invoked on a repo that has `hd-config.md`:
 1. Read prior `layer_decisions`, `skipped_layers`, `team_tooling`
 2. For each layer, start from prior decision; offer "revisit" or "keep"
 3. Don't re-propose `skipped_layers` unless `--reset-skips`
@@ -362,13 +362,13 @@ See [`references/coexistence-checklist.md`](references/coexistence-checklist.md)
 ### Shared
 - [tier-budget-model.md](references/tier-budget-model.md)
 - [coexistence-checklist.md](references/coexistence-checklist.md)
-- [local-md-schema.md](references/local-md-schema.md) — schema v2 spec
+- [hd-config-schema.md](references/hd-config-schema.md) — schema v2 spec
 - [known-mcps.md](references/known-mcps.md) — 6-category tool map + known-MCP install table
 
 ## Assets
 
 - [AGENTS.md.template](assets/AGENTS.md.template)
-- [design-harnessing.local.md.template](assets/design-harnessing.local.md.template) (schema v2)
+- [hd-config.md.template](assets/hd-config.md.template) (schema v2)
 - [rubrics-index.md.template](assets/rubrics-index.md.template)
 - [context-skeleton/](assets/context-skeleton/)
 - [knowledge-skeleton/](assets/knowledge-skeleton/)

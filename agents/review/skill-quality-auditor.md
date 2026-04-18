@@ -12,7 +12,7 @@ Apply the 9-section `skill-quality` rubric (`skills/hd-review/assets/starter-rub
 ## Inputs
 
 - `skill_md_path` — absolute or repo-relative path to the SKILL.md file (required)
-- `rubric_overrides` — optional per-criterion severity overrides from `design-harnessing.local.md` `critique_rubrics.skill_quality`
+- `rubric_overrides` — optional per-criterion severity overrides from `hd-config.md` `critique_rubrics.skill_quality`
 
 ## Procedure
 
@@ -88,7 +88,7 @@ summary:
 
 ## Known caveats
 
-- Composite verdict is a heuristic — user may override per-section severity in `design-harnessing.local.md`.
+- Composite verdict is a heuristic — user may override per-section severity in `hd-config.md`.
 - The rubric is shipped at `skills/hd-review/assets/starter-rubrics/skill-quality.md` — read that file to see the canonical criteria definitions.
 - This agent applies the rubric; it does NOT own the rubric. If rubric language needs updating, edit the rubric file, not this agent.
 

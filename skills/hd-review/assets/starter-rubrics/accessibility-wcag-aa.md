@@ -114,7 +114,7 @@ Duplicate this file to `docs/context/design-system/accessibility-<team>.md` and 
 - Cognitive accessibility (reading level, clear language)
 - Assistive-technology-specific (ARIA patterns for your components)
 
-Reference the extension in `design-harnessing.local.md` `critique_rubrics` list.
+Reference the extension in `hd-config.md` `critique_rubrics` list.
 
 ## See also
 

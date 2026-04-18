@@ -81,7 +81,7 @@ Uses `scripts/budget-check.sh` output. Any file or combined-tier violation → P
 ### Coexistence compliance
 
 - No writes to `docs/solutions/` (compound's namespace) — violation = P1
-- `design-harnessing.local.md` schema valid per `hd-setup/references/local-md-schema.md` — invalid = P2
+- `hd-config.md` schema valid per `hd-setup/references/hd-config-schema.md` — invalid = P2
 - Cross-plug-in Task calls fully-qualified (no bare `learnings-researcher` etc.) — grep skill files for violations
 
 ### Naming discipline
@@ -95,7 +95,7 @@ Uses `scripts/budget-check.sh` output. Any file or combined-tier violation → P
 Declared in `skills/hd-review/SKILL.md`. Audit verifies:
 
 - Block is present and parseable
-- Paths in block match the canonical set (docs/design-solutions/**, docs/knowledge/**, docs/context/**, AGENTS.md, design-harnessing.local.md, skills/**)
+- Paths in block match the canonical set (docs/design-solutions/**, docs/knowledge/**, docs/context/**, AGENTS.md, hd-config.md, skills/**)
 - If `/ce:review` or another review tool has modified any path in the block since the last audit → P1 structural violation
 
 ## Priority framework
@@ -108,7 +108,7 @@ Findings categorize as:
 - Missing required layer (Layer 1 empty, Layer 5 missing)
 - Coexistence violation (writes to `docs/solutions/`)
 - `<protected_artifacts>` integrity violated
-- Schema validation failure in `design-harnessing.local.md`
+- Schema validation failure in `hd-config.md`
 
 ### P2 — Drift (should fix; not blocking)
 

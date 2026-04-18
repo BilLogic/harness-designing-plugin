@@ -16,7 +16,7 @@ Same move (codify practice so it compounds), different domain. Compound is engin
 
 ## 4. Do I need all five layers?
 
-No. Start with Layers 1 and 5 — Context (what the AI knows) + Knowledge (what you've learned). Layers 2, 3, 4 become valuable as the team grows and patterns repeat. `/hd:setup` lets you skip layers explicitly; your skip record lands in `design-harnessing.local.md` so future runs don't re-propose. See article §4a and §4e for the foundational layers.
+No. Start with Layers 1 and 5 — Context (what the AI knows) + Knowledge (what you've learned). Layers 2, 3, 4 become valuable as the team grows and patterns repeat. `/hd:setup` lets you skip layers explicitly; your skip record lands in `hd-config.md` so future runs don't re-propose. See article §4a and §4e for the foundational layers.
 
 ## 5. Where does the harness live — inside my repo or separately?
 

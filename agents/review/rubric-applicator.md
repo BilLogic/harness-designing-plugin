@@ -14,7 +14,7 @@ Apply one rubric to one work item. Return structured findings. Generic wrapper �
 - `work_item_path` — path to the file / design / asset being critiqued OR analyzed (required)
 - `rubric_path` — path to a rubric definition file OR, in `extract` mode, the starter rubric whose SHAPE to use as the extraction template (required)
 - `mode` — `apply` (default) | `extract` — see "Two modes" below
-- `rubric_overrides` — optional per-criterion severity overrides from `design-harnessing.local.md`
+- `rubric_overrides` — optional per-criterion severity overrides from `hd-config.md`
 
 ## Two modes
 

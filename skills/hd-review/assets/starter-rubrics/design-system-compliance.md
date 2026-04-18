@@ -86,7 +86,7 @@ The core criteria apply to most design systems. Customize by:
 1. Copying to `docs/context/design-system/design-system-<team>.md`
 2. Adding team-specific criteria (e.g., "all icons use the icon-library set")
 3. Overriding severity for criteria your team treats differently
-4. Reference in `design-harnessing.local.md` `critique_rubrics` list
+4. Reference in `hd-config.md` `critique_rubrics` list
 
 ## What this rubric does NOT check
 

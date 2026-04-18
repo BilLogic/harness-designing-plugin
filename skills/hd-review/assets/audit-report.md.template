@@ -66,7 +66,7 @@ graduation_candidate: false
 - compound-engineering:research:learnings-researcher (always-run)
 - compound-engineering:review:pattern-recognition-specialist
 - compound-engineering:review:code-simplicity-reviewer
-- (plus any user-configured agents from design-harnessing.local.md review_agents)
+- (plus any user-configured agents from hd-config.md review_agents)
 -->
 
 ## Meta
