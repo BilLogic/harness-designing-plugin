@@ -44,7 +44,7 @@ In `mode: full`, additionally read the layer-specific user artifacts:
 
 - `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any Tier-1-budget files flagged in `detect_json.context_files`
 - `layer: 2` → `<repo_root>/.agent/skills/**` OR `<repo_root>/.claude/skills/**` (whichever `detect_json.platform` indicates), plus user's skill inventory from `detect_json.skills_by_platform`
-- `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; other-tool coexistence paths from `detect_json.other_tool_harnesses_detected`
+- `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; other-tool coexistence paths from `detect_json.signals.other_tool_harnesses_detected[]`
 - `layer: 4` → `<repo_root>/docs/rubrics/**`
 - `layer: 5` → `<repo_root>/docs/knowledge/**`
 

@@ -16,7 +16,7 @@ Audit cross-tool coexistence. Read other-tool harness artifacts and produce a co
 | Parameter | Required | Description |
 |---|---|---|
 | `repo_root` | yes | Path to the repo being audited. |
-| `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Provides `other_tool_harnesses_detected`, `coexistence.*`, and platform hints. |
+| `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Provides `signals.other_tool_harnesses_detected[]` (unified entries with `name`, `type`, `paths_found`, optional `config_file` / `skill_count` / `rule_count`) and platform hints. |
 | `agents_md_path` | no | Path to user's `AGENTS.md`. Default `<repo_root>/AGENTS.md`. Read to note their declared coexistence rules. |
 
 ## Procedure
@@ -30,7 +30,7 @@ The checklist below is the tool set this agent knows how to coexist with. Extend
 | `.agent/` | `<repo_root>/.agent/skills/`, `<repo_root>/.agent/rules/`, subtype from `detect_json.platform` (claude-code / codex / cursor / unknown) |
 | `.claude/` | `<repo_root>/.claude/skills/`, `<repo_root>/.claude/commands/`, `<repo_root>/.claude/agents/` |
 | `.codex/` | `<repo_root>/.codex/skills/`, `<repo_root>/.codex/rules/` |
-| foreign plug-in footprint | any entries in `detect_json.other_tool_harnesses_detected` and any foreign config-file patterns detected at repo root |
+| foreign plug-in footprint | any entries in `detect_json.signals.other_tool_harnesses_detected[]` (where `type: plugin`) and any foreign config-file patterns detected at repo root |
 
 For each present tool, count skills + rules (if the subdirectories exist) and record the paths.
 

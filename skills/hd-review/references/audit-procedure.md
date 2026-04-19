@@ -25,7 +25,7 @@ If a user adds extra `review_agents` to `hd-config.md` that would push a batch t
 
 ## Steps
 
-**Step 1 — Preflight.** Read `hd-config.md` frontmatter (`review_agents`, `other_tool_harnesses_detected`, `coexistence.*`). Run:
+**Step 1 — Preflight.** Read `hd-config.md` frontmatter (`review_agents`, `other_tool_harnesses_detected[]`). Run:
 
 ```bash
 bash skills/hd-review/scripts/budget-check.sh > /tmp/hd-budget.json

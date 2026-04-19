@@ -50,13 +50,13 @@ If any signal fires:
 1. **Announce additive-only mode.** Say: *"Detected existing harness at `<paths>`. I'll operate additive-only — won't modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, or any existing `docs/context/`, `docs/knowledge/`, `docs/rubrics/` file. New files only."*
 2. **Adjust per-layer defaults** for Steps 4/5/6: pre-select **skip** (the existing harness IS Layer 1/2/3). User can override to critique/scaffold per layer, but the friction is flipped.
 3. **Keep Steps 7/8 defaults** (Layer 4 rubrics + Layer 5 knowledge) — these are typically the genuine gap.
-4. **Emit into `hd-config.md`** `other_tool_harnesses_detected: [{path, owner: user, policy: respect}, ...]` listing every pre-existing artifact so future `/hd:review` calls can parse + respect.
+4. **Emit into `hd-config.md`** `other_tool_harnesses_detected: [{name, type, paths_found, owner: user, policy: respect}, ...]` listing every pre-existing artifact so future `/hd:review` calls can parse + respect.
 
 This is a rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots (plus-marketing, oracle-chat, lightning, plus-uno) with 6-pilot additive-only discipline intact.
 
 ## Step 1 — Detect
 
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.*`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v3 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*` (includes `other_tool_harnesses_detected[]` and `compound_installed`), `mcp_servers[]`, `team_tooling.*`.
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
@@ -106,11 +106,11 @@ Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatche
 
 ## Step 9 — Write `hd-config.md`
 
-Schema v2 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
+Schema v3 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
 
 Populate:
-- `schema_version: "2"`, `setup_mode`, `setup_date`, `team_size`
-- `skipped_layers`, `coexistence`, `article_read`
+- `schema_version: "3"`, `setup_mode`, `setup_date`, `team_size`
+- `skipped_layers`, `article_read`
 - `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`
 - `other_tool_harnesses_detected`
 

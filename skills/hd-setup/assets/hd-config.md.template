@@ -1,11 +1,9 @@
 ---
-schema_version: "2"
+schema_version: "3"
 setup_mode: {{SETUP_MODE}}
 setup_date: {{DATE}}
 team_size: {{TEAM_SIZE}}
 skipped_layers: {{SKIPPED_LAYERS}}
-coexistence:
-  compound_engineering: {{COMPOUND_COEXISTS}}
 article_read: {{ARTICLE_READ}}
 
 # Per-layer decisions recorded during the Step 4 layer-walk.
@@ -35,10 +33,13 @@ layer_decisions:
     files_written: {{L5_FILES}}
 
 # Other-tool harnesses detected by /hd:setup and left untouched (additive-only discipline).
-# Each entry: {path, owner, policy}. `owner` is user|team|<tool-name>; `policy` is one of:
-#   respect   — detected, never modified
-#   link      — referenced from Layer 1/2 pointer files
-#   coexist   — tool runs alongside hd-* without collision
+# Unified array — every detected tool is one entry (compound-engineering, .agent,
+# .claude, .codex, future). Required keys per entry: `name`, `type`, `paths_found`.
+# Optional: `config_file`, `skill_count`, `rule_count`, `owner`, `policy`.
+#   type      — plugin | meta-harness | convention | other
+#   owner     — user | team | <tool-name>
+#   policy    — respect (never modified) | link (referenced from pointer files)
+#               | coexist (runs alongside hd-* without collision)
 other_tool_harnesses_detected: {{OTHER_HARNESSES}}
 
 # Flat list of relative paths this /hd:setup run created. Used by future hd-* skills

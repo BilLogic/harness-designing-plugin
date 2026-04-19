@@ -8,23 +8,22 @@ At the user's **repo root**, alongside `AGENTS.md`. Created by `hd:setup` first 
 
 Never at plug-in root. Never nested inside `docs/`. Never inside `.claude/`.
 
-## Schema — LOCKED (schema_version: "2")
+## Schema — LOCKED (schema_version: "3")
 
-Bumps from `"1"` to `"2"` to add `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, and `files_written`. The pilot series (plus-marketing #2, oracle-chat #4, lightning #5, plus-uno #6) all wrote these fields manually; promotes them to first-class. `"1"` files auto-upgrade on next run (missing fields default as documented).
+Bumps from `"2"` to `"3"` to generalize other-tool detection: the named `coexistence.compound_engineering` field is removed; every detected tool (compound-engineering, `.agent/`, `.claude/`, `.codex/`, future) becomes one entry in `other_tool_harnesses_detected[]`. No tool is privileged at the schema level. `"2"` files auto-upgrade on next run (compound entry synthesized from the old bool if present).
+
+Prior: `"1"` → `"2"` added `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, `files_written`.
 
 ```markdown
 ---
 # Required
-schema_version: "2"                        # semver major; bump on breaking changes
+schema_version: "3"                        # semver major; bump on breaking changes
 setup_mode: greenfield | scattered | advanced | localize
 setup_date: 2026-04-17                     # ISO date; last mutation
 team_size: solo | small | medium | large   # <2 | 2-5 | 5-20 | 20+
 
 # Optional — omit field if unknown, don't write null
 skipped_layers: [1, 2, 3, 4, 5]            # int list; layers user declined to scaffold
-
-coexistence:
-  compound_engineering: true               # detected at setup time
 
 article_read: true                         # self-reported; never blocking
 
@@ -69,14 +68,36 @@ layer_decisions:
       - "docs/knowledge/INDEX.md"
       - "docs/knowledge/lessons/README.md"
 
-# NEW in schema v2 — other-tool harnesses detected & respected (never touched)
+# Other-tool harnesses detected & respected (never touched).
+# Schema v3: unified array — every detected tool is one entry, no named
+# special cases. Entry schema:
+#   name           (required string) — tool identifier (e.g. "compound-engineering",
+#                  ".agent", ".claude", ".codex")
+#   type           (required string) — plugin | meta-harness | convention | other
+#   paths_found    (required list)   — repo-relative paths detected for this tool
+#   config_file    (optional string) — tool's root-level config file, if any
+#   skill_count    (optional int)    — SKILL.md count where relevant
+#   rule_count     (optional int)    — rule .md count where relevant
+#   owner          (optional string) — user-annotated: user | team | <tool-name>
+#   policy         (optional string) — user-annotated: respect | link | coexist
 other_tool_harnesses_detected:
-  - path: ".agent/"
+  - name: compound-engineering
+    type: plugin
+    paths_found: ["docs/solutions/", "docs/plans/"]
+    config_file: compound-engineering.local.md
+  - name: .agent
+    type: meta-harness
+    paths_found: [".agent/skills/", ".agent/rules/"]
+    skill_count: 6
+    rule_count: 12
     owner: user
-    policy: respect         # respect | link | coexist
-  - path: "docs/plans/"
-    owner: other-tool
-    policy: coexist
+    policy: respect
+  - name: .claude
+    type: meta-harness
+    paths_found: [".claude/skills/"]
+    skill_count: 3
+    owner: user
+    policy: respect
 
 # NEW in schema v2 — flat list of relative paths this /hd:setup run created
 files_written:
@@ -98,17 +119,16 @@ Free-form notes about the harness — team context, customizations, decisions sp
 
 | Field | Type | Required | Values | Notes |
 |---|---|---|---|---|
-| `schema_version` | string | yes | `"2"` | Semver major. Bump on breaking changes. `"1"` files are upgraded on next run. |
+| `schema_version` | string | yes | `"3"` | Semver major. Bump on breaking changes. `"1"` and `"2"` files are upgraded on next run. |
 | `setup_mode` | enum | yes | `greenfield` \| `scattered` \| `advanced` \| `localize` | Matches `detect.py` output `mode` field |
 | `setup_date` | date (ISO) | yes | `YYYY-MM-DD` | Last time this file was mutated by a skill |
 | `team_size` | enum | yes | `solo` \| `small` \| `medium` \| `large` | solo=<2, small=2-5, medium=5-20, large=20+ |
 | `skipped_layers` | int list | no | `[1-5]` | Which layers user declined during setup. Default `[]`. |
-| `coexistence.compound_engineering` | bool | no | `true` \| `false` | Default `false`. |
 | `article_read` | bool | no | `true` \| `false` | User self-reported; default `false`. |
 | `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories: `docs, design, diagramming, analytics, pm, comms`. |
 | `mcp_servers_at_setup` | string list | no | `[notion, figma, ...]` | From parsing `.mcp.json` / `.cursor/mcp.json` / etc. Default `[]`. |
 | `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: link\|critique\|scaffold\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
-| `other_tool_harnesses_detected` | list of objects | no | see below | Each object: `{path: <relative path>, owner: user\|team\|<tool-name>, policy: respect\|link\|coexist}`. Default `[]`. `respect` = detected, never modified; `link` = referenced from Layer 1/2 pointer files; `coexist` = tool runs alongside hd-* without collision. |
+| `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `compound-engineering`, `.agent`, `.claude`, `.codex`), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |
 | `files_written` | string list | no | relative paths | Flat list of paths this `/hd:setup` run created. Used by `/hd:review health` to audit harness coverage. Default `[]`. |
 
 ## Validation rules (enforced by any skill reading this file)
@@ -119,8 +139,8 @@ Free-form notes about the harness — team context, customizations, decisions sp
 4. `setup_date` matches `YYYY-MM-DD` (10 chars, ISO date format)
 5. `team_size` is one of the 4 enum values
 6. If `layer_decisions` present, each entry has `layer`, `decision`, and `files_written` keys
-7. If `other_tool_harnesses_detected` present, each entry has `path`, `owner`, and `policy` keys
-8. Missing optional fields default to: `skipped_layers: []`, `coexistence.compound_engineering: false`, `article_read: false`, `layer_decisions: []`, `other_tool_harnesses_detected: []`, `files_written: []`
+7. If `other_tool_harnesses_detected` present, each entry has `name`, `type`, and `paths_found` keys
+8. Missing optional fields default to: `skipped_layers: []`, `article_read: false`, `layer_decisions: []`, `other_tool_harnesses_detected: []`, `files_written: []`
 
 Any validation failure: skill surfaces error + refuses to proceed until fixed (do not silently default on malformed file).
 
@@ -136,7 +156,7 @@ When a skill updates this file:
 
 ## Migration contract
 
-When `schema_version` bumps, the plug-in ships a migration skill or in-place upgrade logic. `"1"` → `"2"` migration: populate missing v2 fields with documented defaults; existing v1 keys unchanged.
+When `schema_version` bumps, the plug-in ships a migration skill or in-place upgrade logic. `"1"` → `"2"` migration: populate missing v2 fields with documented defaults; existing v1 keys unchanged. `"2"` → `"3"` migration: remove `coexistence` block; if `coexistence.compound_engineering: true` was present, synthesize a `{name: "compound-engineering", type: "plugin", paths_found: [...]}` entry in `other_tool_harnesses_detected[]`. Existing array entries upgrade from `{path, owner, policy}` to `{name, type, paths_found, owner, policy}` by mapping `path` → `name`+`paths_found` and inferring `type: "meta-harness"` for `.agent`/`.claude`/`.codex` names.
 
 ## Example (additive-only advanced setup on plus-marketing-website)
 
@@ -144,13 +164,11 @@ Filled-in YAML from the plus-marketing-website pilot (2026-04-18). Shows `layer_
 
 ```markdown
 ---
-schema_version: "2"
+schema_version: "3"
 setup_mode: advanced
 setup_date: 2026-04-18
 team_size: small
 skipped_layers: [1, 2, 3]
-coexistence:
-  compound_engineering: true
 article_read: true
 team_tooling:
   docs: [notion, google_docs]
@@ -191,10 +209,15 @@ layer_decisions:
       - "docs/knowledge/README.md"
       - "docs/knowledge/lessons/README.md"
 other_tool_harnesses_detected:
-  - path: ".agent/"
-    owner: user
-    policy: respect
-  - path: "CLAUDE.md"
+  - name: compound-engineering
+    type: plugin
+    paths_found: ["docs/solutions/", "docs/plans/"]
+    config_file: compound-engineering.local.md
+  - name: .agent
+    type: meta-harness
+    paths_found: [".agent/skills/", ".agent/rules/"]
+    skill_count: 8
+    rule_count: 4
     owner: user
     policy: respect
 files_written:

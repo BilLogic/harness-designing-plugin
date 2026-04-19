@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """detect.py — deterministic harness + tooling detection for hd:setup.
 
-Replaces the v1 detect-mode.sh. Emits JSON matching schema v2 (see
+Replaces the v1 detect-mode.sh. Emits JSON matching schema v3 (see
 `references/hd-config-schema.md`). Exit 0 on success (even if no harness
 detected — "greenfield" is a valid result). Non-zero only on I/O failure.
 
@@ -462,26 +462,84 @@ def detect_maturity_signals(has_ai_docs: bool) -> dict:
     }
 
 
-# --- E2.5: compound-engineering footprint enrichment --------------------------
+# --- E2.5: other-tool harness enumeration (generic) ---------------------------
 
 
-def detect_compound_footprint() -> dict:
-    """Replace `coexistence.compound_engineering: bool` with a richer dict."""
+def _compound_entry() -> dict | None:
+    """Detect compound-engineering footprint; return generic harness entry or None."""
     probe_paths = [
         "docs/solutions",
         "docs/ideation",
         "docs/brainstorms",
         "docs/plans",
     ]
-    paths_found = [p for p in probe_paths if (REPO / p).is_dir()]
+    paths_found = [p + "/" for p in probe_paths if (REPO / p).is_dir()]
     config_path = REPO / "compound-engineering.local.md"
     config_file = "compound-engineering.local.md" if config_path.is_file() else None
-    present = bool(paths_found) or config_file is not None
-    return {
-        "present": present,
+    if not paths_found and config_file is None:
+        return None
+    entry: dict = {
+        "name": "compound-engineering",
+        "type": "plugin",
         "paths_found": paths_found,
-        "config_file": config_file,
     }
+    if config_file is not None:
+        entry["config_file"] = config_file
+    return entry
+
+
+def _meta_harness_entry(dirname: str) -> dict | None:
+    """Detect a meta-harness directory (.agent, .claude, .codex) at repo root."""
+    root = REPO / dirname
+    if not root.is_dir():
+        return None
+    paths_found: list[str] = []
+    skill_count = 0
+    rule_count = 0
+    skills_dir = root / "skills"
+    if skills_dir.is_dir():
+        paths_found.append(f"{dirname}/skills/")
+        skill_mds = list(skills_dir.rglob("SKILL.md"))
+        bare_mds = [f for f in skills_dir.iterdir() if f.is_file() and f.suffix == ".md"]
+        skill_count = len(skill_mds) + len(bare_mds)
+        if skill_count == 0:
+            skill_count = sum(1 for f in skills_dir.rglob("*.md") if f.is_file())
+    rules_dir = root / "rules"
+    if rules_dir.is_dir():
+        paths_found.append(f"{dirname}/rules/")
+        rule_count = sum(1 for f in rules_dir.rglob("*.md") if f.is_file())
+    commands_dir = root / "commands"
+    if commands_dir.is_dir():
+        paths_found.append(f"{dirname}/commands/")
+    agents_dir = root / "agents"
+    if agents_dir.is_dir():
+        paths_found.append(f"{dirname}/agents/")
+    if not paths_found:
+        # dir exists but empty/no known subdirs — still surface it
+        paths_found.append(f"{dirname}/")
+    entry: dict = {
+        "name": dirname,
+        "type": "meta-harness",
+        "paths_found": paths_found,
+    }
+    if skill_count:
+        entry["skill_count"] = skill_count
+    if rule_count:
+        entry["rule_count"] = rule_count
+    return entry
+
+
+def detect_other_tool_harnesses() -> list[dict]:
+    """Generic enumeration — returns unified array of detected other-tool harnesses."""
+    entries: list[dict] = []
+    comp = _compound_entry()
+    if comp is not None:
+        entries.append(comp)
+    for dname in (".agent", ".claude", ".codex"):
+        e = _meta_harness_entry(dname)
+        if e is not None:
+            entries.append(e)
+    return entries
 
 
 # --- E2.6: markdown-todos PM signal -------------------------------------------
@@ -632,7 +690,7 @@ def main() -> int:
     a11y = detect_a11y_framework(deps)
     managed_ds = detect_managed_design_system(deps)
     maturity = detect_maturity_signals(v1["has_ai_docs"])
-    compound_footprint = detect_compound_footprint()
+    other_tool_harnesses = detect_other_tool_harnesses()
 
     # E2.6: append markdown-todos to team_tooling.pm if signal fires
     if detect_markdown_todos():
@@ -674,18 +732,17 @@ def main() -> int:
         # G3 — user-level MCP scoping (opt-in via --include-user-mcps)
         "user_mcps_included": args.include_user_mcps,
         "user_mcp_sources": user_mcp_sources,
+        # E2.5 — generic array of detected other-tool harnesses (schema v3)
+        "other_tool_harnesses_detected": other_tool_harnesses,
+        # Plug-in install signal (separate from repo-level detection)
+        "compound_installed": v1["compound_installed"],
     }
 
     output = {
-        "schema_version": "2",
+        "schema_version": "3",
         "mode": mode,
         "priority_matched": priority,
         "signals": signals,
-        "coexistence": {
-            # E2.5 — enriched compound-engineering footprint
-            "compound_engineering": compound_footprint,
-            "compound_installed": v1["compound_installed"],
-        },
         "bloat_overlay": bloat_overlay,
         "mcp_servers": mcp_servers,
         "team_tooling": team_tooling,
