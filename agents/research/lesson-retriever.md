@@ -1,6 +1,6 @@
 ---
 name: lesson-retriever
-description: "Retrieves past lessons from docs/knowledge/lessons/ relevant to a topic, weighted by recency × importance × frequency. Use from hd:maintain capture and hd:review audit/critique."
+description: "Retrieves past lessons from docs/knowledge/lessons/ relevant to a topic, weighted by recency × importance × frequency. Used by hd:maintain + hd:review."
 color: cyan
 model: inherit
 ---

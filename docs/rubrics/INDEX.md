@@ -50,5 +50,5 @@ Run `/hd:review audit` for harness health; `/hd:review critique <path-or-url>` f
 ## See also
 
 - Article §4d — Rubric Setting (distributed pattern argument)
-- [`../../skills/hd-onboard/references/layer-4-rubrics.md`](../../skills/hd-onboard/references/layer-4-rubrics.md) — conceptual explainer
+- [`../../skills/hd-learn/references/layer-4-rubrics.md`](../../skills/hd-learn/references/layer-4-rubrics.md) — conceptual explainer
 - [`../../skills/hd-setup/references/layer-4-rubrics.md`](../../skills/hd-setup/references/layer-4-rubrics.md) — scaffolding guide

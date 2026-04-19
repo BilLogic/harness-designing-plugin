@@ -1,6 +1,6 @@
 ---
 name: rubric-extractor
-description: "Extract implicit rubric rules from a source file; returns candidate rule list with severity + source citations. Used by /hd:setup L4 critique+extract and /hd:maintain rule-propose."
+description: "Extract implicit rubric rules from a source; returns candidate rule list with severity + source citations. Used by /hd:setup L4 critique-extract and /hd:maintain propose."
 color: orange
 model: inherit
 ---
