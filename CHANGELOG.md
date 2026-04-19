@@ -35,7 +35,19 @@ README Installation section restructured into three H3 subsections: Fastest path
 - `cursor-submission.md` for [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish)
 - `codex-submission.md` HOLDING until OpenAI opens self-serve publishing
 
-**3j.5 — Actual submission**: in-flight at time of commit; Claude in Chrome extension required for browser automation. Status tracked in the plan file.
+**3j.5 — Actual submission**: executed via the Claude in Chrome extension + Chrome MCP.
+
+- **Anthropic Claude Code marketplace** — submitted via [claude.ai/settings/plugins/submit](https://claude.ai/settings/plugins/submit). Platforms: Claude Code + Claude Cowork. Status: *"Plugin submitted for review. The review team will evaluate it and may reach out for additional information."*
+- **Cursor marketplace** — submitted via [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish). Owner: individual, contact boyuang@cmu.edu. Logo: `https://raw.githubusercontent.com/BilLogic/harness-designing-plugin/main/assets/logo.svg`. Status: *"Thanks for applying. We've received your submission. We'll follow up at marketplace-publishing@cursor.com once we review your plugin."*
+- **Codex CLI (OpenAI)** — parked. Self-serve publishing not yet open per the [Codex plugin docs](https://developers.openai.com/codex/plugins/build). `docs/submissions/codex-submission.md` ready for instant submission when OpenAI opens the directory. `.codex-plugin/plugin.json` already includes `skills`, `category`, and `capabilities` fields for Codex schema compatibility.
+
+**3j review fixes** (`3cc82444a1`, post-/ce:review pass):
+
+- `docs/rubrics/INDEX.md:53` — fixed broken link from removed `hd-onboard/` path → `hd-learn/` (missed during the 3i.1 rename sweep)
+- `agents/research/lesson-retriever.md` — description trimmed 181 → 153 chars
+- `agents/review/rubric-extractor.md` — description trimmed 182 → 170 chars
+
+/ce:review verdict across 3 reviewers: **SHIP.** Simplicity reviewer: zero blockers, ship as-is. Agent-native-parity reviewer: PASS clean across all 4 skills, 25+ Task calls fully-qualified, `<protected_artifacts>` well-formed. Pattern-recognition reviewer: 7 consistency dimensions verified clean (after the 3 fixes above landed).
 
 ### Phase 3i — agent architecture, skill renames, memory-term rename, reference reorg, README rewrite
 
