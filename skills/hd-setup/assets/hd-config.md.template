@@ -33,8 +33,8 @@ layer_decisions:
     files_written: {{L5_FILES}}
 
 # Other-tool harnesses detected by /hd:setup and left untouched (additive-only discipline).
-# Unified array — every detected tool is one entry (compound-engineering, .agent,
-# .claude, .codex, future). Required keys per entry: `name`, `type`, `paths_found`.
+# Unified array — every detected tool is one entry (.agent, .claude, .codex, any
+# foreign plug-in slug). Required keys per entry: `name`, `type`, `paths_found`.
 # Optional: `config_file`, `skill_count`, `rule_count`, `owner`, `policy`.
 #   type      — plugin | meta-harness | convention | other
 #   owner     — user | team | <tool-name>

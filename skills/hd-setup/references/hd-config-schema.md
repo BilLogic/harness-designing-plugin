@@ -10,7 +10,7 @@ Never at plug-in root. Never nested inside `docs/`. Never inside `.claude/`.
 
 ## Schema — LOCKED (schema_version: "3")
 
-Bumps from `"2"` to `"3"` to generalize other-tool detection: the named `coexistence.compound_engineering` field is removed; every detected tool (compound-engineering, `.agent/`, `.claude/`, `.codex/`, future) becomes one entry in `other_tool_harnesses_detected[]`. No tool is privileged at the schema level. `"2"` files auto-upgrade on next run (compound entry synthesized from the old bool if present).
+Bumps from `"2"` to `"3"` to generalize other-tool detection: the previously named vendor sub-field is removed; every detected tool (`.agent/`, `.claude/`, `.codex/`, any foreign plug-in, any future addition) becomes one entry in `other_tool_harnesses_detected[]`. No tool is privileged at the schema level. `"2"` files auto-upgrade on next run (any legacy vendor-specific bool synthesized into a generic array entry).
 
 Prior: `"1"` → `"2"` added `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, `files_written`.
 
@@ -71,8 +71,8 @@ layer_decisions:
 # Other-tool harnesses detected & respected (never touched).
 # Schema v3: unified array — every detected tool is one entry, no named
 # special cases. Entry schema:
-#   name           (required string) — tool identifier (e.g. "compound-engineering",
-#                  ".agent", ".claude", ".codex")
+#   name           (required string) — tool identifier (e.g. ".agent",
+#                  ".claude", ".codex", or any foreign plug-in slug)
 #   type           (required string) — plugin | meta-harness | convention | other
 #   paths_found    (required list)   — repo-relative paths detected for this tool
 #   config_file    (optional string) — tool's root-level config file, if any
@@ -81,10 +81,6 @@ layer_decisions:
 #   owner          (optional string) — user-annotated: user | team | <tool-name>
 #   policy         (optional string) — user-annotated: respect | link | coexist
 other_tool_harnesses_detected:
-  - name: compound-engineering
-    type: plugin
-    paths_found: ["docs/solutions/", "docs/plans/"]
-    config_file: compound-engineering.local.md
   - name: .agent
     type: meta-harness
     paths_found: [".agent/skills/", ".agent/rules/"]
@@ -128,7 +124,7 @@ Free-form notes about the harness — team context, customizations, decisions sp
 | `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories: `docs, design, diagramming, analytics, pm, comms`. |
 | `mcp_servers_at_setup` | string list | no | `[notion, figma, ...]` | From parsing `.mcp.json` / `.cursor/mcp.json` / etc. Default `[]`. |
 | `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: link\|critique\|scaffold\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
-| `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `compound-engineering`, `.agent`, `.claude`, `.codex`), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |
+| `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `.agent`, `.claude`, `.codex`, or any foreign plug-in slug), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |
 | `files_written` | string list | no | relative paths | Flat list of paths this `/hd:setup` run created. Used by `/hd:review health` to audit harness coverage. Default `[]`. |
 
 ## Validation rules (enforced by any skill reading this file)
@@ -156,7 +152,7 @@ When a skill updates this file:
 
 ## Migration contract
 
-When `schema_version` bumps, the plug-in ships a migration skill or in-place upgrade logic. `"1"` → `"2"` migration: populate missing v2 fields with documented defaults; existing v1 keys unchanged. `"2"` → `"3"` migration: remove `coexistence` block; if `coexistence.compound_engineering: true` was present, synthesize a `{name: "compound-engineering", type: "plugin", paths_found: [...]}` entry in `other_tool_harnesses_detected[]`. Existing array entries upgrade from `{path, owner, policy}` to `{name, type, paths_found, owner, policy}` by mapping `path` → `name`+`paths_found` and inferring `type: "meta-harness"` for `.agent`/`.claude`/`.codex` names.
+When `schema_version` bumps, the plug-in ships a migration skill or in-place upgrade logic. `"1"` → `"2"` migration: populate missing v2 fields with documented defaults; existing v1 keys unchanged. `"2"` → `"3"` migration: remove the legacy `coexistence` block; any legacy vendor-specific presence bool is synthesized into a `{name, type: "plugin", paths_found: [...]}` entry in `other_tool_harnesses_detected[]`. Existing array entries upgrade from `{path, owner, policy}` to `{name, type, paths_found, owner, policy}` by mapping `path` → `name`+`paths_found` and inferring `type: "meta-harness"` for `.agent`/`.claude`/`.codex` names.
 
 ## Example (additive-only advanced setup on plus-marketing-website)
 
@@ -209,10 +205,6 @@ layer_decisions:
       - "docs/knowledge/README.md"
       - "docs/knowledge/lessons/README.md"
 other_tool_harnesses_detected:
-  - name: compound-engineering
-    type: plugin
-    paths_found: ["docs/solutions/", "docs/plans/"]
-    config_file: compound-engineering.local.md
   - name: .agent
     type: meta-harness
     paths_found: [".agent/skills/", ".agent/rules/"]
