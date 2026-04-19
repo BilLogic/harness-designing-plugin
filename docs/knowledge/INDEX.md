@@ -29,7 +29,7 @@ During build:
 
 This plug-in's own knowledge lives here (`docs/knowledge/`). When users scaffold harnesses in their own repos, `/hd:maintain` writes their lessons to their repo's `docs/knowledge/` — never mixed with ours.
 
-Separately: `docs/design-solutions/` is reserved for future distilled pattern-solutions (currently unused) — **not** `docs/solutions/`, which is compound-engineering's namespace.
+Separately: `docs/design-solutions/` is reserved for future distilled pattern-solutions (currently unused) — **not** `docs/solutions/`, which is reserved for other tools.
 
 ## Current lessons
 

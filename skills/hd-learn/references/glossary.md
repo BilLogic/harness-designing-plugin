@@ -21,10 +21,9 @@ Canonical definitions for terms used across the design harness framework. `hd:le
 | **Tier 3 context** | Explicit-pull context. Full design-system library, archives — only when a skill or user explicitly asks. | §4a |
 | **Progressive disclosure** | Skill pattern: SKILL.md is a router; `references/` are loaded on demand; `scripts/` are executed without loading source. | Anthropic spec |
 | **Meta-harness** | A harness run on the thing building the harness. This plug-in's own `docs/` is its meta-harness — we dogfood the advocacy. | — |
-| **Coexistence** | Running alongside another plug-in (compound-engineering) without namespace collisions. Requires discipline on paths, config files, and Task invocation syntax. | — |
+| **Coexistence** | Running alongside another plug-in without namespace collisions. Requires discipline on paths, config files, and Task invocation syntax. | — |
 
 ## See also
 
 - [concept-overview.md](concept-overview.md) — where terms fit in the overall frame
 - [faq.md](faq.md) — common questions, grounded in these terms
-- [coexistence-with-compound.md](coexistence-with-compound.md) — coexistence discipline in detail

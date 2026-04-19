@@ -106,7 +106,7 @@ gaps_surfaced:
 - **READ-ONLY.** Never modifies any file.
 - Scaffolding is the *caller's* responsibility. This agent only recommends — it never writes to `docs/rubrics/`.
 - Respects the additive-only protection: if `existing_rubrics_dir` contains a rubric with the same name, default to `already-present` and do not propose overwrite.
-- Never reads `docs/solutions/` (compound-engineering's namespace).
+- Never reads `docs/solutions/` (reserved for other tools).
 
 ## Failure modes
 

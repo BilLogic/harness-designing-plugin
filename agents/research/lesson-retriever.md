@@ -9,7 +9,7 @@ model: inherit
 
 Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:maintain capture` (Phase 1 research) and by `hd:review audit`/`critique` to surface relevant historical context.
 
-Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads compound-engineering's `docs/solutions/` namespace.
+Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads other tools' namespaces (e.g., `docs/solutions/`).
 
 ## Inputs
 
@@ -70,7 +70,7 @@ If no lessons score above 2.0, return empty `retrieved_lessons[]` and set `summa
 
 - READ-ONLY. Never modifies any file.
 - Reads only under `lessons_root`.
-- NEVER reads `docs/solutions/` (compound-engineering's namespace) — out of scope for this agent. This plug-in does not invoke `compound-engineering:*` tasks; that namespace is respected as external territory only.
+- NEVER reads `docs/solutions/` or other tools' namespaces — out of scope for this agent. This plug-in does not invoke other plug-ins' Task namespaces; foreign namespaces are respected as external territory only.
 
 ## Scope
 

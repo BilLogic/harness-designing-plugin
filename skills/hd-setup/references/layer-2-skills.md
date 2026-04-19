@@ -18,9 +18,9 @@ Teams that get Layer 2 right have:
 
 - **3-5 skills** before considering more — not 0 (undercooked), not 30 (faking maturity)
 - Each skill has **one job, clear trigger, bounded scope**
-- Skills are named with a **team prefix** (like `hd-*`, `ce-*`, `figma-*`) — avoids collisions
+- Skills are named with a **team prefix** (like `hd-*`, `figma-*`, `acme-*`) — avoids collisions
 - SKILL.md is **≤200 lines**; overflow in `references/`
-- **Commands exposed via skill-name frontmatter** (`name: prefix:verb`), not via a separate `commands/` dir (compound v2.39.0 convention)
+- **Commands exposed via skill-name frontmatter** (`name: prefix:verb`), not via a separate `commands/` dir
 
 ## When a team earns its first skill
 
@@ -46,7 +46,6 @@ Required reading before a user authors their own first skill:
 
 - Anthropic — [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 - Anthropic — [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf)
-- EveryInc — [compound-engineering `skills/create-agent-skills/`](https://github.com/EveryInc/compound-engineering-plugin) — meta-skill for authoring skills
 
 Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill compliance checklist distill these into a compliance checklist.
 

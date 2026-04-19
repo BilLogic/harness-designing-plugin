@@ -76,7 +76,6 @@ Every response ends with a concrete suggested action:
 | "Explain Layer 5" / "Knowledge compounding" | [layer-5-knowledge.md](references/layer-5-knowledge.md) | memory-taxonomy.md |
 | "What's procedural / episodic / semantic memory?" | [memory-taxonomy.md](references/memory-taxonomy.md) | layer-1-context.md + layer-5-knowledge.md |
 | "Define [term]" | [glossary.md](references/glossary.md) | — |
-| "How is this different from compound-engineering?" | [coexistence-with-compound.md](references/coexistence-with-compound.md) | — |
 | "Do I need X?" / "Should I skip Y?" | [faq.md](references/faq.md) | — |
 
 ## Example interactions
@@ -112,7 +111,7 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 
 ## Sub-agents invoked
 
-Fully-qualified Task names only (compound 2.35.0 convention).
+Fully-qualified Task names only.
 
 - `design-harnessing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus
 
@@ -127,4 +126,3 @@ Fully-qualified Task names only (compound 2.35.0 convention).
 - [layer-5-knowledge.md](references/layer-5-knowledge.md)
 - [glossary.md](references/glossary.md) — term lookups
 - [faq.md](references/faq.md) — 10 canonical questions
-- [coexistence-with-compound.md](references/coexistence-with-compound.md) — how we differ from compound-engineering

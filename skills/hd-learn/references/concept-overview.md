@@ -43,4 +43,3 @@ You're reading output from the first skill right now.
 - Specific layer deep-dives → [layer-1-context.md](layer-1-context.md) through [layer-5-knowledge.md](layer-5-knowledge.md)
 - Term lookups → [glossary.md](glossary.md)
 - Common questions → [faq.md](faq.md)
-- How this differs from compound-engineering → [coexistence-with-compound.md](coexistence-with-compound.md)

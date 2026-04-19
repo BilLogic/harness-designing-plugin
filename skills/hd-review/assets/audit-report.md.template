@@ -62,11 +62,12 @@ rule_candidate: false
 
 {{AGENT_LIST}}
 
-<!-- List of agents that contributed findings:
-- compound-engineering:research:learnings-researcher (always-run)
-- compound-engineering:review:pattern-recognition-specialist
-- compound-engineering:review:code-simplicity-reviewer
-- (plus any user-configured agents from hd-config.md review_agents)
+<!-- List of agents that contributed findings. Examples:
+- design-harnessing:analysis:harness-auditor (×5, one per layer)
+- design-harnessing:analysis:rubric-recommender
+- design-harnessing:research:lesson-retriever
+- design-harnessing:analysis:coexistence-analyzer (conditional)
+- (plus any user-configured external agents from hd-config.md review_agents)
 -->
 
 ## Meta

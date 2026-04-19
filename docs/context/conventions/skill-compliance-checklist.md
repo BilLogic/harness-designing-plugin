@@ -40,8 +40,8 @@ Verify before committing any skill:
 
 ### Coexistence
 
-- [ ] Skill does NOT write to `docs/solutions/` (compound's namespace)
-- [ ] Skill does NOT read `compound-engineering.local.md` as its config
-- [ ] No "rivalry" language in output (no vs./conflict/incompatible with compound)
+- [ ] Skill does NOT write to `docs/solutions/` (reserved for other tools)
+- [ ] Skill does NOT read any other plug-in's config file
+- [ ] No "rivalry" language in output (no vs./conflict/incompatible with any other tool)
 - [ ] Cross-plug-in Task calls use fully-qualified names
 

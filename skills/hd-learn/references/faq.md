@@ -10,9 +10,9 @@ A wrapper of five layers around an AI system — Context (what it knows), Skills
 
 A style guide is a PDF that goes stale. A harness is running code the AI uses every time. Style guides describe outputs after the fact; harnesses shape the workflow producing those outputs. Style guide answers "what does our button look like?" — harness answers "how does our team decide when to add a button variant, and what happens to that decision six months later?" See article §3.
 
-## 3. How is this different from Every's compound-engineering-plugin?
+## 3. Where does this fit among other AI workflow plug-ins?
 
-Same move (codify practice so it compounds), different domain. Compound is engineering — PRs, tests, reviews, worktrees. This plug-in is design — mockups, rubrics, critique, rule adoption. The two coexist without namespace fights. See [coexistence-with-compound.md](coexistence-with-compound.md) for the isolation rules, and article §3 for the positioning argument.
+This plug-in is scoped specifically to **design** — mockups, rubrics, critique, rule adoption, design-system work. It is namespaced (`/hd:*` commands, `hd-*` skills, `hd-config.md` config, `docs/design-solutions/` output path) so it can run alongside other plug-ins without collision. See article §3 for the positioning argument.
 
 ## 4. Do I need all five layers?
 
@@ -28,7 +28,7 @@ Inside your repo. The harness is version-controlled alongside the code and desig
 
 ## 7. What's a "rule"?
 
-When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/changelog.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:maintain` proposes rule adoptions; `/hd:graduate` is *not* a separate skill (folded into compound — single verb family).
+When a lesson has been useful 3+ times across the team, promote it from narrative (in `docs/knowledge/lessons/`) to rule (in `AGENTS.md` under "Rules"). The original lesson stays — history is sacred. A meta-entry in `docs/knowledge/changelog.md` documents the promotion. See article §4e for the mechanics. In this plug-in, `/hd:maintain` proposes rule adoptions; there's no separate `/hd:graduate` verb (kept as a single verb family).
 
 ## 8. Do I need Claude Code, or does this work elsewhere?
 
@@ -40,7 +40,7 @@ Solo is fine — Layer 5 rule-adoption machinery can wait. `/hd:setup` has a `so
 
 ## 10. Where does this plug-in come from?
 
-Extracted from plus-uno (Bill's personal working implementation at [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)) and structurally mimics [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin). Companion to a Substack article series making the thesis (§2, §3, §4a-e, §6).
+Extracted from plus-uno (Bill's personal working implementation at [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)). Companion to a Substack article series making the thesis (§2, §3, §4a-e, §6).
 
 ## 11. Why five layers specifically? Why not 3 or 7?
 
@@ -72,4 +72,3 @@ All three paths coexist. `/hd:review critique <rubric-name>` uses your customize
 
 - [concept-overview.md](concept-overview.md) — the framework in 200 words
 - [glossary.md](glossary.md) — term lookups
-- [coexistence-with-compound.md](coexistence-with-compound.md) — how this plug-in differs from compound

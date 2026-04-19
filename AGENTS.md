@@ -4,7 +4,7 @@ Canonical source of truth for this repo. Read natively by Claude Code, Codex CLI
 
 ## Philosophy
 
-A design harness is the wrapper of context, skills, orchestration, rubrics, and knowledge built around an AI system so every design task inherits the team's accumulated thinking. This plug-in gives design teams skills to build one. Philosophical cousin to `EveryInc/compound-engineering-plugin`: same move (codify practice so it compounds), different domain (design, not engineering), different organizing frame (five-layer noun stack, not compound loop).
+A design harness is the wrapper of context, skills, orchestration, rubrics, and knowledge built around an AI system so every design task inherits the team's accumulated thinking. This plug-in gives design teams skills to build one. Organizing frame: a five-layer noun stack (Context, Skills, Orchestration, Rubrics, Knowledge) — codify practice so it compounds.
 
 ## Repo layout
 
@@ -70,7 +70,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 
 **No `workflows/` folders inside skills.** Procedures live in each SKILL.md; shared procedures that span skills become sub-agents in `agents/<category>/`.
 
-**No `commands/` directory.** Commands are skills with `name: hd:verb` frontmatter, exposed as `/hd:verb` (compound v2.39.0 convention).
+**No `commands/` directory.** Commands are skills with `name: hd:verb` frontmatter, exposed as `/hd:verb`.
 
 ## `docs/` is our meta-harness
 
@@ -83,7 +83,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 
 Each `.md` file under `agents/<category>/` defines a Task-invokable sub-agent: YAML frontmatter (`name`, `description`, optional `color` + `model`) + prose that acts as the sub-agent's system prompt.
 
-Categories mirror compound's convention (with some of ours):
+Categories:
 - `analysis/` — deterministic analysis (scoring, clustering)
 - `research/` — retrieval + citation finding
 - `review/` — rubric application + quality checks
@@ -92,7 +92,7 @@ Categories mirror compound's convention (with some of ours):
 ```
 Task design-harnessing:<category>:<agent-name>(...)
 ```
-Never bare names — compound 2.35.0 lesson: bare names get re-prefixed wrong. We do **not** invoke `compound-engineering:*` agents from our skills; our namespace is strictly `design-harnessing:<cat>:<name>`.
+Never bare names — bare names get re-prefixed wrong. Our namespace is strictly `design-harnessing:<cat>:<name>`; we do not invoke any other plug-in's Task namespace.
 
 **When to create a new agent:** prove ≥2 invocation sites across ≥2 skills, OR a case where an isolated context window measurably improves quality (heavy reads, parallel dispatch). Don't create speculatively.
 
@@ -105,20 +105,18 @@ All commands use `hd:` prefix (two letters — *harness design*; secondary read 
 - `/hd:maintain` — capture lessons, promote lessons to rules (MAINTAIN)
 - `/hd:review` — audit harness health, critique work items (IMPROVE)
 
-Never ship bare command names. Always namespaced (compound 2.38.0 rename-pain lesson).
+Never ship bare command names. Always namespaced — unnamespaced commands create rename pain when teams extend them.
 
-## Coexistence with compound-engineering
+## Coexistence with other plug-ins
 
-We took structural inspiration from `compound-engineering` (plug-in layout, skills-as-commands, categorized sub-agents, plan-then-work workflow). The relationship is **one-way**: we stay out of their namespace, we declare `<protected_artifacts>` so `/ce:review` won't flag our outputs, and we **never** invoke `compound-engineering:*` Task calls from our skills or agents. Most readers run both plug-ins side by side — hard rules keep them from colliding:
+Users often run multiple AI plug-ins in the same repo. Our discipline:
 
-| Compound's | Ours |
-|---|---|
-| `/ce:*` commands | `/hd:*` commands |
-| `docs/solutions/` | `docs/design-solutions/` (activated v0.5) |
-| `compound-engineering.local.md` | `hd-config.md` |
-| `ce-*` skill prefix | `hd-*` skill prefix |
-
-Our Task calls are always `Task design-harnessing:<category>:<agent-name>(...)` — fully-qualified, never bare (compound 2.35.0 lesson: bare names get re-prefixed wrong). We do not call into compound's Task namespace.
+- All commands are `/hd:*` — we do not define or shadow any other plug-in's command prefix.
+- All skills are `hd-*` — we do not collide with skill prefixes from other plug-ins.
+- Our config file is `hd-config.md` at repo root.
+- We write knowledge under `docs/design-solutions/` (activated v0.5), `docs/knowledge/`, and `docs/rubrics/` — namespaces unique to this plug-in.
+- `<protected_artifacts>` in `hd-review/SKILL.md` declares paths external review/cleanup tools should leave alone.
+- Our Task calls are always `Task design-harnessing:<category>:<agent-name>(...)` — fully-qualified, never bare. We do not call into any other plug-in's Task namespace.
 
 ## Skill compliance
 
@@ -141,14 +139,13 @@ Required reading before authoring any skill:
 
 - Anthropic — [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 - Anthropic — [Complete Guide to Building Skills for Claude (PDF)](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf)
-- EveryInc — `compound-engineering/skills/create-agent-skills/` (meta-skill; read locally at `~/.claude/plugins/cache/compound-engineering-plugin/compound-engineering/2.42.0/skills/create-agent-skills/`)
 
 ## Repo-level contributor rules
 
-- **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions, compound 2.37.1 lesson).
+- **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions).
 - **Lesson files** use `YYYY-MM-DD-slug.md` in `docs/knowledge/lessons/`.
-- **Never write to `docs/solutions/`** — that's compound-engineering's namespace. Our equivalent is `docs/design-solutions/` (v0.5+).
-- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task design-harnessing:<category>:<agent-name>(...)`. We do not call `compound-engineering:*` tasks.
+- **Never write to `docs/solutions/`** — reserved for other tools. Our equivalent is `docs/design-solutions/` (v0.5+).
+- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task design-harnessing:<category>:<agent-name>(...)`.
 
 ## Rules
 
@@ -157,7 +154,7 @@ Rules that earned their place via episodic lesson → team rule. Each entry date
 <!-- Add new rules above this line. -->
 
 - [2026-04-18] When `.agent/` or `.claude/` is detected with ≥1 skill or rule file, `/hd:setup` defaults to: skip L1/L2/L3 prompts and scaffold only L4 (rubrics) and L5 (knowledge). The existing harness is treated as Layer 1+2 authority; hd-* adds Layer 4+5 on top. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno).
-- [2026-04-18] `/hd:setup` is **additive-only** when any existing harness is detected. Never modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or compound-engineering artifacts. New files only. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (6 confirmations across full pilot matrix).
+- [2026-04-18] `/hd:setup` is **additive-only** when any existing harness is detected. Never modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or other-tool harness artifacts. New files only. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (6 confirmations across full pilot matrix).
 - [2026-04-16] Don't ship future-version skill stubs with `disable-model-invocation: true` at current version. Wait to author the skill when it's being built. Stubs with fake trigger text + the flag make the skill surface actively worse than if it didn't exist. Source: [docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md](docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md)
 
 ## Pre-commit checklist
@@ -166,5 +163,5 @@ Rules that earned their place via episodic lesson → team rule. Each entry date
 - [ ] README component counts match actual skill counts
 - [ ] All new files pass the skill compliance checklist above
 - [ ] Markdown lint clean (no broken fences, no unbalanced quotes)
-- [ ] No writes to `docs/solutions/` (compound's namespace)
+- [ ] No writes to `docs/solutions/` (reserved for other tools)
 - [ ] All three sibling manifests (`.claude-plugin`, `.codex-plugin`, `.cursor-plugin`) aligned on name + version + description

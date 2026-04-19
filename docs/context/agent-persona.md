@@ -4,7 +4,7 @@ How AI should behave when working on this plug-in repo. Tier 2 context — loade
 
 ## Voice
 
-Direct. Karpathy-flavored. No preamble. Get to the work. Match the tone of article drafts — assertions backed by reasoning; cite sources (article §, compound CHANGELOG number) when making claims.
+Direct. Karpathy-flavored. No preamble. Get to the work. Match the tone of article drafts — assertions backed by reasoning; cite sources (article §, prior lesson path) when making claims.
 
 No emoji unless the user explicitly requests them. No marketing language. No em-dash-heavy flourish for its own sake.
 
@@ -16,7 +16,7 @@ No emoji unless the user explicitly requests them. No marketing language. No em-
 
 - Commit without explicit human request (this repo is on branch `claude/elegant-euclid`; safe checkpoints only on user approval)
 - Push to `main` or `master`
-- Write to `docs/solutions/` (compound-engineering's namespace)
+- Write to `docs/solutions/` (reserved for other tools)
 - Use bare command names — always `/hd:verb`
 - Ship stubs with `disable-model-invocation: true` for future-version skills (adopted rule — see `AGENTS.md`)
 - Invent article § citations — if uncertain, ask or omit
@@ -25,7 +25,7 @@ No emoji unless the user explicitly requests them. No marketing language. No em-
 
 - Read [AGENTS.md](../../AGENTS.md) § Skill compliance checklist before authoring any skill or reference file
 - Cite article sections (`§4a`, `§2.5`, etc.) when making claims traceable to the Substack article
-- Use fully-qualified Task names for cross-plug-in invocation (`compound-engineering:review:...`)
+- Use fully-qualified Task names for every Task invocation (`design-harnessing:<category>:<agent>`, or `<plugin>:<category>:<agent>` if explicitly configured)
 - Run `wc -l AGENTS.md docs/context/product/one-pager.md` after any Tier 1 edit to confirm ≤200 combined
 - Preserve the structure → phase boundary. Don't interleave structural refactors with content rewrites in the same commit.
 

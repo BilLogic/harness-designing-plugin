@@ -81,7 +81,7 @@ summary:
 
 - READ-ONLY. Never modifies any file.
 - Never reads outside `lessons_root` + `rules_log`.
-- Never writes to `docs/solutions/` (compound's namespace).
+- Never writes to `docs/solutions/` (reserved for other tools).
 - When called from `hd:review audit`, the output feeds the drift-detection section of the audit report.
 - When called from `hd:maintain propose-rule`, the ready-scoring-≥-3.5 cluster becomes the proposed rule passed to the plan-hash step.
 

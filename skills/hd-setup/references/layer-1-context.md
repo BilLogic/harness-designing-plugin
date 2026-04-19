@@ -222,12 +222,9 @@ built around an AI system so every design task inherits team thinking.
 All commands use `hd:` prefix (two letters — *harness design*).
 Never ship bare names.
 
-## Coexistence with compound-engineering
+## Coexistence with other plug-ins
 
-| Compound's | Ours |
-|---|---|
-| `/ce:*` | `/hd:*` |
-| `docs/solutions/` | `docs/design-solutions/` |
+Declare namespace isolation rules for any other AI plug-ins in use (command prefixes, output paths, config files).
 
 ## Skill compliance checklist
 
@@ -314,7 +311,7 @@ Use v2: `api.example.com/v2/messages`.
 
 #### Anti-pattern 5: Missing coexistence rules
 
-If the repo uses multiple AI plug-ins (compound-engineering + design-harness, etc.), AGENTS.md MUST declare namespace isolation rules. Missing these = silent collision (plug-ins overwrite each other's output paths).
+If the repo uses multiple AI plug-ins, AGENTS.md MUST declare namespace isolation rules. Missing these = silent collision (plug-ins overwrite each other's output paths).
 
 ### Pre-write check
 
@@ -327,7 +324,6 @@ Before `hd:setup` writes or modifies AGENTS.md, verify:
 
 ## See also
 
-- [coexistence-checklist.md](coexistence-checklist.md) — coexistence rules detail
 - [hd-learn/references/layer-1-context.md](../../hd-learn/references/layer-1-context.md) — concept explainer
 - Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/context](https://github.com/BilLogic/plus-uno/tree/main/docs/context)
 - Article §4a — Context Engineering

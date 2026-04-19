@@ -49,11 +49,11 @@ Self-review checklist before PR:
 1. `AGENTS.md` Skill compliance checklist passes for every touched skill
 2. Tier 1 budget: `wc -l AGENTS.md docs/context/product/one-pager.md` → total ≤200
 3. All three manifests (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`) aligned on name + version + description
-4. No writes to `docs/solutions/` (compound's namespace)
+4. No writes to `docs/solutions/` (reserved for other tools)
 5. New lessons dated; frontmatter valid YAML
 6. CHANGELOG updated under `[Unreleased]` (move to versioned section only at release)
 
-If `/ce:review` or `/hd:review` is available in the session, run them before human review.
+If `/hd:review` is available in the session, run it before human review.
 
 ## Dogfood
 

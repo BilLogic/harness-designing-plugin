@@ -91,9 +91,9 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 ## Coexistence
 
 - ✅ Writes ONLY to `docs/knowledge/lessons/` (capture) or `AGENTS.md` + `docs/knowledge/changelog.md` (apply)
-- ❌ Never writes to `docs/solutions/` (compound's namespace)
+- ❌ Never writes to `docs/solutions/` (reserved for other tools)
 - ❌ Never writes to `docs/design-solutions/` in this release (reserved for post-release)
-- ✅ Task calls stay in our own namespace and are fully-qualified: `Task design-harnessing:<category>:<agent>(...)`. We do not invoke `compound-engineering:*` tasks.
+- ✅ Task calls stay in our own namespace and are fully-qualified: `Task design-harnessing:<category>:<agent>(...)`. We do not invoke any other plug-in's Task namespace.
 
 ## Compact-safe mode
 

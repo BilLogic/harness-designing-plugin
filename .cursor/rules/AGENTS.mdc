@@ -9,7 +9,7 @@ alwaysApply: true
 All conventions for this plug-in live in [AGENTS.md](../../AGENTS.md) at the repo root. Load that file for:
 
 - Skill-authoring rules (SKILL.md structure, frontmatter, reference-link syntax)
-- Coexistence discipline with `compound-engineering` (namespace isolation, fully-qualified Task calls)
+- Coexistence discipline with other plug-ins (namespace isolation, fully-qualified Task calls)
 - Repo layout + command naming convention
 
 This file exists so Cursor IDE (which reads `.cursor/rules/*.mdc` natively) picks up the conventions. Cursor CLI, Claude Code, Codex CLI, Windsurf, and GitHub Copilot all read `AGENTS.md` natively and don't need this redirect.

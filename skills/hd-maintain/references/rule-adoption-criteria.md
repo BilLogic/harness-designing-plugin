@@ -34,7 +34,7 @@ Before proposing a rule, check: can the rule be stated in ≤1 sentence as a cle
 
 - "Don't ship future-version skill stubs with `disable-model-invocation: true`."
 - "Button variants limited to approved set (primary / secondary / ghost); new variants require RFC."
-- "Cross-plug-in Task invocations use fully-qualified names (e.g., `compound-engineering:review:...`)."
+- "Cross-plug-in Task invocations use fully-qualified names (e.g., `<plugin-name>:<category>:<agent>`)."
 
 **Not yet clean** (refine first):
 

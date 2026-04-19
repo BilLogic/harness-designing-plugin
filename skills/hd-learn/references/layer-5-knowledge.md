@@ -36,7 +36,7 @@ If you mix them (append lessons into the design-system cheat-sheet), the cheat-s
 
 ## Our `docs/design-solutions/` namespace
 
-`hd:maintain` writes lessons to `docs/knowledge/lessons/` and rules to `AGENTS.md`. `docs/design-solutions/` is reserved for future distilled pattern-solutions — **not** `docs/solutions/` (compound-engineering's namespace). Keeps the two plug-ins out of each other's way.
+`hd:maintain` writes lessons to `docs/knowledge/lessons/` and rules to `AGENTS.md`. `docs/design-solutions/` is reserved for future distilled pattern-solutions — **not** `docs/solutions/`, which is reserved for other tools.
 
 ## What does NOT belong here
 

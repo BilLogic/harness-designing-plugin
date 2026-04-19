@@ -43,7 +43,7 @@ Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-p
 
 Before Step 1 completes, check: does this repo already have an AI harness?
 
-**Positive-harness signals (any one triggers guardrail):** `.agent/` with ≥1 skill or rule file, `.claude/` with skills or settings, `AGENTS.md` ≥ 20 lines of real content, `docs/context/` populated, `docs/knowledge/` populated, compound-engineering artifacts (`compound-engineering.local.md` OR `docs/solutions/`).
+**Positive-harness signals (any one triggers guardrail):** `.agent/` with ≥1 skill or rule file, `.claude/` with skills or settings, `AGENTS.md` ≥ 20 lines of real content, `docs/context/` populated, `docs/knowledge/` populated, other-tool harness artifacts detected by `detect.py` (e.g., foreign config files at repo root, `docs/solutions/`).
 
 If any signal fires:
 
@@ -56,7 +56,7 @@ This is a rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed acro
 
 ## Step 1 — Detect
 
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.compound_engineering`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v2 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*`, `coexistence.*`, `mcp_servers[]`, `team_tooling.*`, `other_tool_harnesses_detected[]`.
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
@@ -80,13 +80,13 @@ Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / cr
 - **Batch 1** (parallel, 5 agents): `design-harnessing:analysis:harness-auditor` × 5 — one per layer, `scenario: setup-pre-analysis`
 - **Batch 2** (parallel, 1 agent): `design-harnessing:analysis:rubric-recommender` — rubric-gap ranking + starter-trio recommendation
 
-Each batch stays ≤5 agents (compound v2.39.0: 6+ parallel crashes context). Outputs synthesize into a per-layer default table consumed by Phase B. Non-Claude hosts skip Phase A and fall back to the per-detection default table in [`per-layer-procedure.md`](references/per-layer-procedure.md).
+Each batch stays ≤5 agents (6+ parallel strains context). Outputs synthesize into a per-layer default table consumed by Phase B. Non-Claude hosts skip Phase A and fall back to the per-detection default table in [`per-layer-procedure.md`](references/per-layer-procedure.md).
 
 → See [`references/phase-a-pre-analysis.md`](references/phase-a-pre-analysis.md) for full dispatch detail, synthesis schema, and Guardrail interaction.
 
 ## Step 3 — Tool discovery
 
-Surface detected `team_tooling` + `mcp_servers` from Step 1. If `coexistence.compound_engineering: true`, note once: *"compound-engineering detected — we coexist by default; won't touch its namespace."*
+Surface detected `team_tooling` + `mcp_servers` from Step 1. If any `other_tool_harnesses_detected` entries are present, note once: *"Other-tool harness(es) detected at `<paths>` — we coexist by default; won't touch those namespaces."*
 
 Solo-dispatch `design-harnessing:research:lesson-retriever` with `topic: "tool-discovery"` to surface past tool-adoption lessons. Skip when `docs/knowledge/lessons/` is empty.
 
@@ -148,17 +148,17 @@ When invoked on a repo that has `hd-config.md`:
 - Concept Q&A → `/hd:learn`; lesson capture → `/hd:maintain`; audit → `/hd:review`
 - Invoke other hd skills directly — always suggest, never invoke
 - Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/` — strict coexistence
-- Write to `docs/solutions/` (compound's namespace) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)
+- Write to `docs/solutions/` (reserved for other tools) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)
 
 ## Coexistence
 
-Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses `compound-engineering.local.md`, no rivalry language. All Task calls stay in our own namespace (`Task design-harnessing:<cat>:<name>(...)`) — we do not invoke `compound-engineering:*` tasks. See [`references/coexistence-checklist.md`](references/coexistence-checklist.md).
+Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses another plug-in's config file, no rivalry language. All Task calls stay in our own namespace (`Task design-harnessing:<cat>:<name>(...)`) — we do not invoke other plug-ins' Task namespaces.
 
 ## Reference files
 
 - [per-layer-procedure.md](references/per-layer-procedure.md) — shared FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + checkpoint
 - Layer guides (concept + procedure + depth): [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns + Tier-1 budget model + Step 4 procedure), [layer-2-skills.md](references/layer-2-skills.md) (+ Step 5 procedure), [layer-3-orchestration.md](references/layer-3-orchestration.md) (+ Step 6 procedure), [layer-4-rubrics.md](references/layer-4-rubrics.md) (INDEX.md template + Step 7 procedure), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML + Step 8 procedure)
-- Shared: [coexistence-checklist.md](references/coexistence-checklist.md), [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
+- Shared: [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
 
 ## Assets
 
@@ -176,7 +176,7 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Sub-agents invoked
 
-Fully-qualified `design-harnessing:<category>:<agent>` Task names only (compound 2.35.0). Each parallel batch stays ≤5 (compound v2.39.0).
+Fully-qualified `design-harnessing:<category>:<agent>` Task names only. Each parallel batch stays ≤5.
 
 - **Phase A Batch 1** — `analysis:harness-auditor` × 5 (one per layer, `scenario: setup-pre-analysis`)
 - **Phase A Batch 2** — `analysis:rubric-recommender` (scenario: setup-pre-analysis)

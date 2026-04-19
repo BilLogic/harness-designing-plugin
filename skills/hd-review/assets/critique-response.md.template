@@ -42,5 +42,5 @@
 - "Ready for approval" (when all findings ≤ P3)
 - "Review rubric X with team" (when findings suggest the rubric itself needs revision)
 
-Never suggest `/ce:*` commands — stay in our verb namespace.
+Never suggest another plug-in's commands — stay in our own `/hd:*` verb namespace.
 -->

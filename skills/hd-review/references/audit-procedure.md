@@ -17,7 +17,7 @@ If `mode: "quick"`, jump to [§ Mode: quick](#mode-quick) below; otherwise conti
 
 ## Parallel→serial auto-switch
 
-Each batch below contains ≤5 agents. Compound CHANGELOG 2.39.0 documents that 6+ parallel Task dispatches crash context. We stay safe by splitting audit into two batches (5 + 2–3) rather than fanning out a single 7-agent burst.
+Each batch below contains ≤5 agents. 6+ parallel Task dispatches strain context. We stay safe by splitting audit into two batches (5 + 2–3) rather than fanning out a single 7-agent burst.
 
 If a user adds extra `review_agents` to `hd-config.md` that would push a batch to ≥6, auto-switch that batch to serial and surface:
 
@@ -25,7 +25,7 @@ If a user adds extra `review_agents` to `hd-config.md` that would push a batch t
 
 ## Steps
 
-**Step 1 — Preflight.** Read `hd-config.md` frontmatter (`review_agents`, `coexistence.compound_engineering`, `other_tool_harnesses_detected`). Run:
+**Step 1 — Preflight.** Read `hd-config.md` frontmatter (`review_agents`, `other_tool_harnesses_detected`, `coexistence.*`). Run:
 
 ```bash
 bash skills/hd-review/scripts/budget-check.sh > /tmp/hd-budget.json
@@ -72,7 +72,7 @@ Task design-harnessing:research:lesson-retriever(
 )
 ```
 
-Conditional third dispatch (same batch) — only when `coexistence.compound_engineering: true` OR `other_tool_harnesses_detected` is non-empty:
+Conditional third dispatch (same batch) — only when `other_tool_harnesses_detected` is non-empty:
 
 ```
 Task design-harnessing:analysis:coexistence-analyzer(
@@ -81,7 +81,7 @@ Task design-harnessing:analysis:coexistence-analyzer(
 )
 ```
 
-Cross-plug-in compound review agents (if any in `hd-config.md:review_agents`) also join Batch 2 as long as the batch stays ≤5.
+Cross-plug-in review agents (if any in `hd-config.md:review_agents`) also join Batch 2 as long as the batch stays ≤5. Dispatched with fully-qualified Task names.
 
 **Step 4 — Inline: parse `budget-check.sh` JSON.** Extract tier-1 line counts, per-skill SKILL.md sizes, violations. These become deterministic P1 findings (no agent required).
 
@@ -90,7 +90,7 @@ Cross-plug-in compound review agents (if any in `hd-config.md:review_agents`) al
 1. **Deduplicate** — same issue from multiple agents merges into one finding (note "flagged by N agents")
 2. **Categorize** — P1/P2/P3 per the appropriate `audit-criteria-<scope>.md`
 3. **Source-attribute** — every finding tags which agent(s) flagged it (e.g., `layer-3-auditor + rubric-recommender`)
-4. **Protected-artifacts cross-check** — discard any finding recommending deletion/gitignore of a protected path. Pattern from compound's `ce-review/SKILL.md`.
+4. **Protected-artifacts cross-check** — discard any finding recommending deletion/gitignore of a protected path (see `<protected_artifacts>` in SKILL.md).
 
 **Step 6 — Render report.** Load [`../assets/audit-report.md.template`](../assets/audit-report.md.template). Fill placeholders:
 - `{{DATE}}`, `{{TOP_3_PRIORITIES}}`, `{{INVENTORY_TABLE}}`

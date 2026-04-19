@@ -72,4 +72,4 @@ Each check produces:
 - Parent skill: `../SKILL.md`
 - Agent that loads this: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 2`)
 - Skill-quality rubric itself: `../assets/starter-rubrics/skill-quality.md`
-- Naming discipline (cross-cutting): `audit-criteria-coexistence.md`
+- Naming discipline (cross-cutting): handled by the `coexistence-analyzer` agent (`agents/analysis/coexistence-analyzer.md`)

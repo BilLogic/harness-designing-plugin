@@ -28,4 +28,3 @@ Thin redirect templates written to a user's repo when `/hd:setup` detects scatte
 ## See also
 
 - [../../references/good-agents-md-patterns.md](../../references/good-agents-md-patterns.md) — healthy AGENTS.md shape
-- [../../references/coexistence-checklist.md](../../references/coexistence-checklist.md) — cross-tool coexistence rules

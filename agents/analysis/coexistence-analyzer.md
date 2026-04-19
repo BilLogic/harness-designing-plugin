@@ -1,13 +1,13 @@
 ---
 name: coexistence-analyzer
-description: "Audits cross-plugin + cross-tool coexistence (compound-engineering, .agent/, .claude/, .codex/) and reports protection coverage + collision risks. Solo dispatch."
+description: "Detects other-tool harness artifacts (.agent/, .claude/, .codex/, foreign plug-ins) and reports protection coverage + collision risks. Solo dispatch."
 color: purple
 model: inherit
 ---
 
 # coexistence-analyzer
 
-Audit cross-plugin and cross-tool coexistence. Read other-tool artifacts (compound-engineering footprint, `.agent/`, `.claude/`, `.codex/` skill/rule corpora) and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review audit` when `detect.py` flagged `other_tool_harnesses_detected: true` or `coexistence.compound_engineering.present: true`.
+Audit cross-tool coexistence. Read other-tool harness artifacts and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review audit` when `detect.py` flagged `other_tool_harnesses_detected` as non-empty.
 
 **Dispatch pattern:** **solo**. Invoked at most once per audit run. Does not invoke other agents (the caller pairs this with `harness-auditor(layer: 3)` for orchestration-level concerns).
 
@@ -16,47 +16,40 @@ Audit cross-plugin and cross-tool coexistence. Read other-tool artifacts (compou
 | Parameter | Required | Description |
 |---|---|---|
 | `repo_root` | yes | Path to the repo being audited. |
-| `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Provides `coexistence.compound_engineering.*`, `other_tool_harnesses_detected`, and platform hints. |
+| `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Provides `other_tool_harnesses_detected`, `coexistence.*`, and platform hints. |
 | `agents_md_path` | no | Path to user's `AGENTS.md`. Default `<repo_root>/AGENTS.md`. Read to note their declared coexistence rules. |
 
 ## Procedure
 
-### Phase 1: load criteria
+### Phase 1: enumerate tools to probe
 
-Read `skills/hd-review/references/audit-criteria-coexistence.md`. This reference defines:
-- The list of tools we know how to coexist with
-- Per-tool protected-namespace patterns
-- Collision-risk categories (namespace collision, write-path collision, naming collision)
+The checklist below is the tool set this agent knows how to coexist with. Extend as new conventions are adopted.
 
-### Phase 2: probe detected tools
-
-For each tool below, combine `detect_json` signals with direct filesystem existence checks:
-
-| Tool | Probes |
+| Tool / convention | Probes |
 |---|---|
-| `compound-engineering` | `detect_json.coexistence.compound_engineering.paths_found`, `<repo_root>/docs/solutions/`, `<repo_root>/docs/ideation/`, `<repo_root>/docs/brainstorms/`, `<repo_root>/compound-engineering.local.md` |
 | `.agent/` | `<repo_root>/.agent/skills/`, `<repo_root>/.agent/rules/`, subtype from `detect_json.platform` (claude-code / codex / cursor / unknown) |
 | `.claude/` | `<repo_root>/.claude/skills/`, `<repo_root>/.claude/commands/`, `<repo_root>/.claude/agents/` |
 | `.codex/` | `<repo_root>/.codex/skills/`, `<repo_root>/.codex/rules/` |
+| foreign plug-in footprint | any entries in `detect_json.other_tool_harnesses_detected` and any foreign config-file patterns detected at repo root |
 
 For each present tool, count skills + rules (if the subdirectories exist) and record the paths.
 
-### Phase 3: read the user's declared rules
+### Phase 2: read the user's declared rules
 
 Read `agents_md_path` (if present). Look for:
-- An explicit coexistence table (our scaffolded `| Compound's | Ours |` pattern)
+- A coexistence section (namespace isolation table or prose rules)
 - A protected-artifacts block
 - Any "never write to" declarations
 
 Record these as `their_policy` entries.
 
-### Phase 4: read our own declared protections
+### Phase 3: read our own declared protections
 
 Read `<repo_root>/skills/hd-review/SKILL.md` and extract the `<protected_artifacts>` block (if present). Each pattern there is one of our own declared protections.
 
 Per the adopted rule (2026-04-18): `/hd:setup` is additive-only when any existing harness is detected. This agent confirms those protections are **declared**, not whether they are enforced at write-time (that's the skill's runtime check).
 
-### Phase 5: align policies + detect collisions
+### Phase 4: align policies + detect collisions
 
 Cross-reference:
 - For each tool's protected namespace, is there a matching entry in our declared protections?
@@ -64,11 +57,11 @@ Cross-reference:
   - Missing → `status: gap` (surface in `collision_risks`)
   - Extra on our side → `status: over-declared` (informational)
 - Check for write-path collisions: does any hd-* skill declare a write path that overlaps a detected tool's namespace?
-- Check for naming collisions: command prefixes (`/hd:*` vs `/ce:*`), skill prefixes (`hd-*` vs `ce-*`), config files (`hd-config.md` vs `compound-engineering.local.md`)
+- Check for naming collisions: command prefixes (`/hd:*` vs any detected `/<foreign>:*`), skill prefixes (`hd-*` vs any detected foreign prefix), config files at repo root.
 
-### Phase 6: rank collision risks
+### Phase 5: rank collision risks
 
-- **p1** — active write-path collision (e.g., an hd-* skill would write to `docs/solutions/`)
+- **p1** — active write-path collision (e.g., an hd-* skill would write to a foreign namespace)
 - **p2** — protected-namespace gap (tool present, our protection not declared)
 - **p3** — naming ambiguity or cosmetic overlap with no write risk
 
@@ -77,15 +70,6 @@ Cross-reference:
 ```yaml
 agent: coexistence-analyzer
 detected_tools:
-  - name: compound-engineering
-    present: true
-    paths:
-      - docs/solutions/
-      - docs/ideation/
-      - compound-engineering.local.md
-    config_file: compound-engineering.local.md
-    skill_count: null       # n/a — compound skills live in plugin cache, not repo
-    rule_count: null
   - name: ".agent/"
     present: true
     subtype: claude-code
@@ -100,33 +84,37 @@ detected_tools:
   - name: ".codex/"
     present: false
     paths: []
+  - name: foreign-plugin
+    present: true
+    paths:
+      - docs/solutions/
+      - <foreign-config>.md
+    config_file: <foreign-config>.md
+    skill_count: null
+    rule_count: null
 protection_coverage:
-  - artifact_pattern: docs/solutions/
-    our_policy: never-write
-    their_policy: protected-namespace
-    status: aligned
-  - artifact_pattern: compound-engineering.local.md
-    our_policy: never-modify
-    their_policy: config-owned
-    status: aligned
   - artifact_pattern: .agent/skills/**
     our_policy: additive-only
     their_policy: user-owned
     status: aligned
-  - artifact_pattern: docs/ideation/
+  - artifact_pattern: docs/solutions/
+    our_policy: never-write
+    their_policy: foreign-namespace
+    status: aligned
+  - artifact_pattern: <foreign-namespace>/
     our_policy: undeclared
     their_policy: protected-namespace
     status: gap
 collision_risks:
   - severity: p2
-    description: "docs/ideation/ is a compound-engineering namespace but hd-review SKILL.md does not declare it in <protected_artifacts>"
-    recommended_action: "Add docs/ideation/ to skills/hd-review/SKILL.md <protected_artifacts> block"
+    description: "Foreign namespace detected but hd-review SKILL.md does not declare it in <protected_artifacts>"
+    recommended_action: "Add the foreign namespace glob to skills/hd-review/SKILL.md <protected_artifacts>"
   - severity: p3
-    description: "Both compound-engineering and hd-* define config files at repo root (compound-engineering.local.md + hd-config.md) — no collision, but document the pairing in AGENTS.md"
-    recommended_action: "Ensure AGENTS.md coexistence table lists both config files side by side"
+    description: "Multiple plug-in config files at repo root — no collision, but document the pairing in AGENTS.md"
+    recommended_action: "Ensure AGENTS.md coexistence section lists each config file"
 summary:
   tools_detected: 2
-  aligned_policies: 3
+  aligned_policies: 2
   gaps: 1
   p1_count: 0
   p2_count: 1
@@ -137,19 +125,17 @@ summary:
 
 - **READ-ONLY.** Never modifies any file, never writes to any detected tool's namespace.
 - Never reads *inside* another tool's non-public artifacts beyond what's needed for existence + counting (e.g., list `.agent/skills/` contents but do not read skill bodies).
-- Never reads `docs/solutions/` bodies — only existence + path listing.
+- Never reads foreign namespace contents (e.g., `docs/solutions/`) beyond existence + path listing.
 - Fully-qualified Task invocation if another agent is referenced: `Task design-harnessing:analysis:harness-auditor(...)` (but this agent does NOT invoke others; the caller orchestrates).
 
 ## Failure modes
 
 - `detect_json` missing → `error: "detect_json required"`
 - `repo_root` unreadable → `error: "repo_root not accessible"`
-- `audit-criteria-coexistence.md` missing → `error: "coexistence criteria reference not found"` (plug-in install issue)
 - Tool subtype ambiguous (`.agent/` present but no clear platform signal) → report `subtype: unknown` and note in collision_risks at p3
 
 ## See also
 
-- `skills/hd-review/references/audit-criteria-coexistence.md` — the per-tool check definitions this agent operationalizes
 - `skills/hd-review/SKILL.md` — source of our declared `<protected_artifacts>` block
-- `AGENTS.md` — source of the coexistence table (user's declared rules)
+- `AGENTS.md` — source of the coexistence section (user's declared rules)
 - `agents/analysis/harness-auditor.md` — sibling agent; Layer 3 orchestration audit pairs with this coexistence report

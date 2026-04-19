@@ -30,7 +30,7 @@ Harness Designing Plugin helps design teams turn their scattered AI setup — No
 
 Ships 9 sub-agents and 14 starter rubrics (distilled from pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section with personas, user stories, realistic scenarios, and anti-scenarios. Validated across a six-repo pilot matrix.
 
-This plug-in is the companion toolkit to Bill Guo's Substack series on design harnessing. Structural inspiration: EveryInc/compound-engineering-plugin.
+This plug-in is the companion toolkit to Bill Guo's Substack series on design harnessing.
 ```
 
 ### Repository URL
@@ -81,9 +81,9 @@ Design / Productivity
 ## Additional notes (if the form has an open text field)
 
 - Validated across six-repo pilot matrix: figma/sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno.
-- All four SKILL.md files ≤200 lines (compound-engineering v2.39.0 style invariant).
-- `<protected_artifacts>` block declared in `hd-review` so `/ce:review` never flags our outputs.
-- No cross-plugin Task invocations — we stay entirely within `design-harnessing:<category>:<agent>` namespace and respect compound-engineering's `/ce:*` / `docs/solutions/` / `compound-engineering.local.md` namespace.
+- All four SKILL.md files ≤200 lines.
+- `<protected_artifacts>` block declared in `hd-review` so external review/cleanup tools leave our outputs alone.
+- No cross-plugin Task invocations — we stay entirely within the `design-harnessing:<category>:<agent>` namespace and respect other tools' namespaces (`docs/solutions/`, foreign config files, foreign command prefixes).
 - Phases 3e–3j shipped 2026-04-18.
 
 ## Links to pass the reviewer

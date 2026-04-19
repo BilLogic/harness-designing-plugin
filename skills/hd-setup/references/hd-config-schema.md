@@ -75,7 +75,7 @@ other_tool_harnesses_detected:
     owner: user
     policy: respect         # respect | link | coexist
   - path: "docs/plans/"
-    owner: compound-engineering
+    owner: other-tool
     policy: coexist
 
 # NEW in schema v2 — flat list of relative paths this /hd:setup run created
@@ -234,9 +234,8 @@ When the flag is passed, any MCP server names found in user-level files are **un
 
 ## Coexistence note
 
-This file is OURS (`hd-config.md`). NOT to be confused with compound's `compound-engineering.local.md`. If both plug-ins are installed, two config files coexist at repo root. See [coexistence-checklist.md](coexistence-checklist.md).
+This file is OURS (`hd-config.md`). Other plug-ins may write their own config files at repo root; they coexist without interference.
 
 ## See also
 
-- [coexistence-checklist.md](coexistence-checklist.md) — namespace isolation
 - `../assets/hd-config.md.template` — the actual file template hd:setup writes

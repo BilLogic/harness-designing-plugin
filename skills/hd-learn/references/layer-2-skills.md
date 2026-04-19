@@ -43,7 +43,6 @@ Skill authoring is a discipline — not an ad-hoc prose-writing exercise. Three 
 
 - Anthropic's [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 - Anthropic's [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf)
-- compound-engineering's [`skills/create-agent-skills/`](https://github.com/EveryInc/compound-engineering-plugin) meta-skill
 
 Our plug-in's contributor conventions in [AGENTS.md](../../../AGENTS.md) distill these into a skill compliance checklist.
 

@@ -89,7 +89,7 @@ This workflow is owned by `/hd:maintain`; Layer 5 setup only prepares the direct
 
 ## Coexistence
 
-- ❌ Never write to `docs/solutions/` — that's compound-engineering's namespace
+- ❌ Never write to `docs/solutions/` — reserved for other tools
 - ✅ `docs/design-solutions/` is ours (reserved for distilled pattern-solutions in future releases)
 
 ## Audit signals (hd:review audit surfaces these)

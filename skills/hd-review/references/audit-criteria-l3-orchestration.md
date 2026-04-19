@@ -48,12 +48,12 @@ with `layer: 3`.
 - **Fail example:** team reports handoffs happen verbally in Slack, no artifact trail
 - **Scope:** this layer only (observational — confirm via team interview if uncertain)
 
-### ce-coexistence-at-l3
-- **Check:** orchestration doesn't step on compound-engineering's `/ce:*` workflow namespace
+### other-tool-coexistence-at-l3
+- **Check:** orchestration doesn't step on another plug-in's workflow namespace
 - **Default severity:** p1
-- **Pass example:** `hd:*` workflows and `/ce:*` workflows have distinct entry points
-- **Fail example:** a workflow file invokes `/ce:review` as a gate without namespace-qualifying it, or renames a `/ce:*` step
-- **Scope:** cross-layer (deeper coexistence checks live in `audit-criteria-coexistence.md`)
+- **Pass example:** `hd:*` workflows and any external workflows have distinct entry points
+- **Fail example:** a workflow file invokes an external slash command as a gate without namespace-qualifying it, or silently renames an external step
+- **Scope:** cross-layer (deeper coexistence checks are handled by the `coexistence-analyzer` agent)
 
 ## Output shape
 
@@ -70,4 +70,4 @@ Each check produces:
 
 - Parent skill: `../SKILL.md`
 - Agent that loads this: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 3`)
-- Coexistence deep-dive: `audit-criteria-coexistence.md`
+- Coexistence deep-dive: handled by the `coexistence-analyzer` agent (`agents/analysis/coexistence-analyzer.md`)

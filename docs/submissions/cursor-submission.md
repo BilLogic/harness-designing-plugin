@@ -75,7 +75,7 @@ Detected from plug-in structure:
 - No `rules/` directory (we use AGENTS.md at repo root for conventions)
 - No `mcp.json` (no bundled MCP servers)
 - No `hooks/` (no automation scripts required for the plug-in itself)
-- No `commands/` (commands are skills via `name: hd:*` frontmatter, compound v2.39.0 convention)
+- No `commands/` (commands are skills via `name: hd:*` frontmatter)
 
 ### Category
 ```

@@ -44,7 +44,7 @@ In `mode: full`, additionally read the layer-specific user artifacts:
 
 - `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any Tier-1-budget files flagged in `detect_json.context_files`
 - `layer: 2` → `<repo_root>/.agent/skills/**` OR `<repo_root>/.claude/skills/**` (whichever `detect_json.platform` indicates), plus user's skill inventory from `detect_json.skills_by_platform`
-- `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; compound-engineering coexistence paths from `detect_json.coexistence.compound_engineering.paths_found`
+- `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; other-tool coexistence paths from `detect_json.other_tool_harnesses_detected`
 - `layer: 4` → `<repo_root>/docs/rubrics/**`
 - `layer: 5` → `<repo_root>/docs/knowledge/**`
 
@@ -118,7 +118,7 @@ summary:
 
 - **READ-ONLY.** Never modifies any file.
 - Never reads outside `repo_root` (plus the plug-in's own `skills/hd-review/references/` for the criteria file).
-- Never reads `docs/solutions/` (compound-engineering's namespace).
+- Never reads `docs/solutions/` (reserved for other tools).
 - Respects the additive-only protection (adopted rule 2026-04-18): reports on existing harness artifacts but flags them `protected: true` in evidence so the caller knows not to propose modification.
 - Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 audit, it dispatches `Task design-harnessing:analysis:rubric-recommender(...)` separately.
 
@@ -134,7 +134,6 @@ summary:
 
 - `skills/hd-review/references/audit-criteria-l1-context.md` … `-l5-knowledge.md` — per-layer check definitions
 - `skills/hd-review/references/audit-criteria-budget.md` — Tier-1/2/3 budget checks (cross-cutting)
-- `skills/hd-review/references/audit-criteria-coexistence.md` — cross-tool checks (dispatched via `coexistence-analyzer`)
-- `agents/analysis/coexistence-analyzer.md` — sibling agent for cross-plugin / cross-tool audit
+- `agents/analysis/coexistence-analyzer.md` — sibling agent for cross-tool audit (cross-tool check logic lives in the agent spec)
 - `agents/analysis/rubric-recommender.md` — sibling agent for Layer 4 gap-finding
 - `agents/analysis/rule-candidate-scorer.md` — sibling agent for Layer 5 drift detection

@@ -116,7 +116,7 @@ Critique ends with one concrete suggestion. Common patterns:
 - **All P1 findings are design-system violations** → "Review your design-system/cheat-sheet.md with the team"
 - **Work item passed** → "Ready for approval; consider documenting decisions as a `/hd:maintain capture`"
 
-Never suggest `/ce:*` commands — coexistence rule (stay in our verb namespace in user-facing output).
+Never suggest another plug-in's commands — stay in our own `/hd:*` verb namespace in user-facing output.
 
 ## Work-item types supported
 

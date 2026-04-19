@@ -8,7 +8,7 @@ A Claude Code plug-in for design teams building AI harnesses. Ships skills that 
 
 ## Who it's for
 
-**5–20 person design teams** adopting AI-assisted workflows. Secondary: solo designers and 20+ person design orgs. Not: non-design teams (they're compound-engineering's persona).
+**5–20 person design teams** adopting AI-assisted workflows. Secondary: solo designers and 20+ person design orgs. Not: non-design teams.
 
 ## Core value proposition
 
@@ -24,4 +24,3 @@ Turn scattered AI-context pile (Slack pins, Notion docs, Figma comments, retros)
 
 - Origin article series: *(link TBD)*
 - Extraction source: [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)
-- Philosophical cousin: [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin)

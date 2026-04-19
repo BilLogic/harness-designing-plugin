@@ -50,7 +50,7 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`.
 | `harness-auditor` | Audit one layer given `layer: 1\|2\|3\|4\|5`. Dispatched 5× parallel by `/hd:review audit` and reused by `/hd:setup` Phase A |
 | `rule-candidate-scorer` | Cluster lessons; score rule-readiness on recurrence × clean-imperative × team-agreement |
 | `rubric-recommender` | From `detect.py` signals, rank which starter rubrics to scaffold or flag as gaps |
-| `coexistence-analyzer` | Detect other-tool artifacts (`.agent/`, `.claude/`, `.codex/`, compound-engineering footprint); flag collision risks |
+| `coexistence-analyzer` | Detect other-tool harness artifacts (`.agent/`, `.claude/`, `.codex/`, foreign plug-in footprints); flag collision risks |
 
 ### `research/` (2)
 
@@ -162,7 +162,7 @@ Codex CLI and Cursor equivalents ship from the same repo via `.codex-plugin/` an
 
 - **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/article-quote-finder-corpus.md` once the series publishes.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
-- **Namespace respect, not integration.** If you also run `compound-engineering`, this plug-in stays out of its namespace — our commands are `/hd:*` (not `/ce:*`), we write to `docs/design-solutions/` (not `docs/solutions/`), our config is `hd-config.md` (not `compound-engineering.local.md`), and our `<protected_artifacts>` block tells `/ce:review` to leave our outputs alone. We don't call into compound's skills or agents.
+- **Namespace respect, not integration.** This plug-in is strictly namespaced — commands are `/hd:*`, skills are `hd-*`, our config is `hd-config.md`, we write knowledge under `docs/design-solutions/` (never `docs/solutions/`), and our `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
 ## Version History
 

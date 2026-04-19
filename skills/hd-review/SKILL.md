@@ -16,7 +16,7 @@ Audit harness health (audit mode) OR apply Layer 4 rubric(s) to a work item (cri
 
 ## Protected artifacts
 
-This skill respects and declares the coexistence contract. Our output paths are protected from modification by other review tools (e.g., `/ce:review` from compound-engineering):
+Declares protected paths so any external review/cleanup tool leaves our artifacts alone:
 
 ```yaml
 <protected_artifacts>
@@ -29,7 +29,7 @@ This skill respects and declares the coexistence contract. Our output paths are 
 </protected_artifacts>
 ```
 
-Pattern from compound's `ce-review/SKILL.md` protected-artifacts. Both plug-ins can audit the same repo without modifying each other's outputs.
+Multiple review tools can audit the same repo without modifying each other's outputs.
 
 ## Mode detection
 
@@ -56,7 +56,7 @@ hd:review audit Progress:
 - [ ] Step 8: Summarize + suggest next
 ```
 
-Two-batch parallel dispatch, each batch ≤5 agents (compound 2.39.0 convention: ≥6 parallel crashes context; we split into 2 batches to stay safe). Batch 1 fans out across layers; Batch 2 covers rubric gaps + lesson corpus + optional coexistence. Inline `budget-check.sh` parse. Synthesize with protected-artifacts cross-check → atomic write one dated audit lesson.
+Two-batch parallel dispatch, each batch ≤5 agents (≥6 parallel strains context; we split into 2 batches to stay safe). Batch 1 fans out across layers; Batch 2 covers rubric gaps + lesson corpus + optional coexistence. Inline `budget-check.sh` parse. Synthesize with protected-artifacts cross-check → atomic write one dated audit lesson.
 → See [references/audit-procedure.md](references/audit-procedure.md) for full procedure
 
 **Quick mode:** `/hd:review audit mode:quick` — ~30s scan based on `detect.py` signals + `hd-config.md` only (no deep file reads, no file writes). Dispatches a single `harness-auditor` in aggregate mode. Use as preflight before a full audit or as a CI check. See [references/audit-procedure.md § Mode: quick](references/audit-procedure.md#mode-quick).
@@ -82,15 +82,15 @@ Parse target + rubric → resolve rubric path → dispatch applicator sub-agent 
 - **Capture lessons** → `/hd:maintain capture` (suggestion, not invocation)
 - **Modify source work items** during critique (read-only)
 - **Modify rubric files** (both modes — rubrics are team-owned)
-- **Write to `docs/solutions/`** (compound's namespace)
+- **Write to `docs/solutions/`** (reserved for other tools)
 
 ## Coexistence
 
 - ✅ Reads our namespace + rubric files + user-specified work items
 - ✅ Writes ONLY to `docs/knowledge/lessons/harness-audit-*.md` (audit mode)
-- ❌ Never writes to compound's namespace
-- ❌ Never modifies compound's config files
-- `<protected_artifacts>` block (above) protects our outputs from `/ce:review`
+- ❌ Never writes to other plug-ins' namespaces
+- ❌ Never modifies other plug-ins' config files
+- `<protected_artifacts>` block (above) declares our outputs as read-only for external review/cleanup tools
 - Cross-plug-in Task calls fully-qualified
 
 ## Compact-safe mode
@@ -102,13 +102,13 @@ When context budget is tight:
 
 ## Parallel→serial auto-switch
 
-Each dispatch batch stays ≤5 agents (compound v2.39.0 convention: 6+ parallel crashes context). Audit splits into two batches of ≤5 to stay under the cap; critique batches up to 5 rubric-applier calls in parallel and falls back to serial at 6+.
+Each dispatch batch stays ≤5 agents (6+ parallel strains context). Audit splits into two batches of ≤5 to stay under the cap; critique batches up to 5 rubric-applier calls in parallel and falls back to serial at 6+.
 
 ## Reference files
 
 - [references/audit-procedure.md](references/audit-procedure.md) — full audit-mode step sequence (2-batch dispatch)
 - [references/critique-procedure.md](references/critique-procedure.md) — full critique-mode step sequence (Steps 1–5)
-- [references/audit-criteria-l1-context.md](references/audit-criteria-l1-context.md) through `audit-criteria-l5-knowledge.md` + `audit-criteria-coexistence.md` + `audit-criteria-budget.md` — per-scope health criteria + severity framework
+- [references/audit-criteria-l1-context.md](references/audit-criteria-l1-context.md) through `audit-criteria-l5-knowledge.md` + `audit-criteria-budget.md` — per-scope health criteria + severity framework (cross-tool coexistence checks live in the `coexistence-analyzer` agent spec)
 - [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds + scripts
 - [references/drift-detection.md](references/drift-detection.md) — stale-file + rule-adoption-drought signals
 - [references/critique-format.md](references/critique-format.md) — critique output shape
@@ -141,7 +141,7 @@ Each dispatch batch stays ≤5 agents (compound v2.39.0 convention: 6+ parallel 
 
 ## Sub-agents invoked
 
-All dispatch uses fully-qualified Task names (compound 2.35.0 convention). Cross-plug-in calls use the `compound-engineering:` prefix.
+All dispatch uses fully-qualified Task names. We stay within `design-harnessing:` and do not dispatch into other plug-ins' namespaces by default.
 
 **Audit mode — BATCH 1 (parallel, 5 agents):**
 - `design-harnessing:analysis:harness-auditor` × 5 — one per layer (`layer: 1` through `layer: 5`), `scenario: audit`
@@ -149,7 +149,7 @@ All dispatch uses fully-qualified Task names (compound 2.35.0 convention). Cross
 **Audit mode — BATCH 2 (parallel, 2–3 agents):**
 - `design-harnessing:analysis:rubric-recommender` — L4 gap finding (`scenario: audit-gap-finding`)
 - `design-harnessing:research:lesson-retriever` — L5 cluster corpus scan
-- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `coexistence.compound_engineering: true` or other-tool harnesses are detected
+- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `other_tool_harnesses_detected` is non-empty
 
 **Audit mode — quick:**
 - Single `design-harnessing:analysis:harness-auditor` in aggregate mode (reads `detect.py` JSON + `hd-config.md` only)
@@ -159,4 +159,4 @@ All dispatch uses fully-qualified Task names (compound 2.35.0 convention). Cross
 - `design-harnessing:review:rubric-applier` — all other targets (batch-parallel ≤5 if multiple rubrics)
 
 **Cross-plug-in (optional user config):**
-- `compound-engineering:research:learnings-researcher`, other `compound-engineering:review:*` agents — only dispatched if listed in `hd-config.md:review_agents`
+- Users may list external agents in `hd-config.md:review_agents`; those are dispatched with fully-qualified Task names, one entry per external agent. Empty by default.

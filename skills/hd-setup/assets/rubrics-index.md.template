@@ -23,8 +23,7 @@ Layer 4 (rubrics) is **not** Layer 1 (design-system source content). Layer 1 des
 
 ## Coexistence
 
-<!-- If compound-engineering or other review harnesses are installed, note overlap + ownership here. -->
-<!-- Example: `/ce:review` (compound) runs generic code review; `/hd:review critique` (hd) runs design rubrics. -->
+<!-- If other review harnesses are installed, note overlap + ownership here (generic code review vs. design rubrics, etc.). -->
 
 {{COEXISTENCE_NOTE}}
 

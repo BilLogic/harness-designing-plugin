@@ -65,9 +65,9 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 **Checks:**
 
 1. `find docs/solutions -type f 2>/dev/null` returns any file → structural violation (we never write there)
-2. `compound-engineering.local.md` was modified since last audit and last modifier was our skill → we wrote to their config file (severe)
+2. Any external plug-in's config file at repo root was modified since last audit and last modifier was our skill → we wrote to a foreign config file (severe)
 3. `hd-config.md` schema invalid per `hd-setup/references/hd-config-schema.md`
-4. Bare compound Task calls in our skill files (grep for `Task [a-z-]+-researcher` without `compound-engineering:` prefix)
+4. Bare Task calls in our skill files (grep for `Task [a-z-]+-[a-z]+\(` without a fully-qualified `<plugin>:<category>:` prefix)
 
 **Severity:** P1 structural for all four. These are hard coexistence rules; violations break the "we can both be installed" promise.
 
