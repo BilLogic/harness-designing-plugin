@@ -117,16 +117,23 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 ## Installation
 
-```bash
-claude /plugin install harness-designing
+### Fastest path — self-hosted marketplace (available today)
+
+```
+/plugin marketplace add BilLogic/harness-designing-plugin
+/plugin install design-harness
 ```
 
-Local dev:
+### Local dev
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
 claude --plugin-dir ~/plugins/harness-designing
 ```
+
+### Official directories *(pending submission)*
+
+Once accepted by Anthropic's plugin directory, Cursor's marketplace, and OpenAI's Codex plugin directory (coming soon), one-line installs will be available via `claude /plugin install` / Cursor marketplace UI / `codex plugins add`.
 
 Codex CLI and Cursor equivalents ship from the same repo via `.codex-plugin/` and `.cursor-plugin/` sibling manifests.
 
