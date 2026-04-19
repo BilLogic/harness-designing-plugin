@@ -5,6 +5,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3j — marketplace submission prep (Anthropic, Cursor, Codex CLI)
+
+Completed per [`docs/plans/2026-04-18-006-refactor-phase-3j-marketplace-submission-plan.md`](docs/plans/2026-04-18-006-refactor-phase-3j-marketplace-submission-plan.md). Preps distribution to three platforms plus in-session content sweep triggered by Bill's README review.
+
+**Post-Phase-3i sweep** (`4ca0673c7e`): 13 living files corrected for two framing issues Bill surfaced reviewing the README:
+
+- **Coexistence framing** — reframed from bidirectional ("our skills invoke compound's agents") to one-way namespace respect. We do not invoke `compound-engineering:*` Task names from our skills or agents. `AGENTS.md § Coexistence` rule is now "No cross-plug-in Task calls." Living files swept: `AGENTS.md`, 4 coexistence references, `agents/research/lesson-retriever.md`, skill coexistence paragraphs in `hd-setup` + `hd-maintain`. Only surviving cross-plug-in Task references are labeled WRONG-form examples.
+- **Memory taxonomy** — anchored all living files to the article's canonical 4-type frame (procedural / semantic / episodic / working, per article §2.5). The five operational subtypes (temporal, procedural-chosen, semantic-taste, speculative, + canonical episodic) now nest as *derivative refinements* inside the canonical 4, not as peers. Files swept: `memory-taxonomy.md`, `faq.md`, `layer-5-knowledge.md`, `SKILL.md` + `capture-procedure.md` + `lesson-patterns.md` in `hd-maintain`, knowledge-skeleton `README.md.template`.
+
+**3j.1 — Manifest polish** (`5ea07e2082`): 3 plugin manifests updated for submission readiness.
+
+- `.claude-plugin/plugin.json` — fixed stale `homepage` + `repository` URLs (`design-harnessing-plugin` → `harness-designing-plugin`)
+- `.cursor-plugin/plugin.json` — added `homepage`, `repository`, `logo`, 7-keyword array
+- `.codex-plugin/plugin.json` — added same 4 fields; preserved Codex-specific `skills`, `category`, `capabilities`
+- Cross-manifest consistency: name `design-harness`, version `1.0.0`, description identical
+
+**3j.2 — Logo asset** (same commit): `assets/logo.svg` (501 bytes, viewBox `0 0 512 512`). 5 left-aligned horizontal bars in an inverted staircase: charcoal `#1f2937` (layers 2–5) + teal accent `#0d9488` (Layer 1 foundation). Renders crisp at 64px and 512px; evokes "harness builds the ladder" from the article tagline.
+
+**3j.3 — Self-hosted marketplace** (same commit): `marketplace.json` at repo root enables instant install before official directory listing:
+```
+/plugin marketplace add BilLogic/harness-designing-plugin
+/plugin install design-harness
+```
+README Installation section restructured into three H3 subsections: Fastest path (marketplace add) → Local dev (git clone) → Official directories (pending submission).
+
+**3j.4 — Submission packets** (`b8241c8d88`): pre-filled copy-paste packets in `docs/submissions/`:
+- `anthropic-submission.md` for [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission)
+- `cursor-submission.md` for [cursor.com/marketplace/publish](https://cursor.com/marketplace/publish)
+- `codex-submission.md` HOLDING until OpenAI opens self-serve publishing
+
+**3j.5 — Actual submission**: in-flight at time of commit; Claude in Chrome extension required for browser automation. Status tracked in the plan file.
+
 ### Phase 3i — agent architecture, skill renames, memory-term rename, reference reorg, README rewrite
 
 Completed per [`docs/plans/2026-04-18-005-refactor-phase-3i-agent-arch-renames-reorg-plan.md`](docs/plans/2026-04-18-005-refactor-phase-3i-agent-arch-renames-reorg-plan.md). Eleven work units. Origin: six rounds of in-session design dialogue 2026-04-18.

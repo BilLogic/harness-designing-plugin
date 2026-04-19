@@ -1,7 +1,7 @@
 ---
 title: "Phase 3j — marketplace submission: manifests, logo, marketplace.json, submission packets"
 type: refactor
-status: active
+status: prep-completed-submission-pending
 date: 2026-04-18
 ---
 
