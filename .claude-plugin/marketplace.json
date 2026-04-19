@@ -11,11 +11,16 @@
   "plugins": [
     {
       "name": "design-harness",
-      "source": ".",
+      "source": "./",
       "description": "Design-focused AI harness for design teams. 4 skills + 9 agents + 14 starter rubrics.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Bill Guo",
+        "url": "https://github.com/BilLogic"
+      },
       "homepage": "https://github.com/BilLogic/harness-designing-plugin",
+      "repository": "https://github.com/BilLogic/harness-designing-plugin",
       "license": "MIT",
-      "category": "design",
       "keywords": [
         "design",
         "design-harness",
