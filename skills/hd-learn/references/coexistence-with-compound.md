@@ -20,15 +20,15 @@ Both are valid organizing moves. Teams running both get the union of benefits.
 | `compound-engineering.local.md` | `hd-config.md` | Separate config files; no shared state |
 | `ce-*` skill prefix | `hd-*` skill prefix | Distinct, no collisions |
 
-## Cross-plug-in invocation
+## One-way relationship — we stay in our own namespace
 
-When our skills call compound's agents (for example, `hd:review` v1 uses compound's pattern-recognition agent), they use **fully-qualified Task names**:
+We do **not** invoke any `compound-engineering:*` Task from our skills or agents. Our Task calls are always fully-qualified within our own namespace:
 
 ```
-Task compound-engineering:research:learnings-researcher(...)
+Task design-harnessing:<category>:<agent-name>(...)
 ```
 
-Never bare names — compound's 2.35.0 changelog documents the collision this causes.
+Never bare names — compound's 2.35.0 changelog documents the re-prefixing collision that causes. Bill's plug-in borrows compound's structural patterns; it does not reach into compound's Task namespace at runtime.
 
 ## Protected artifacts
 

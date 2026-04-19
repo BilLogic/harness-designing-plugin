@@ -2,9 +2,7 @@
 
 **Distilled from:** Substack article §2.5.
 
-Our knowledge layer uses 6 memory types. The 4 classical types (below) come from the memory literature; 2 derivative types (speculative, temporal) are operational refinements for designer workflows.
-
-Four kinds of memory, each mapping to a different part of the harness. Collapsing them is the single most common mistake — it's the reason so many AI-context setups rot after a few months.
+The canonical frame is **four** memory types — procedural, semantic, episodic, working — each mapping to a different part of the harness. Collapsing them is the single most common mistake, and the reason so many AI-context setups rot after a few months. This plug-in adds two **derivative subtypes** (speculative, temporal) as operational refinements for Layer 5's knowledge folder; they live *inside* episodic / semantic, not as peers.
 
 ## The four memory types
 

@@ -27,7 +27,7 @@ Each lesson file begins with a single YAML block declaring its memory type:
 title: "Short title of the lesson"      # required; 3-10 words; descriptive
 date: YYYY-MM-DD                        # required; ISO date of capture; must match filename prefix
 tags: [tag-a, tag-b, tag-c]             # required; 1-5 tags; kebab-case
-memory_type: episodic                   # episodic | procedural-chosen | semantic-taste | speculative | temporal
+memory_type: episodic                   # canonical: episodic | procedural | semantic | working (article §2.5). Derivative subtypes used here as operational labels: procedural-chosen | semantic-taste | speculative | temporal
 rule_candidate: true | false      # required for episodic; ready to graduate soon?
 rule_ref: null                      # optional; filled post-adoption w/ AGENTS.md entry ref
 importance: 3                           # optional 1-5; used by lesson-retriever weighting

@@ -32,7 +32,7 @@ Pick ONE checklist based on detected mode:
 
 ```
 hd:maintain capture Progress:
-- [ ] Step 1: Identify subject + memory type (episodic / decision / preference / ideation / changelog)
+- [ ] Step 1: Identify subject + memory type against canonical-4 frame (article §2.5): episodic (lesson), procedural (decision), semantic (preference), semantic-speculative (ideation), episodic-temporal (changelog)
 - [ ] Step 2: Resolve target file (lessons/YYYY-MM-DD-<slug>.md, or decisions/preferences/ideations/changelog.md)
 - [ ] Step 3: Optional — retrieve relevant past lessons (sub-agent)
 - [ ] Step 4: Draft the entry
@@ -93,7 +93,7 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 - ✅ Writes ONLY to `docs/knowledge/lessons/` (capture) or `AGENTS.md` + `docs/knowledge/changelog.md` (apply)
 - ❌ Never writes to `docs/solutions/` (compound's namespace)
 - ❌ Never writes to `docs/design-solutions/` in this release (reserved for post-release)
-- ✅ Cross-plug-in Task calls fully-qualified: `Task compound-engineering:research:learnings-researcher(...)`
+- ✅ Task calls stay in our own namespace and are fully-qualified: `Task design-harnessing:<category>:<agent>(...)`. We do not invoke `compound-engineering:*` tasks.
 
 ## Compact-safe mode
 

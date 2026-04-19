@@ -28,12 +28,12 @@ per audit run (not dispatched per-layer).
 - **Fail example:** missing `design_system:` key, or unknown top-level key
 - **Scope:** cross-cutting
 
-### fully-qualified-task-calls
-- **Check:** cross-plug-in Task calls are fully qualified (no bare `learnings-researcher` etc.)
+### namespace-respect-in-task-calls
+- **Check:** skill/agent Task calls stay inside our namespace and are fully qualified (no bare names; no reaches into `compound-engineering:*`)
 - **Default severity:** p1
-- **Pass example:** `Task compound-engineering:research:learnings-researcher(...)`
-- **Fail example:** bare `Task learnings-researcher(...)` — will get re-prefixed wrong
-- **Scope:** cross-cutting (grep skill files for violations)
+- **Pass example:** `Task design-harnessing:research:lesson-retriever(...)`
+- **Fail example:** bare `Task lesson-retriever(...)` (re-prefixed wrong, compound 2.35.0); or `Task compound-engineering:research:learnings-researcher(...)` (we do not invoke compound's agents from our code)
+- **Scope:** cross-cutting (grep skill + agent files for violations)
 
 ### naming-discipline
 - **Check:** skill dirs use `hd-*` prefix; `name:` frontmatter uses `hd:verb`; plan files use `YYYY-MM-DD-NNN-<type>-<slug>-plan.md`

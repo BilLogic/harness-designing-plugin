@@ -52,7 +52,7 @@ Each layer maps to a distinct memory/cognition mechanism, and collapsing or spli
 - **L4 Rubrics** = *semantic checks* (how to judge quality)
 - **L5 Knowledge** = *episodic + temporal memory* (what happened, when, with consequences)
 
-Collapsing L1+L2 loses the noun/verb distinction. Collapsing L4+L1 loses the checks-vs-source-content separation (a bug we fixed in Phase 3d). Splitting L5 into episodic-vs-temporal-vs-speculative proved too granular in practice — the 5 memory types live *inside* L5, not as separate layers. See article § layer-overview.
+Collapsing L1+L2 loses the noun/verb distinction. Collapsing L4+L1 loses the checks-vs-source-content separation (a bug we fixed in Phase 3d). Promoting L5's derivative subtypes (temporal, speculative) into separate layers proved too granular — the canonical-4 frame (article §2.5) stays primary; the derivative subtypes live *inside* L5 as operational refinements, not as separate layers. See article § layer-overview and §2.5.
 
 ## 12. I already have CLAUDE.md or .agent/ — do I still need this?
 

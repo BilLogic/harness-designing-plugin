@@ -11,12 +11,13 @@ Step-by-step procedure for `/hd:maintain capture`: classify the memory type, res
 
 ## Steps
 
-**Step 1 — Identify subject + memory type.** Extract from conversation. Classify:
-- "What happened during this work?" → **episodic** → `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md` (new file)
-- "What did we choose, and why?" → **procedural-chosen** → `docs/knowledge/decisions.md`
-- "What taste/workflow call are we standardizing?" → **semantic-taste** → `docs/knowledge/preferences.md`
-- "What idea are we exploring / deferring?" → **speculative** → `docs/knowledge/ideations.md`
-- "What harness-structural change happened?" → **temporal** → `docs/knowledge/changelog.md`
+**Step 1 — Identify subject + memory type.** Extract from conversation. Classify against the canonical-4 frame from article §2.5 (procedural / semantic / episodic / working); derivative subtype names on the right are the operational labels used in frontmatter:
+
+- "What happened during this work?" → **episodic** (canonical) → `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md` (new file)
+- "What did we choose, and why?" → **procedural** → subtype `procedural-chosen` → `docs/knowledge/decisions.md`
+- "What taste/workflow call are we standardizing?" → **semantic** → subtype `semantic-taste` → `docs/knowledge/preferences.md`
+- "What idea are we exploring / deferring?" → **semantic** (not-yet-committed) → subtype `speculative` → `docs/knowledge/ideations.md`
+- "What harness-structural change happened?" → **episodic** (time-ordered) → subtype `temporal` → `docs/knowledge/changelog.md`
 
 If thin/ambiguous, ask: *"What's the lesson? Answer in one sentence."* Then: *"Is this (a) episodic what-happened, (b) a decision we made, (c) a preference we hold, (d) an idea to explore, or (e) a harness-structural change?"* Default when unclear: episodic lesson.
 

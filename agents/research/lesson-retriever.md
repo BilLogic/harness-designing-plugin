@@ -70,13 +70,11 @@ If no lessons score above 2.0, return empty `retrieved_lessons[]` and set `summa
 
 - READ-ONLY. Never modifies any file.
 - Reads only under `lessons_root`.
-- NEVER reads `docs/solutions/` (compound's namespace) — that's for compound's own learnings-researcher agent, which the calling skill can also invoke separately via `Task compound-engineering:research:learnings-researcher(...)` when cross-plug-in retrieval is wanted.
+- NEVER reads `docs/solutions/` (compound-engineering's namespace) — out of scope for this agent. This plug-in does not invoke `compound-engineering:*` tasks; that namespace is respected as external territory only.
 
-## When to use this vs compound's `learnings-researcher`
+## Scope
 
-- **Use `design-harnessing:research:lesson-retriever`** when you want strictly-design-harness lessons (Layer 5) filtered and weighted.
-- **Use `compound-engineering:research:learnings-researcher`** when you want engineering-domain solutions (compound's `docs/solutions/`) — orthogonal corpus.
-- **Use both** (parallel Task calls) when the current topic has both design and engineering dimensions.
+- **Use `design-harnessing:research:lesson-retriever`** for design-harness lessons under `docs/knowledge/lessons/` (Layer 5), filtered and weighted. That is this agent's only corpus.
 
 ## Failure modes
 

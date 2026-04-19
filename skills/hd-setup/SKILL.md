@@ -152,7 +152,7 @@ When invoked on a repo that has `hd-config.md`:
 
 ## Coexistence
 
-Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses `compound-engineering.local.md`, no rivalry language. Cross-plug-in Task calls always fully-qualified: `Task compound-engineering:research:learnings-researcher(...)`. See [`references/coexistence-checklist.md`](references/coexistence-checklist.md).
+Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses `compound-engineering.local.md`, no rivalry language. All Task calls stay in our own namespace (`Task design-harnessing:<cat>:<name>(...)`) — we do not invoke `compound-engineering:*` tasks. See [`references/coexistence-checklist.md`](references/coexistence-checklist.md).
 
 ## Reference files
 

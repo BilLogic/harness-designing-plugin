@@ -39,14 +39,13 @@ find docs/solutions -newer AGENTS.md 2>/dev/null && echo "FAIL: wrote to compoun
 [ ! -f compound-engineering.local.md ] || echo "OK: compound's config untouched"
 ```
 
-## Cross-plug-in invocation rules
+## Task namespace discipline
 
-When OUR skills invoke compound's agents (starts at v1 `hd:review`), always use fully-qualified Task names:
+Our skills and agents only invoke tasks inside our own namespace, always fully qualified:
 
-- **Correct:** `Task compound-engineering:research:learnings-researcher(...)`
-- **Wrong:** `Task learnings-researcher(...)` — gets re-prefixed with our namespace, fails silently
-
-Reference: compound CHANGELOG 2.35.0.
+- **Correct:** `Task design-harnessing:research:lesson-retriever(...)`
+- **Wrong (bare):** `Task lesson-retriever(...)` — gets re-prefixed, fails silently (compound CHANGELOG 2.35.0)
+- **Wrong (cross-plug-in):** `Task compound-engineering:research:learnings-researcher(...)` — we do not invoke compound's agents from our code; the relationship is one-way (we borrow their patterns; we don't call into their runtime)
 
 ## Output language discipline
 

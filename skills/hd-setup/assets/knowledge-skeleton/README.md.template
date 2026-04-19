@@ -5,16 +5,18 @@ Layer 5 of the five-layer design harness: **what the team has learned**. Organiz
 
 ## Memory types used here
 
-| File | Memory type | What it captures | Mutability |
-|------|-------------|------------------|------------|
-| `lessons/<domain>.md` | **episodic** | Dated narratives of what happened during specific work | Append-only; history is sacred (article §4e) |
-| `decisions.md` | **procedural-chosen** | ADR-style: "we chose X over Y because Z" | Append-only; supersede with new entries, never edit old |
-| `preferences.md` | **semantic-taste** | Stable taste calls the team holds | Mutable with team agreement |
-| `ideations.md` | **speculative** | Open questions, unchosen paths, ideas we might revisit | Append-only; cross off when decided |
-| `changelog.md` | **temporal** | When harness-structural changes happened (file renames, layer additions) | Append-only |
-| `changelog.md` | **meta-log** | Which lessons promoted into AGENTS.md rules, and when | Append-only; created on first rule adoption (not at setup) |
+Anchored on the article §2.5 canonical-4 frame (procedural / semantic / episodic / working). Derivative subtype names on the right are the operational role labels used in frontmatter.
 
-The taxonomy comes from agent-memory research (OpenClaw / MemGPT / Generative Agents). Article §2.5 covers the mapping to the broader harness-memory model.
+| File | Canonical type (§2.5) | Derivative subtype | What it captures | Mutability |
+|------|------------------------|--------------------|------------------|------------|
+| `lessons/<domain>.md` | **episodic** | — | Dated narratives of what happened during specific work | Append-only; history is sacred (article §4e) |
+| `decisions.md` | **procedural** | procedural-chosen | ADR-style: "we chose X over Y because Z" | Append-only; supersede with new entries, never edit old |
+| `preferences.md` | **semantic** | semantic-taste | Stable taste calls the team holds | Mutable with team agreement |
+| `ideations.md` | **semantic** (not-yet-committed) | speculative | Open questions, unchosen paths, ideas we might revisit | Append-only; cross off when decided |
+| `changelog.md` | **episodic** (time-ordered) | temporal | When harness-structural changes happened | Append-only |
+| `changelog.md` | **episodic** | meta-log | Which lessons promoted into AGENTS.md rules, and when | Append-only; created on first rule adoption (not at setup) |
+
+Article §2.5 is the primary vocabulary; the derivative subtypes are operational refinements for this folder, not peers of the canonical 4.
 
 ## Why separate files?
 

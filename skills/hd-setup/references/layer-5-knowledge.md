@@ -24,20 +24,22 @@ docs/knowledge/
 
 Templates for the 6 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/).
 
-## Five-memory-type model
+## Memory types in Layer 5
 
-| Type | File | Lifecycle | What it captures |
-|------|------|-----------|------------------|
-| **episodic** | `lessons/<domain>.md` | Append-only; history is sacred | Dated narratives of what happened during specific work |
-| **procedural-chosen** | `decisions.md` | Append-only; supersede with new entries, never edit | ADR-style chosen-option-with-rationale |
-| **semantic-taste** | `preferences.md` | Mutable with team agreement | Stable taste calls |
-| **speculative** | `ideations.md` | Append-only; cross off (don't delete) when idea decided | Open questions, unchosen paths |
-| **temporal** | `changelog.md` | Append-only | When harness-structural changes happened |
-| **meta-log** | `changelog.md` | Append-only; created on first rule adoption | Which episodic lessons became AGENTS.md rules |
+Anchor: the article §2.5 canonical-4 frame — **procedural / semantic / episodic / working**. Layer 5 is primarily **episodic** memory (what happened), with two derivative subtypes that refine the operational shape for a design team's knowledge folder.
 
-The 5+1 taxonomy comes from agent-memory research (OpenClaw / MemGPT / Generative Agents). Article §2.5 covers the broader harness-memory mapping.
+| File | Canonical type (article §2.5) | Derivative subtype | Lifecycle | What it captures |
+|------|------------------------------|--------------------|-----------|------------------|
+| `lessons/<domain>.md` | **episodic** | — (canonical) | Append-only; history is sacred | Dated narratives of what happened during specific work |
+| `decisions.md` | **procedural** | procedural-chosen (ADR subtype) | Append-only; supersede with new entries, never edit | Chosen-option-with-rationale |
+| `preferences.md` | **semantic** | semantic-taste (team taste subtype) | Mutable with team agreement | Stable taste calls |
+| `ideations.md` | **semantic** (not-yet-committed) | speculative | Append-only; cross off (don't delete) when idea decided | Open questions, unchosen paths |
+| `changelog.md` | **episodic** (time-ordered) | temporal | Append-only | When harness-structural changes happened |
+| `changelog.md` | **episodic** | meta-log | Append-only; created on first rule adoption | Which episodic lessons became AGENTS.md rules |
 
-## Memory-type labels appear in three places
+Derivative subtype names remain in `memory_type:` YAML frontmatter as informative role labels, but the canonical-4 frame from article §2.5 is the primary vocabulary. The broader harness-memory mapping lives in article §2.5; `hd-learn/references/memory-taxonomy.md` explains the four types plus their derivative refinements.
+
+## Memory-type labels appear in three places (derivative subtype names)
 
 1. **YAML frontmatter** on each file — `memory_type: <type>`
 2. **INDEX.md** has a Memory Type column
@@ -124,7 +126,7 @@ Task design-harnessing:analysis:rule-candidate-scorer(
 Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for each.
 
 **Execute — scaffold:**
-- Use the five-memory-type model + domain-grouped-lessons sections above for L5 depth
+- Use the canonical-4 memory frame (article §2.5) + derivative subtypes + domain-grouped-lessons sections above for L5 depth
 - Seed questions: (1) 3 decisions in last 6 months new hire should know? (2) mistake you want to prevent recurring? (3) pattern across 3+ projects worth formalizing?
 - Write `docs/knowledge/INDEX.md`, `docs/knowledge/changelog.md`, 1 starter lesson
 

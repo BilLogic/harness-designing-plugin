@@ -90,11 +90,7 @@ Categories mirror compound's convention (with some of ours):
 ```
 Task design-harnessing:<category>:<agent-name>(...)
 ```
-From OUR skills to compound's agents:
-```
-Task compound-engineering:<category>:<agent-name>(...)
-```
-Never bare names — compound 2.35.0 lesson: bare names get re-prefixed wrong.
+Never bare names — compound 2.35.0 lesson: bare names get re-prefixed wrong. We do **not** invoke `compound-engineering:*` agents from our skills; our namespace is strictly `design-harnessing:<cat>:<name>`.
 
 **When to create a new agent:** prove ≥2 invocation sites across ≥2 skills, OR a case where an isolated context window measurably improves quality (heavy reads, parallel dispatch). Don't create speculatively.
 
@@ -111,7 +107,7 @@ Never ship bare command names. Always namespaced (compound 2.38.0 rename-pain le
 
 ## Coexistence with compound-engineering
 
-Most readers run `compound-engineering` alongside this plug-in. Hard rules:
+We took structural inspiration from `compound-engineering` (plug-in layout, skills-as-commands, categorized sub-agents, plan-then-work workflow). The relationship is **one-way**: we stay out of their namespace, we declare `<protected_artifacts>` so `/ce:review` won't flag our outputs, and we **never** invoke `compound-engineering:*` Task calls from our skills or agents. Most readers run both plug-ins side by side — hard rules keep them from colliding:
 
 | Compound's | Ours |
 |---|---|
@@ -120,7 +116,7 @@ Most readers run `compound-engineering` alongside this plug-in. Hard rules:
 | `compound-engineering.local.md` | `hd-config.md` |
 | `ce-*` skill prefix | `hd-*` skill prefix |
 
-Invoke compound agents via fully-qualified Task names: `compound-engineering:review:pattern-recognition-specialist` (compound 2.35.0 fix). Bare names get re-prefixed incorrectly.
+Our Task calls are always `Task design-harnessing:<category>:<agent-name>(...)` — fully-qualified, never bare (compound 2.35.0 lesson: bare names get re-prefixed wrong). We do not call into compound's Task namespace.
 
 ## Skill compliance
 
@@ -150,7 +146,7 @@ Required reading before authoring any skill:
 - **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions, compound 2.37.1 lesson).
 - **Lesson files** use `YYYY-MM-DD-slug.md` in `docs/knowledge/lessons/`.
 - **Never write to `docs/solutions/`** — that's compound-engineering's namespace. Our equivalent is `docs/design-solutions/` (v0.5+).
-- **Cross-plug-in agent invocation** always uses fully-qualified names: `Task compound-engineering:research:learnings-researcher(...)`.
+- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task design-harnessing:<category>:<agent-name>(...)`. We do not call `compound-engineering:*` tasks.
 
 ## Rules
 
