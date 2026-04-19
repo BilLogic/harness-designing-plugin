@@ -2,19 +2,24 @@
 
 A plug-in for design teams to assemble the AI harness you already have into something that compounds. Ships for [Claude Code](https://claude.com/claude-code), [Codex CLI](https://github.com/openai/codex), and [Cursor](https://cursor.com) from one repo with three sibling manifests.
 
+> *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
+> — from the companion article
+
 ## Thesis
 
 You already have a design harness. It's just scattered — across Slack pins, Notion docs, Figma comments, AGENTS.md rules, and a decade of design reviews. This plug-in assembles that pile into **five layers** every AI-assisted design task inherits:
 
 | Layer | Memory type | What lives here |
 |---|---|---|
-| **1. Context** | semantic | Product, users, brand voice, design system tokens — what's always true |
-| **2. Skills** | procedural | Repeatable design tasks (prototype a screen, write a component, audit a11y) |
-| **3. Orchestration** | procedural-of-procedures | When to invoke which skill, and in what order |
-| **4. Rubrics** | semantic checks | How to judge quality — a11y, typography, interaction, telemetry, i18n, … |
-| **5. Knowledge** | episodic + temporal + speculative + semantic-taste + procedural-chosen | Lessons, decisions, preferences, changelogs, ideations |
+| **1. Context Engineering** | semantic (+ identity-layer procedural) | Product facts, users, brand voice, design system tokens, conventions — what's always true |
+| **2. Skill Curation** | procedural | Repeatable design tasks the agent *does* (research, plan, prototype, review, ship, compound) |
+| **3. Workflow Orchestration** | procedural | When to invoke which skill and in what order; handoffs between skills |
+| **4. Rubric Setting** | procedural (for evaluation) | How to judge "good" — a11y, typography, interaction, telemetry, i18n, … wired between workflow phases |
+| **5. Knowledge Compounding** | episodic | Lessons, decisions, preferences, changelogs, ideations — captured per event, promoted to rules when patterns repeat |
 
-Per layer, four choices: **link** (pointer to source of truth), **critique** (apply a rubric), **scaffold** (seed questions + write files), or **skip**.
+Working memory — the active session — is ephemeral. The five layers control what flows into it each time.
+
+At each layer, four choices: **link** (pointer to source of truth), **critique** (apply a rubric), **scaffold** (seed questions + write files), or **skip**.
 
 ## Components
 
@@ -29,10 +34,10 @@ Per layer, four choices: **link** (pointer to source of truth), **critique** (ap
 
 | Command | Use it to… |
 |---|---|
-| [`/hd:learn`](skills/hd-learn/SKILL.md) | Ask questions about the harness concept. 10 atomic references (one per layer + glossary + FAQ + coexistence + memory-taxonomy). Article § citations when the corpus is configured. No writes. |
-| [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + harness-auditor + coexistence-analyzer + rubric-recommender). Offer per-layer link / critique / scaffold / skip. Write `hd-config.md`. |
-| [`/hd:maintain`](skills/hd-maintain/SKILL.md) | Capture lessons (one dated file per event). Propose rules from lessons to AGENTS.md. Destructive rule adoptions require SHA-256 plan-hash proof-of-consent. |
-| [`/hd:review`](skills/hd-review/SKILL.md) | `audit` harness health in a 2-batch dispatch (preflight + deep); `critique` work items against rubrics. `<protected_artifacts>` declared so `/ce:review` never flags our outputs. |
+| [`/hd:learn`](skills/hd-learn/SKILL.md) | Ask questions about the harness concept. 10 atomic references (one per layer + glossary + FAQ + memory-taxonomy). Article § citations when the corpus is configured. No writes. |
+| [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + 5× harness-auditor + rubric-recommender). Offer per-layer link / critique / scaffold / skip. Write `hd-config.md`. |
+| [`/hd:maintain`](skills/hd-maintain/SKILL.md) | Capture lessons (one dated file per event). Promote lessons to rules in AGENTS.md. Destructive rule adoptions require SHA-256 plan-hash proof-of-consent. |
+| [`/hd:review`](skills/hd-review/SKILL.md) | `audit` harness health in a 2-batch parallel dispatch; `critique` harness artifacts (SKILL.md, rubric, lesson) against quality rubrics. Not for critiquing design deliverables — that happens outside our scope. |
 
 ## Agents
 
@@ -42,29 +47,31 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`.
 
 | Agent | Purpose |
 |---|---|
-| `harness-auditor` | 5-layer health narrative; full mode or quick preflight |
+| `harness-auditor` | Audit one layer given `layer: 1\|2\|3\|4\|5`. Dispatched 5× parallel by `/hd:review audit` and reused by `/hd:setup` Phase A |
 | `rule-candidate-scorer` | Cluster lessons; score rule-readiness on recurrence × clean-imperative × team-agreement |
-| `rubric-recommender` | Propose which starter rubrics to seed given repo signals |
-| `coexistence-analyzer` | Detect compound-engineering artifacts and namespace collisions |
+| `rubric-recommender` | From `detect.py` signals, rank which starter rubrics to scaffold or flag as gaps |
+| `coexistence-analyzer` | Detect other-tool artifacts (`.agent/`, `.claude/`, `.codex/`, compound-engineering footprint); flag collision risks |
 
 ### `research/` (2)
 
 | Agent | Purpose |
 |---|---|
 | `lesson-retriever` | Retrieve past lessons weighted by relevance × recency × importance |
-| `article-quote-finder` | Verbatim article quotes with § citations; graceful empty when corpus not configured |
+| `article-quote-finder` | Verbatim article quotes with § citations; emits graceful empty when corpus not configured |
 
 ### `review/` (3)
 
 | Agent | Purpose |
 |---|---|
 | `skill-quality-auditor` | Apply the 9-section skill-quality rubric to any SKILL.md |
-| `rubric-applier` | Forward critique: apply any rubric to any work item |
-| `rubric-extractor` | Find implicit rubrics in AGENTS.md, docs, design reviews; emit candidate rubric YAML |
+| `rubric-applier` | Forward critique: apply any rubric to any harness artifact |
+| `rubric-extractor` | Find implicit rubrics in AGENTS.md, conventions, design reviews; emit candidate rubric YAML |
 
 ## Starter rubrics
 
-In [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-rubrics/). Each carries a `## Scope & Grounding` section (personas + user stories + scenarios + anti-scenarios) and cites its `source:` derivation. Authoring guide at [`skills/hd-review/references/rubric-authoring-guide.md`](skills/hd-review/references/rubric-authoring-guide.md). Derived from [pbakaus/impeccable](https://github.com/pbakaus/impeccable), Nielsen's 10 heuristics, [Material Design 3](https://m3.material.io), and [Fluent 2](https://fluent2.microsoft.design).
+In [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-rubrics/). Each carries a `## Scope & Grounding` section (personas + user stories + scenarios + anti-scenarios) and cites its `source:` derivation. Authoring guide at [`skills/hd-review/references/rubric-authoring-guide.md`](skills/hd-review/references/rubric-authoring-guide.md).
+
+Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in scaffolds and maintains the rubric library; running rubrics against actual design work happens in whatever AI tool the team uses.
 
 ### Quality & craft
 
@@ -104,20 +111,9 @@ In [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-
 
 | Script | Purpose |
 |---|---|
-| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v2 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, compound coexistence, team tooling, MCP servers |
+| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v2 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
 | [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + Tier 1 combined-context budget |
-
-## Coexistence with compound-engineering
-
-Runs alongside [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) without namespace collisions. Our skills invoke compound's agents via fully-qualified Task names (`Task compound-engineering:research:learnings-researcher(…)`).
-
-| Compound's | Ours |
-|---|---|
-| `/ce:*` commands | `/hd:*` commands |
-| `docs/solutions/` | `docs/design-solutions/` (v0.5+) |
-| `compound-engineering.local.md` | `hd-config.md` |
-| `ce-*` skill prefix | `hd-*` skill prefix |
 
 ## Installation
 
@@ -136,22 +132,29 @@ Codex CLI and Cursor equivalents ship from the same repo via `.codex-plugin/` an
 
 ## Credits
 
-**Article** — Bill Guo's Substack series on design harnessing *(URL TBD)*.
+**The article** — Bill Guo's Substack series on design harnessing *(URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
 
-**Plugin architecture inspiration** — [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [@dhh](https://twitter.com/dhh) and [@kieranklaassen](https://twitter.com/kieranklaassen). Same move (codify practice so it compounds), different domain.
+**Plug-in pattern** — [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [@dhh](https://twitter.com/dhh) and [@kieranklaassen](https://twitter.com/kieranklaassen). The structural model — `plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow — is lifted directly from their work. Their companion essay, [*Compound Engineering*](https://every.to/guides/compound-engineering), is the lineage we extend into design.
+
+**Harness vocabulary + anatomy** — LangChain: [*Anatomy of an Agent Harness*](https://blog.langchain.com/anatomy-of-an-agent-harness) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory). The noun "harness," the memory-typology framing, and the ownership argument come from here.
+
+**Context engineering + harness design for long-running apps** — Anthropic: [*Effective Context Engineering for AI Agents*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [*Harness Design for Long-Running Apps*](https://www.anthropic.com/engineering/harness-design-long-running-apps), [*Authoring Skills for Claude*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices), and the [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf). Attention-budget and progressive-disclosure patterns from these.
 
 **Rubric source material**
-- [pbakaus/impeccable](https://github.com/pbakaus/impeccable) by [@paulbakaus](https://twitter.com/paulbakaus)
-- [Nielsen Norman Group](https://www.nngroup.com) — [Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/)
-- [Material Design 3](https://m3.material.io) — Google
-- [Fluent 2](https://fluent2.microsoft.design) — Microsoft
+- [pbakaus/impeccable](https://github.com/pbakaus/impeccable) by [@paulbakaus](https://twitter.com/paulbakaus) — typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design
+- [Nielsen Norman Group](https://www.nngroup.com) — [Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) → `heuristic-evaluation`
+- [Material Design 3](https://m3.material.io) — Google → `design-system-compliance`, `interaction-states`
+- [Fluent 2](https://fluent2.microsoft.design) — Microsoft → `accessibility-wcag-aa`, `ux-writing`
 
-**Skill-authoring guidance** — Anthropic's [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) and [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf).
+**Adjacent work** — [*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by productpower covers context engineering for designers; this plug-in extends to all five layers.
+
+**Working implementation** — [BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the open-source harness built for a rotating 15-designer team; the patterns templated here are distilled from it.
 
 ## Known Issues
 
-- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Set the corpus path in `agents/research/article-quote-finder-corpus.md` once the article series publishes.
+- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/article-quote-finder-corpus.md` once the series publishes.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
+- **Namespace respect, not integration.** If you also run `compound-engineering`, this plug-in stays out of its namespace — our commands are `/hd:*` (not `/ce:*`), we write to `docs/design-solutions/` (not `docs/solutions/`), our config is `hd-config.md` (not `compound-engineering.local.md`), and our `<protected_artifacts>` block tells `/ce:review` to leave our outputs alone. We don't call into compound's skills or agents.
 
 ## Version History
 
