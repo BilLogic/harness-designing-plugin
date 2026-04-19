@@ -96,7 +96,7 @@ Completed per [`docs/plans/2026-04-18-005-refactor-phase-3i-agent-arch-renames-r
 - 4 skills: `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review`. All SKILL.md ≤200 lines.
 - 9 agents across 3 categories (`analysis/` 4, `research/` 2, `review/` 3).
 - 14 starter rubrics, each with `## Scope & Grounding`.
-- 3 scripts (`detect.py`, `compute-plan-hash.sh`, `budget-check.sh`).
+- 4 scripts (`detect.py`, `detect-mode.sh`, `compute-plan-hash.sh`, `budget-check.sh`).
 - Budget-check: violations 0; Tier-1 198/200.
 - Repo history clean on `dh/main`.
 

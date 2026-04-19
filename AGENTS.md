@@ -28,17 +28,19 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 │   ├── rubrics/INDEX.md           # Layer 4 pointer
 │   └── plans/                     # PRDs + scenario docs
 │
-├── agents/                        # reusable sub-agents invoked by skills via Task
+├── agents/                           # reusable sub-agents invoked by skills via Task
 │   ├── analysis/
-│   │   └── rule-candidate-scorer.md
+│   │   ├── harness-auditor.md         # layer-parameterized 5-way parallel
+│   │   ├── rule-candidate-scorer.md   # cluster lessons, score rule-readiness
+│   │   ├── rubric-recommender.md      # rank which starters to scaffold
+│   │   └── coexistence-analyzer.md    # detect other-tool harness signals
 │   ├── research/
-│   │   ├── lesson-retriever.md
-│   │   ├── article-quote-finder.md
-│   │   └── article-quote-finder-corpus.md
+│   │   ├── lesson-retriever.md        # past-lessons ranking
+│   │   └── article-quote-finder.md    # + article-quote-finder-corpus.md (data ref, not an agent)
 │   └── review/
-│       ├── skill-quality-auditor.md
-│       ├── rubric-applier.md
-│       └── rubric-extractor.md
+│       ├── skill-quality-auditor.md   # 9-section rubric on any SKILL.md
+│       ├── rubric-applier.md          # forward critique (apply-mode)
+│       └── rubric-extractor.md        # reverse extract (find implicit rubrics)
 │
 └── skills/
     ├── hd-learn/                # LEARN (Q&A)

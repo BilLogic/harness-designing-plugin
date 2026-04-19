@@ -54,7 +54,7 @@ Record these as `their_policy` entries.
 
 Read `<repo_root>/skills/hd-review/SKILL.md` and extract the `<protected_artifacts>` block (if present). Each pattern there is one of our own declared protections.
 
-Per the graduated rule (2026-04-18): `/hd:setup` is additive-only when any existing harness is detected. This agent confirms those protections are **declared**, not whether they are enforced at write-time (that's the skill's runtime check).
+Per the adopted rule (2026-04-18): `/hd:setup` is additive-only when any existing harness is detected. This agent confirms those protections are **declared**, not whether they are enforced at write-time (that's the skill's runtime check).
 
 ### Phase 5: align policies + detect collisions
 

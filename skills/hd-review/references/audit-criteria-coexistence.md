@@ -68,7 +68,7 @@ per audit run (not dispatched per-layer).
 - **Default severity:** p1
 - **Pass example:** only new files created; existing harness untouched
 - **Fail example:** hd-setup rewrote `AGENTS.md` in a repo that already had one
-- **Scope:** cross-cutting (grounded in 2026-04-18 graduated rule)
+- **Scope:** cross-cutting (grounded in 2026-04-18 adopted rule)
 
 ## What's out of scope for this audit
 

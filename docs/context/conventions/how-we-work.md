@@ -13,11 +13,11 @@ Format: `<type>(<scope>): description`
 - `docs` — meta-harness updates, README, PRD
 - `chore` — dependency bumps, CHANGELOG-only changes
 
-**Scope:** the skill name (`hd-onboard`, `hd-setup`) or a plug-in-level concern (`manifests`, `agents`, `docs`).
+**Scope:** the skill name (`hd-learn`, `hd-setup`) or a plug-in-level concern (`manifests`, `agents`, `docs`).
 
 **Examples from this repo's history:**
 - `refactor: flatten repo to single-plug-in structure (Phase 1)`
-- `feat(hd-onboard): implement v0.MVP learn skill (Phase 2a)`
+- `feat(hd-learn): implement v0.MVP learn skill (Phase 2a)`
 - `feat(hd-setup): implement v0.MVP setup skill (Phase 2b)`
 
 End commits with:
@@ -57,7 +57,7 @@ If `/ce:review` or `/hd:review` is available in the session, run them before hum
 
 ## Dogfood
 
-Every significant learning during plug-in development → new lesson in `docs/knowledge/lessons/`. When 3+ lessons converge on same pattern → graduate to `AGENTS.md` rule (see [../../knowledge/graduations.md](../../knowledge/graduations.md) for the meta-log).
+Every significant learning during plug-in development → new lesson in `docs/knowledge/lessons/`. When 3+ lessons converge on same pattern → promote to `AGENTS.md` rule (see [../../knowledge/changelog.md](../../knowledge/changelog.md) for the adoption log).
 
 This is the plug-in's self-referential proof point: if the plug-in authors won't dogfood it, nobody else will either.
 

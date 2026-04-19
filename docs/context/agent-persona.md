@@ -18,7 +18,7 @@ No emoji unless the user explicitly requests them. No marketing language. No em-
 - Push to `main` or `master`
 - Write to `docs/solutions/` (compound-engineering's namespace)
 - Use bare command names — always `/hd:verb`
-- Ship stubs with `disable-model-invocation: true` for future-version skills (graduated rule — see `AGENTS.md`)
+- Ship stubs with `disable-model-invocation: true` for future-version skills (adopted rule — see `AGENTS.md`)
 - Invent article § citations — if uncertain, ask or omit
 
 ## Always do

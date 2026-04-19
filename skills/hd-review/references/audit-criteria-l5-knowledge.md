@@ -44,21 +44,21 @@ rule-adoption cadence. Loaded by `harness-auditor` with `layer: 5`.
 ### rule-adoption-cadence
 - **Check:** rule-adoption cadence ~1 per 10 lessons is healthy; at least one rule visible in git history via `docs/knowledge/changelog.md`
 - **Default severity:** p2
-- **Pass example:** 23 lessons, 2-3 graduated rules recorded in changelog
-- **Fail example:** 40+ lessons, 0 rule graduations recorded
+- **Pass example:** 23 lessons, 2-3 adopted rules recorded in changelog
+- **Fail example:** 40+ lessons, 0 rule adoptions recorded
 - **Scope:** this layer only
 
 ### rule-adoption-drought
 - **Check:** 10+ lessons with same tag and 0 rule adoptions → drought
 - **Default severity:** p2
-- **Pass example:** repeated-tag clusters eventually produce a graduation
+- **Pass example:** repeated-tag clusters eventually produce an adoption
 - **Fail example:** 15 lessons tagged `#handoff-friction`, no rule adopted — pattern is being re-learned, not codified
 - **Scope:** this layer only
 
 ### compound-readiness-backlog
 - **Check:** lessons with `rule_candidate: yes` that haven't been adopted are tracked as a backlog
 - **Default severity:** p2
-- **Pass example:** 3 candidates flagged; the next `/hd:compound` run has a queue
+- **Pass example:** 3 candidates flagged; the next `/hd:maintain` run has a queue
 - **Fail example:** 12 candidates flagged over 6 months, none processed
 - **Scope:** this layer only
 

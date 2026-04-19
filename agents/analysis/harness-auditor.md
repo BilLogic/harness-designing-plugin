@@ -70,7 +70,7 @@ If `scenario: setup-pre-analysis`, add a `recommended_action` block:
 - `default: link` — existing layer artifact is healthy; link hd-* on top (additive-only)
 - `default: critique` — layer exists but has p2+ findings; propose critique in the interactive walk
 - `default: scaffold` — layer absent or empty; propose scaffolding from starter assets
-- `default: skip` — graduated rule (2026-04-18) says skip L1/L2/L3 when `.agent/` or `.claude/` detected with ≥1 skill/rule
+- `default: skip` — adopted rule (2026-04-18) says skip L1/L2/L3 when `.agent/` or `.claude/` detected with ≥1 skill/rule
 
 If `scenario: audit`, omit `recommended_action`.
 
@@ -119,7 +119,7 @@ summary:
 - **READ-ONLY.** Never modifies any file.
 - Never reads outside `repo_root` (plus the plug-in's own `skills/hd-review/references/` for the criteria file).
 - Never reads `docs/solutions/` (compound-engineering's namespace).
-- Respects the additive-only protection (graduated rule 2026-04-18): reports on existing harness artifacts but flags them `protected: true` in evidence so the caller knows not to propose modification.
+- Respects the additive-only protection (adopted rule 2026-04-18): reports on existing harness artifacts but flags them `protected: true` in evidence so the caller knows not to propose modification.
 - Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 audit, it dispatches `Task design-harnessing:analysis:rubric-recommender(...)` separately.
 
 ## Failure modes

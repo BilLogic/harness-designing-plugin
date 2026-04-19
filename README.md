@@ -11,7 +11,7 @@ You already have a design harness. It's just scattered — across Slack pins, No
 
 | Layer | Memory type | What lives here |
 |---|---|---|
-| **1. Context Engineering** | semantic (+ identity-layer procedural) | Product facts, users, brand voice, design system tokens, conventions — what's always true |
+| **1. Context Engineering** | semantic | Product facts, users, brand voice, design system tokens, conventions — what's always true |
 | **2. Skill Curation** | procedural | Repeatable design tasks the agent *does* (research, plan, prototype, review, ship, compound) |
 | **3. Workflow Orchestration** | procedural | When to invoke which skill and in what order; handoffs between skills |
 | **4. Rubric Setting** | procedural (for evaluation) | How to judge "good" — a11y, typography, interaction, telemetry, i18n, … wired between workflow phases |
@@ -28,7 +28,7 @@ At each layer, four choices: **link** (pointer to source of truth), **critique**
 | Skills | 4 |
 | Agents | 9 |
 | Starter rubrics | 14 |
-| Scripts | 3 |
+| Scripts | 4 |
 
 ## Commands
 
@@ -112,6 +112,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 | Script | Purpose |
 |---|---|
 | [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v2 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
+| [`skills/hd-setup/scripts/detect-mode.sh`](skills/hd-setup/scripts/detect-mode.sh) | Bash shim fallback for `detect.py` when python3 unavailable |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
 | [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + Tier 1 combined-context budget |
 

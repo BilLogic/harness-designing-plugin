@@ -33,17 +33,14 @@ Per [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist", every 
 - One-level reference links
 - Imperative/infinitive voice
 - Markdown lint clean
-- Coexistence rules (no writes to `docs/solutions/`, fully-qualified Task names for cross-plug-in)
-
-`/ce:review` has run against this scaffold and surfaced the findings codified in the graduated-rules section.
+- Coexistence rules (no writes to `docs/solutions/`, fully-qualified Task names in our own `design-harnessing:*` namespace)
 
 ## `hd:review` execution
 
 `hd:review` executes rubric checks programmatically:
 
-- `audit-parallel.md` / `audit-serial.md` workflows run compound-engineering's research + review agents against the harness (parallel ≤5; serial auto-switch ≥6)
-- `critique.md` workflow applies rubrics to a specific work item
-- Starter rubrics ship at `skills/hd-review/templates/starter-rubrics/` (for users to extend): accessibility-wcag-aa, design-system-compliance, component-budget
+- See `skills/hd-review/SKILL.md` § Audit mode and § Critique mode for the procedures (parallel 2-batch audit dispatch; critique applies rubrics to a single work item).
+- Starter rubrics ship at `skills/hd-review/assets/starter-rubrics/` (14 rubrics, for users to copy into `docs/rubrics/<name>.md` and customize). See `skills/hd-review/references/rubric-authoring-guide.md` for the authoring spec.
 
 Run `/hd:review audit` for harness health; `/hd:review critique <path-or-url>` for single-work-item rubric application.
 

@@ -39,7 +39,7 @@ Target: ≤200 lines for routers. Overflow → `references/`.
 - `name:` — matches directory name; use `hd:verb` form for commands
 - `description:` — third person ("Scaffolds..."), what + when, ≤180 chars preferred (≤1024 hard limit per Anthropic)
 - `argument-hint:` — quote YAML-special characters (compound 2.36.0 fix)
-- `disable-model-invocation: true` — only for genuinely manual-only skills (graduated rule: no stubs with this flag)
+- `disable-model-invocation: true` — only for genuinely manual-only skills (adopted rule: no stubs with this flag)
 
 ## Content style
 

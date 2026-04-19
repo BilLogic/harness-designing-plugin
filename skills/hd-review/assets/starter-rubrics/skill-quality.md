@@ -31,7 +31,7 @@ This rubric is self-referential: it's the rubric we apply to our own Layer 2 ski
 - As the **model**, I need **descriptions naming the one job with concrete triggers** so that **I select the right skill**.
 
 ### Realistic scenarios
-- **`hd:onboard`** — 150-line SKILL.md router + 10 atomic reference files. Description: "Answers questions about the five-layer design harness framework." One job; non-overlapping with setup / compound / review. Why it matters: canonical well-shaped skill.
+- **`hd:learn`** — 150-line SKILL.md router + 10 atomic reference files. Description: "Answers questions about the five-layer design harness framework." One job; non-overlapping with setup / maintain / review. Why it matters: canonical well-shaped skill.
 - **`hd:setup` with detect script** — deterministic `scripts/detect-mode.sh` emits JSON; router reads JSON, branches, references per-mode procedures. Why it matters: scalability-and-maintainability section; separation of router / script / references.
 - **Self-critique before shipping** — author walks sections 1, 2, 3, 5 on their draft. Why it matters: these four catch the most common ship-blockers.
 

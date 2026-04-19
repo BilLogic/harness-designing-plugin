@@ -84,7 +84,7 @@ rule_candidate: true
 
 **Context:** Scaffolded v0.5 and v1 skills as stubs during v0.MVP build, with `disable-model-invocation: true` and fake trigger text for namespace reservation.
 
-**Decision / Observation:** `/ce:review` surfaced the stubs as "worse than absent" across three independent reviewer agents — pattern-recognition flagged dangling links; code-simplicity flagged misleading trigger text; agent-native flagged the flag as foreclosing design space before real design decisions.
+**Decision / Observation:** Three independent reviewers surfaced the stubs as "worse than absent" — pattern-recognition flagged dangling links; code-simplicity flagged misleading trigger text; agent-native flagged the flag as foreclosing design space before real design decisions.
 
 **Result:** Deleted both stubs. Will author at v0.5 and v1 when the skills actually have logic.
 
