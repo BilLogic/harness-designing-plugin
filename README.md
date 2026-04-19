@@ -111,7 +111,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 | Script | Purpose |
 |---|---|
-| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v2 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
+| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v3 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
 | [`skills/hd-setup/scripts/detect-mode.sh`](skills/hd-setup/scripts/detect-mode.sh) | Bash shim fallback for `detect.py` when python3 unavailable |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
 | [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + Tier 1 combined-context budget |
@@ -132,29 +132,27 @@ git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness
 claude --plugin-dir ~/plugins/harness-designing
 ```
 
-### Official directories *(pending submission)*
+### Official directories *(pending review)*
 
-Once accepted by Anthropic's plugin directory, Cursor's marketplace, and OpenAI's Codex plugin directory (coming soon), one-line installs will be available via `claude /plugin install` / Cursor marketplace UI / `codex plugins add`.
-
-Codex CLI and Cursor equivalents ship from the same repo via `.codex-plugin/` and `.cursor-plugin/` sibling manifests.
+Submitted to Anthropic's plugin directory and Cursor's marketplace. Once accepted, one-line installs land via `claude /plugin install` and the Cursor marketplace UI. Codex CLI ships from the same repo via `.codex-plugin/`; OpenAI's directory opens later.
 
 ## Credits
 
 **The article** — Bill Guo's Substack series on design harnessing *(URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
 
-**Plug-in pattern** — [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [@dhh](https://twitter.com/dhh) and [@kieranklaassen](https://twitter.com/kieranklaassen). The structural model — `plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow — is lifted directly from their work. Their companion essay, [*Compound Engineering*](https://every.to/guides/compound-engineering), is the lineage we extend into design.
+**Harness vocabulary + anatomy (primary inspiration)** — LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) ([@Vtrivedy10](https://x.com/Vtrivedy10)) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17) ([@hwchase17](https://x.com/hwchase17)). The noun "harness," the memory-typology framing, and the ownership argument come from here — this is the vocab + concept lineage that made a design-focused harness legible in the first place.
 
-**Harness vocabulary + anatomy** — LangChain: [*Anatomy of an Agent Harness*](https://blog.langchain.com/anatomy-of-an-agent-harness) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory). The noun "harness," the memory-typology framing, and the ownership argument come from here.
+**Compounding practice + plug-in pattern** — [EveryInc/compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [@kieranklaassen](https://twitter.com/kieranklaassen) and the Every team, with their companion essay [*Compound Engineering*](https://every.to/guides/compound-engineering). Heavy user — their lesson → rule compounding loop inspired the design-focused compounding we wire into the Workflow Orchestration layer. The structural model (`plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow) is also lifted from their work.
 
-**Context engineering + harness design for long-running apps** — Anthropic: [*Effective Context Engineering for AI Agents*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents), [*Harness Design for Long-Running Apps*](https://www.anthropic.com/engineering/harness-design-long-running-apps), [*Authoring Skills for Claude*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices), and the [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf). Attention-budget and progressive-disclosure patterns from these.
+**Context engineering + harness design for long-running apps** — Anthropic: [*Effective Context Engineering for AI Agents*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) by [Prithvi Rajasekaran](https://x.com/rgb_prithvi) ([@rgb_prithvi](https://x.com/rgb_prithvi) · [LinkedIn](https://www.linkedin.com/in/prithvi72/)), [Ethan Dixon](https://www.linkedin.com/in/eltd/) ([LinkedIn](https://www.linkedin.com/in/eltd/)), [Carly Ryan](https://www.linkedin.com/in/carly-ryan-2565b3154/) ([LinkedIn](https://www.linkedin.com/in/carly-ryan-2565b3154/)), and [Jeremy Hadfield](https://x.com/jerhadf) ([@jerhadf](https://x.com/jerhadf) · [LinkedIn](https://www.linkedin.com/in/jeremyhadf/)) of the Applied AI team; [*Harness Design for Long-Running Apps*](https://www.anthropic.com/engineering/harness-design-long-running-apps) by [Prithvi Rajasekaran](https://x.com/rgb_prithvi) (Labs team); [*Effective Harnesses for Long-Running Agents*](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) by [Justin Young](https://www.linkedin.com/in/jyoung127) ([LinkedIn](https://www.linkedin.com/in/jyoung127)) with contributions from David Hershey, [Prithvi Rajasekaran](https://x.com/rgb_prithvi), [Jeremy Hadfield](https://x.com/jerhadf), Naia Bouscal, Michael Tingley, Jesse Mu, Jake Eaton, Marius Buleandara, Maggie Vo, Pedram Navid, Nadine Yasser, and Alex Notov (Claude Code + code RL teams); [*Authoring Skills for Claude*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices); and the [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf). Attention-budget and progressive-disclosure patterns from these.
 
 **Rubric source material**
 - [pbakaus/impeccable](https://github.com/pbakaus/impeccable) by [@paulbakaus](https://twitter.com/paulbakaus) — typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design
-- [Nielsen Norman Group](https://www.nngroup.com) — [Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) → `heuristic-evaluation`
+- [Nielsen Norman Group](https://www.nngroup.com) ([@NNgroup](https://twitter.com/NNgroup)) — [Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) by [Jakob Nielsen](https://twitter.com/JakobNielsen) → `heuristic-evaluation`
 - [Material Design 3](https://m3.material.io) — Google → `design-system-compliance`, `interaction-states`
 - [Fluent 2](https://fluent2.microsoft.design) — Microsoft → `accessibility-wcag-aa`, `ux-writing`
 
-**Adjacent work** — [*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by productpower covers context engineering for designers; this plug-in extends to all five layers.
+**Adjacent work** — [*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by [Samet Özkale](https://twitter.com/sametozkale) ([@sametozkale](https://twitter.com/sametozkale)) covers context engineering for designers; this plug-in extends to all five layers.
 
 **Working implementation** — [BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the open-source harness built for a rotating 15-designer team; the patterns templated here are distilled from it.
 
@@ -162,7 +160,7 @@ Codex CLI and Cursor equivalents ship from the same repo via `.codex-plugin/` an
 
 - **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/article-quote-finder-corpus.md` once the series publishes.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
-- **Namespace respect, not integration.** This plug-in is strictly namespaced — commands are `/hd:*`, skills are `hd-*`, our config is `hd-config.md`, we write knowledge under `docs/design-solutions/` (never `docs/solutions/`), and our `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
+- **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
 ## Version History
 
