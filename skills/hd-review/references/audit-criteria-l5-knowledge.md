@@ -7,81 +7,98 @@ loaded_by: hd-review audit mode (via harness-auditor agent with layer: 5)
 
 ## Purpose
 
-Criteria for auditing the Knowledge layer: memory-type distribution across the
-5 type files, INDEX sync, lesson hygiene, compound-readiness backlog, and
-rule-adoption cadence. Loaded by `harness-auditor` with `layer: 5`.
+Criteria for the Knowledge layer: `docs/knowledge/` structure, lesson hygiene, rule-adoption cadence, and drought detection. Loaded by `harness-auditor` with `layer: 5`.
+
+**Grading.** 4-level `content_status`: `missing` · `present-but-stale` · `present-and-populated` · `healthy`.
+
+**No `INDEX.md` checked.** Per 3k.13, AGENTS.md Harness map lists the L5 files.
 
 ## Criteria
 
-### lesson-time-spread
-- **Check:** `docs/knowledge/lessons/*.md` has entries spread across time (not front-loaded)
+### knowledge-folder-present
+
+- **Check:** `docs/knowledge/` exists with the canonical file set
 - **Default severity:** p2
-- **Pass example:** lessons span multiple months with consistent trickle
-- **Fail example:** all lessons dated within a single week (burst capture; no ongoing discipline)
-- **Scope:** this layer only
+- **Canonical files:** `changelog.md`, `decisions.md`, `ideations.md`, `preferences.md`, `lessons/` directory
+- **Content checks:** each file non-empty OR scaffolded with meaningful headers (not just `# TODO`)
+
+### lessons-directory-active
+
+- **Check:** `docs/knowledge/lessons/` exists and has ≥1 dated lesson
+- **Default severity:** p2
+- **Stale signal:** folder exists but empty after 30 days of harness use
+
+### lesson-time-spread
+
+- **Check:** lessons spread across time, not front-loaded
+- **Default severity:** p2
+- **Stale signal:** all lessons dated within a single week (burst capture, no ongoing discipline)
 
 ### lesson-hygiene
-- **Check:** every lesson has a date and at least one tag
-- **Default severity:** p2
-- **Pass example:** every file follows `YYYY-MM-DD-slug.md` naming and has `tags:` in frontmatter
-- **Fail example:** lessons without dates or tags, or inconsistent tag vocabulary
-- **Scope:** this layer only
 
-### memory-type-distribution
-- **Check:** memory types distributed across the 5 type files (not everything pooled in `lessons/`)
+- **Check:** every lesson follows `YYYY-MM-DD-slug.md` naming + has valid frontmatter (date, tags)
 - **Default severity:** p2
-- **Pass example:** procedural-memory, episodic-memory, semantic-memory, etc. each populated appropriately
-- **Fail example:** all knowledge in one bucket; type split not respected
-- **Scope:** this layer only
+- **Content checks:**
+  - Filename matches pattern
+  - Frontmatter parses
+  - ≥1 tag present
+  - Body has ≥3 lines of real content (not just frontmatter)
 
-### knowledge-index-sync
-- **Check:** `docs/knowledge/INDEX.md` (or equivalent) reflects the actual file set
+### changelog-populated
+
+- **Check:** `changelog.md` records structural events and rule adoptions
 - **Default severity:** p2
-- **Pass example:** INDEX matches files on disk; no orphans, no broken links
-- **Fail example:** INDEX references deleted lessons; new lessons absent from INDEX
-- **Scope:** this layer only
+- **Content checks:**
+  - File has ≥1 dated entry
+  - No `{{PLACEHOLDER}}` residue
+  - Entries have dates in `YYYY-MM-DD` format
 
 ### rule-adoption-cadence
-- **Check:** rule-adoption cadence ~1 per 10 lessons is healthy; at least one rule visible in git history via `docs/knowledge/changelog.md`
+
+- **Check:** ~1 rule adoption per 10 lessons is healthy
 - **Default severity:** p2
-- **Pass example:** 23 lessons, 2-3 adopted rules recorded in changelog
-- **Fail example:** 40+ lessons, 0 rule adoptions recorded
-- **Scope:** this layer only
+- **Pass example:** 23 lessons, 2–3 rules adopted in `AGENTS.md` with source-lesson citations
+- **Stale signal:** 40+ lessons, 0 rule adoptions
 
 ### rule-adoption-drought
-- **Check:** 10+ lessons with same tag and 0 rule adoptions → drought
-- **Default severity:** p2
-- **Pass example:** repeated-tag clusters eventually produce an adoption
-- **Fail example:** 15 lessons tagged `#handoff-friction`, no rule adopted — pattern is being re-learned, not codified
-- **Scope:** this layer only
 
-### compound-readiness-backlog
-- **Check:** lessons with `rule_candidate: yes` that haven't been adopted are tracked as a backlog
+- **Check:** ≥10 lessons with same tag + 0 rule adoptions → drought
 - **Default severity:** p2
-- **Pass example:** 3 candidates flagged; the next `/hd:maintain` run has a queue
-- **Fail example:** 12 candidates flagged over 6 months, none processed
-- **Scope:** this layer only
+- **Content check:** cluster lessons by tag; any cluster ≥10 with no corresponding rule in AGENTS.md is a drought signal
 
-### changelog-placeholders
-- **Check:** `changelog.md` has no `{{PLACEHOLDER}}` left unfilled
+### rule-candidate-backlog
+
+- **Check:** lessons with `rule_candidate: yes` are tracked and processed
 - **Default severity:** p2
-- **Pass example:** every entry has a real date, rule, and source-lesson link
-- **Fail example:** entries with `{{DATE}}` or `{{RULE}}` still in the file
-- **Scope:** this layer only
+- **Stale signal:** 12+ candidates flagged over 6 months, none processed via `/hd:maintain rule-propose`
+
+### knowledge-mapped-in-agents-md
+
+- **Check:** AGENTS.md Harness map L5 section lists the knowledge files + lessons/ folder
+- **Default severity:** p2
+- **Stale signal:** AGENTS.md doesn't reflect the L5 file set on disk
+
+### decisions-and-ideations-captured
+
+- **Check:** `decisions.md` + `ideations.md` + `preferences.md` have real content (not just scaffolded placeholders)
+- **Default severity:** p3
+- **Content checks:**
+  - Each has ≥1 non-placeholder entry
+  - No `{{TEMPLATE}}` residue
 
 ## Output shape
 
-Each check produces:
 ```yaml
 - check: <name>
   status: pass | warn | fail
+  content_status: missing | present-but-stale | present-and-populated | healthy
   severity: p1 | p2 | p3
-  evidence: "<what was observed>"
-  recommendation: "<what to do if fail>"
+  evidence: "<observation>"
+  recommendation: "<action>"
 ```
 
 ## See also
 
-- Parent skill: `../SKILL.md`
-- Agent that loads this: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 5`)
+- Agent: `../../../agents/analysis/harness-auditor.md` (`layer: 5`)
 - Drift heuristics: `drift-detection.md`
+- Lesson patterns: `../../hd-maintain/references/lesson-patterns.md`

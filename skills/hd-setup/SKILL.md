@@ -28,12 +28,14 @@ hd:setup Progress:
 - [ ] Step 1: Detect — run detect.py; parse JSON
 - [ ] Step 2: Onboard check — suggest /hd:learn if first-time user (soft)
 - [ ] Step 3: Tool discovery — surface detected + ask per category
+- [ ] Step 3.5: Scaffold mode — additive (default when existing harness) vs use-standard
 - [ ] Step 4: Layer 1 (Context) — link / critique / scaffold / skip
 - [ ] Step 5: Layer 2 (Skills) — link / critique / scaffold / skip
 - [ ] Step 6: Layer 3 (Orchestration) — link / critique / scaffold / skip
 - [ ] Step 7: Layer 4 (Rubrics) — link / critique / scaffold / skip
 - [ ] Step 8: Layer 5 (Knowledge) — link / critique / scaffold / skip
-- [ ] Step 9: Write hd-config.md (schema v2)
+- [ ] Step 8.5: Proposed-files preview — show table; user confirms before any write
+- [ ] Step 9: Write hd-config.md (schema v3)
 - [ ] Step 10: Summarize decisions + suggest next skill
 ```
 
@@ -41,18 +43,11 @@ Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-p
 
 ## Guardrail — additive-only when existing harness detected
 
-Before Step 1 completes, check: does this repo already have an AI harness?
+**Signals:** `.agent/` with ≥1 skill/rule, `.claude/` with skills/settings, `AGENTS.md` ≥20 lines of real content, populated `docs/context/` or `docs/knowledge/`, or any other-tool harness flagged by `detect.py`.
 
-**Positive-harness signals (any one triggers guardrail):** `.agent/` with ≥1 skill or rule file, `.claude/` with skills or settings, `AGENTS.md` ≥ 20 lines of real content, `docs/context/` populated, `docs/knowledge/` populated, other-tool harness artifacts detected by `detect.py` (e.g., foreign config files at repo root, `docs/solutions/`).
+If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **skip** for Layers 1/2/3; keep Layer 4/5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
 
-If any signal fires:
-
-1. **Announce additive-only mode.** Say: *"Detected existing harness at `<paths>`. I'll operate additive-only — won't modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, or any existing `docs/context/`, `docs/knowledge/`, `docs/rubrics/` file. New files only."*
-2. **Adjust per-layer defaults** for Steps 4/5/6: pre-select **skip** (the existing harness IS Layer 1/2/3). User can override to critique/scaffold per layer, but the friction is flipped.
-3. **Keep Steps 7/8 defaults** (Layer 4 rubrics + Layer 5 knowledge) — these are typically the genuine gap.
-4. **Emit into `hd-config.md`** `other_tool_harnesses_detected: [{name, type, paths_found, owner: user, policy: respect}, ...]` listing every pre-existing artifact so future `/hd:review` calls can parse + respect.
-
-This is a rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots (plus-marketing, oracle-chat, lightning, plus-uno) with 6-pilot additive-only discipline intact.
+Rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots — additive-only discipline intact.
 
 ## Step 1 — Detect
 
@@ -94,6 +89,15 @@ Ask **one batched question** across all 6 categories (docs/wiki, design, diagram
 
 Only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
 
+## Step 3.5 — Scaffold mode (3k.11)
+
+**Narrate:** *"Before we walk the layers, pick how to scaffold any new files."* Offer two modes:
+
+- **A. Additive** (default when existing harness detected). Leave existing structure untouched; new files land alongside what's already there.
+- **B. Use standard.** Scaffold the canonical tree per [`references/standard-harness-structure.md`](references/standard-harness-structure.md). Default when greenfield.
+
+Record in `hd-config.md:scaffold_mode` so later `/hd:review` runs know which structural contract to audit against.
+
 ## Phase B — Steps 4–8 (interactive, inline)
 
 Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatches for the default; execution is inline. Targeted dispatches live in per-layer references.
@@ -103,6 +107,12 @@ Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatche
 - **Step 6 — Layer 3 (Orchestration).** Handoffs across PM tools. Default **link** when PM tool detected, **skip** when <3 skills. → [layer-3-orchestration.md](references/layer-3-orchestration.md)
 - **Step 7 — Layer 4 (Rubrics).** Default from `rubric-recommender`: if AI-docs > 200 lines → **critique + extract** via `review:rubric-extractor` (batch ≤5); else **scaffold** starter trio. `rubric-applier` (apply-mode) is `/hd:review critique` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
 - **Step 8 — Layer 5 (Knowledge).** Default from Phase A's L5 auditor; deep critique re-uses `analysis:rule-candidate-scorer` (solo) when `has_plans_convention`. → [layer-5-knowledge.md](references/layer-5-knowledge.md)
+
+## Step 8.5 — Proposed-files preview (3k.3)
+
+Before any file write, render a proposed-files table (layer → action → paths), state the total count, and ask *"Proceed? (y / revise `<layer>` / cancel)"*. Only an explicit `y` advances to Step 9. `revise L<N>` returns to that layer's step; `cancel` aborts without any write.
+
+**Narrate:** *"Showing the full write list first so you can catch surprises before anything lands."* → See [`references/per-layer-procedure.md § Preview table format`](references/per-layer-procedure.md) for the exact rendering.
 
 ## Step 9 — Write `hd-config.md`
 
@@ -120,7 +130,7 @@ Atomic write (temp file + `mv`).
 
 Report:
 - **Layer decisions table** (5 rows: layer → choice → evidence)
-- **Tier 1 budget snapshot** (`wc -l AGENTS.md docs/context/product/one-pager.md | tail -1`)
+- **Always-loaded budget snapshot** (run `bash skills/hd-review/scripts/budget-check.sh | jq .always_loaded_lines`)
 - **Other-tool harnesses respected** (paths untouched)
 - **Next step** tuned to outcome:
   - Mostly scaffold → `/hd:maintain capture` to record first lesson
@@ -157,21 +167,21 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 ## Reference files
 
 - [per-layer-procedure.md](references/per-layer-procedure.md) — shared FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + checkpoint
-- Layer guides (concept + procedure + depth): [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns + Tier-1 budget model + Step 4 procedure), [layer-2-skills.md](references/layer-2-skills.md) (+ Step 5 procedure), [layer-3-orchestration.md](references/layer-3-orchestration.md) (+ Step 6 procedure), [layer-4-rubrics.md](references/layer-4-rubrics.md) (INDEX.md template + Step 7 procedure), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML + Step 8 procedure)
-- Shared: [hd-config-schema.md](references/hd-config-schema.md) (schema v2), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
+- Layer guides (concept + procedure + depth): [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns + always-loaded budget model + Step 4 procedure), [layer-2-skills.md](references/layer-2-skills.md) (+ Step 5 procedure), [layer-3-orchestration.md](references/layer-3-orchestration.md) (+ Step 6 procedure), [layer-4-rubrics.md](references/layer-4-rubrics.md) (+ Step 7 procedure), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML + Step 8 procedure)
+- **Standard:** [standard-harness-structure.md](references/standard-harness-structure.md) (canonical tree, 3k.12), [standard-agent-categories.md](references/standard-agent-categories.md) (5 categories)
+- Shared: [hd-config-schema.md](references/hd-config-schema.md) (schema v3), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
 
 ## Assets
 
-- [AGENTS.md.template](assets/AGENTS.md.template)
-- [hd-config.md.template](assets/hd-config.md.template) (schema v2)
-- [rubrics-index.md.template](assets/rubrics-index.md.template)
+- [AGENTS.md.template](assets/AGENTS.md.template) — master-index template (harness map + agent persona, per 3k.13)
+- [hd-config.md.template](assets/hd-config.md.template) (schema v3)
 - [context-skeleton/](assets/context-skeleton/)
-- [knowledge-skeleton/](assets/knowledge-skeleton/)
+- [knowledge-skeleton/](assets/knowledge-skeleton/) — minus retired INDEX.md (per 3k.13)
 - [platform-stubs/](assets/platform-stubs/) — redirect stubs for scattered mode
 
 ## Scripts
 
-- `scripts/detect.py` — canonical detector (schema v2 JSON)
+- `scripts/detect.py` — canonical detector (schema v3 JSON)
 - `scripts/detect-mode.sh` — bash shim → detect.py
 
 ## Sub-agents invoked

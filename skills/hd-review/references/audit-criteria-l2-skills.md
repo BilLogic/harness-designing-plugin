@@ -7,69 +7,80 @@ loaded_by: hd-review audit mode (via harness-auditor agent with layer: 2)
 
 ## Purpose
 
-Criteria for auditing the Skills layer: SKILL.md compliance (frontmatter,
-description length, line caps), progressive disclosure, Task wiring, and
-custom-skill count drift. Loaded by `harness-auditor` with `layer: 2`.
+Criteria for the Skills layer: SKILL.md compliance, progressive disclosure, budget hygiene, and content quality. Loaded by `harness-auditor` with `layer: 2`.
+
+**Grading.** 4-level `content_status`: `missing` · `present-but-stale` · `present-and-populated` · `healthy`. Presence of a file is necessary but not sufficient — each check verifies the content actually does its job.
 
 ## Criteria
 
+### skill-dir-detected
+
+- **Check:** one of `.agent/skills/`, `.claude/skills/`, `skills/` exists with ≥1 SKILL.md
+- **Default severity:** p1
+- **Source of truth:** `budget-check.sh` → `skill_dir_detected` field
+- **Content check:** `skill_dir_detected != "none"` in the JSON output. If none, the L2 audit score is capped at 3.0 regardless of other findings.
+
 ### custom-skill-count
-- **Check:** 1-5 custom skills (beyond what the plug-in ships) after 3+ months of use
+
+- **Check:** 1–5 custom skills after 3+ months of use
 - **Default severity:** p2
-- **Pass example:** 3 team-authored skills after 5 months
-- **Fail example:** 0 custom skills after 6 months of use (suggests underused harness); or 12 skills with overlapping triggers (proliferation)
-- **Scope:** this layer only
+- **Stale signal:** 0 custom skills after 6 months (underused harness); 12+ with overlapping triggers (proliferation)
 
 ### skill-md-compliance
-- **Check:** each skill has `SKILL.md` ≤200 lines with proper YAML frontmatter (`name`, `description`, etc.)
+
+- **Check:** each SKILL.md ≤200 lines + valid YAML frontmatter (`name`, `description`)
 - **Default severity:** p1
-- **Pass example:** all `skills/*/SKILL.md` files pass frontmatter validation and are ≤200 lines
-- **Fail example:** skill missing `description:` key or body is 340 lines
-- **Scope:** this layer only
+- **Content checks:**
+  - Frontmatter parses
+  - `name` matches the team's prefix convention
+  - `description` is non-empty, ≤180 chars (soft) / ≤1024 (hard)
+  - Body has ≥1 "Procedure" or "Workflow" section
 
 ### description-char-budget
-- **Check:** each skill's `description:` ≤180 chars
+
+- **Check:** each skill's `description:` ≤180 chars (soft), ≤1024 hard
 - **Default severity:** p2
-- **Pass example:** description is 140 chars, trigger-oriented
-- **Fail example:** description is 240 chars with rambling prose
-- **Scope:** this layer only
+- **Source of truth:** `budget-check.sh` → `skills[].description_chars`
 
 ### skill-prefix-convention
-- **Check:** all skills use the team's `<prefix>-*` convention (e.g. `hd-*`)
+
+- **Check:** all custom skills share a `<prefix>-*` convention
 - **Default severity:** p2
-- **Pass example:** every custom skill dir matches the declared prefix
-- **Fail example:** a skill named `design-tokens` lives alongside `hd-review` — no prefix
-- **Scope:** this layer only (naming-discipline also checks `name:` frontmatter form)
+- **Stale signal:** mixed prefixes indicate accidental proliferation
 
 ### skill-quality-rubric-pass
-- **Check:** each skill passes the 9-point `skill-quality` rubric (see `../assets/starter-rubrics/skill-quality.md`)
-- **Default severity:** p1 (if ≥2 sections fail at p1)
-- **Pass example:** skill passes all 9 sections or has only minor (p3) gaps
-- **Fail example:** skill fails sections 3 (progressive disclosure) and 7 (Task wiring) at p1
-- **Scope:** this layer only
-- **Audit action:** for every `skills/*/SKILL.md`, run the `skill-quality` rubric; cite failing-section numbers (1–9) in the report.
 
-### tagging-and-categorization
-- **Check:** skills have tags / categorization where the convention applies
-- **Default severity:** p3
-- **Pass example:** every skill has a `tags:` or category hint
-- **Fail example:** untagged skills mixed with tagged ones — inconsistent
-- **Scope:** this layer only
+- **Check:** each skill passes the 9-section `skill-quality` rubric
+- **Default severity:** p1 (if ≥2 sections fail at p1)
+- **Audit action:** for every SKILL.md, run `skill-quality` rubric via `skill-quality-auditor`; cite failing section numbers
+- **Content check:** fails if SKILL.md has only placeholder content (`{{STEP_1}}`, `TODO:`, etc.)
+
+### references-exist-and-parse
+
+- **Check:** every `references/*.md` referenced from SKILL.md exists on disk and is non-empty
+- **Default severity:** p2
+- **Stale signal:** SKILL.md links to `references/foo.md` that was deleted or renamed
+
+### task-dispatch-wiring
+
+- **Check:** if skill dispatches Task invocations, they use fully-qualified names (`<namespace>:<category>:<agent>`)
+- **Default severity:** p1 (coexistence collision risk)
+- **Stale signal:** bare Task names (no namespace prefix) — liable to re-prefix wrong
 
 ## Output shape
 
-Each check produces:
 ```yaml
 - check: <name>
   status: pass | warn | fail
+  content_status: missing | present-but-stale | present-and-populated | healthy
   severity: p1 | p2 | p3
-  evidence: "<what was observed>"
-  recommendation: "<what to do if fail>"
+  evidence: "<observation>"
+  recommendation: "<action>"
 ```
 
 ## See also
 
-- Parent skill: `../SKILL.md`
-- Agent that loads this: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 2`)
-- Skill-quality rubric itself: `../assets/starter-rubrics/skill-quality.md`
-- Naming discipline (cross-cutting): handled by the `coexistence-analyzer` agent (`agents/analysis/coexistence-analyzer.md`)
+- Agent: `../../../agents/analysis/harness-auditor.md` (`layer: 2`)
+- Budget script: `../scripts/budget-check.sh`
+- Skill-quality rubric: `../assets/starter-rubrics/skill-quality.md`
+- Consistency check: `audit-criteria-consistency.md`

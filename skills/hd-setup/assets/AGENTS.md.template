@@ -1,50 +1,76 @@
-# {{TEAM_NAME}} — AGENTS.md
-
-Canonical source of truth for AI conventions in this repo. Tier 1 context — always loaded. Target length: ≤200 lines combined with `docs/context/product/one-pager.md`.
-
-## Product
+# {{TEAM_NAME}}
 
 {{PRODUCT_ONE_LINER}}
 
-Full product one-pager: [docs/context/product/one-pager.md](docs/context/product/one-pager.md)
-
-## Design system
-
-{{DESIGN_SYSTEM_LOCATION}}
-
-Cheat-sheet: [docs/context/design-system/cheat-sheet.md](docs/context/design-system/cheat-sheet.md)
-
-## How we work
-
-Conventions: commits, reviews, file naming, branch discipline.
-
-Full conventions: [docs/context/conventions/how-we-work.md](docs/context/conventions/how-we-work.md)
-
 ## Agent persona
 
-How the AI should behave in this repo: voice, defaults, escalation.
+**Role.** You are an AI teammate for {{TEAM_ROLE}} working on {{PRODUCT_NAME}}.
 
-Full persona: [docs/context/agent-persona.md](docs/context/agent-persona.md)
+**Responsibility.** Produce {{PRIMARY_OUTPUT}} that earns review against the rubrics in `docs/rubrics/`. Read widely, write narrowly — edit only what you are explicitly asked to change.
+
+**Boundary.** Read-mostly by default. Direct writes permitted only in `docs/knowledge/lessons/` (capture) and files explicitly listed in an invoked skill's scope.
+
+**Voice.** {{VOICE_HINT}}
+
+## Harness map
+
+### L1 Context — what's always true
+- [`docs/context/product/`](docs/context/product/) — vision, users, journeys, capabilities, success metrics, glossary
+- [`docs/context/engineering/`](docs/context/engineering/) — stack, data, API, deployment, dev environment, security + privacy
+- [`docs/context/design-system/`](docs/context/design-system/) — styles · foundations · components
+- [`docs/context/conventions/`](docs/context/conventions/) — repo map + team norms
+
+### L2 Skills — repeatable jobs
+<!-- One line per skill. Keep brief. -->
+- `skills/<skill-name>/SKILL.md` — <one-line purpose>
+
+### L3 Agents — sub-agents invoked by skills
+<!-- One line per agent. Category folders: research / planning / generation / review / compound. -->
+- `agents/<category>/<agent-name>.md` — <one-line purpose>
+
+### L4 Rubrics — how we judge "good"
+<!-- One line per rubric. -->
+- [`docs/rubrics/<rubric-name>.md`](docs/rubrics/) — <one-line purpose>
+
+### L5 Knowledge — what happened
+- [`docs/knowledge/changelog.md`](docs/knowledge/changelog.md) — rule adoptions + structural events
+- [`docs/knowledge/decisions.md`](docs/knowledge/decisions.md) — ADR-lite
+- [`docs/knowledge/ideations.md`](docs/knowledge/ideations.md) — considered + rejected
+- [`docs/knowledge/preferences.md`](docs/knowledge/preferences.md) — team taste
+- [`docs/knowledge/lessons/`](docs/knowledge/lessons/) — dated event log
+
+## Always-loaded files (beyond AGENTS.md)
+
+Every session opens these before doing anything else:
+
+1. [`docs/context/product/one-pager.md`](docs/context/product/one-pager.md)
+2. [`docs/context/design-system/components/cheat-sheet.md`](docs/context/design-system/components/cheat-sheet.md)
+
+Everything else loads on demand.
 
 ## Rules
 
-Rules that earned their place here via Layer 5 promotion (a lesson proved itself 3+ times across the team). Each entry: date + rule + link to source lesson.
+Rules that earned their place here via Layer 5 promotion — a lesson proved itself 3+ times across the team and graduated from episodic memory to always-applied procedure.
 
 <!-- Add new rules above this line. Format:
 - [YYYY-MM-DD] Rule statement. Source: docs/knowledge/lessons/YYYY-MM-DD-slug.md
 -->
 
-## Knowledge layer
-
-Lessons: [docs/knowledge/lessons/](docs/knowledge/lessons/)
-Rule-adoption log: [docs/knowledge/changelog.md](docs/knowledge/changelog.md)
-
 ## When in doubt
 
-- Ask instead of assuming
+- Ask before assuming
 - Prefer existing patterns over new ones
-- Document decisions as dated lessons in `docs/knowledge/lessons/`
+- Capture surprises as dated lessons in `docs/knowledge/lessons/`
+
+## Pre-commit checklist
+
+<!-- Repo-specific gates. Examples:
+- [ ] Lint passes
+- [ ] Tests pass
+- [ ] Design tokens unchanged without design-system-compliance rubric review
+- [ ] New rules cite a source lesson
+-->
 
 ---
 
-*Scaffolded by `/hd:setup` on {{DATE}}. Version-control it; evolve it with your team. See [hd-config.md](hd-config.md) for this repo's local config.*
+*Scaffolded by `/hd:setup` on {{DATE}}. Version-control it; evolve it with your team. See [hd-config.md](hd-config.md) for this repo's machine-parseable config.*

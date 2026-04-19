@@ -7,6 +7,19 @@ rule_candidate: false
 
 # Harness audit — {{DATE}}
 
+## Harness health
+
+```
+{{HEALTH_BARS}}
+```
+
+<!-- 5 rows, one per layer. Format:
+L<N> <layer-name padded 16ch>  <10-block bar>  <score 0-10>  <one-line summary>
+Bar: blocks_filled = round(health_score). Filled = U+2588 "█". Empty = U+2591 "░".
+Example:
+L1 Context          ████████░░  8.0  healthy, 2 drift issues
+-->
+
 ## Top 3 priorities
 
 {{TOP_3_PRIORITIES}}
@@ -47,6 +60,20 @@ rule_candidate: false
 ### P3 — polish (nice-to-have)
 
 {{P3_FINDINGS}}
+
+## Cross-layer consistency
+
+{{CONSISTENCY_FINDINGS}}
+
+<!-- Duplicate rules, contradictions, orphan pointers, overlapping skill scopes,
+stale cross-references, hd-config drift. Each entry tags affected_layers: [...] -->
+
+## hd-config drift
+
+{{HD_CONFIG_DRIFT}}
+
+<!-- Fields where detect.py output differs from hd-config.md recorded state.
+Example: "detect.py found .codex/ harness; hd-config.md missing that entry" -->
 
 ## Suggested actions
 

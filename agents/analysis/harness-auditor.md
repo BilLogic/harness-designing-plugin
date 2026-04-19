@@ -34,7 +34,7 @@ Read the audit-criteria reference for `layer`:
 - `layer: 4` → `skills/hd-review/references/audit-criteria-l4-rubrics.md`
 - `layer: 5` → `skills/hd-review/references/audit-criteria-l5-knowledge.md`
 
-The reference defines the **checks** for that layer (names, default severity, pass/fail heuristics, Tier-1-budget thresholds where applicable).
+The reference defines the **checks** for that layer (names, default severity, pass/fail heuristics, always-loaded budget thresholds where applicable).
 
 ### Phase 2: gather inputs
 
@@ -42,7 +42,7 @@ Always read `detect_json` and `hd_config_path` (if present).
 
 In `mode: full`, additionally read the layer-specific user artifacts:
 
-- `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any Tier-1-budget files flagged in `detect_json.context_files`
+- `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any always-loaded files flagged in `detect_json.context_files`
 - `layer: 2` → `<repo_root>/.agent/skills/**` OR `<repo_root>/.claude/skills/**` (whichever `detect_json.platform` indicates), plus user's skill inventory from `detect_json.skills_by_platform`
 - `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; other-tool coexistence paths from `detect_json.signals.other_tool_harnesses_detected[]`
 - `layer: 4` → `<repo_root>/docs/rubrics/**`
@@ -50,19 +50,34 @@ In `mode: full`, additionally read the layer-specific user artifacts:
 
 In `mode: quick`, skip the user-artifact read and base findings on `detect_json` signals + `hd_config_path` overrides only. Note `scope_loaded` accordingly.
 
-### Phase 3: run each check
+### Phase 3: run each check — grade on content, not presence
 
 For every check defined in the audit-criteria reference:
 
-1. Evaluate pass / warn / fail against the evidence gathered in Phase 2.
-2. If the check has a `hd-config.md` override (e.g., severity downgrade, check disabled), apply it.
-3. Record `severity`, `status`, `evidence` (file:line or exact observation), and `recommendation` (concrete action).
+1. **Presence check.** Does the expected path exist? If not → `content_status: missing`.
+2. **Content check.** If present, read the file(s) and evaluate the criterion's `content_checks:` heuristics. Failing heuristics → `content_status: present-but-stale`.
+3. **Drift check.** If content checks pass, look for drift signals (stale dates, orphan pointers, dead cross-references, template placeholders). ≥1 signal → `content_status: present-and-populated`.
+4. **Healthy.** Presence + content + zero drift → `content_status: healthy`.
+5. Map `content_status` to `status`:
+   - `missing` or `present-but-stale` → `fail`
+   - `present-and-populated` → `warn`
+   - `healthy` → `pass`
+6. Apply any `hd-config.md` override (severity downgrade, check disabled).
+7. Record `severity`, `status`, `content_status`, `evidence` (file:line or exact observation), and `recommendation` (concrete action).
+
+**Critical:** do NOT grade a check as passing just because the path exists. Caricature's L1 had `docs/` but the content was stale/mismatched — that's `present-but-stale`, not `healthy`.
 
 ### Phase 4: score + rank findings
 
-Compute `health_score` (0-10) per the formula in the audit-criteria reference (typically: 10 - p1_count*3 - p2_count*1 - p3_count*0.3, floored at 0).
+Compute `health_score` (0–10) per the formula:
 
-Rank findings by severity then by check importance. Return the top 3-5.
+```
+health_score = 10 - (p1_count × 3) - (p2_count × 1) - (p3_count × 0.3)
+```
+
+Floored at 0. Additional penalty: `content_status: missing` results subtract an extra 0.5 per check beyond the severity scoring (missing content is worse than stale content).
+
+Rank findings by severity then by check importance. Return the top 3–5.
 
 ### Phase 5: scenario-specific tail
 
@@ -84,20 +99,23 @@ scenario: audit
 health_score: 6.4
 top_findings:
   - severity: p1
-    check: "skill-frontmatter-present"
+    check: "skill-md-compliance"
     status: fail
+    content_status: missing
     evidence: ".agent/skills/button-variants/SKILL.md missing YAML frontmatter"
     recommendation: "Add frontmatter with name + description fields per skill-compliance checklist"
   - severity: p2
-    check: "skill-description-length"
+    check: "description-char-budget"
     status: warn
+    content_status: present-but-stale
     evidence: "3 of 7 skills have description >180 chars (loses triggering precision)"
     recommendation: "Tighten descriptions per hd-review skill-quality rubric"
   - severity: p2
-    check: "skill-reference-link-rules"
+    check: "references-exist-and-parse"
     status: warn
-    evidence: "2 references/*.md files exceed 500-line budget"
-    recommendation: "Split oversized references or promote to sub-agent"
+    content_status: present-but-stale
+    evidence: "SKILL.md links to references/foo.md which doesn't exist on disk"
+    recommendation: "Remove orphan link or restore target file"
 recommended_action:      # only present when scenario=setup-pre-analysis
   default: critique
   why: "Existing .agent/skills/ corpus has p1+p2 findings — propose critique in interactive walk"
@@ -133,7 +151,7 @@ summary:
 ## See also
 
 - `skills/hd-review/references/audit-criteria-l1-context.md` … `-l5-knowledge.md` — per-layer check definitions
-- `skills/hd-review/references/audit-criteria-budget.md` — Tier-1/2/3 budget checks (cross-cutting)
+- `skills/hd-review/references/audit-criteria-budget.md` — always-loaded + bloat budget checks (cross-cutting)
 - `agents/analysis/coexistence-analyzer.md` — sibling agent for cross-tool audit (cross-tool check logic lives in the agent spec)
 - `agents/analysis/rubric-recommender.md` — sibling agent for Layer 4 gap-finding
 - `agents/analysis/rule-candidate-scorer.md` — sibling agent for Layer 5 drift detection

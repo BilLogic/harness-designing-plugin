@@ -29,9 +29,12 @@ If a user adds extra `review_agents` to `hd-config.md` that would push a batch t
 
 ```bash
 bash skills/hd-review/scripts/budget-check.sh > /tmp/hd-budget.json
+python skills/hd-setup/scripts/detect.py > /tmp/hd-detect.json
 ```
 
-JSON is authoritative for bloat findings; parsed inline in Step 4. Also load `scripts/detect.py` JSON from a prior `/hd:setup` run (or rerun `python skills/hd-setup/scripts/detect.py > /tmp/hd-detect.json` if stale).
+**Narrate to user:** "Running preflight — budget check + fresh detect.py scan. This lets us see what's really in the repo right now vs what hd-config.md recorded."
+
+Also diff `/tmp/hd-detect.json` vs `hd-config.md` contents (3k.6). Compare fields: `other_tool_harnesses_detected[]`, `skipped_layers`, `team_tooling`, `skills_by_platform`. Any mismatch queues a `hd-config-stale` finding (p2) for Step 5 synthesis.
 
 **Step 2 — BATCH 1 (parallel, 5 agents): per-layer `harness-auditor`.**
 
@@ -83,7 +86,15 @@ Task design-harnessing:analysis:coexistence-analyzer(
 
 Cross-plug-in review agents (if any in `hd-config.md:review_agents`) also join Batch 2 as long as the batch stays ≤5. Dispatched with fully-qualified Task names.
 
-**Step 4 — Inline: parse `budget-check.sh` JSON.** Extract tier-1 line counts, per-skill SKILL.md sizes, violations. These become deterministic P1 findings (no agent required).
+**Step 3.5 — Cross-layer consistency pass (3k.7).** After Batch 2 completes, run consistency criteria inline against the repo:
+
+Read `audit-criteria-consistency.md`. For each criterion (duplicate rules, contradictions, orphan pointers, overlapping skills, stale lesson citations, hd-config drift), evaluate against the evidence already gathered. Cheap to run inline — no new dispatch needed.
+
+**Narrate to user:** "Cross-checking consistency — looking for duplicated rules across AGENTS.md and rubrics, orphan pointers, and redundant content across layers."
+
+Findings feed into Step 5 synthesis with `affected_layers: [...]` tags.
+
+**Step 4 — Inline: parse `budget-check.sh` JSON.** Extract `always_loaded_lines`, per-skill SKILL.md sizes, violations, `skill_dir_detected`, `always_loaded_contract_source`. These become deterministic P1 findings (no agent required).
 
 **Step 5 — Synthesize + cross-check.**
 
@@ -93,11 +104,38 @@ Cross-plug-in review agents (if any in `hd-config.md:review_agents`) also join B
 4. **Protected-artifacts cross-check** — discard any finding recommending deletion/gitignore of a protected path (see `<protected_artifacts>` in SKILL.md).
 
 **Step 6 — Render report.** Load [`../assets/audit-report.md.template`](../assets/audit-report.md.template). Fill placeholders:
+
+- `{{HEALTH_BARS}}` (3k.4) — ASCII layer-health visualization. One row per layer; block-char bar from `health_score`. See [§ Rendering health bars](#rendering-health-bars) below.
 - `{{DATE}}`, `{{TOP_3_PRIORITIES}}`, `{{INVENTORY_TABLE}}`
 - `{{P1_FINDINGS}}` / `{{P2_FINDINGS}}` / `{{P3_FINDINGS}}`
 - `{{LAYER_N_FINDINGS}}` × 5 (from Batch 1)
-- `{{RUBRIC_GAPS}}` (from rubric-recommender), `{{LESSON_DRIFT}}` (from lesson-retriever), `{{COEXISTENCE_FINDINGS}}` (if dispatched)
-- `{{BUDGET_VIOLATIONS}}` (from Step 4), `{{SUGGESTED_ACTIONS}}`, `{{AGENT_LIST}}`, `{{EXECUTION_MODE}}`
+- `{{CONSISTENCY_FINDINGS}}` (from Step 3.5)
+- `{{RUBRIC_GAPS}}`, `{{LESSON_DRIFT}}`, `{{COEXISTENCE_FINDINGS}}` (if dispatched)
+- `{{BUDGET_VIOLATIONS}}` (from Step 4), `{{HD_CONFIG_DRIFT}}` (from Step 1), `{{SUGGESTED_ACTIONS}}`, `{{AGENT_LIST}}`, `{{EXECUTION_MODE}}`
+
+### Rendering health bars
+
+For each layer 1–5, extract `health_score` (0–10) from the Batch 1 agent response. Render:
+
+```
+L<N> <layer-name>  <bar>  <score>  <one-line summary>
+```
+
+**Bar rule:** `blocks_filled = round(health_score)` (0–10 → 0–10 blocks). Filled = `█`, empty = `░`. Pad layer name to 16 chars for alignment.
+
+**Example:**
+
+```
+## Harness health
+
+L1 Context          ████████░░  8.0  healthy, 2 drift issues
+L2 Skill Curation   ██░░░░░░░░  2.0  skill_dir detected but 6 of 7 SKILL.md overweight
+L3 Orchestration    ██████░░░░  6.0  dispatch wiring OK, no gate map
+L4 Rubric Setting   ░░░░░░░░░░  0.0  not scaffolded
+L5 Knowledge        ████░░░░░░  4.0  no changelog; drought: 14 untagged lessons
+```
+
+ASCII-only. No color codes. Terminal + chat friendly.
 
 **Step 7 — Atomic write.** Single file: `docs/knowledge/lessons/$(date -u +%Y-%m-%d)-harness-audit.md`.
 

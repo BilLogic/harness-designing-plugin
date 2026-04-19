@@ -7,67 +7,72 @@ loaded_by: hd-review audit mode (via harness-auditor agent with layer: 3)
 
 ## Purpose
 
-Criteria for auditing the Orchestration layer: skill-to-skill chains, workflow
-artifacts, handoff clarity, and gate declarations. Loaded by `harness-auditor`
-with `layer: 3`.
+Criteria for the Orchestration layer: the **dispatch graph** between `skills/` (user-triggered) and `agents/` (skill-invoked). L3 is **not a folder**; orchestration emerges from legible wiring between L2 and the agents layer.
+
+**Grading.** 4-level `content_status`: `missing` · `present-but-stale` · `present-and-populated` · `healthy`.
 
 ## Criteria
 
-### orchestration-presence
-- **Check:** `docs/orchestration/` exists if team has ≥3 Layer 2 skills
-- **Default severity:** p2
-- **Pass example:** team has 4 skills and `docs/orchestration/intake-to-handoff.md` exists
-- **Fail example:** team has 5 skills and no orchestration dir → skills are orphaned
-- **Scope:** this layer only
+### agents-directory-present
 
-### workflow-naming-and-refs
-- **Check:** workflows are named and referenced in handoffs (not just ambient)
-- **Default severity:** p2
-- **Pass example:** `docs/orchestration/design-review-flow.md` named and cited from 2 skills
-- **Fail example:** workflow exists as a file but no skill/handoff links to it
-- **Scope:** this layer only
+- **Check:** `agents/` (or `.agent/agents/`, `.claude/agents/`) exists if team has ≥3 skills
+- **Default severity:** p3 (optional for small teams)
+- **Stale signal:** directory exists but empty, or contains only template placeholders
 
-### gates-declared
-- **Check:** gates declared (which rubrics apply where)
-- **Default severity:** p2
-- **Pass example:** workflow says "before handoff: run `a11y` + `token-compliance` rubrics"
-- **Fail example:** workflow describes steps but never says which rubrics gate progression
-- **Scope:** this layer only
+### agent-frontmatter-valid
 
-### workflow-freshness
-- **Check:** workflow files not stale (touched within 6 months or marked stable)
-- **Default severity:** p2
-- **Pass example:** most-recent workflow edit 2 months ago
-- **Fail example:** all workflow files last edited 9+ months ago, no stable markers
-- **Scope:** this layer only
-
-### handoffs-as-artifacts
-- **Check:** handoffs happen as artifacts (not in Slack / ephemeral chat)
-- **Default severity:** p2
-- **Pass example:** PR template or handoff doc references a rubric + a source-of-truth file
-- **Fail example:** team reports handoffs happen verbally in Slack, no artifact trail
-- **Scope:** this layer only (observational — confirm via team interview if uncertain)
-
-### other-tool-coexistence-at-l3
-- **Check:** orchestration doesn't step on another plug-in's workflow namespace
+- **Check:** every agent file has valid YAML frontmatter with `name` + `description`
 - **Default severity:** p1
-- **Pass example:** `hd:*` workflows and any external workflows have distinct entry points
-- **Fail example:** a workflow file invokes an external slash command as a gate without namespace-qualifying it, or silently renames an external step
-- **Scope:** cross-layer (deeper coexistence checks are handled by the `coexistence-analyzer` agent)
+- **Content checks:**
+  - Frontmatter parses
+  - `description` non-empty, ≤180 chars (soft) / ≤1024 (hard)
+  - `name` matches filename (kebab-case)
+
+### dispatch-wiring-legible
+
+- **Check:** skills that dispatch agents use fully-qualified Task names (`<namespace>:<category>:<agent>`)
+- **Default severity:** p1
+- **Content check:** grep every SKILL.md for `Task ` invocations; all should be `<ns>:<cat>:<name>(...)` form
+- **Stale signal:** bare Task names (no namespace) — gets re-prefixed wrong on rename
+
+### skill-to-agent-consistency
+
+- **Check:** every agent referenced by a skill exists on disk
+- **Default severity:** p1
+- **Content check:** for every `Task ns:cat:agent` in any SKILL.md, verify `agents/<cat>/<agent>.md` (or equivalent path) exists
+- **Stale signal:** skill references `design-harnessing:analysis:foo` but `agents/analysis/foo.md` doesn't exist
+
+### category-naming-sanity
+
+- **Check:** agent categories are reasonable (using standard 5, or team has documented custom categories in AGENTS.md)
+- **Default severity:** p3
+- **Note:** standard categories are `research / planning / generation / review / compound`; users may deviate. Audit does NOT enforce these names, just checks they're documented.
+
+### workflow-gates-readable
+
+- **Check:** if a skill's workflow includes rubric gates, the rubric path is explicit in SKILL.md
+- **Default severity:** p2
+- **Content check:** skills mentioning "apply rubric X" should cite the rubric's path under `docs/rubrics/`
+
+### cross-plugin-namespace-respect
+
+- **Check:** no skill dispatches into another plug-in's Task namespace
+- **Default severity:** p1
+- **Stale signal:** foreign Task calls (e.g. `compound-engineering:*` from our skills) — handled via `coexistence-analyzer`
 
 ## Output shape
 
-Each check produces:
 ```yaml
 - check: <name>
   status: pass | warn | fail
+  content_status: missing | present-but-stale | present-and-populated | healthy
   severity: p1 | p2 | p3
-  evidence: "<what was observed>"
-  recommendation: "<what to do if fail>"
+  evidence: "<observation>"
+  recommendation: "<action>"
 ```
 
 ## See also
 
-- Parent skill: `../SKILL.md`
-- Agent that loads this: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 3`)
-- Coexistence deep-dive: handled by the `coexistence-analyzer` agent (`agents/analysis/coexistence-analyzer.md`)
+- Agent: `../../../agents/analysis/harness-auditor.md` (`layer: 3`)
+- Coexistence: `../../../agents/analysis/coexistence-analyzer.md`
+- Standard categories: `../../hd-setup/references/standard-agent-categories.md`

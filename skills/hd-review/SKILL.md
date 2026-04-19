@@ -10,6 +10,8 @@ argument-hint: "audit | critique <file-path-or-url> [--rubric <name>]"
 
 Default: dispatch via Task tool for audit mode; inline response for critique mode. If `AskUserQuestion` is unavailable (non-Claude hosts), fall back to numbered-list prompts. **Read-only by design** — audit writes exactly one dated lesson file; critique writes nothing.
 
+**Narrate rationale inline.** Before each major step (preflight, Batch 1 dispatch, Batch 2 dispatch, consistency pass, synthesis, write), announce what's happening and why. Users shouldn't have to ask "what's going on?" — the skill tells them, and explains the *reason* for each dispatch choice (parallel vs serial, which agents, why the consistency pass runs last).
+
 ## Single job
 
 Audit harness health (audit mode) OR apply Layer 4 rubric(s) to a work item (critique mode). One skill, two verbs of the IMPROVE family.
@@ -35,10 +37,12 @@ Multiple review tools can audit the same repo without modifying each other's out
 
 | User says… / invokes… | Mode |
 |---|---|
+| `/hd:review` (no args) | **audit** (default) |
 | "Audit my harness" / `/hd:review audit` | **audit** |
 | "Review this design" / `/hd:review critique <path> [--rubric <name>]` | **critique** |
+| `/hd:review <path>` (file path, no verb) | ask: *"Audit the harness or critique `<path>`?"* |
 
-Ambiguous → ask: *"Audit the harness itself, or critique a specific work item?"*
+**Default is audit.** Harness health is the typical entry point. Critique is explicit — requires a verb + target.
 
 ## Workflow checklist (per mode)
 
@@ -137,7 +141,7 @@ Each dispatch batch stays ≤5 agents (6+ parallel strains context). Audit split
 
 ## Scripts
 
-- `scripts/budget-check.sh` — deterministic Tier 1 + SKILL.md budget enforcement; emits JSON
+- `scripts/budget-check.sh` — deterministic always-loaded + SKILL.md budget enforcement; emits JSON
 
 ## Sub-agents invoked
 

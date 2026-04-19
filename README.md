@@ -114,7 +114,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 | [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v3 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
 | [`skills/hd-setup/scripts/detect-mode.sh`](skills/hd-setup/scripts/detect-mode.sh) | Bash shim fallback for `detect.py` when python3 unavailable |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
-| [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + Tier 1 combined-context budget |
+| [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + always-loaded combined-context budget |
 
 ## Installation
 
