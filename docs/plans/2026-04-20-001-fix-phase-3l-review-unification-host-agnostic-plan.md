@@ -26,7 +26,7 @@ Post-3k iteration. Live execution testing across 5 Codex repos on 2026-04-20 (co
 ### P1 — blockers
 
 - [ ] **3l.1** Zero stale references to per-layer `INDEX.md` files across `skills/**/references/*.md`, `skills/**/SKILL.md`, procedure files, and templates. Canonical L5 scaffold output list locked (`changelog.md`, `decisions.md`, `ideations.md`, `preferences.md`, `lessons/.gitkeep` — no INDEX, no starter lesson). "Preview table format" section written in `per-layer-procedure.md`.
-- [ ] **3l.2** `/hd:review` produces the full report (health bars + per-layer findings + cross-layer consistency + hd-config drift) on every host tested: Claude Code, Codex CLI, Cursor IDE, Cursor CLI. Inline serial execution is the baseline. Parallel dispatch becomes an optimization layer that auto-detects host capability.
+- [ ] **3l.2** `/hd:review` writes the full report to `docs/knowledge/reviews/<date>-harness-review.md` and emits a rich chat summary (ASCII health bars + priorities table + cross-layer signals) on every host tested: Claude Code, Codex CLI, Cursor IDE, Cursor CLI. File write is the canonical output — chat summary is derivative. Parallel dispatch stays as an optional speed-up for the evaluation phase, not a requirement.
 
 ### P2 — UX
 
@@ -91,26 +91,83 @@ Total: 8 files across 2 layers + 2 root files
 Proceed? (y / revise <layer> / cancel)
 ```
 
-### 3l.2 — Host-agnostic review execution
+### 3l.2 — File-first reporting (host-agnostic by construction)
+
+**Key reframe.** Review writes the full report to a dated md file. Chat emits a rich summary with the visualization (ASCII bars + tables). Host-parity question dissolves — every host can write files.
 
 **Architecture change:**
 
 | Today | After 3l.2 |
 |---|---|
-| `Task design-harnessing:analysis:harness-auditor(layer: N)` × 5 required | Inline serial evaluation of `review-criteria-l<N>.md` is the baseline |
-| Rendering gated behind dispatch completing | Rendering never gates — inline evaluation always produces full report |
-| Stalls on Codex/Cursor | Full report on every host |
-| No host detection | Detects: Claude (Task), Codex (MCP + /agent), Cursor IDE (subagents API), Cursor CLI (inline only), others (inline only) |
-| Parallel is the only mode | Parallel is an optimization flag — same output, shorter wall time |
+| Full report text emitted inline in chat transcript | Full report written to `docs/knowledge/reviews/<date>-harness-review.md` |
+| Rendering gated behind `Task` dispatch | Rendering is a file write — no dispatch dependency |
+| Stalls on Codex/Cursor because Task doesn't resolve | File-write works on every host; same output everywhere |
+| Chat shows entire report (eats context) | Chat shows summary only: health bars + top priorities + cross-layer signals + path |
+| Parallel dispatch is required | Parallel dispatch is an *optional* speed-up for the evaluation phase (not rendering) |
+
+**Output destinations:**
+- **File:** `docs/knowledge/reviews/<date>-harness-review.md` (full template — per-layer findings with evidence, recommendations, agent list, meta)
+- **Chat:** rich summary — see below
+
+**Chat summary spec (tables + dividers, not bullets):**
+
+```
+Review complete · Full report: docs/knowledge/reviews/<date>-harness-review.md
+
+═══════════════════════════════════════════════════════════════════
+
+Harness health — <score> / 10 (<state>)
+
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████████░░    8.0    <one-line summary>
+L2 Skill Curation  ██░░░░░░░░    2.0    <one-line summary>
+L3 Orchestration   ██████░░░░    6.0    <one-line summary>
+L4 Rubric Setting  ████░░░░░░    4.0    <one-line summary>
+L5 Knowledge       █████░░░░░    5.0    <one-line summary>
+
+═══════════════════════════════════════════════════════════════════
+
+Top priorities
+
+Sev  #    Layer    Finding                                      Effort
+───  ───  ───────  ───────────────────────────────────────────  ──────
+P1   1    L2       <one-line>                                   S
+P1   2    L1       <one-line>                                   S
+P2   3    L4       <one-line>                                   M
+
+═══════════════════════════════════════════════════════════════════
+
+Cross-layer signals
+
+Signal           Status    Evidence
+───────────────  ────────  ─────────────────────────────────────
+hd-config.md     <status>  <evidence>
+Consistency      <n>       <evidence>
+
+═══════════════════════════════════════════════════════════════════
+
+Next · address P1s before ship · full findings + evidence in file
+```
+
+**Rules:**
+- ASCII bars mandatory in summary (the at-a-glance visualization Bill called "eye-catching")
+- Tables preferred over bullets for structured data (priorities, cross-layer signals)
+- Box-drawing `═` chars as section dividers, `─` for table row separators
+- No emoji, no color codes, no zero-width characters — pure Unicode
+- Summary length is whatever carries the required info; no line cap
+- Full file always co-exists at the cited path; user opens for deep dive
 
 **Files:**
-- `skills/hd-review/references/audit-procedure.md` → renamed to `review-procedure.md` (under 3l.7); rewritten with host-agnostic steps
-- `skills/hd-review/references/host-capability-detection.md` — **new** file documenting capability probes + dispatch mapping per host
-- `skills/hd-review/SKILL.md` — update dispatch prose; call out "same output on every host"
+- `skills/hd-review/references/audit-procedure.md` → renamed to `review-procedure.md` (under 3l.7); rewritten to write file + emit summary
+- `skills/hd-review/SKILL.md` — update output-destination language; no Task gating
+- `skills/hd-review/assets/audit-report.md.template` → renamed to `review-report.md.template` (under 3l.7); same content; lives only in the file now
 
-**Inline evaluation contract:** for each layer 1–5, read `review-criteria-l<N>.md`, gather evidence per check (file reads + regex heuristics), emit the same YAML output shape the parallel agent would. Consistency check (3k.7) remains inline anyway.
+**Inline evaluation contract:** for each layer 1–5, read `review-criteria-l<N>.md`, gather evidence per check (file reads + regex heuristics), emit the YAML output shape. Consistency + drift checks run inline. Same logic whether host dispatches in parallel or serial.
 
-**Parallel dispatch layer:** wrapper that, when host supports it, fans out the same per-layer evaluation across sub-agents and merges results. Same criteria, same output shape. Just parallelized.
+**Parallel dispatch (optional speed-up):** wrapper that, when host supports it, fans out per-layer evaluation across sub-agents and merges results. Cuts wall time. Does NOT change output.
+
+**New directory:** `docs/knowledge/reviews/` — review outputs live here (separate from `docs/knowledge/lessons/` which stays for real episodic captures via `/hd:maintain capture`).
 
 ### 3l.3 — Detector content-awareness (schema v4)
 
@@ -166,25 +223,67 @@ User can override to skip if they genuinely don't want suggestions.
 - `skills/hd-maintain/assets/lesson.md.template` — add `memory_type: episodic` and `importance: <1-5>` to frontmatter per `lesson-patterns.md`
 - `skills/hd-maintain/references/capture-procedure.md` — Step 0: check `docs/knowledge/lessons/` exists; if not, `mkdir -p` + narrate ("Creating `docs/knowledge/lessons/` — first-time setup for the knowledge layer")
 
-### 3l.6 — Surface progress bars
+### 3l.6 — Surface progress bars (tables + dividers)
 
-**Three render points:**
+**Three render points, all using the same table format:**
 
-1. **After Phase A pre-analysis in `/hd:setup`** (`references/phase-a-pre-analysis.md`):
-   ```
-   Phase A complete — layer snapshot:
+**1. After Phase A pre-analysis in `/hd:setup`** (`references/phase-a-pre-analysis.md`):
 
-   L1 Context          ████░░░░░░  4.0  scattered content, no canonical tree
-   L2 Skills           █████████░  9.0  .agent/skills/ with 7 skills
-   L3 Orchestration    ██████░░░░  6.0  workflow docs present, no gate map
-   L4 Rubrics          ░░░░░░░░░░  0.0  absent
-   L5 Knowledge        ██░░░░░░░░  2.0  docs/solutions/ only
+```
+═══════════════════════════════════════════════════════════════════
 
-   Walking layers now — default per-layer action based on this snapshot:
-   L1 critique · L2 critique · L3 critique · L4 scaffold · L5 scaffold
-   ```
-2. **Top of `/hd:review` report** — already in place via 3k.4, stays.
-3. **On demand via `/hd:review snapshot`** — quick-mode output shows just the bars + one-liner summaries; no full findings.
+Phase A complete — layer snapshot
+
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████░░░░░░    4.0    scattered, no canonical tree
+L2 Skill Curation  █████████░    9.0    .agent/skills/ with 7 skills
+L3 Orchestration   ██████░░░░    6.0    workflow docs, no gate map
+L4 Rubric Setting  ░░░░░░░░░░    0.0    absent
+L5 Knowledge       ██░░░░░░░░    2.0    docs/solutions/ only
+
+═══════════════════════════════════════════════════════════════════
+
+Proposed per-layer action (override any row to change)
+
+Layer  Action     Rationale
+─────  ─────────  ───────────────────────────────────────────────
+L1     critique   scattered content — review + suggest canonical map
+L2     critique   existing skills — surface skill-quality findings
+L3     critique   workflows implicit — propose explicit gates
+L4     scaffold   absent — starter trio + scope-and-grounding
+L5     scaffold   thin — full knowledge structure
+```
+
+Summary only — not written to any file (setup writes per-layer scaffolds later, gated by Step 8.5 preview).
+
+**2. In `/hd:review` chat summary** — the full summary spec from 3l.2 (file writes go to `docs/knowledge/reviews/<date>-harness-review.md`; chat shows bars + priorities + cross-layer).
+
+**3. On demand via `/hd:review snapshot`** — quick-mode, bars-only output (no priorities, no cross-layer, no file write):
+
+```
+═══════════════════════════════════════════════════════════════════
+
+Harness health — <score> / 10 (<state>)
+
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████░░░░░░    4.0    <one-line>
+L2 Skill Curation  █████████░    9.0    <one-line>
+L3 Orchestration   ██████░░░░    6.0    <one-line>
+L4 Rubric Setting  ░░░░░░░░░░    0.0    <one-line>
+L5 Knowledge       ██░░░░░░░░    2.0    <one-line>
+
+═══════════════════════════════════════════════════════════════════
+
+Run `/hd:review` for full findings + evidence
+```
+
+**Rules applied consistently across all 3 render points:**
+- Table layout for layer snapshot (Layer / Bar / Score / State columns)
+- Box-drawing `═` for section dividers, `─` for in-table row separators
+- Bars: `blocks_filled = round(health_score)`, filled = `█`, empty = `░`
+- No emoji, no color codes — Unicode box-drawing only
 
 ### 3l.7 — Retire "audit" term
 
@@ -236,8 +335,9 @@ Regression pass: live-test all 5 Codex repos + smoke-test on our own repo.
 
 ## Verification
 
-- [ ] `/hd:review` on Codex produces report with ASCII bars + 5 per-layer sections + Cross-layer consistency + hd-config drift
-- [ ] `/hd:review` on Claude Code produces same report (parallel dispatch faster, same content)
+- [ ] `/hd:review` on Codex writes `docs/knowledge/reviews/<date>-harness-review.md` (full template) AND emits chat summary with bars + priorities table + cross-layer table + dividers
+- [ ] `/hd:review` on Claude Code produces same file + same chat summary (parallel dispatch faster on the evaluation phase, same output)
+- [ ] `/hd:review snapshot` emits bars-only chat output, writes nothing
 - [ ] `rg -i "audit" skills/ agents/` returns zero matches in living prose (frontmatter + body)
 - [ ] `/hd:setup` on cornerstone reports `layers_present_scattered: ["L1", "L3"]` not `[]`
 - [ ] `/hd:setup` in a repo with `.claude/` defaults Layer 1–3 to `critique`, not `skip`
