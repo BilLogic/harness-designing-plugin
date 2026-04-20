@@ -118,23 +118,135 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 ## Installation
 
-### Fastest path — self-hosted marketplace (available today)
+The plug-in ships three sibling manifests from one repo: `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`. Same skills, same agents, same scripts — host-specific install paths below.
+
+### Claude Code
+
+**One-liner via self-hosted marketplace** (available today, no wait for directory review):
 
 ```
 /plugin marketplace add BilLogic/harness-designing-plugin
 /plugin install design-harness
 ```
 
-### Local dev
+Skills appear as `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review`.
+
+<details>
+<summary>Alternative: clone + --plugin-dir</summary>
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
 claude --plugin-dir ~/plugins/harness-designing
 ```
 
+Useful if you want to inspect the plug-in first, or run a local fork.
+
+</details>
+
+### Codex CLI
+
+No automatic marketplace yet. Clone + register manually:
+
+```bash
+# 1. Clone to a stable location
+git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
+
+# 2. Register the skills dir with Codex
+mkdir -p ~/.codex/skills
+ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/design-harness
+
+# 3. Restart Codex so it picks up the new skills
+```
+
+Skills appear as `design-harness:hd-learn` / `-hd-setup` / `-hd-maintain` / `-hd-review` in the Codex skill list.
+
+To update: `cd ~/.codex/harness-designing-plugin && git pull`.
+
+### Cursor (IDE + CLI)
+
+Marketplace submission pending. Meanwhile, clone + register:
+
+```bash
+# 1. Clone
+git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
+
+# 2. Link skills into Cursor's user-level skills dir
+mkdir -p ~/.cursor/skills
+ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/design-harness
+
+# 3. Restart Cursor
+```
+
+Note: Cursor CLI does not expose the Task tool for sub-agent dispatch; `/hd:review` runs inline serial on that host. Same output, slightly longer wall time. See [Host compatibility](#host-compatibility) below.
+
+### Windsurf / plain terminal / any other host
+
+The skills are just markdown + bash/python. Clone the repo and point your host at `skills/`:
+
+```bash
+git clone https://github.com/BilLogic/harness-designing-plugin ~/harness-designing
+export DESIGN_HARNESS=~/harness-designing
+# then reference $DESIGN_HARNESS/skills/<skill-name>/SKILL.md from your host's skill loader
+```
+
+For hosts without a skills-dir convention, invoke the scripts directly:
+
+```bash
+# Detect harness shape on the current repo
+python3 $DESIGN_HARNESS/skills/hd-setup/scripts/detect.py
+
+# Budget check
+bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
+```
+
+### Host compatibility
+
+| Host | Install path | Parallel sub-agent dispatch | Output |
+|---|---|---|---|
+| Claude Code | Marketplace one-liner | ✅ via `Task` tool | Full parallel (~30s /hd:review) |
+| Codex CLI | Clone + symlink | ✅ via `/agent` + MCP | Full parallel (~30s) |
+| Cursor IDE | Clone + symlink | ✅ via subagents API (≤4) | Full parallel (~45s) |
+| Cursor CLI | Clone + symlink | ❌ inline serial | Same output, ~1–2 min |
+| Windsurf / other | Clone + manual | ❌ inline serial | Same output, ~1–2 min |
+
+`/hd:review` writes the full report file regardless of host; chat summary renders identically everywhere (box-drawing tables work in every terminal that supports UTF-8).
+
+### Updating
+
+All install paths share the same update command:
+
+```bash
+# Claude Code marketplace
+/plugin marketplace update BilLogic/harness-designing-plugin
+
+# Any clone-based install
+cd <clone-path> && git pull
+```
+
+Pin to a specific release:
+
+```bash
+cd <clone-path> && git checkout v1.1.0
+```
+
 ### Official directories *(pending review)*
 
-Submitted to Anthropic's plugin directory and Cursor's marketplace. Once accepted, one-line installs land via `claude /plugin install` and the Cursor marketplace UI. Codex CLI ships from the same repo via `.codex-plugin/`; OpenAI's directory opens later.
+Submitted to Anthropic's plugin directory (Apr 18, 2026) + Cursor's marketplace (Apr 18, 2026). Both pending reviewer response. Once accepted, one-line installs land via `claude /plugin install` and the Cursor marketplace UI. OpenAI Codex directory opens later.
+
+### Uninstall
+
+```bash
+# Claude Code
+/plugin uninstall design-harness
+/plugin marketplace remove harness-designing
+
+# Codex CLI / Cursor / Windsurf (clone-based)
+rm ~/.codex/skills/design-harness      # remove symlink (if Codex)
+rm ~/.cursor/skills/design-harness     # remove symlink (if Cursor)
+rm -rf ~/.codex/harness-designing-plugin   # remove the clone
+```
+
+The plug-in never modifies files outside its own install dir. Uninstall = delete the clone + any symlinks you created.
 
 ## Credits
 
