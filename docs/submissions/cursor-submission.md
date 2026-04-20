@@ -25,18 +25,20 @@ Harness Designing Plugin helps design teams turn their scattered AI setup into a
 
 Four skills:
 • /hd:learn — Q&A about the five-layer concept
-• /hd:setup — detects existing harness, pre-analyzes all five layers in parallel, walks through link / critique / scaffold / skip
+• /hd:setup — detects existing harness, pre-analyzes all five layers in parallel, walks through link / review / scaffold / skip with preview-before-write gate. Supports --from-review flag.
 • /hd:maintain — captures lessons and promotes them to team rules with SHA-256 plan-hash proof-of-consent
-• /hd:review — audits harness health in parallel; critiques harness artifacts against quality rubrics
+• /hd:review — full review across 5 layers or targeted review of one item. Writes dated report to docs/knowledge/reviews/; emits chat summary with ASCII health bars, priorities table, Proposed revision diff, and Staleness check.
+
+Host-agnostic: same output on Claude, Codex, Cursor, any terminal. Parallel sub-agent dispatch is an optional speed-up.
 
 Ships 9 sub-agents and 14 starter rubrics (pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section (personas, user stories, scenarios, anti-scenarios).
 
-Validated across a six-repo pilot matrix. Companion toolkit to Bill Guo's Substack series on design harnessing.
+Validated across 10 repos (6-repo pilot matrix + 4 Phase 3k–3m test repos). Companion toolkit to Bill Guo's Substack series on design harnessing.
 ```
 
 ### Version
 ```
-1.0.0
+1.1.0
 ```
 
 ### Repository URL

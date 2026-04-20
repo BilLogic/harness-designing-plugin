@@ -42,7 +42,7 @@ Same as Cursor/Anthropic packet — copy from either when submitting.
 
 ### Version
 ```
-1.0.0
+1.1.0
 ```
 
 ### Repository
@@ -79,7 +79,7 @@ MIT
 {
   "skills": "./skills",
   "category": "design",
-  "capabilities": ["scaffold", "explain", "audit"]
+  "capabilities": ["scaffold", "explain", "review"]
 }
 ```
 

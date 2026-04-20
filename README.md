@@ -37,7 +37,7 @@ At each layer, four choices: **link** (pointer to source of truth), **review** (
 | [`/hd:learn`](skills/hd-learn/SKILL.md) | Ask questions about the harness concept. 10 atomic references (one per layer + glossary + FAQ + memory-taxonomy). Article § citations when the corpus is configured. No writes. |
 | [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + 5× harness-auditor + rubric-recommender). Offer per-layer link / review / scaffold / skip. Write `hd-config.md`. |
 | [`/hd:maintain`](skills/hd-maintain/SKILL.md) | Capture lessons (one dated file per event). Promote lessons to rules in AGENTS.md. Destructive rule adoptions require SHA-256 plan-hash proof-of-consent. |
-| [`/hd:review`](skills/hd-review/SKILL.md) | Full review across all 5 layers (parallel dispatch when host supports it) OR targeted review of one layer / file / rubric. Writes full report to `docs/knowledge/reviews/<date>-harness-review.md`; emits rich chat summary with ASCII health bars + priorities table. Not for reviewing design deliverables — that happens outside our scope. |
+| [`/hd:review`](skills/hd-review/SKILL.md) | Full review across all 5 layers (parallel dispatch when host supports it) OR targeted review of one layer / file / rubric. Writes full report to `docs/knowledge/reviews/<date>-harness-review.md`; emits chat summary with ASCII health bars + priorities table + `Proposed revision` file-tree diff + Staleness check (comparing against any prior review). Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes. Not for reviewing design deliverables — that happens outside our scope. |
 
 ## Agents
 
@@ -111,7 +111,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 | Script | Purpose |
 |---|---|
-| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v3 repo scan — layer presence, managed design systems, a11y frameworks, other-tool harnesses, team tooling, MCP servers |
+| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v4 repo scan — layer presence + scattered-layer detection, managed design systems, a11y frameworks, other-tool harnesses (`.agent/`, `.agents/`, `.claude/`, `.codex/`, `.cursor/skills/`, `.windsurf/`, `.roo/`), team tooling, MCP servers |
 | [`skills/hd-setup/scripts/detect-mode.sh`](skills/hd-setup/scripts/detect-mode.sh) | Bash shim fallback for `detect.py` when python3 unavailable |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
 | [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + always-loaded combined-context budget |
@@ -164,7 +164,10 @@ Submitted to Anthropic's plugin directory and Cursor's marketplace. Once accepte
 
 ## Version History
 
-See [CHANGELOG.md](./CHANGELOG.md). Phases 3e–3i shipped 2026-04-18; validated across a 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno).
+See [CHANGELOG.md](./CHANGELOG.md).
+
+- **v1.1.0** (2026-04-20) — iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
+- **v1.0.0** (2026-04-18) — distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plugin directory + Cursor marketplace.
 
 ## License
 
