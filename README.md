@@ -1,6 +1,6 @@
 # Harness Designing Plugin
 
-A five-layer structure that turns scattered AI usage into a design practice that survives tool changes, team rotations, and model updates. Works with [Claude Code](https://claude.com/claude-code), [Codex CLI](https://github.com/openai/codex), and [Cursor](https://cursor.com)—see [Installation](#installation) for your host.
+A five-layer structure that turns scattered AI usage into a design practice that survives tool changes, team rotations, and model updates. Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools—see [Installation](#installation) for your host.
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
 >—from the companion article
@@ -21,7 +21,7 @@ Working memory—the active session—is ephemeral. The five layers control what
 
 At each layer, four choices: **link** (pointer to source of truth), **review** (apply a rubric + surface improvement suggestions), **scaffold** (seed questions + write files), or **skip**.
 
-## What you get
+## Template
 
 When `/hd:setup` scaffolds a greenfield repo, it proposes this starting structure:
 
