@@ -118,86 +118,136 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 ## Installation
 
-The plug-in ships three sibling manifests from one repo: `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`. Same skills, same agents, same scripts — host-specific install paths below.
+> **Status — beta testing.** Submitted to Anthropic's plugin directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below — they work today.
+
+The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`) — same skills, agents, scripts. Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended — handles different home dirs, shells, skill-dir conventions for you), OR run the exact commands yourself.
 
 ### Claude Code
 
-**One-liner via self-hosted marketplace** (available today, no wait for directory review):
+**Paste this into Claude Code:**
+
+```
+Install the Harness Designing Plugin from https://github.com/BilLogic/harness-designing-plugin
+using the self-hosted marketplace. Run these in order:
+  /plugin marketplace add BilLogic/harness-designing-plugin
+  /plugin install design-harness
+Then list my available skills so I can confirm hd:learn, hd:setup,
+hd:maintain, and hd:review appear.
+```
+
+<details>
+<summary>Or run the commands directly</summary>
 
 ```
 /plugin marketplace add BilLogic/harness-designing-plugin
 /plugin install design-harness
 ```
 
-Skills appear as `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review`.
+</details>
 
 <details>
-<summary>Alternative: clone + --plugin-dir</summary>
+<summary>Alternative — clone + --plugin-dir (for inspecting / forking)</summary>
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
 claude --plugin-dir ~/plugins/harness-designing
 ```
 
-Useful if you want to inspect the plug-in first, or run a local fork.
-
 </details>
 
 ### Codex CLI
 
-No automatic marketplace yet. Clone + register manually:
+**Paste this into Codex:**
 
-```bash
-# 1. Clone to a stable location
-git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
+```
+Install the Harness Designing Plugin from
+https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
 
-# 2. Register the skills dir with Codex
-mkdir -p ~/.codex/skills
-ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/design-harness
-
-# 3. Restart Codex so it picks up the new skills
+1. Clone the repo to a stable location (e.g. ~/.codex/harness-designing-plugin
+   or wherever Codex expects externally-cloned plugins on my machine)
+2. Register its skills/ directory so hd-learn, hd-setup, hd-maintain, and
+   hd-review appear alongside my existing skills (use whichever mechanism
+   my Codex version supports — symlink into ~/.codex/skills/, or the Codex
+   plugin-registration API, or a config entry)
+3. Tell me what to restart / reload so the skills activate
+4. List my skills after restart to confirm the four hd-* skills loaded
 ```
 
-Skills appear as `design-harness:hd-learn` / `-hd-setup` / `-hd-maintain` / `-hd-review` in the Codex skill list.
+<details>
+<summary>Or run the commands directly</summary>
 
-To update: `cd ~/.codex/harness-designing-plugin && git pull`.
+```bash
+git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
+mkdir -p ~/.codex/skills
+ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/design-harness
+# Then restart Codex
+```
+
+Update: `cd ~/.codex/harness-designing-plugin && git pull`
+
+</details>
 
 ### Cursor (IDE + CLI)
 
-Marketplace submission pending. Meanwhile, clone + register:
+**Paste this into Cursor:**
 
-```bash
-# 1. Clone
-git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
+```
+Install the Harness Designing Plugin from
+https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
 
-# 2. Link skills into Cursor's user-level skills dir
-mkdir -p ~/.cursor/skills
-ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/design-harness
-
-# 3. Restart Cursor
+1. Clone the repo to a stable location (e.g. ~/cursor-plugins/harness-designing
+   or wherever Cursor expects externally-cloned plugins on my machine)
+2. Register its skills/ directory so the hd-* skills appear alongside my
+   existing skills (typically via ~/.cursor/skills/ or your current
+   skill-loading mechanism — pick what works for my Cursor version)
+3. Tell me what to restart / reload
+4. Note: if I'm on Cursor CLI rather than the IDE, /hd:review will run
+   inline serial because the CLI doesn't expose the Task tool — same
+   output, just ~1-2 min wall time instead of ~30s
 ```
 
-Note: Cursor CLI does not expose the Task tool for sub-agent dispatch; `/hd:review` runs inline serial on that host. Same output, slightly longer wall time. See [Host compatibility](#host-compatibility) below.
+<details>
+<summary>Or run the commands directly</summary>
+
+```bash
+git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
+mkdir -p ~/.cursor/skills
+ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/design-harness
+# Then restart Cursor
+```
+
+</details>
 
 ### Windsurf / plain terminal / any other host
 
-The skills are just markdown + bash/python. Clone the repo and point your host at `skills/`:
+**Paste this into your AI:**
+
+```
+Install the Harness Designing Plugin from
+https://github.com/BilLogic/harness-designing-plugin on my current host:
+
+1. Clone the repo to a stable location on my machine
+2. Set up whatever pointer / env var / config entry my host needs so its
+   skill-loader or agent-loader can find the SKILL.md files under skills/
+3. If my host has no skill-loader, just confirm the clone location so
+   I can invoke scripts directly (e.g. the detect.py and budget-check.sh
+   from skills/hd-*/scripts/)
+4. Tell me how to restart / reload so the skills activate
+```
+
+<details>
+<summary>Or run the commands directly</summary>
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/harness-designing
 export DESIGN_HARNESS=~/harness-designing
-# then reference $DESIGN_HARNESS/skills/<skill-name>/SKILL.md from your host's skill loader
-```
 
-For hosts without a skills-dir convention, invoke the scripts directly:
-
-```bash
-# Detect harness shape on the current repo
+# Direct script invocation (hosts without skill-loader convention):
 python3 $DESIGN_HARNESS/skills/hd-setup/scripts/detect.py
-
-# Budget check
 bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
 ```
+
+</details>
 
 ### Host compatibility
 
@@ -229,9 +279,9 @@ Pin to a specific release:
 cd <clone-path> && git checkout v1.1.0
 ```
 
-### Official directories *(pending review)*
+### Official directories *(beta — pending marketplace review)*
 
-Submitted to Anthropic's plugin directory (Apr 18, 2026) + Cursor's marketplace (Apr 18, 2026). Both pending reviewer response. Once accepted, one-line installs land via `claude /plugin install` and the Cursor marketplace UI. OpenAI Codex directory opens later.
+The plug-in is in **beta testing**. Submitted to Anthropic's Claude Code plugin directory and Cursor's marketplace on 2026-04-18; both are pending reviewer response. Once accepted, installation becomes a one-liner via each platform's native UI (no git clone, no manual registration). Until then the clone-based paths above work on every host today. OpenAI Codex directory opens later.
 
 ### Uninstall
 
