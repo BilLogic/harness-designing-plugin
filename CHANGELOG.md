@@ -3,7 +3,62 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.1.0] — 2026-04-20
+
+Iteration release. Three phases (3k, 3l, 3m) built on top of v1.0.0 distribution-ready baseline. Surfaced by live testing across 10 real repos (plus-uno, sds, plus-marketing-website, caricature, oracle-chat, lightning, cornerstone, Dawnova, compound-designing, plus-vibe-coding-starting-kit). ~25 fixes landed.
+
+Headlines:
+
+- **Unified vocabulary** — "audit" and "critique" retired; one verb: **review**. `/hd:review` asks "full or targeted" scope, never audit-vs-critique (3l.7).
+- **File-first reporting** — full review writes to `docs/knowledge/reviews/<date>-harness-review.md`; chat emits rich summary with ASCII bars + tables + file-tree diff. Host-agnostic by construction — works on Claude Code, Codex CLI, Cursor IDE, Cursor CLI, Windsurf, any terminal (3l.2, 3m.4).
+- **Content-quality grading** — `harness-auditor` grades on actual file content (4-level `content_status`), not just path presence. Caricature-style false passes eliminated (3k.1, 3k.10).
+- **Smarter detection** — `budget-check.sh` auto-detects `.agent/skills/` / `.claude/skills/` / `skills/`. `detect.py` schema v4 probes `.agents/` (plural), `.cursor/skills/`, `.windsurf/`, `.roo/`; detects scattered L1 content in non-canonical locations. False positives on `.claude/worktrees/` metadata-only dirs eliminated (3k.2, 3l.3, 3m.1).
+- **Review → setup feedback loop** — `/hd:setup --from-review <path>` applies review findings as opt-in Step 8.5 writes. Staleness preflight flags when the same findings recur across reviews (3m.3, 3m.5).
+- **Canonical standard locked** — `standard-harness-structure.md` (full tree aligned with plus-uno + Material 3 + Fluent 2) + `standard-agent-categories.md` (research / planning / generation / review / compound) (3k.12).
+- **AGENTS.md is the sole master index** — per-layer INDEX.md files retired. Template gains Agent persona + Harness map sections (3k.13).
+
+Full details per phase below.
+
+### Phase 3m — setup accuracy + review actionability (2026-04-20)
+
+Completed per [`docs/plans/2026-04-20-002-fix-phase-3m-setup-accuracy-review-actionability-plan.md`](docs/plans/2026-04-20-002-fix-phase-3m-setup-accuracy-review-actionability-plan.md). Shipped five fixes surfaced by live stress-testing across five real repos. Commit `dd69f449f8`.
+
+- **3m.1** `_meta_harness_entry()` in `detect.py` now requires content substance (skills/rules/agents/commands dir with ≥1 .md, OR settings.json with ≥5 non-blank lines, OR AGENTS.md with ≥20 non-blank lines). Pure-metadata dirs (`.claude/worktrees/` alone) return `None`. Fixes Dawnova false positive where a bare worktree metadata folder triggered guardrail additive-only mode.
+- **3m.2** Per-layer review default gated by content substance. When `harness-auditor` reports `content_status: missing` for all per-layer checks, Phase A synthesis flips default from `review` to `scaffold`. No more tone-deaf "review nothing" when guardrail fires on nominal-only signals. Layers with ≥1 non-missing check still default to `review` (3l.4 behavior preserved).
+- **3m.4** `/hd:review` chat summary + report template gain `## Proposed revision` section. Renders revised file tree as a ```diff fenced block with `+` new files, `~` edits, unchanged lines for context. Derived from finding recommendations via phrase heuristics (`add <path>` / `promote <src> to <dest>` / `trim <path>` etc.). Users see the concrete plan inline without re-running setup.
+- **3m.3** `/hd:setup --from-review <path>` flag. Skips Phase A (already ran when review was produced), extracts write-style findings, merges them into Step 8.5 preview as opt-in rows. Closes the review → setup feedback loop while preserving preview-before-write safety.
+- **3m.5** Staleness preflight check. `/hd:review` Step 1.5 reads most recent prior review from `docs/knowledge/reviews/*-harness-review*.md`. After synthesis, computes Jaccard overlap on `(category, check, file)` finding triples. Overlap ≥70% → Staleness block in chat summary with git-log activity since + lesson-capture count + suggestion to capture a blocker lesson or mark deferred. Overlap <70% → single compact line. First review → "fresh review — no prior".
+
+**Dogfood run (`<commit>`):** first self-review landed at `docs/knowledge/reviews/2026-04-20-harness-review.md`. Surfaced real drift in the plug-in repo: retired `docs/knowledge/INDEX.md` + `README.md` still on disk (3k.13 cleanup incomplete), `docs/rubrics/` had only `INDEX.md` without actual rubrics (no dogfood of our own L4 contract). Acted on the review: removed two retired files, promoted `skill-quality.md` starter to `docs/rubrics/`.
+
+### Phase 3l — review unification + host-agnostic execution (2026-04-20)
+
+Completed per [`docs/plans/2026-04-20-001-fix-phase-3l-review-unification-host-agnostic-plan.md`](docs/plans/2026-04-20-001-fix-phase-3l-review-unification-host-agnostic-plan.md). Addressed vocabulary friction + host-specific rendering gaps from 2026-04-19 live testing. Commits `a90e0a51b9` + `f0c307a0b7`.
+
+- **3l.7** Retire "audit" + "critique" vocabulary. Unified under "review" (full / targeted). Renamed 7 `audit-criteria-l*.md` → `review-criteria-l*.md`, `audit-procedure.md` → `review-procedure.md`, `critique-procedure.md` → `targeted-review-procedure.md`, `critique-format.md` → `targeted-review-format.md`, `audit-report.md.template` → `review-report.md.template`, `critique-response.md.template` → `targeted-review-response.md.template`. Per-layer setup action `critique` → `review`. Bulk sweep of 52 living files via word-boundary regex (preserves `auditor` agent names). `/hd:review` mode detection now asks "full or targeted", never "audit or critique".
+- **3l.1** Finished 3k.13 INDEX.md retirement cleanup. `layer-5-knowledge.md` reconciled: canonical L5 scaffold outputs `changelog.md` + `decisions.md` + `ideations.md` + `preferences.md` + `lessons/.gitkeep` (no INDEX, no starter lesson). Added missing "Preview table format" section in `per-layer-procedure.md` that SKILL.md Step 8.5 was pointing to. `capture-procedure.md` drops INDEX.md update; bootstraps `docs/knowledge/lessons/` if absent.
+- **3l.4** Guardrail default flipped `skip` → `review` for L1/L2/L3 when existing harness detected. Critique reviews existing content read-only and surfaces improvement suggestions instead of tone-deaf "you already have this, we'll do nothing" skip. AGENTS.md rule updated to supersede 2026-04-18 skip-default.
+- **3l.5** `lesson.md.template` gains `memory_type` + `importance` fields (required per `lesson-patterns.md`). `capture-procedure.md` Step 0 auto-creates `docs/knowledge/lessons/` with narration when absent.
+- **3l.3** `detect.py` schema v4. New probes: `.agents/` (plural), `.cursor/skills/`, `.windsurf/`, `.roo/`. Content-based L1 detection for scattered content (PRD filenames, tech-stack docs, design-system dirs). New `layers_present_scattered[]` field + `scattered_l1_signals` sub-object. Oracle Chat now correctly reports `layers_present_scattered: ["L1", "L3"]` (was `layers_present: []`).
+- **3l.2** File-first reporting. `review-procedure.md` rewritten — inline serial is the baseline; parallel dispatch is an optional speed-up on hosts that support it (Claude `Task`, Codex `/agent`, Cursor subagents API). Full report writes to `docs/knowledge/reviews/<date>-harness-review.md`. Chat emits rich summary with Unicode box-drawing tables (═/─), ASCII health bars, priorities table, cross-layer signals. Same output on every host — wall time differs, content doesn't.
+- **3l.6** Progress bars surface beyond the review report. Phase A renders a 5-row ASCII health snapshot after pre-analysis completes, before Phase B's layer walk. `/hd:review snapshot` mode added for bars-only output (no file write, ~30s).
+
+### Phase 3k — audit accuracy + UX polish + canonical standard (2026-04-19)
+
+Completed per [`docs/plans/2026-04-19-002-fix-phase-3k-testing-findings-plan.md`](docs/plans/2026-04-19-002-fix-phase-3k-testing-findings-plan.md). Addressed audit credibility + UX issues from 5-repo hands-on testing. Commit `433298bc54`.
+
+- **3k.1 + 3k.10** Content-quality grading in `harness-auditor`. Output gains `content_status: missing | present-but-stale | present-and-populated | healthy`. Empty indexes, stub files, orphan pointers fail instead of passing. Caricature's false L1-L3 pass (paths existed but content was stale) now fires findings correctly.
+- **3k.2** `budget-check.sh` auto-detects user-repo skill locations. Probes `.agent/skills/`, `.claude/skills/`, `skills/` in priority order. Reads `loading-order.md` (or `.agent/loading-order.md`) for repo's own always-loaded contract. Output gains `skill_dir_detected`, `always_loaded_contract_source`, `always_loaded_lines` fields. Cornerstone false-clean 0-skill report → correctly 6 skills with 5 violations.
+- **3k.3** `/hd:setup` Step 8.5 proposed-files preview table before any write. Users see the full scope + confirm `y / revise / cancel` before files land.
+- **3k.4** ASCII layer-health bars at top of review report. Block chars (`█`/`░`) + percentages. Terminal + chat friendly. No emoji, no color codes.
+- **3k.5** `/hd:review` defaults to full review when invoked bare. Only asks for scope when a file path is passed without a verb.
+- **3k.6** Stale `hd-config.md` detection. `/hd:review` re-runs `detect.py` and diffs vs recorded config. Any drift (other-tool harnesses added, team tooling changed, skipped layers mismatched) queues a `hd-config-stale` (p2) finding for synthesis.
+- **3k.7** New `review-criteria-consistency.md` (post-3l.7 rename). Cross-layer check surface: duplicate rules across AGENTS.md vs rubrics, contradicting rule+rubric pairs, orphan pointers (link exists, target missing), overlapping skill scope, stale lesson citations, hd-config drift.
+- **3k.8** Narrated execution. SKILL.md files explain rationale inline at each major step ("Running preflight — budget check + fresh detect.py scan. This lets us see what's really in the repo right now vs what hd-config.md recorded.").
+- **3k.9** Plain-language copy-edit pass. Retired "tier 1" jargon in living prose in favor of "always-loaded". Historical files (CHANGELOG, plans, dated lessons) preserved as audit trail.
+- **3k.11** `/hd:setup` Step 3.5 scaffold mode choice: **additive** (default when existing harness detected) vs **use-standard** (scaffold the canonical tree).
+- **3k.12** Locked canonical harness structure at `skills/hd-setup/references/standard-harness-structure.md`. Per-layer tree with `product/` + `engineering/` (renamed from `architecture/`) + `design-system/` (styles/foundations/components, derived from plus-uno + Material 3 + Fluent 2). Locked standard agent categories at `skills/hd-setup/references/standard-agent-categories.md` — `research / planning / generation / review / compound` (non-enforced).
+- **3k.13** `AGENTS.md` is the sole master index. Per-layer `INDEX.md` files retired. Template gains `## Agent persona` section (role + responsibility + boundary) and `## Harness map` covering all 5 layers. L5 scaffold drops INDEX.md.template + starter-lesson.md.template; only 4 canonical files + empty `lessons/.gitkeep`.
 
 ### Phase 3j — marketplace submission prep (Anthropic, Cursor, Codex CLI)
 
