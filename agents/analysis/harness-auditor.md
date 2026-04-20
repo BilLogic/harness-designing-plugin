@@ -87,9 +87,9 @@ If `scenario: setup-pre-analysis`, add a `recommended_action` block per 3m.2 con
 non_missing_count = number of checks whose content_status != "missing"
 ```
 
-- `default: link` — existing layer artifact is healthy and points to an authoritative source
+- `default: scaffold` — existing layer artifact is healthy and points to an authoritative source
 - `default: review` — `non_missing_count >= 1` (layer has content to review + suggest on)
-- `default: scaffold` — `non_missing_count == 0` (layer absent or nominal-only; propose canonical tree)
+- `default: create` — `non_missing_count == 0` (layer absent or nominal-only; propose canonical tree)
 - `default: skip` — available as user override only; no longer auto-selected from the auditor
 
 Include `non_missing_count` and `total_checks` in the output so the caller can inspect the decision.

@@ -22,7 +22,7 @@ Thin redirect templates written to a user's repo when `/hd:setup` detects scatte
 ## When the skill does NOT write these
 
 - **Greenfield mode** — no existing platform files to redirect from; `AGENTS.md` is the only file scaffolded
-- **Advanced mode** — user already has a harness; skill walks layer-by-layer with link/review options; never re-scaffolds stubs
+- **Advanced mode** — user already has a harness; skill walks layer-by-layer with scaffold/review options; never re-writes stubs
 - **User declined** at the "consolidate?" prompt
 
 ## See also

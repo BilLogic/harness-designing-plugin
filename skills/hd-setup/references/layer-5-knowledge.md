@@ -1,6 +1,6 @@
 # Layer 5 — Knowledge (depth reference)
 
-**Loaded by:** `SKILL.md` Step 8 when scaffolding or reviewing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the canonical-4 memory frame, scaffold shape, and rule-adoption handoff.
+**Loaded by:** `SKILL.md` Step 8 when setting up or reviewing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the canonical-4 memory frame, output shape, and rule-adoption handoff.
 
 **Concept explainer:** [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md)
 
@@ -20,7 +20,7 @@ docs/knowledge/
 
 **No starter lesson.** `/hd:setup` scaffolds the 4 top-level files + empty `lessons/` dir. First real lesson comes from `/hd:maintain capture` (setup Step 10 nudges the user to run it).
 
-**`changelog.md` IS scaffolded at setup.** Template seed: one `## YYYY-MM-DD — harness scaffold` entry recording the setup event itself. Not empty, not placeholder — the real first structural event.
+**`changelog.md` IS created at setup.** Template seed: one `## YYYY-MM-DD — harness setup` entry recording the setup event itself. Not empty, not placeholder — the real first structural event.
 
 Templates for the 4 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/). (No `INDEX.md.template` — retired in 3k.13. No starter `lesson.md` in the skeleton — lessons come via `/hd:maintain capture`.)
 
@@ -81,8 +81,8 @@ Layer 5 drift signals (per [`../../hd-review/references/review-criteria-l5-knowl
 
 **Propose default (post-3l.4):**
 - `has_plans_convention: true` or `has_knowledge_dir: true` → **review** — run `rule-candidate-scorer` on existing entries; surface improvement suggestions
-- `team_tooling.docs` + MCP live → **scaffold** + offer to pull retro/post-mortem/decision-labeled pages
-- Nothing → **scaffold** the 4 canonical files + empty `lessons/` from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
+- `team_tooling.docs` + MCP live → **create** + offer to pull retro/post-mortem/decision-labeled pages
+- Nothing → **create** the 4 canonical files + empty `lessons/` from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
 
 **Execute — review:** invoke:
 
@@ -95,7 +95,7 @@ Task design-harnessing:analysis:rule-candidate-scorer(
 
 Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for each.
 
-**Execute — scaffold:** write exactly these files:
+**Execute — create:** write exactly these files:
 - `docs/knowledge/changelog.md` (from template)
 - `docs/knowledge/decisions.md` (from template)
 - `docs/knowledge/ideations.md` (from template)

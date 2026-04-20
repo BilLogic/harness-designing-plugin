@@ -1,6 +1,6 @@
 # Layer 4 — Rubrics (depth reference)
 
-**Loaded by:** `SKILL.md` Step 7 when scaffolding or reviewing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
+**Loaded by:** `SKILL.md` Step 7 when setting up or reviewing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
 
 **Concept explainer:** [hd-learn `layer-4-rubrics.md`](../../hd-learn/references/layer-4-rubrics.md)
 
@@ -15,11 +15,11 @@ Rubrics are **a behavior of the system, not a folder**. They live in three place
 
 Key distinction: **design-system holds the source-of-truth CONTENT; rubrics hold the CHECKS against that content.** Don't confuse them. A `typography.md` in `design-system/styles/` defines "we use DM Sans at modular scale 1.25"; a `typography.md` in `docs/rubrics/` defines "headings must use the approved type scale."
 
-Per article §4d: centralizing CHECKS + ENFORCEMENT into design-system/ would break the connection between *what good is* (Layer 1 source content) and *how we check for it* (Layer 4 rubrics). `hd:setup` scaffolds `docs/rubrics/INDEX.md` as a **thin pointer file** explaining this distributed pattern — it's navigational.
+Per article §4d: centralizing CHECKS + ENFORCEMENT into design-system/ would break the connection between *what good is* (Layer 1 source content) and *how we check for it* (Layer 4 rubrics). `hd:setup` creates `docs/rubrics/INDEX.md` as a **thin pointer file** explaining this distributed pattern — it's navigational.
 
 ## Starter rubric library (12 shipped)
 
-Located at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/). `hd:setup` Step 7 scaffold copies user-chosen starters into `docs/rubrics/<name>.md` for customization.
+Located at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/). `hd:setup` Step 7 create action copies user-chosen starters into `docs/rubrics/<name>.md` for customization.
 
 | # | File | Applies to | Source |
 |---|---|---|---|
@@ -63,10 +63,10 @@ under `critique_rubrics:` to make it the default for `hd:review review <path>`.
 
 Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template).
 
-## When Layer 4 is scaffolded vs linked vs reviewed
+## When Layer 4 is created vs scaffolded vs reviewed
 
-- **Scaffold** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
-- **Link** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
+- **Create** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
+- **Scaffold** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
 - **Review + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
 - **Review** (when user points at a specific work item) — hand off to `/hd:review review <path>`, which dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
 
@@ -83,11 +83,11 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 | Condition | Default |
 |---|---|
 | 1. `has_ai_docs: true` AND combined existing AI-doc size > 200 lines | **review + extract** (surface implicit rubrics from existing docs; do NOT duplicate as fresh starters) |
-| 2. `has_tokens_package` or `has_figma_config` | **scaffold** design-system-compliance rubric referencing actual token paths |
-| 3. `has_external_skills: true` | **scaffold** skill-quality rubric entry |
-| 4. Nothing detected | **scaffold** starter trio (accessibility-wcag-aa + design-system-compliance + component-budget) |
+| 2. `has_tokens_package` or `has_figma_config` | **create** design-system-compliance rubric referencing actual token paths |
+| 3. `has_external_skills: true` | **create** skill-quality rubric entry |
+| 4. Nothing detected | **create** starter trio (accessibility-wcag-aa + design-system-compliance + component-budget) |
 
-Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
+Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
 
 **Execute — review + extract** (condition 1):
 1. Invoke the rubric-extractor sub-agent against each existing AI-doc (batch-parallel ≤5; serial at 6+ per compound v2.39.0): find rule-like statements that could become explicit rubric criteria.
@@ -102,7 +102,7 @@ Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A
 4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
 5. Never modify the source AI-doc file. Extraction is read-only on the source.
 
-**Execute — scaffold** (conditions 2/3/4):
+**Execute — create** (conditions 2/3/4):
 - Use the "distributed-behavior pattern" + "starter rubric library" sections above for L4 depth (distributed-behavior rationale, 12-starter enumeration, INDEX.md pattern)
 - Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?
 - If "no clear criteria yet" → offer the 12 starter rubrics at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) (distilled from Impeccable + Nielsen + Material 3 + Fluent 2) + fallback baselines

@@ -7,7 +7,7 @@ loaded_by: hd-setup
 
 ## Purpose
 
-Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / review / scaffold / skip) and a rubric-gap recommendation so Steps 4–8 (Phase B) feel informed rather than interrogative. Every layer default in Phase B comes from this phase's output.
+Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (scaffold / review / create / skip) and a rubric-gap recommendation so Steps 4–8 (Phase B) feel informed rather than interrogative. Every layer default in Phase B comes from this phase's output.
 
 Loaded when the host supports Task dispatch. Non-Claude hosts (or any host where `Task` is unavailable) run Phase A **inline serial** — evaluate each layer against `review-criteria-l<N>.md` one at a time. Same output shape; same health snapshot at the end.
 
@@ -33,7 +33,7 @@ Task design-harnessing:analysis:harness-auditor(layer: 4, scenario: "setup-pre-a
 Task design-harnessing:analysis:harness-auditor(layer: 5, scenario: "setup-pre-analysis", ...)
 ```
 
-Each layer-auditor returns: `default_action: link|review|scaffold|skip`, `why: <one-sentence>`, `signals: [...]`.
+Each layer-auditor returns: `default_action: scaffold|review|create|skip`, `why: <one-sentence>`, `signals: [...]`.
 
 ## Batch 2 (parallel, 1 agent): `rubric-recommender`
 
@@ -86,11 +86,11 @@ Proposed per-layer action (override any row to change)
 
 Layer  Action     Rationale
 ─────  ─────────  ─────────────────────────────────────────────
-L1     review   scattered content — review + suggest canonical map
-L2     review   existing skills — surface skill-quality findings
-L3     review   workflows implicit — propose explicit gates
-L4     scaffold   absent — starter trio + scope-and-grounding
-L5     scaffold   thin — full knowledge structure
+L1     review     scattered content — review + suggest canonical map
+L2     review     existing skills — surface skill-quality findings
+L3     review     workflows implicit — propose explicit gates
+L4     create     absent — starter trio + scope-and-grounding
+L5     create     thin — full knowledge structure
 ```
 
 Bar rule: `blocks_filled = round(health_score)`, filled = `█`, empty = `░`. Each row: Layer name (17 chars) · bar · score · state summary. Snapshot is summary-only — never written to any file at Phase A; Step 8.5 preview gates any writes.
@@ -103,7 +103,7 @@ If the Guardrail (additive-only mode, § SKILL.md) already fired before Phase A:
 
 - L1/L2/L3 `harness-auditor` dispatches still run. Synthesis decides default-action per-layer by reading `content_status` from the auditor response (3m.2):
   - ≥1 check reports `content_status` better than `missing` → `default_action: review`
-  - All checks report `content_status: missing` (nominal-only guardrail fire) → `default_action: scaffold`
+  - All checks report `content_status: missing` (nominal-only guardrail fire) → `default_action: create`
 - L4/L5 auditor output + `rubric-recommender` output still drive defaults normally.
 - Skip remains available as user-choice override but is no longer auto-selected.
 

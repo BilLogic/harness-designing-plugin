@@ -1,6 +1,6 @@
 ---
 name: hd:setup
-description: Walks the five-layer design harness layer by layer. Detects existing harnesses + tools, offers per-layer link / review / scaffold / skip. Use to set up or revisit any repo.
+description: Walks the five-layer design harness layer by layer. Detects existing harnesses + tools, offers per-layer scaffold / review / create / skip. Use to set up or revisit any repo.
 argument-hint: "[--reset-skips | --discover-tools | --from-review <path>]"
 ---
 
@@ -14,9 +14,9 @@ Use `AskUserQuestion` for branching decisions (option A/B/C/D per layer). If una
 
 Walk the five-layer harness in order. At each layer, detect existing material (other-tool harnesses, external tooling, MCP configs, prior hd-* content) and offer four choices:
 
-- **link** — pointer file from `docs/<layer>/` to existing source; original untouched
+- **scaffold** — point at existing source, wrap structure around it (pointer file from `docs/<layer>/`; original untouched)
 - **review** — apply relevant rubric; surface findings; user decides per-finding
-- **scaffold** — seed questions + write new layer files
+- **create** — start from scratch with seeded prompts; write new layer files
 - **skip** — record in `skipped_layers`; re-runs don't re-propose unless `--reset-skips`
 
 User drives every decision. Skill never merges, absorbs, or overwrites external harnesses.
@@ -29,25 +29,25 @@ hd:setup Progress:
 - [ ] Step 2: Onboard check — suggest /hd:learn if first-time user (soft)
 - [ ] Step 3: Tool discovery — surface detected + ask per category
 - [ ] Step 3.5: Scaffold mode — additive (default when existing harness) vs use-standard
-- [ ] Step 4: Layer 1 (Context) — link / review / scaffold / skip
-- [ ] Step 5: Layer 2 (Skills) — link / review / scaffold / skip
-- [ ] Step 6: Layer 3 (Orchestration) — link / review / scaffold / skip
-- [ ] Step 7: Layer 4 (Rubrics) — link / review / scaffold / skip
-- [ ] Step 8: Layer 5 (Knowledge) — link / review / scaffold / skip
+- [ ] Step 4: Layer 1 (Context) — scaffold / review / create / skip
+- [ ] Step 5: Layer 2 (Skills) — scaffold / review / create / skip
+- [ ] Step 6: Layer 3 (Orchestration) — scaffold / review / create / skip
+- [ ] Step 7: Layer 4 (Rubrics) — scaffold / review / create / skip
+- [ ] Step 8: Layer 5 (Knowledge) — scaffold / review / create / skip
 - [ ] Step 8.5: Proposed-files preview — show table; user confirms before any write
 - [ ] Step 9: Write hd-config.md (schema v3)
 - [ ] Step 10: Summarize decisions + suggest next skill
 ```
 
-Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-procedure.md`](references/per-layer-procedure.md) for the FRAME → SHOW → PROPOSE → ASK → EXECUTE contract, default-action table, link-mode extract-and-pointer rule, and post-layer checkpoint.
+Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-procedure.md`](references/per-layer-procedure.md) for the FRAME → SHOW → PROPOSE → ASK → EXECUTE contract, default-action table, scaffold-mode extract-and-pointer rule, and post-layer checkpoint.
 
 ## Guardrail — additive-only when existing harness detected
 
 **Signals:** `.agent/` / `.agents/` with ≥1 skill/rule, `.claude/` with skills/settings, `.cursor/skills/` or `.windsurf/`, `AGENTS.md` ≥20 lines of real content, populated `docs/context/` or `docs/knowledge/`, or any other-tool harness flagged by `detect.py`.
 
-If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **review** for L1/L2/L3 when the layer has non-trivial content, else fall through to **scaffold** (3m.2); keep L4/L5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
+If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **review** for L1/L2/L3 when the layer has non-trivial content, else fall through to **create** (3m.2); keep L4/L5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
 
-**Why content-gated default?** A repo with real `.agent/skills/` + `docs/` benefits from review (surface improvement suggestions). A repo whose guardrail only fires on a nominal `.claude/settings.local.json` has nothing to review — scaffold is the helpful default. `harness-auditor` emits `content_status` per check; Phase A synthesis uses it to pick review vs scaffold. Skip remains a user-choice override in all cases.
+**Why content-gated default?** A repo with real `.agent/skills/` + `docs/` benefits from review (surface improvement suggestions). A repo whose guardrail only fires on a nominal `.claude/settings.local.json` has nothing to review — create is the helpful default. `harness-auditor` emits `content_status` per check; Phase A synthesis uses it to pick review vs create. Skip remains a user-choice override in all cases.
 
 Rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots — additive-only discipline intact.
 
@@ -72,7 +72,7 @@ Default to B on silence. Never block.
 
 ## Phase A — parallel pre-analysis
 
-Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / review / scaffold / skip) so Phase B (Steps 4–8) feels informed rather than interrogative.
+Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (scaffold / review / create / skip) so Phase B (Steps 4–8) feels informed rather than interrogative.
 
 - **Batch 1** (parallel, 5 agents): `design-harnessing:analysis:harness-auditor` × 5 — one per layer, `scenario: setup-pre-analysis`
 - **Batch 2** (parallel, 1 agent): `design-harnessing:analysis:rubric-recommender` — rubric-gap ranking + starter-trio recommendation
@@ -91,12 +91,12 @@ Ask **one batched question** across all 6 categories (docs/wiki, design, diagram
 
 Only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
 
-## Step 3.5 — Scaffold mode (3k.11)
+## Step 3.5 — Structure mode (3k.11)
 
-**Narrate:** *"Before we walk the layers, pick how to scaffold any new files."* Offer two modes:
+**Narrate:** *"Before we walk the layers, pick how to arrange any new files."* Offer two modes:
 
 - **A. Additive** (default when existing harness detected). Leave existing structure untouched; new files land alongside what's already there.
-- **B. Use standard.** Scaffold the canonical tree per [`references/standard-harness-structure.md`](references/standard-harness-structure.md). Default when greenfield.
+- **B. Use standard.** Lay down the canonical tree per [`references/standard-harness-structure.md`](references/standard-harness-structure.md). Default when greenfield.
 
 Record in `hd-config.md:scaffold_mode` so later `/hd:review` runs know which structural contract to review against.
 
@@ -104,10 +104,10 @@ Record in `hd-config.md:scaffold_mode` so later `/hd:review` runs know which str
 
 Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatches for the default; execution is inline. Targeted dispatches live in per-layer references.
 
-- **Step 4 — Layer 1 (Context).** Semantic memory. Scaffold under `docs/context/`; link writes pointer files with 3–5 line extracted summaries; review applies bloat-detection. → [layer-1-context.md](references/layer-1-context.md)
+- **Step 4 — Layer 1 (Context).** Semantic memory. Create under `docs/context/`; scaffold writes pointer files with 3–5 line extracted summaries; review applies bloat-detection. → [layer-1-context.md](references/layer-1-context.md)
 - **Step 5 — Layer 2 (Skills).** Procedural memory. Default typically **skip** or **review** via `review:skill-quality-auditor`. → [layer-2-skills.md](references/layer-2-skills.md)
-- **Step 6 — Layer 3 (Orchestration).** Handoffs across PM tools. Default **link** when PM tool detected, **skip** when <3 skills. → [layer-3-orchestration.md](references/layer-3-orchestration.md)
-- **Step 7 — Layer 4 (Rubrics).** Default from `rubric-recommender`: if AI-docs > 200 lines → **review + extract** via `review:rubric-extractor` (batch ≤5); else **scaffold** starter trio. `rubric-applier` (apply-mode) is `/hd:review review` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
+- **Step 6 — Layer 3 (Orchestration).** Handoffs across PM tools. Default **scaffold** when PM tool detected, **skip** when <3 skills. → [layer-3-orchestration.md](references/layer-3-orchestration.md)
+- **Step 7 — Layer 4 (Rubrics).** Default from `rubric-recommender`: if AI-docs > 200 lines → **review + extract** via `review:rubric-extractor` (batch ≤5); else **create** starter trio. `rubric-applier` (apply-mode) is `/hd:review review` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
 - **Step 8 — Layer 5 (Knowledge).** Default from Phase A's L5 auditor; deep review re-uses `analysis:rule-candidate-scorer` (solo) when `has_plans_convention`. → [layer-5-knowledge.md](references/layer-5-knowledge.md)
 
 ## Step 8.5 — Proposed-files preview (3k.3)
@@ -135,15 +135,15 @@ Report:
 - **Always-loaded budget snapshot** (run `bash skills/hd-review/scripts/budget-check.sh | jq .always_loaded_lines`)
 - **Other-tool harnesses respected** (paths untouched)
 - **Next step** tuned to outcome:
-  - Mostly scaffold → `/hd:maintain capture` to record first lesson
-  - Mostly link → `/hd:review` to review the combined harness
+  - Mostly create → `/hd:maintain capture` to record first lesson
+  - Mostly scaffold → `/hd:review` to review the combined harness
   - Mostly review → address findings; re-run `/hd:review`
 
 ## `--from-review` mode (3m.3)
 
 `/hd:setup --from-review <path-to-review-file>` skips Phase A (already ran when the review was produced), extracts write-style findings from the review file, and merges them into Step 8.5 preview as `from-review`-tagged rows. User confirms per the usual `y / revise / cancel` gate.
 
-Extraction heuristic: recommendations containing `"add <path>"`, `"create <path>"`, `"scaffold <path>"`, `"promote <src> to <dest>"`, `"trim/update/tighten <path>"` produce diff rows. Non-actionable findings are skipped. Closes the review → setup loop while preserving preview-before-write safety.
+Extraction heuristic: recommendations containing `"add <path>"`, `"create <path>"`, `"promote <src> to <dest>"`, `"trim/update/tighten <path>"` produce diff rows. Non-actionable findings are skipped. Closes the review → setup loop while preserving preview-before-write safety.
 
 ## Re-run semantics
 
@@ -157,7 +157,7 @@ When invoked on a repo that has `hd-config.md`:
 
 - **F1** Tool-discovery loop → skip, `team_tooling: {}`, note in prose
 - **F2** MCP install → only recommend from [`references/known-mcps.md`](references/known-mcps.md); unknown → pointer-only
-- **F3** Other-tool harness conflict → link, don't absorb; never modify
+- **F3** Other-tool harness conflict → scaffold, don't absorb; never modify
 - **F4** User stuck on seed questions → Material 3 / Fluent 2 / awesome-design-md fallbacks; still stuck → minimal placeholder
 - **F5** Destructive action → always show diff preview; require explicit confirmation; never silent
 
@@ -174,7 +174,7 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Reference files
 
-- [per-layer-procedure.md](references/per-layer-procedure.md) — FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + Step 8.5 preview format
+- [per-layer-procedure.md](references/per-layer-procedure.md) — FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + scaffold-mode contract + Step 8.5 preview format
 - [phase-a-pre-analysis.md](references/phase-a-pre-analysis.md) — parallel dispatch + health snapshot render
 - Layer guides: `layer-1-context.md` through `layer-5-knowledge.md` under `references/` (per-layer depth + procedure)
 - **Standard:** [standard-harness-structure.md](references/standard-harness-structure.md) (canonical tree), [standard-agent-categories.md](references/standard-agent-categories.md) (5 categories)

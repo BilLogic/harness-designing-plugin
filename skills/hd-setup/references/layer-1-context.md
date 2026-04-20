@@ -47,13 +47,13 @@ Templates for all 21 files: [`../assets/context-skeleton/`](../assets/context-sk
 
 ## Escape hatch — "simple mode"
 
-Some users don't need the full plus-uno baseline — they want a lightweight scaffold. At Step 4, if user indicates "simple / minimal / just the basics," offer a reduced set:
+Some users don't need the full plus-uno baseline — they want a lightweight starter set. At Step 4, if user indicates "simple / minimal / just the basics," offer a reduced set:
 
 - `product/app.md` (elevator pitch only)
 - `conventions/tech-stack.md` (tech inventory only)
 - `design-system/foundations/tokens.md` + `design-system/components/cheat-sheet.md` (no foundations/styles subfolders)
 
-User can graduate to full baseline later by re-running `/hd:setup` and picking "full scaffold".
+User can graduate to full baseline later by re-running `/hd:setup` and picking "full baseline".
 
 ## When existing content is present
 
@@ -65,7 +65,7 @@ Classify-don't-overwrite. Map existing content to the baseline sub-paths:
 - Design system cheat-sheet → split across `design-system/foundations/`, `styles/`, `components/`
 - Tech stack list → `conventions/tech-stack.md`
 
-Diff preview before any write (F4 safety in SKILL.md). If source content is in another tool (Notion / Figma), Step 4 prefers **link mode** with extract+pointer (per `assets/pointer-file.md.template`) over scaffold-duplicate.
+Diff preview before any write (F4 safety in SKILL.md). If source content is in another tool (Notion / Figma), Step 4 prefers **scaffold mode** with extract+pointer (per `assets/pointer-file.md.template`) over create-duplicate.
 
 ## Scenario edge cases
 
@@ -81,9 +81,9 @@ Diff preview before any write (F4 safety in SKILL.md). If source content is in a
 
 **Propose default** per [per-layer-procedure.md § Default action per detection](per-layer-procedure.md#default-action-per-detection).
 
-**Execute — scaffold:**
+**Execute — create:**
 - Load this file for L1 depth (baseline shape + healthy-AGENTS.md patterns below)
-- Ask scaffold depth: **full baseline** (21 files across product/conventions/design-system — matches plus-uno) vs **simple mode** (~4 files — just app.md + tech-stack.md + tokens.md + components/cheat-sheet.md). Default: full baseline for team repos, simple mode for solo.
+- Ask create depth: **full baseline** (21 files across product/conventions/design-system — matches plus-uno) vs **simple mode** (~4 files — just app.md + tech-stack.md + tokens.md + components/cheat-sheet.md). Default: full baseline for team repos, simple mode for solo.
 - Seed questions for product/: (1) product in one sentence? (2) user in one sentence? (3) biggest design constraint? (4) top 3 features?
 - Seed questions for conventions/: (1) primary language + framework? (2) 3 most important coding rules?
 - Seed questions for design-system/: (1) token source of truth (Figma / tokens package / CSS vars)? (2) existing component library (shadcn / Radix / custom)? (3) a11y target (WCAG AA baseline)?
@@ -91,7 +91,7 @@ Diff preview before any write (F4 safety in SKILL.md). If source content is in a
 - Copy the chosen template set from [`../assets/context-skeleton/`](../assets/context-skeleton/) under `docs/context/`, pre-filling `{{PLACEHOLDER}}` with user answers
 - Enforce Tier 1 budget per the *Tier-1 budget model* section below: `AGENTS.md` + `docs/context/product/app.md` combined ≤ 200 lines (non-Tier-1 content like features/flows/pillars lives in sibling files — doesn't count against budget)
 
-**Execute — link:** write pointer files under `docs/context/<subtopic>/` using [`../assets/pointer-file.md.template`](../assets/pointer-file.md.template). Each pointer file must include a 3–5 line **extracted summary** of the source content, not just the bare link. Goal: pointer file is Tier 1 useful standalone; source has full detail.
+**Execute — scaffold:** write pointer files under `docs/context/<subtopic>/` using [`../assets/pointer-file.md.template`](../assets/pointer-file.md.template). Each pointer file must include a 3–5 line **extracted summary** of the source content, not just the bare link. Goal: pointer file is Tier 1 useful standalone; source has full detail.
 
 Read the source (Notion page via MCP if live, `.agent/rules/*`, `.github/copilot-instructions.md` section, etc.), extract a 3–5 line summary in plain prose, fill the template.
 
@@ -134,7 +134,7 @@ Tier 1 loads on every task. Every token in Tier 1 is a token NOT available for t
 - 200-400 lines: context bloat; task quality degrades
 - \>400 lines: AI starts ignoring sections; might as well not have them
 
-### Enforcement at scaffold time
+### Enforcement at create time
 
 After `hd:setup` writes Tier 1 files, it runs:
 

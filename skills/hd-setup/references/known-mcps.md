@@ -142,11 +142,11 @@ How discovered tools map into each layer during `five-layer-walk.md`:
 - **diagramming** — ask which diagrams are evergreen (architecture / data-flow), add pointer files
 
 ### Layer 2 (Skills)
-- Rarely external-sourced. If the user has team-specific skill definitions in docs/notion, offer to extract and scaffold as `hd-*` / team-prefix skills.
+- Rarely external-sourced. If the user has team-specific skill definitions in docs/notion, offer to extract and create as `hd-*` / team-prefix skills.
 
 ### Layer 3 (Orchestration)
 - **pm (linear/github_issues)** — scan recent labels / workflows for recurring handoff patterns; seed `docs/orchestration/workflows.md`
-- **diagramming** — link to sequence/state diagrams
+- **diagramming** — scaffold pointers to sequence/state diagrams
 
 ### Layer 4 (Rubrics)
 - **design (figma)** — component + variant inventory → seed component-budget rubric

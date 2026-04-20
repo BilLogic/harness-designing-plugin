@@ -23,14 +23,12 @@ This plug-in assembles the pile into **five layers**. Every AI-assisted task inh
 | **4. Rubric Setting** | Quality bars—a11y, design-system, typography, telemetry, i18n | Applied by Skills at workflow gates. |
 | **5. Knowledge Compounding** | Lessons, decisions, preferences, changelog | Captured by every skill. Recurring patterns promote to Context rules. |
 
-Working memory—the active session—is ephemeral. The five layers control what flows into it each time.
-
 **At each layer, four choices:**
 
-- **link** — point at an existing source of truth
-- **review** — apply a rubric, surface improvement suggestions
-- **scaffold** — seed questions, write new files
-- **skip** — acknowledge the layer, leave it alone
+- **scaffold** — point at what already exists, wrap structure around it
+- **review** — evaluate it against a rubric, flag what could improve
+- **create** — start from scratch with seeded prompts
+- **skip** — leave this layer for later
 
 ## Commands
 
@@ -43,14 +41,14 @@ Ten atomic references back the answers—one per layer, plus glossary, FAQ, and 
 **Try:**
 
 - *"What's the difference between Layer 1 and Layer 5?"*
-- *"When should I scaffold vs. link at Layer 1?"*
+- *"When should I scaffold vs. create at Layer 1?"*
 - *"Walk me through the five layers for a team just starting out."*
 
 ### [`/hd:setup`](skills/hd-setup/SKILL.md) — walk your repo, layer by layer
 
 Detects existing harness artifacts (`.agent/`, `.claude/`, `docs/context/`, etc.). Pre-analyzes all five layers in parallel. Walks each layer with a **preview-before-write gate**.
 
-Per layer: **link** · **review** · **scaffold** · **skip**.
+Per layer: **scaffold** · **review** · **create** · **skip**.
 
 When scaffolding a greenfield repo, it proposes this starting structure:
 

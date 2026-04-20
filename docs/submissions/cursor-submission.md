@@ -25,7 +25,7 @@ Harness Designing Plugin helps design teams turn their scattered AI setup into a
 
 Four skills:
 • /hd:learn — Q&A about the five-layer concept
-• /hd:setup — detects existing harness, pre-analyzes all five layers in parallel, walks through link / review / scaffold / skip with preview-before-write gate. Supports --from-review flag.
+• /hd:setup — detects existing harness, pre-analyzes all five layers in parallel, walks through scaffold / review / create / skip with preview-before-write gate. Supports --from-review flag.
 • /hd:maintain — captures lessons and promotes them to team rules with SHA-256 plan-hash proof-of-consent
 • /hd:review — full review across 5 layers or targeted review of one item. Writes dated report to docs/knowledge/reviews/; emits chat summary with ASCII health bars, priorities table, Proposed revision diff, and Staleness check.
 

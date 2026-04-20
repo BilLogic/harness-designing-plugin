@@ -23,7 +23,7 @@ setup_date: 2026-04-17                     # ISO date; last mutation
 team_size: solo | small | medium | large   # <2 | 2-5 | 5-20 | 20+
 
 # Optional — omit field if unknown, don't write null
-skipped_layers: [1, 2, 3, 4, 5]            # int list; layers user declined to scaffold
+skipped_layers: [1, 2, 3, 4, 5]            # int list; layers user declined to create
 
 article_read: true                         # self-reported; never blocking
 
@@ -44,7 +44,7 @@ mcp_servers_at_setup: [notion, figma, shadcn]
 # alongside each decision.
 layer_decisions:
   - layer: L1
-    decision: link            # link | review | scaffold | skip
+    decision: scaffold        # scaffold | review | create | skip
     why: ".agent/rules/ IS Layer 1 — overlay would duplicate"
     files_written: []
   - layer: L2
@@ -56,13 +56,13 @@ layer_decisions:
     why: "prerequisite of 3+ Layer 2 skills not satisfied"
     files_written: []
   - layer: L4
-    decision: scaffold
+    decision: create
     why: "no existing rubric library"
     files_written:
       - "docs/rubrics/INDEX.md"
       - "docs/rubrics/accessibility-wcag-aa.md"
   - layer: L5
-    decision: scaffold
+    decision: create
     why: "knowledge skeleton absent"
     files_written:
       - "docs/knowledge/INDEX.md"
@@ -123,7 +123,7 @@ Free-form notes about the harness — team context, customizations, decisions sp
 | `article_read` | bool | no | `true` \| `false` | User self-reported; default `false`. |
 | `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories: `docs, design, diagramming, analytics, pm, comms`. |
 | `mcp_servers_at_setup` | string list | no | `[notion, figma, ...]` | From parsing `.mcp.json` / `.cursor/mcp.json` / etc. Default `[]`. |
-| `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: link\|review\|scaffold\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
+| `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: scaffold\|review\|create\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
 | `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `.agent`, `.claude`, `.codex`, or any foreign plug-in slug), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |
 | `files_written` | string list | no | relative paths | Flat list of paths this `/hd:setup` run created. Used by `/hd:review health` to review harness coverage. Default `[]`. |
 
@@ -156,7 +156,7 @@ When `schema_version` bumps, the plug-in ships a migration skill or in-place upg
 
 ## Example (additive-only advanced setup on plus-marketing-website)
 
-Filled-in YAML from the plus-marketing-website pilot (2026-04-18). Shows `layer_decisions` with mixed scaffold/skip, `other_tool_harnesses_detected` respecting an existing `.agent/` framework, and a populated `files_written` review trail.
+Filled-in YAML from the plus-marketing-website pilot (2026-04-18). Shows `layer_decisions` with mixed create/skip, `other_tool_harnesses_detected` respecting an existing `.agent/` framework, and a populated `files_written` review trail.
 
 ```markdown
 ---
@@ -188,8 +188,8 @@ layer_decisions:
     why: "prerequisite of 3+ Layer 2 skills not satisfied (.agent/skills/ not hd-owned)"
     files_written: []
   - layer: L4
-    decision: scaffold
-    why: "extract + scaffold rubrics (existing .agent/rules/ has implicit rubric content)"
+    decision: create
+    why: "extract + create rubrics (existing .agent/rules/ has implicit rubric content)"
     files_written:
       - "docs/rubrics/INDEX.md"
       - "docs/rubrics/accessibility-wcag-aa.md"
@@ -198,7 +198,7 @@ layer_decisions:
       - "docs/rubrics/interaction-states.md"
       - "docs/rubrics/typography.md"
   - layer: L5
-    decision: scaffold
+    decision: create
     why: "fresh knowledge-skeleton; .agent/ is Layer 1, not Layer 5"
     files_written:
       - "docs/knowledge/INDEX.md"

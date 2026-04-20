@@ -24,7 +24,7 @@ A design-focused AI harness. Four skills for assembling the scattered AI setup y
 Harness Designing Plugin helps design teams turn their scattered AI setup — Notion prompts, Figma comments, AGENTS.md rules, chat histories — into a five-layer design harness that compounds across sessions and rotations. Four skills walk you through the assembly:
 
 - /hd:learn — Q&A about the five-layer concept (Context, Skills, Orchestration, Rubrics, Knowledge)
-- /hd:setup — detects existing harness artifacts, pre-analyzes all five layers in parallel, and walks you through link / review / scaffold / skip per layer with a preview-before-write gate
+- /hd:setup — detects existing harness artifacts, pre-analyzes all five layers in parallel, and walks you through scaffold / review / create / skip per layer with a preview-before-write gate
 - /hd:maintain — captures lessons and promotes them to team rules with SHA-256 plan-hash proof-of-consent
 - /hd:review — full review across all 5 layers OR targeted review of one layer / file / rubric. Writes a dated report to docs/knowledge/reviews/ and emits a rich chat summary with ASCII health bars, priorities table, Proposed revision file-tree diff, and Staleness check (flags when the same findings recur across reviews). Pairs with /hd:setup --from-review <path> to apply findings as concrete writes.
 

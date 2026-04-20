@@ -7,9 +7,9 @@ skipped_layers: {{SKIPPED_LAYERS}}
 article_read: {{ARTICLE_READ}}
 
 # Per-layer decisions recorded during the Step 4 layer-walk.
-# One row per layer (L1–L5). `decision` is one of: link | review | scaffold | skip.
+# One row per layer (L1–L5). `decision` is one of: scaffold | review | create | skip.
 # `why` is a one-line rationale. `files_written` lists relative paths created for that layer
-# (empty list `[]` for link/review/skip).
+# (empty list `[]` for scaffold/review/skip).
 layer_decisions:
   - layer: L1
     decision: {{L1_DECISION}}

@@ -56,7 +56,7 @@ Collapsing L1+L2 loses the noun/verb distinction. Collapsing L4+L1 loses the che
 
 ## 12. I already have CLAUDE.md or .agent/ — do I still need this?
 
-Yes, but additive-only. As of rule 2026-04-18, `/hd:setup` defaults to **skip L1/L2/L3, scaffold L4/L5 only** when `.agent/` or `.claude/` with content is detected. Existing harness is respected as Layer 1+2 authority; hd-* adds rubric checks (L4) + episodic knowledge capture (L5) on top. Zero modifications to pre-existing files (6/6 pilots confirmed). See `AGENTS.md § Rules` for the rule.
+Yes, but additive-only. As of rule 2026-04-20, `/hd:setup` defaults to **review L1/L2/L3, create L4/L5 only** when `.agent/` or `.claude/` with content is detected. Existing harness is respected as Layer 1+2 authority; hd-* adds rubric checks (L4) + episodic knowledge capture (L5) on top. Zero modifications to pre-existing files (6/6 pilots confirmed). See `AGENTS.md § Rules` for the rule.
 
 ## 13. How do I customize the starter rubrics for my team?
 

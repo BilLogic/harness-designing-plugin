@@ -57,7 +57,7 @@ Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill complia
 
 **Propose default:**
 - `has_external_skills: true` → **review** via skill-quality rubric
-- `.agent/skills/` → **link**
+- `.agent/skills/` → **scaffold**
 - Nothing → **skip** (Layer 2 is premature for most teams)
 
 **Execute — review:** per-skill invocation:
@@ -70,7 +70,7 @@ Task design-harnessing:review:skill-quality-auditor(
 
 Aggregate findings. Present to user. Don't modify anything.
 
-**Execute — scaffold:** seed questions: (1) workflow explained 3+ times last month? (2) repetitive task worth automating? Point user at the "What good Layer 2 looks like" section above for authoring discipline.
+**Execute — create:** seed questions: (1) workflow explained 3+ times last month? (2) repetitive task worth automating? Point user at the "What good Layer 2 looks like" section above for authoring discipline.
 
 → Return to [../SKILL.md § Step 5 — Layer 2 (Skills)](../SKILL.md#step-5--layer-2-skills)
 
