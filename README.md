@@ -1,6 +1,6 @@
 # Harness Designing Plugin
 
-A plug-in for design teams to assemble the AI harness you already have into something that compounds. Ships for [Claude Code](https://claude.com/claude-code), [Codex CLI](https://github.com/openai/codex), and [Cursor](https://cursor.com) from one repo with three sibling manifests.
+A five-layer structure that turns scattered AI usage into a design practice that survives tool changes, team rotations, and model updates. Works with [Claude Code](https://claude.com/claude-code), [Codex CLI](https://github.com/openai/codex), and [Cursor](https://cursor.com)—see [Installation](#installation) for your host.
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
 >—from the companion article
@@ -21,14 +21,35 @@ Working memory—the active session—is ephemeral. The five layers control what
 
 At each layer, four choices: **link** (pointer to source of truth), **review** (apply a rubric + surface improvement suggestions), **scaffold** (seed questions + write files), or **skip**.
 
-## Components
+## What you get
 
-| Component | Count |
-|---|---|
-| Skills | 4 |
-| Agents | 9 |
-| Starter rubrics | 14 |
-| Scripts | 4 |
+When `/hd:setup` scaffolds a greenfield repo, it proposes this starting structure:
+
+```
+<repo-root>/
+├── AGENTS.md                   # always-loaded rules + harness map + agent persona
+├── hd-config.md                # machine-parseable config
+│
+├── docs/
+│   ├── context/                # L1 — what's always true
+│   │   ├── product/            # one-pager, users, journeys, capabilities, metrics
+│   │   ├── engineering/        # stack, data, API, deployment, dev env, security
+│   │   ├── design-system/      # styles · foundations · components
+│   │   └── conventions/        # repo map + team norms
+│   │
+│   ├── rubrics/                # L4 — how we judge "good"
+│   └── knowledge/              # L5 — changelog, decisions, ideations, preferences, lessons
+│
+├── skills/                     # L2 — repeatable jobs (SKILL.md + references + assets + scripts)
+└── agents/                     # L3 emerges from skills ↔ agents dispatch
+    └── <category>/             # research / planning / generation / review / compound
+```
+
+This is a **starting template**, not a contract. Every team customizes—rename folders, skip layers, add your own. The plug-in audits what you have, suggests what's missing, and respects what you built (additive-only by default). Full spec at [`skills/hd-setup/references/standard-harness-structure.md`](skills/hd-setup/references/standard-harness-structure.md).
+
+### Pairs with your existing MCP servers
+
+The plug-in is a pattern-scaffold, not a data source. Point a [Notion MCP](https://github.com/makenotion/notion-mcp-server) at your team's workspace and `/hd:setup` can scan existing product docs, PRDs, or design reviews and propose Layer 1 context mapped from them. Same applies to Figma, Linear, Google Docs, or any other MCP you already run—external MCPs feed the harness; the plug-in organizes what they surface.
 
 ## Commands
 
@@ -69,43 +90,14 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`.
 
 ## Starter rubrics
 
-In [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-rubrics/). Each carries a `## Scope & Grounding` section (personas + user stories + scenarios + anti-scenarios) and cites its `source:` derivation. Authoring guide at [`skills/hd-review/references/rubric-authoring-guide.md`](skills/hd-review/references/rubric-authoring-guide.md).
+14 rubrics ship in [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-rubrics/). Copy any into `docs/rubrics/<name>.md` and customize. Each carries a `## Scope & Grounding` section (personas + user stories + scenarios + anti-scenarios) and cites its source. Authoring guide at [`skills/hd-review/references/rubric-authoring-guide.md`](skills/hd-review/references/rubric-authoring-guide.md).
 
-Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in scaffolds and maintains the rubric library; running rubrics against actual design work happens in whatever AI tool the team uses.
+- **Craft** — `accessibility-wcag-aa`, `design-system-compliance`, `component-budget`, `skill-quality`, `interaction-states`, `heuristic-evaluation`
+- **Visual** — `typography`, `color-and-contrast`, `spatial-design`, `motion-design`
+- **Communication** — `ux-writing`, `responsive-design`
+- **Domain-specific** — `telemetry-display`, `i18n-cjk`
 
-### Quality and craft
-
-| Rubric | Covers |
-|---|---|
-| `accessibility-wcag-aa` | WCAG 2.1 AA conformance |
-| `design-system-compliance` | Token/component adherence; pre-fills for antd / chakra-ui / mui / mantine |
-| `component-budget` | Per-surface component-count ceilings |
-| `skill-quality` | 9-section SKILL.md rubric |
-| `interaction-states` | Default / hover / active / focus / disabled / loading / error |
-| `heuristic-evaluation` | Nielsen's 10 |
-
-### Visual and sensory
-
-| Rubric | Covers |
-|---|---|
-| `typography` | Scale, hierarchy, line-length, rhythm |
-| `color-and-contrast` | Contrast ratios, semantic color use |
-| `spatial-design` | Spacing scale, density, alignment |
-| `motion-design` | Duration, easing, purpose, reduced-motion |
-
-### Communication and shape
-
-| Rubric | Covers |
-|---|---|
-| `ux-writing` | Voice, clarity, actionability |
-| `responsive-design` | Breakpoints, fluid scaling, touch targets |
-
-### Domain-specific
-
-| Rubric | Covers |
-|---|---|
-| `telemetry-display` | IoT / hardware / real-time dashboards |
-| `i18n-cjk` | Bilingual and CJK products |
+`/hd:review` applies these against harness artifacts (SKILL.md, rubric files, lessons) out of the box. Running them against actual design work happens in whatever AI tool your team uses.
 
 ## Scripts
 
@@ -120,7 +112,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 > **Status—beta testing.** Submitted to Anthropic's plug-in directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below—they work today.
 
-The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`)—same skills, agents, scripts. Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended—handles different home dirs, shells, skill-dir conventions for you), or run the exact commands yourself.
+Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended—handles different home directories, shells, and skill-dir conventions for you), or run the exact commands yourself. The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`); same skills, agents, and scripts across all three.
 
 ### Claude Code
 
@@ -248,18 +240,6 @@ bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
 ```
 
 </details>
-
-### Host compatibility
-
-| Host | Install path | Parallel sub-agent dispatch | Output |
-|---|---|---|---|
-| Claude Code | Marketplace one-liner | ✅ via `Task` tool | Full parallel (~30s /hd:review) |
-| Codex CLI | Clone + symlink | ✅ via `/agent` + MCP | Full parallel (~30s) |
-| Cursor IDE | Clone + symlink | ✅ via subagents API (≤4) | Full parallel (~45s) |
-| Cursor CLI | Clone + symlink | ❌ inline serial | Same output, ~1–2 min |
-| Windsurf / other | Clone + manual | ❌ inline serial | Same output, ~1–2 min |
-
-`/hd:review` writes the full report file regardless of host; chat summary renders identically everywhere (box-drawing tables work in every terminal that supports UTF-8).
 
 ### Updating
 
