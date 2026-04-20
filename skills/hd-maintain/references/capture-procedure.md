@@ -11,6 +11,16 @@ Step-by-step procedure for `/hd:maintain capture`: classify the memory type, res
 
 ## Steps
 
+**Step 0 — Bootstrap knowledge layer if missing (3l.5).** Before anything else, check that `docs/knowledge/lessons/` exists. If not, create it with narration:
+
+```bash
+mkdir -p docs/knowledge/lessons
+```
+
+Narrate to user: *"Creating `docs/knowledge/lessons/` — first-time setup for the knowledge layer."*
+
+Also check for the 4 canonical L5 files (`changelog.md`, `decisions.md`, `ideations.md`, `preferences.md`). If any are missing AND the user has not run `/hd:setup` with L5 scaffold, suggest: *"Your knowledge layer isn't fully scaffolded. Run `/hd:setup` (pick Layer 5: scaffold) to set up the rest, or continue — I can still capture this lesson."*
+
 **Step 1 — Identify subject + memory type.** Extract from conversation. Classify against the canonical-4 frame from article §2.5 (procedural / semantic / episodic / working); derivative subtype names on the right are the operational labels used in frontmatter:
 
 - "What happened during this work?" → **episodic** (canonical) → `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md` (new file)
@@ -57,7 +67,9 @@ Entry body — 4 sections, each 1–3 sentences: **Context / Decision / Result /
 
 **Step 6 — Approval.** Show the drafted entry verbatim + target file path (new file for episodic; append location for shared files). User approves (Y), edits (E), or aborts (A). Never write without explicit Y/E.
 
-**Step 7 — Atomic write.** For episodic: write the full file to a temp path then `mv` it to `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md`. For non-episodic shared files: append entry with `---` separator, temp file + `mv`. Always update `docs/knowledge/INDEX.md` entry count + last-updated.
+**Step 7 — Atomic write.** For episodic: write the full file to a temp path then `mv` it to `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md`. For non-episodic shared files: append entry with `---` separator, temp file + `mv`.
+
+Per 3k.13, no `INDEX.md` is updated — AGENTS.md Harness map is the sole index. Optionally offer: *"Append this lesson to AGENTS.md Harness map L5 section?"* (default no; large lesson corpora clutter AGENTS.md).
 
 **Step 8 — Summarize.** Report target file + tag-cluster signal (if any). Next-step suggestion: `/hd:maintain rule-propose <topic>` when ≥ 3 lesson files share a tag.
 

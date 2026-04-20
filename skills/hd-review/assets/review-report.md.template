@@ -1,41 +1,50 @@
 ---
-title: "Harness audit — {{DATE}}"
+title: "Harness review — {{DATE}}"
 date: {{DATE}}
-tags: [audit, layer-audit, harness-health]
+tags: [review, layer-review, harness-health]
+memory_type: episodic
 rule_candidate: false
 ---
 
-# Harness audit — {{DATE}}
+# Harness review — {{DATE}}
 
 ## Harness health
+
+**Overall:** {{OVERALL_SCORE}} / 10 ({{OVERALL_STATE}})
 
 ```
 {{HEALTH_BARS}}
 ```
 
 <!-- 5 rows, one per layer. Format:
-L<N> <layer-name padded 16ch>  <10-block bar>  <score 0-10>  <one-line summary>
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████████░░    8.0    healthy, 2 drift issues
+...
 Bar: blocks_filled = round(health_score). Filled = U+2588 "█". Empty = U+2591 "░".
-Example:
-L1 Context          ████████░░  8.0  healthy, 2 drift issues
 -->
 
-## Top 3 priorities
+## Top priorities
 
-{{TOP_3_PRIORITIES}}
+{{TOP_PRIORITIES_TABLE}}
 
-<!-- Surfaces the top-severity findings; user reads this even if they don't read the full report. -->
+<!-- Format (table with dividers):
+Sev  #    Layer    Finding                                      Effort
+───  ───  ───────  ───────────────────────────────────────────  ──────
+P1   1    L2       <one-line>                                   S
+...
+-->
 
 ## Current state
 
 {{INVENTORY_TABLE}}
 
 <!-- Table summarizing:
-- AGENTS.md line count + Tier 1 budget status
+- AGENTS.md line count + always-loaded budget status (from budget-check.sh)
 - docs/context/ file count + total line count
 - docs/knowledge/lessons/ count + date spread
 - docs/knowledge/changelog.md entry count
-- skills/ count (user-authored vs plug-in-shipped)
+- skills/ count (user-authored vs plug-in-shipped) — from skill_dir_detected
 -->
 
 ## Findings
@@ -46,7 +55,8 @@ L1 Context          ████████░░  8.0  healthy, 2 drift issues
 
 <!-- Each finding:
 - severity: p1
-- category: tier-budget | coexistence | protected-artifacts | missing-layer | schema-invalid
+- category: always-loaded-budget | coexistence | protected-artifacts | missing-layer | schema-invalid
+- content_status: missing | present-but-stale | present-and-populated | healthy
 - file: <path>
 - finding: <one-sentence description>
 - suggested_action: <concrete next step>
@@ -95,15 +105,15 @@ Example: "detect.py found .codex/ harness; hd-config.md missing that entry" -->
 - design-harnessing:research:lesson-retriever
 - design-harnessing:analysis:coexistence-analyzer (conditional)
 - (plus any user-configured external agents from hd-config.md review_agents)
--->
+Inline-serial mode: "none — evaluated inline against review-criteria-l*.md" -->
 
 ## Meta
 
-- Execution mode: {{EXECUTION_MODE}} (parallel | serial)
+- Execution mode: {{EXECUTION_MODE}} (parallel | inline-serial)
 - Agents invoked: {{AGENT_COUNT}}
 - Duration: {{DURATION_SECONDS}}s
-- Report version: {{REPORT_VERSION}}  <!-- bump if template schema changes -->
+- Report version: {{REPORT_VERSION}}
 
 ---
 
-**Note:** This audit report is itself a Layer 5 lesson — dated, append-only, history is sacred. Don't edit or delete this file; author a counter-lesson if findings need revising.
+**Note:** This review report is dated and append-only; history is sacred. Don't edit or delete this file; author a new dated review if findings need revising.

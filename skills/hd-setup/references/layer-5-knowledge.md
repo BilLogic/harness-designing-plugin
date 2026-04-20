@@ -1,79 +1,50 @@
 # Layer 5 — Knowledge (depth reference)
 
-**Loaded by:** `SKILL.md` Step 8 when scaffolding or critiquing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the 5-memory-type model, domain-grouped-lessons convention, INDEX pattern, and rule-adoption handoff.
+**Loaded by:** `SKILL.md` Step 8 when scaffolding or reviewing Layer 5. Seed questions + decision defaults live in SKILL.md; this file provides the canonical-4 memory frame, scaffold shape, and rule-adoption handoff.
 
 **Concept explainer:** [hd-learn `layer-5-knowledge.md`](../../hd-learn/references/layer-5-knowledge.md)
 
-## Shape under `docs/knowledge/` (plus-uno-derived)
+## Canonical shape under `docs/knowledge/`
 
 ```
 docs/knowledge/
-├── INDEX.md              # domain table: Domain | Memory Type | File | Entries | Last Updated | Top Tags
-├── README.md             # memory-type taxonomy explainer (article § citations)
-├── changelog.md          # memory_type: temporal — harness-structural changes over time
-├── decisions.md          # memory_type: procedural-chosen — ADR-style (append-only, supersede; never edit)
+├── changelog.md          # memory_type: temporal (episodic subtype) — harness-structural events
+├── decisions.md          # memory_type: procedural-chosen — ADR-style (append-only, supersede)
 ├── ideations.md          # memory_type: speculative — open questions + unchosen paths
 ├── preferences.md        # memory_type: semantic-taste — stable taste calls (mutable w/ team agreement)
-└── lessons/              # memory_type: episodic — domain-grouped, NOT per-date
-    ├── <domain-1>.md     # created on first capture targeting this domain
-    ├── <domain-2>.md
-    └── ...               # split threshold ~15 entries per file
+└── lessons/
+    └── .gitkeep          # seeded empty; populates as /hd:maintain capture runs
 ```
 
-`changelog.md` — **memory_type: meta-log** — is NOT scaffolded at setup time. Created on first rule adoption (`/hd:maintain rule-apply`) to avoid empty-file noise. When it appears, it lives at `docs/knowledge/changelog.md`.
+**No `INDEX.md`.** Per 3k.13, AGENTS.md Harness map is the sole index for every layer, including L5. The L5 section in AGENTS.md lists `changelog.md`, `decisions.md`, `ideations.md`, `preferences.md`, and `lessons/`.
 
-Templates for the 6 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/).
+**No starter lesson.** `/hd:setup` scaffolds the 4 top-level files + empty `lessons/` dir. First real lesson comes from `/hd:maintain capture` (setup Step 10 nudges the user to run it).
+
+**`changelog.md` IS scaffolded at setup.** Template seed: one `## YYYY-MM-DD — harness scaffold` entry recording the setup event itself. Not empty, not placeholder — the real first structural event.
+
+Templates for the 4 scaffolded files: [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/). (No `INDEX.md.template` — retired in 3k.13. No starter `lesson.md` in the skeleton — lessons come via `/hd:maintain capture`.)
 
 ## Memory types in Layer 5
 
-Anchor: the article §2.5 canonical-4 frame — **procedural / semantic / episodic / working**. Layer 5 is primarily **episodic** memory (what happened), with two derivative subtypes that refine the operational shape for a design team's knowledge folder.
+Anchor: article §2.5 canonical-4 frame — **procedural / semantic / episodic / working**. Layer 5 is primarily **episodic** memory (what happened), plus procedural-chosen (decisions) + semantic-taste (preferences) + speculative (ideations).
 
 | File | Canonical type (article §2.5) | Derivative subtype | Lifecycle | What it captures |
 |------|------------------------------|--------------------|-----------|------------------|
-| `lessons/<domain>.md` | **episodic** | — (canonical) | Append-only; history is sacred | Dated narratives of what happened during specific work |
-| `decisions.md` | **procedural** | procedural-chosen (ADR subtype) | Append-only; supersede with new entries, never edit | Chosen-option-with-rationale |
-| `preferences.md` | **semantic** | semantic-taste (team taste subtype) | Mutable with team agreement | Stable taste calls |
-| `ideations.md` | **semantic** (not-yet-committed) | speculative | Append-only; cross off (don't delete) when idea decided | Open questions, unchosen paths |
-| `changelog.md` | **episodic** (time-ordered) | temporal | Append-only | When harness-structural changes happened |
-| `changelog.md` | **episodic** | meta-log | Append-only; created on first rule adoption | Which episodic lessons became AGENTS.md rules |
+| `lessons/<slug>.md` | **episodic** | — (canonical) | Append-only; history is sacred | Dated narratives of what happened |
+| `decisions.md` | **procedural** | procedural-chosen (ADR) | Append-only; supersede entries | Chosen-option-with-rationale |
+| `preferences.md` | **semantic** | semantic-taste | Mutable with team agreement | Stable taste calls |
+| `ideations.md` | **semantic** (not-yet-committed) | speculative | Append-only; cross off when decided | Open questions, unchosen paths |
+| `changelog.md` | **episodic** (time-ordered) | temporal + meta-log | Append-only | Harness events + rule adoptions |
 
-Derivative subtype names remain in `memory_type:` YAML frontmatter as informative role labels, but the canonical-4 frame from article §2.5 is the primary vocabulary. The broader harness-memory mapping lives in article §2.5; `hd-learn/references/memory-taxonomy.md` explains the four types plus their derivative refinements.
+The canonical-4 frame from article §2.5 is the primary vocabulary. Derivative subtype names appear in `memory_type:` YAML frontmatter as role labels.
 
-## Memory-type labels appear in three places (derivative subtype names)
+## Lesson file naming
 
-1. **YAML frontmatter** on each file — `memory_type: <type>`
-2. **INDEX.md** has a Memory Type column
-3. **README.md** explains the taxonomy with article § citations
+**Canonical:** per-date files at `docs/knowledge/lessons/YYYY-MM-DD-slug.md`. One file per captured event.
 
-## Domain-grouped lessons (NOT per-date files)
+**Alternative (larger teams):** domain-grouped files (`lessons/ds-compliance.md`, `lessons/integration.md`, etc.), each holding multiple dated entries separated by `---`. Plus-uno uses this pattern. If a team opts in, `/hd:maintain capture` proposes sub-domain split at ~15 entries per file.
 
-Plus-uno precedent: lessons grouped by DOMAIN into single files (`lessons/ds-compliance.md`, `lessons/integration.md`, `lessons/agent-patterns.md`, `lessons/ui-patterns.md`), each file holding multiple entries separated by `---`.
-
-**Rationale:** per-date files accumulate as noise. Grouping by domain keeps related episodes together; retrieval is more coherent. Split threshold (~15 entries) prevents any file from becoming unwieldy; `/hd:maintain capture` proposes sub-domain split when the threshold approaches.
-
-Each domain file has YAML frontmatter:
-
-```yaml
----
-memory_type: episodic
-domain: <name>
-split_threshold: 15
----
-```
-
-Individual entries follow with per-entry YAML (title, date, tags, rule_candidate, importance). See [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) for the entry schema.
-
-## Seeded starter lesson (first capture post-setup)
-
-If `/hd:setup` creates the `docs/knowledge/` scaffold fresh, the starter lesson is NOT pre-written. Instead, `/hd:setup` Step 10 suggests: *"Capture your first lesson now — the setup session itself is a lesson. Run `/hd:maintain capture`."*
-
-If the user does, `/hd:maintain capture`:
-1. Classifies the subject (likely episodic with domain like `harness-setup` or `meta`)
-2. Creates `lessons/<domain>.md` with YAML frontmatter
-3. Appends the first entry
-4. Updates INDEX.md
-
-This single pattern — domain file created on-first-capture — applies for all future captures too.
+Default is per-date. Teams can switch by setting `hd-config.md:lessons_format: domain-grouped`.
 
 ## Rule adoption workflow (Layer 5 → AGENTS.md)
 
@@ -91,17 +62,16 @@ This workflow is owned by `/hd:maintain`; Layer 5 setup only prepares the direct
 
 - ❌ Never write to `docs/solutions/` — reserved for other tools
 - ✅ `docs/design-solutions/` is ours (reserved for distilled pattern-solutions in future releases)
+- ✅ `docs/knowledge/reviews/` is the review-report destination (3l.2), separate from `lessons/`
 
-## Audit signals (hd:review audit surfaces these)
+## Review signals (hd:review surfaces these)
 
-Layer 5 drift signals:
-- **Rule-adoption drought** — 10+ entries with same tag across lessons/* + 0 rule adoptions (team captures but never promotes)
+Layer 5 drift signals (per [`../../hd-review/references/review-criteria-l5-knowledge.md`](../../hd-review/references/review-criteria-l5-knowledge.md)):
+
+- **Rule-adoption drought** — 10+ entries with same tag + 0 rule adoptions
 - **Missing tags** — entries without `tags:` field (hard to cluster)
-- **Stale INDEX** — INDEX.md entry counts don't match actual file contents (re-sync needed)
-- **Burst-capture** — all entries in a file from a single week then nothing (no ongoing discipline)
-- **Oversized domain file** — >15 entries without a sub-domain split
-
-The `rule-candidate-scorer` sub-agent quantifies these signals for `hd:review audit`.
+- **Burst-capture** — all entries from a single week then nothing
+- **Changelog placeholder residue** — `{{...}}` left unfilled
 
 ## Procedure — Step 8
 
@@ -109,10 +79,10 @@ The `rule-candidate-scorer` sub-agent quantifies these signals for `hd:review au
 
 **Show:** `has_plans_convention` + count, existing lessons count, rule adoption count, `team_tooling.docs` (for retros) and `team_tooling.pm` (for closed-issue decisions).
 
-**Propose default:**
-- `has_plans_convention: true` → **critique** — invoke `rule-candidate-scorer` on existing lessons
+**Propose default (post-3l.4):**
+- `has_plans_convention: true` or `has_knowledge_dir: true` → **critique** — run `rule-candidate-scorer` on existing entries; surface improvement suggestions
 - `team_tooling.docs` + MCP live → **scaffold** + offer to pull retro/post-mortem/decision-labeled pages
-- Nothing → **scaffold** empty lessons dir from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
+- Nothing → **scaffold** the 4 canonical files + empty `lessons/` from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
 
 **Execute — critique:** invoke:
 
@@ -125,18 +95,22 @@ Task design-harnessing:analysis:rule-candidate-scorer(
 
 Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for each.
 
-**Execute — scaffold:**
-- Use the canonical-4 memory frame (article §2.5) + derivative subtypes + domain-grouped-lessons sections above for L5 depth
-- Seed questions: (1) 3 decisions in last 6 months new hire should know? (2) mistake you want to prevent recurring? (3) pattern across 3+ projects worth formalizing?
-- Write `docs/knowledge/INDEX.md`, `docs/knowledge/changelog.md`, 1 starter lesson
+**Execute — scaffold:** write exactly these files:
+- `docs/knowledge/changelog.md` (from template)
+- `docs/knowledge/decisions.md` (from template)
+- `docs/knowledge/ideations.md` (from template)
+- `docs/knowledge/preferences.md` (from template)
+- `docs/knowledge/lessons/.gitkeep` (empty)
+
+Update AGENTS.md Harness map L5 section to list the above. No `INDEX.md` written.
 
 → Return to [../SKILL.md § Step 8 — Layer 5 (Knowledge)](../SKILL.md#step-8--layer-5-knowledge)
 
 ## See also
 
-- [layer-1-context.md](layer-1-context.md) — context/knowledge separation (different memory types, different lifecycles)
+- [layer-1-context.md](layer-1-context.md) — context/knowledge separation
 - [hd-learn/references/layer-5-knowledge.md](../../hd-learn/references/layer-5-knowledge.md) — concept explainer
-- [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) — entry authoring + domain-file schema
-- [`../../hd-maintain/references/rule-adoption-criteria.md`](../../hd-maintain/references/rule-adoption-criteria.md) — 3-criterion rule for rule-readiness
-- [`../../hd-maintain/references/plan-hash-protocol.md`](../../hd-maintain/references/plan-hash-protocol.md) — SHA-256 proof-of-consent spec
-- Plus-uno reference implementation: [github.com/BilLogic/plus-uno/tree/main/docs/knowledge](https://github.com/BilLogic/plus-uno/tree/main/docs/knowledge)
+- [`../../hd-maintain/references/lesson-patterns.md`](../../hd-maintain/references/lesson-patterns.md) — entry authoring
+- [`../../hd-maintain/references/rule-adoption-criteria.md`](../../hd-maintain/references/rule-adoption-criteria.md) — 3-criterion rule-readiness
+- [`../../hd-maintain/references/plan-hash-protocol.md`](../../hd-maintain/references/plan-hash-protocol.md) — SHA-256 proof-of-consent
+- Plus-uno reference: [github.com/BilLogic/plus-uno/tree/main/docs/knowledge](https://github.com/BilLogic/plus-uno/tree/main/docs/knowledge)

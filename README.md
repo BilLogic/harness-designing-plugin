@@ -19,7 +19,7 @@ You already have a design harness. It's just scattered — across Slack pins, No
 
 Working memory — the active session — is ephemeral. The five layers control what flows into it each time.
 
-At each layer, four choices: **link** (pointer to source of truth), **critique** (apply a rubric), **scaffold** (seed questions + write files), or **skip**.
+At each layer, four choices: **link** (pointer to source of truth), **review** (apply a rubric + surface improvement suggestions), **scaffold** (seed questions + write files), or **skip**.
 
 ## Components
 
@@ -35,9 +35,9 @@ At each layer, four choices: **link** (pointer to source of truth), **critique**
 | Command | Use it to… |
 |---|---|
 | [`/hd:learn`](skills/hd-learn/SKILL.md) | Ask questions about the harness concept. 10 atomic references (one per layer + glossary + FAQ + memory-taxonomy). Article § citations when the corpus is configured. No writes. |
-| [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + 5× harness-auditor + rubric-recommender). Offer per-layer link / critique / scaffold / skip. Write `hd-config.md`. |
+| [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + 5× harness-auditor + rubric-recommender). Offer per-layer link / review / scaffold / skip. Write `hd-config.md`. |
 | [`/hd:maintain`](skills/hd-maintain/SKILL.md) | Capture lessons (one dated file per event). Promote lessons to rules in AGENTS.md. Destructive rule adoptions require SHA-256 plan-hash proof-of-consent. |
-| [`/hd:review`](skills/hd-review/SKILL.md) | `audit` harness health in a 2-batch parallel dispatch; `critique` harness artifacts (SKILL.md, rubric, lesson) against quality rubrics. Not for critiquing design deliverables — that happens outside our scope. |
+| [`/hd:review`](skills/hd-review/SKILL.md) | Full review across all 5 layers (parallel dispatch when host supports it) OR targeted review of one layer / file / rubric. Writes full report to `docs/knowledge/reviews/<date>-harness-review.md`; emits rich chat summary with ASCII health bars + priorities table. Not for reviewing design deliverables — that happens outside our scope. |
 
 ## Agents
 
@@ -47,7 +47,7 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`.
 
 | Agent | Purpose |
 |---|---|
-| `harness-auditor` | Audit one layer given `layer: 1\|2\|3\|4\|5`. Dispatched 5× parallel by `/hd:review audit` and reused by `/hd:setup` Phase A |
+| `harness-auditor` | Review one layer given `layer: 1\|2\|3\|4\|5`. Dispatched 5× parallel by `/hd:review` (full) and reused by `/hd:setup` Phase A |
 | `rule-candidate-scorer` | Cluster lessons; score rule-readiness on recurrence × clean-imperative × team-agreement |
 | `rubric-recommender` | From `detect.py` signals, rank which starter rubrics to scaffold or flag as gaps |
 | `coexistence-analyzer` | Detect other-tool harness artifacts (`.agent/`, `.claude/`, `.codex/`, foreign plug-in footprints); flag collision risks |
@@ -64,7 +64,7 @@ Invoked from skills via `Task design-harnessing:<category>:<name>(…)`.
 | Agent | Purpose |
 |---|---|
 | `skill-quality-auditor` | Apply the 9-section skill-quality rubric to any SKILL.md |
-| `rubric-applier` | Forward critique: apply any rubric to any harness artifact |
+| `rubric-applier` | Forward review: apply any rubric to any harness artifact |
 | `rubric-extractor` | Find implicit rubrics in AGENTS.md, conventions, design reviews; emit candidate rubric YAML |
 
 ## Starter rubrics

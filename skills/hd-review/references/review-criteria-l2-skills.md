@@ -83,4 +83,4 @@ Criteria for the Skills layer: SKILL.md compliance, progressive disclosure, budg
 - Agent: `../../../agents/analysis/harness-auditor.md` (`layer: 2`)
 - Budget script: `../scripts/budget-check.sh`
 - Skill-quality rubric: `../assets/starter-rubrics/skill-quality.md`
-- Consistency check: `audit-criteria-consistency.md`
+- Consistency check: `review-criteria-consistency.md`

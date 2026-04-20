@@ -1,6 +1,6 @@
 # Rubric application
 
-**Purpose:** how to apply a Layer 4 rubric to a specific work item. Loaded by [SKILL.md § Critique mode — procedure](../SKILL.md#critique-mode--procedure).
+**Purpose:** how to apply a Layer 4 rubric to a specific work item. Loaded by [SKILL.md § Targeted review](../SKILL.md).
 
 ## Rubric file schema
 
@@ -65,11 +65,11 @@ For each rubric + work item pair:
 4. **Aggregate findings** across all applied criteria
 5. **Deduplicate** — if two criteria across two rubrics produce identical finding text, merge (rare but possible)
 6. **Sort** — by severity (P1 first), then by rubric + criterion alphabetically
-7. **Emit** — per `critique-format.md`
+7. **Emit** — per `targeted-review-format.md`
 
 ## Applying multiple rubrics
 
-Critique mode typically applies multiple rubrics to a single work item — a design proposal might get checked against accessibility, design-system-compliance, and component-budget simultaneously.
+Targeted review typically applies multiple rubrics to a single work item — a design proposal might get checked against accessibility, design-system-compliance, and component-budget simultaneously.
 
 Order of rubric application:
 
@@ -141,6 +141,6 @@ Example: design-system-compliance rubric checks "uses approved color tokens," bu
 
 ## Cross-reference
 
-- [critique-format.md](critique-format.md) — output structure (pairs with application loop)
-- [`../templates/starter-rubrics/`](../templates/starter-rubrics/) — shipped rubric examples; canonical schema reference
-- [`../SKILL.md § Critique mode — procedure`](../SKILL.md#critique-mode--procedure) — step-by-step procedure using this mechanism
+- [targeted-review-format.md](targeted-review-format.md) — output structure (pairs with application loop)
+- [`../assets/starter-rubrics/`](../assets/starter-rubrics/) — shipped rubric examples; canonical schema reference
+- [`../SKILL.md`](../SKILL.md) § Targeted review — step-by-step procedure using this mechanism

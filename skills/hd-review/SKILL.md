@@ -1,20 +1,22 @@
 ---
 name: hd:review
-description: Audits harness health or applies team rubrics to a work item. Use for harness health checks or single-item design critique.
-argument-hint: "audit | critique <file-path-or-url> [--rubric <name>]"
+description: Reviews harness health (full) or targets one layer/file (targeted). Writes dated report; emits summary with health bars + priorities in chat.
+argument-hint: "[full | <file-path-or-url> [--rubric <name>] | snapshot]"
 ---
 
-# hd:review — improve your harness (audit + critique)
+# hd:review — review your harness (full or targeted)
 
 ## Interaction method
 
-Default: dispatch via Task tool for audit mode; inline response for critique mode. If `AskUserQuestion` is unavailable (non-Claude hosts), fall back to numbered-list prompts. **Read-only by design** — audit writes exactly one dated lesson file; critique writes nothing.
+**Output destinations.** Every `/hd:review` run writes the full report to a dated markdown file and emits a rich summary in chat. Chat summary carries the visualization (ASCII health bars, priorities table, cross-layer signals). Deep findings live in the file.
 
-**Narrate rationale inline.** Before each major step (preflight, Batch 1 dispatch, Batch 2 dispatch, consistency pass, synthesis, write), announce what's happening and why. Users shouldn't have to ask "what's going on?" — the skill tells them, and explains the *reason* for each dispatch choice (parallel vs serial, which agents, why the consistency pass runs last).
+**Host-agnostic by construction.** File write works on every host (Claude Code, Codex CLI, Cursor IDE/CLI, Windsurf, any terminal). Chat summary works everywhere the transcript does. No Task dispatch is required — it's an optional speed-up for the evaluation phase on hosts that support parallel sub-agents.
+
+**Narrate rationale inline** at each major step (preflight, per-layer evaluation, synthesis, write, summary). Users shouldn't have to ask "what's going on?"
 
 ## Single job
 
-Audit harness health (audit mode) OR apply Layer 4 rubric(s) to a work item (critique mode). One skill, two verbs of the IMPROVE family.
+Review harness health — either in full (every layer + cross-layer + budgets) or targeted (one layer, one file, or one rubric). One skill, two scopes of the IMPROVE family.
 
 ## Protected artifacts
 
@@ -31,136 +33,165 @@ Declares protected paths so any external review/cleanup tool leaves our artifact
 </protected_artifacts>
 ```
 
-Multiple review tools can audit the same repo without modifying each other's outputs.
+Multiple review tools can run on the same repo without modifying each other's outputs.
 
 ## Mode detection
 
-| User says… / invokes… | Mode |
-|---|---|
-| `/hd:review` (no args) | **audit** (default) |
-| "Audit my harness" / `/hd:review audit` | **audit** |
-| "Review this design" / `/hd:review critique <path> [--rubric <name>]` | **critique** |
-| `/hd:review <path>` (file path, no verb) | ask: *"Audit the harness or critique `<path>`?"* |
+- Bare `/hd:review` or `/hd:review full` → **full review** (default)
+- `/hd:review snapshot` → **snapshot** (bars-only chat output, no file write)
+- `/hd:review targeted <path> [--rubric <name>]` → **targeted review**
+- `/hd:review <path>` (bare path, no verb) → ask *"Run a full review across all layers, or a targeted review of `<path>`?"*
 
-**Default is audit.** Harness health is the typical entry point. Critique is explicit — requires a verb + target.
+Default is full review. Ambiguous input asks scope, never "audit vs critique."
 
 ## Workflow checklist (per mode)
 
-### Audit mode
+### Full review
 
 ```
-hd:review audit Progress:
-- [ ] Step 1: Load agent list from hd-config.md; run budget-check.sh
-- [ ] Step 2: BATCH 1 (parallel) — harness-auditor × 5 (one per layer 1–5)
-- [ ] Step 3: BATCH 2 (parallel) — rubric-recommender + lesson-retriever + (conditional) coexistence-analyzer
-- [ ] Step 4: Inline parse budget-check.sh JSON
-- [ ] Step 5: Synthesize findings + cross-check against <protected_artifacts>
-- [ ] Step 6: Render report per template
-- [ ] Step 7: Atomic write to docs/knowledge/lessons/<date>-harness-audit.md
-- [ ] Step 8: Summarize + suggest next
+hd:review full Progress:
+- [ ] Step 1: Preflight — run budget-check.sh + detect.py; diff vs hd-config.md
+- [ ] Step 2: Per-layer evaluation (inline serial baseline; parallel when host supports it)
+- [ ] Step 3: Cross-layer consistency check (inline)
+- [ ] Step 4: Synthesize findings + cross-check against <protected_artifacts>
+- [ ] Step 5: Render full report; atomic write to docs/knowledge/reviews/<date>-harness-review.md
+- [ ] Step 6: Emit rich chat summary (bars + priorities + cross-layer signals)
+- [ ] Step 7: Suggest next
 ```
 
-Two-batch parallel dispatch, each batch ≤5 agents (≥6 parallel strains context; we split into 2 batches to stay safe). Batch 1 fans out across layers; Batch 2 covers rubric gaps + lesson corpus + optional coexistence. Inline `budget-check.sh` parse. Synthesize with protected-artifacts cross-check → atomic write one dated audit lesson.
-→ See [references/audit-procedure.md](references/audit-procedure.md) for full procedure
+**Per-layer evaluation:** for each layer 1–5, load `review-criteria-l<N>.md`, gather evidence, emit YAML findings. Baseline is inline serial (any host). Parallel dispatch (Claude Task, Codex /agent, Cursor subagents) runs the same evaluation concurrently when available.
 
-**Quick mode:** `/hd:review audit mode:quick` — ~30s scan based on `detect.py` signals + `hd-config.md` only (no deep file reads, no file writes). Dispatches a single `harness-auditor` in aggregate mode. Use as preflight before a full audit or as a CI check. See [references/audit-procedure.md § Mode: quick](references/audit-procedure.md#mode-quick).
+→ See [references/review-procedure.md](references/review-procedure.md) for full step detail.
 
-### Critique mode
+**Snapshot mode:** `/hd:review snapshot` — ~30s preflight-only pass. Emits bars-only table + overall score; no file write, no deep layer reads.
+
+### Targeted review
 
 ```
-hd:review critique Progress:
-- [ ] Step 1: Parse target work item(s) + optional --rubric
+hd:review targeted Progress:
+- [ ] Step 1: Parse target + optional --rubric
 - [ ] Step 2: Resolve rubric path (starter / user-defined)
-- [ ] Step 3: Dispatch — SKILL.md target → skill-quality-auditor; otherwise → rubric-applier (batch-parallel ≤5 if multiple)
-- [ ] Step 4: Aggregate findings per critique-format.md
-- [ ] Step 5: Emit inline; zero file writes
+- [ ] Step 3: Evaluate — SKILL.md target → skill-quality-auditor; otherwise → rubric-applier (inline or parallel)
+- [ ] Step 4: Aggregate findings per targeted-review-format.md
+- [ ] Step 5: Emit inline summary; write targeted report only if user confirms
 ```
 
-Parse target + rubric → resolve rubric path → dispatch applicator sub-agent → aggregate findings → emit inline (zero writes).
-→ See [references/critique-procedure.md](references/critique-procedure.md) for full procedure
+→ See [references/targeted-review-procedure.md](references/targeted-review-procedure.md) for full step detail.
+
+## Output shape
+
+### File — always written by full review
+
+Path: `docs/knowledge/reviews/<date>-harness-review.md`
+
+Template: [`assets/review-report.md.template`](assets/review-report.md.template). Carries per-layer findings with evidence, recommendations, consistency findings, hd-config drift, agent list, meta.
+
+### Chat summary — always emitted
+
+Rich summary with Unicode box-drawing tables. Mandatory sections:
+
+```
+Review complete · Full report: docs/knowledge/reviews/<date>-harness-review.md
+
+═══════════════════════════════════════════════════════════════════
+
+Harness health — <score> / 10 (<state>)
+
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████████░░    8.0    <one-line summary>
+L2 Skill Curation  ██░░░░░░░░    2.0    <one-line summary>
+L3 Orchestration   ██████░░░░    6.0    <one-line summary>
+L4 Rubric Setting  ████░░░░░░    4.0    <one-line summary>
+L5 Knowledge       █████░░░░░    5.0    <one-line summary>
+
+═══════════════════════════════════════════════════════════════════
+
+Top priorities
+
+Sev  #    Layer    Finding                                      Effort
+───  ───  ───────  ───────────────────────────────────────────  ──────
+P1   1    L2       <one-line>                                   S
+P1   2    L1       <one-line>                                   S
+P2   3    L4       <one-line>                                   M
+
+═══════════════════════════════════════════════════════════════════
+
+Cross-layer signals
+
+Signal           Status    Evidence
+───────────────  ────────  ─────────────────────────────────────
+hd-config.md     <status>  <evidence>
+Consistency      <n>       <evidence>
+
+═══════════════════════════════════════════════════════════════════
+
+Next · <one-line next-step suggestion>
+```
+
+Rules: ASCII bars always shown. Tables preferred over bullets for structured data. Box-drawing `═` as section dividers, `─` inside tables. No emoji, no color codes.
 
 ## What this skill does NOT do
 
 - **Scaffold harness** → `/hd:setup`
 - **Concept Q&A** → `/hd:learn`
 - **Capture lessons** → `/hd:maintain capture` (suggestion, not invocation)
-- **Modify source work items** during critique (read-only)
+- **Modify source work items** during targeted review (read-only)
 - **Modify rubric files** (both modes — rubrics are team-owned)
 - **Write to `docs/solutions/`** (reserved for other tools)
 
 ## Coexistence
 
 - ✅ Reads our namespace + rubric files + user-specified work items
-- ✅ Writes ONLY to `docs/knowledge/lessons/harness-audit-*.md` (audit mode)
+- ✅ Writes ONLY to `docs/knowledge/reviews/<date>-harness-review.md` (full review)
 - ❌ Never writes to other plug-ins' namespaces
 - ❌ Never modifies other plug-ins' config files
-- `<protected_artifacts>` block (above) declares our outputs as read-only for external review/cleanup tools
+- `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools
 - Cross-plug-in Task calls fully-qualified
 
 ## Compact-safe mode
 
-When context budget is tight:
-- Audit → collapse to `mode:quick` (single `harness-auditor` aggregate, no deep reads)
-- Critique → apply fewer rubrics (skip ones requiring deep file reads)
-- Hash mechanisms: N/A (hd-review doesn't use plan-hash; read-mostly)
+When context budget is tight: full review collapses to `snapshot` mode (bars-only, no file write). Targeted review applies fewer rubrics. No plan-hash mechanism (hd-review is read-mostly).
 
-## Parallel→serial auto-switch
+## Parallel dispatch — optional speed-up
 
-Each dispatch batch stays ≤5 agents (6+ parallel strains context). Audit splits into two batches of ≤5 to stay under the cap; critique batches up to 5 rubric-applier calls in parallel and falls back to serial at 6+.
+When the host supports sub-agent dispatch (Claude `Task`, Codex `/agent`, Cursor subagents API), per-layer evaluation fans out in parallel (≤5 agents per batch). Otherwise runs inline serial. Output file + chat summary are identical regardless of mode.
 
 ## Reference files
 
-- [references/audit-procedure.md](references/audit-procedure.md) — full audit-mode step sequence (2-batch dispatch)
-- [references/critique-procedure.md](references/critique-procedure.md) — full critique-mode step sequence (Steps 1–5)
-- [references/audit-criteria-l1-context.md](references/audit-criteria-l1-context.md) through `audit-criteria-l5-knowledge.md` + `audit-criteria-budget.md` — per-scope health criteria + severity framework (cross-tool coexistence checks live in the `coexistence-analyzer` agent spec)
-- [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds + scripts
+- [references/review-procedure.md](references/review-procedure.md) — full review step sequence (preflight → per-layer → consistency → synthesize → file + summary)
+- [references/targeted-review-procedure.md](references/targeted-review-procedure.md) — targeted review sequence
+- [references/review-criteria-l1-context.md](references/review-criteria-l1-context.md) through `review-criteria-l5-knowledge.md` + `review-criteria-budget.md` + `review-criteria-consistency.md` — per-scope health criteria
+- [references/bloat-detection.md](references/bloat-detection.md) — concrete thresholds
 - [references/drift-detection.md](references/drift-detection.md) — stale-file + rule-adoption-drought signals
-- [references/critique-format.md](references/critique-format.md) — critique output shape
+- [references/targeted-review-format.md](references/targeted-review-format.md) — targeted review output shape
 - [references/rubric-application.md](references/rubric-application.md) — rubric → work-item mapping + resolution order
+- [references/rubric-authoring-guide.md](references/rubric-authoring-guide.md) — authoring custom rubrics
 
 ## Assets
 
-- [assets/audit-report.md.template](assets/audit-report.md.template) — audit output format
-- [assets/critique-response.md.template](assets/critique-response.md.template) — critique output format
-- [assets/starter-rubrics/](assets/starter-rubrics/) — 14 shipped rubrics (each with `## Scope & Grounding` per 3i.8):
-  - `accessibility-wcag-aa.md` — WCAG 2.1 AA + Fluent 2 + Material 3 a11y
-  - `design-system-compliance.md` — token + variant adherence (managed-DS pre-fills: antd, chakra, mui, mantine)
-  - `component-budget.md` — new-primitive RFC gate
-  - `skill-quality.md` — 9-point Layer 2 skill health check (applied by `skill-quality-auditor` sub-agent)
-  - `interaction-states.md` — loading / empty / error / success state coverage
-  - `heuristic-evaluation.md` — Nielsen 10 usability heuristics
-  - `typography.md` — type scale + pairing + hierarchy + OpenType
-  - `color-and-contrast.md` — OKLCH + contrast + tinted neutrals + dark-mode
-  - `spatial-design.md` — spacing + proximity + grids + rhythm
-  - `motion-design.md` — reduced-motion + duration + easing + purpose
-  - `ux-writing.md` — error/empty/success copy + voice + banned phrases
-  - `responsive-design.md` — mobile-first + fluid + touch targets + safe area
-  - `telemetry-display.md` — IoT / hardware / real-time-data (freshness, device-state, alerts)
-  - `i18n-cjk.md` — bilingual / CJK-primary products (dual-script, IME states, fontstack)
-  - Users extend by authoring new rubric check files at `docs/rubrics/<name>.md`. See `references/rubric-authoring-guide.md`.
+- [assets/review-report.md.template](assets/review-report.md.template) — full-review output file format
+- [assets/targeted-review-response.md.template](assets/targeted-review-response.md.template) — targeted review response format
+- [assets/starter-rubrics/](assets/starter-rubrics/) — 14 shipped rubrics with `## Scope & Grounding` sections
 
 ## Scripts
 
 - `scripts/budget-check.sh` — deterministic always-loaded + SKILL.md budget enforcement; emits JSON
 
-## Sub-agents invoked
+## Sub-agents dispatched (when host supports parallel)
 
-All dispatch uses fully-qualified Task names. We stay within `design-harnessing:` and do not dispatch into other plug-ins' namespaces by default.
+All Task calls use fully-qualified names in the `design-harnessing:` namespace. Never dispatches into other plug-ins' namespaces.
 
-**Audit mode — BATCH 1 (parallel, 5 agents):**
-- `design-harnessing:analysis:harness-auditor` × 5 — one per layer (`layer: 1` through `layer: 5`), `scenario: audit`
+**Full review — per-layer evaluation (parallel, 5 agents):**
+- `design-harnessing:analysis:harness-auditor` × 5 — one per layer (`layer: 1` through `layer: 5`)
 
-**Audit mode — BATCH 2 (parallel, 2–3 agents):**
-- `design-harnessing:analysis:rubric-recommender` — L4 gap finding (`scenario: audit-gap-finding`)
+**Full review — cross-cutting (parallel, 2–3 agents):**
+- `design-harnessing:analysis:rubric-recommender` — L4 gap finding
 - `design-harnessing:research:lesson-retriever` — L5 cluster corpus scan
-- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `other_tool_harnesses_detected` is non-empty
+- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `other_tool_harnesses_detected[]` is non-empty
 
-**Audit mode — quick:**
-- Single `design-harnessing:analysis:harness-auditor` in aggregate mode (reads `detect.py` JSON + `hd-config.md` only)
+**Targeted review:**
+- `design-harnessing:review:skill-quality-auditor` — targets ending in `SKILL.md`
+- `design-harnessing:review:rubric-applier` — all other targets (batch-parallel ≤5)
 
-**Critique mode:**
-- `design-harnessing:review:skill-quality-auditor` — targets whose path ends in `SKILL.md` (batch-parallel if multiple SKILLs passed)
-- `design-harnessing:review:rubric-applier` — all other targets (batch-parallel ≤5 if multiple rubrics)
-
-**Cross-plug-in (optional user config):**
-- Users may list external agents in `hd-config.md:review_agents`; those are dispatched with fully-qualified Task names, one entry per external agent. Empty by default.
+**Cross-plug-in (optional):** users list external agents in `hd-config.md:review_agents`. Empty by default.

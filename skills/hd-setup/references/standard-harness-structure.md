@@ -1,6 +1,6 @@
 # Standard harness structure
 
-The canonical file tree `/hd:setup` scaffolds when a user picks **"Use standard"** mode. This is a **starting point + reference**, not a straitjacket — users can rename, split, merge, or skip folders as their team's workflow takes shape. Audit grades on content quality (see `audit-criteria-l*.md`), not strict structural conformance.
+The canonical file tree `/hd:setup` scaffolds when a user picks **"Use standard"** mode. This is a **starting point + reference**, not a straitjacket — users can rename, split, merge, or skip folders as their team's workflow takes shape. Review grades on content quality (see `review-criteria-l*.md`), not strict structural conformance.
 
 ## The tree
 

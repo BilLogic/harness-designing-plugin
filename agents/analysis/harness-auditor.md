@@ -1,38 +1,38 @@
 ---
 name: harness-auditor
-description: "Audits one harness layer (1-5) against audit-criteria-l*.md and returns a structured health report. Dispatched 5x parallel by hd:review audit and by hd:setup pre-analysis."
+description: "Reviews one harness layer (1-5) against review-criteria-l*.md and returns a structured health report. Dispatched 5x parallel by hd:review full and by hd:setup pre-analysis."
 color: purple
 model: inherit
 ---
 
 # harness-auditor
 
-Audit a single harness layer (Layer 1 context, Layer 2 skills, Layer 3 orchestration, Layer 4 rubrics, or Layer 5 knowledge) against the matching audit-criteria reference. Produce a structured YAML report with a health score, 3-5 top findings (severity + evidence + recommendation), and a recommended action — suitable for either a full audit report (scenario `audit`) or a pre-analysis proposal that feeds the interactive walk (scenario `setup-pre-analysis`).
+Review a single harness layer (Layer 1 context, Layer 2 skills, Layer 3 orchestration, Layer 4 rubrics, or Layer 5 knowledge) against the matching review-criteria reference. Produce a structured YAML report with a health score, 3-5 top findings (severity + evidence + recommendation), and a recommended action — suitable for either a full-review report (scenario `full-review`) or a pre-analysis proposal that feeds the interactive walk (scenario `setup-pre-analysis`).
 
-**Dispatch pattern:** **batch-parallel**. The canonical caller invokes 5 instances concurrently (one per layer) from `/hd:review audit` Batch 1, and again from `/hd:setup` Phase A before the interactive walk. Each instance is scoped to a single layer and MUST NOT invoke other agents (1-level-deep call graph from the caller).
+**Dispatch pattern:** **batch-parallel** when the host supports it. The canonical caller invokes 5 instances concurrently (one per layer) from `/hd:review` (full review) Batch 1, and again from `/hd:setup` Phase A before the interactive walk. When the host lacks parallel dispatch, the caller runs the same logic inline serial. Each instance is scoped to a single layer and MUST NOT invoke other agents (1-level-deep call graph from the caller).
 
 ## Parameters
 
 | Parameter | Required | Description |
 |---|---|---|
-| `layer` | yes | One of `1|2|3|4|5`. Determines which audit-criteria reference and which user artifacts are read. |
-| `repo_root` | yes | Path to the repo being audited. All user-artifact reads are relative to this. |
+| `layer` | yes | One of `1|2|3|4|5`. Determines which review-criteria reference and which user artifacts are read. |
+| `repo_root` | yes | Path to the repo being reviewed. All user-artifact reads are relative to this. |
 | `detect_json` | yes | The output of `skills/hd-setup/scripts/detect.py` passed as an argument. NEVER re-run detect.py. |
 | `hd_config_path` | no | Path to `hd-config.md`. Defaults to `<repo_root>/hd-config.md`. |
 | `mode` | no | `full` (default) reads deep into user artifacts; `quick` uses only `detect_json` + `hd_config_path`. |
-| `scenario` | no | `audit` (default) produces an audit-report shape; `setup-pre-analysis` adds a `recommended_action` block to feed the interactive walk. |
+| `scenario` | no | `full-review` (default) produces a review-report shape; `setup-pre-analysis` adds a `recommended_action` block to feed the interactive walk. |
 
 ## Procedure
 
 ### Phase 1: load the criteria reference
 
-Read the audit-criteria reference for `layer`:
+Read the review-criteria reference for `layer`:
 
-- `layer: 1` → `skills/hd-review/references/audit-criteria-l1-context.md`
-- `layer: 2` → `skills/hd-review/references/audit-criteria-l2-skills.md`
-- `layer: 3` → `skills/hd-review/references/audit-criteria-l3-orchestration.md`
-- `layer: 4` → `skills/hd-review/references/audit-criteria-l4-rubrics.md`
-- `layer: 5` → `skills/hd-review/references/audit-criteria-l5-knowledge.md`
+- `layer: 1` → `skills/hd-review/references/review-criteria-l1-context.md`
+- `layer: 2` → `skills/hd-review/references/review-criteria-l2-skills.md`
+- `layer: 3` → `skills/hd-review/references/review-criteria-l3-orchestration.md`
+- `layer: 4` → `skills/hd-review/references/review-criteria-l4-rubrics.md`
+- `layer: 5` → `skills/hd-review/references/review-criteria-l5-knowledge.md`
 
 The reference defines the **checks** for that layer (names, default severity, pass/fail heuristics, always-loaded budget thresholds where applicable).
 
@@ -52,7 +52,7 @@ In `mode: quick`, skip the user-artifact read and base findings on `detect_json`
 
 ### Phase 3: run each check — grade on content, not presence
 
-For every check defined in the audit-criteria reference:
+For every check defined in the review-criteria reference:
 
 1. **Presence check.** Does the expected path exist? If not → `content_status: missing`.
 2. **Content check.** If present, read the file(s) and evaluate the criterion's `content_checks:` heuristics. Failing heuristics → `content_status: present-but-stale`.
@@ -87,7 +87,7 @@ If `scenario: setup-pre-analysis`, add a `recommended_action` block:
 - `default: scaffold` — layer absent or empty; propose scaffolding from starter assets
 - `default: skip` — adopted rule (2026-04-18) says skip L1/L2/L3 when `.agent/` or `.claude/` detected with ≥1 skill/rule
 
-If `scenario: audit`, omit `recommended_action`.
+If `scenario: full-review`, omit `recommended_action`.
 
 ## Output shape
 
@@ -95,7 +95,7 @@ If `scenario: audit`, omit `recommended_action`.
 agent: harness-auditor
 layer: 2
 mode: full
-scenario: audit
+scenario: full-review
 health_score: 6.4
 top_findings:
   - severity: p1
@@ -120,7 +120,7 @@ recommended_action:      # only present when scenario=setup-pre-analysis
   default: critique
   why: "Existing .agent/skills/ corpus has p1+p2 findings — propose critique in interactive walk"
 scope_loaded:
-  - path: skills/hd-review/references/audit-criteria-l2-skills.md
+  - path: skills/hd-review/references/review-criteria-l2-skills.md
   - path: .agent/skills/**
   - path: hd-config.md
 summary:
@@ -138,20 +138,20 @@ summary:
 - Never reads outside `repo_root` (plus the plug-in's own `skills/hd-review/references/` for the criteria file).
 - Never reads `docs/solutions/` (reserved for other tools).
 - Respects the additive-only protection (adopted rule 2026-04-18): reports on existing harness artifacts but flags them `protected: true` in evidence so the caller knows not to propose modification.
-- Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 audit, it dispatches `Task design-harnessing:analysis:rubric-recommender(...)` separately.
+- Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 review, it dispatches `Task design-harnessing:analysis:rubric-recommender(...)` separately.
 
 ## Failure modes
 
 - `layer` out of range `1..5` → `error: "invalid layer; must be 1-5"`
 - `repo_root` missing or unreadable → `error: "repo_root not accessible"`
 - `detect_json` malformed → `error: "detect_json parse failed"`; do not attempt to re-run detect.py
-- Audit-criteria reference missing → `error: "audit-criteria-l<N>-*.md not found"` (indicates a plug-in install issue)
+- Review-criteria reference missing → `error: "review-criteria-l<N>-*.md not found"` (indicates a plug-in install issue)
 - Large user corpus (many skills / many lesson files) → score at summary level; note partial read in `scope_loaded`
 
 ## See also
 
-- `skills/hd-review/references/audit-criteria-l1-context.md` … `-l5-knowledge.md` — per-layer check definitions
-- `skills/hd-review/references/audit-criteria-budget.md` — always-loaded + bloat budget checks (cross-cutting)
-- `agents/analysis/coexistence-analyzer.md` — sibling agent for cross-tool audit (cross-tool check logic lives in the agent spec)
+- `skills/hd-review/references/review-criteria-l1-context.md` … `-l5-knowledge.md` — per-layer check definitions
+- `skills/hd-review/references/review-criteria-budget.md` — always-loaded + bloat budget checks (cross-cutting)
+- `agents/analysis/coexistence-analyzer.md` — sibling agent for cross-tool review (cross-tool check logic lives in the agent spec)
 - `agents/analysis/rubric-recommender.md` — sibling agent for Layer 4 gap-finding
 - `agents/analysis/rule-candidate-scorer.md` — sibling agent for Layer 5 drift detection

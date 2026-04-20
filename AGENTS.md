@@ -39,7 +39,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
 │   │   └── article-quote-finder.md    # + article-quote-finder-corpus.md (data ref, not an agent)
 │   └── review/
 │       ├── skill-quality-auditor.md   # 9-section rubric on any SKILL.md
-│       ├── rubric-applier.md          # forward critique (apply-mode)
+│       ├── rubric-applier.md          # forward review (apply-mode)
 │       └── rubric-extractor.md        # reverse extract (find implicit rubrics)
 │
 └── skills/
@@ -58,7 +58,7 @@ This repo is flat — the plug-in payload IS the repo root (no `plugins/<name>/`
     │   ├── SKILL.md
     │   ├── references/
     │   └── assets/
-    └── hd-review/                 # IMPROVE (audit + critique)
+    └── hd-review/                 # IMPROVE (full + targeted review)
         ├── SKILL.md
         ├── references/
         ├── assets/
@@ -103,7 +103,7 @@ All commands use `hd:` prefix (two letters — *harness design*; secondary read 
 - `/hd:learn` — Q&A about the harness concept (LEARN)
 - `/hd:setup` — walk the five layers (SETUP)
 - `/hd:maintain` — capture lessons, promote lessons to rules (MAINTAIN)
-- `/hd:review` — audit harness health, critique work items (IMPROVE)
+- `/hd:review` — review harness health (full) or review a specific work item (targeted) (IMPROVE)
 
 Never ship bare command names. Always namespaced — unnamespaced commands create rename pain when teams extend them.
 
@@ -131,7 +131,7 @@ When describing skill components, use these exact verbs:
 - **`scripts/`** = EXECUTE (bash/python tools; output consumed, source not loaded)
 - **`assets/`** = ASSETS (templates + starters + skeletons; referenced by skill logic)
 
-Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `audit-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills promote to sub-agents in `agents/<category>/`.
+Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `review-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills promote to sub-agents in `agents/<category>/`.
 
 ## Skill authoring references
 
@@ -153,7 +153,7 @@ Rules that earned their place via episodic lesson → team rule. Each entry date
 
 <!-- Add new rules above this line. -->
 
-- [2026-04-18] When `.agent/` or `.claude/` is detected with ≥1 skill or rule file, `/hd:setup` defaults to: skip L1/L2/L3 prompts and scaffold only L4 (rubrics) and L5 (knowledge). The existing harness is treated as Layer 1+2 authority; hd-* adds Layer 4+5 on top. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (4 confirmations: plus-marketing, oracle-chat, lightning, plus-uno).
+- [2026-04-20] When `.agent/` / `.agents/` / `.claude/` / `.cursor/skills/` / `.windsurf/` is detected with ≥1 skill or rule file, `/hd:setup` defaults to: **critique** L1/L2/L3 (review existing content + surface improvement suggestions, read-only) and scaffold L4 (rubrics) + L5 (knowledge). The existing harness stays the authority — critique never modifies it. Supersedes the 2026-04-18 skip-default rule; live testing across 5 Codex repos on 2026-04-20 surfaced that skip felt too blunt. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (original 4 confirmations) + docs/plans/2026-04-20-001-fix-phase-3l-review-unification-host-agnostic-plan.md (3l.4 revision).
 - [2026-04-18] `/hd:setup` is **additive-only** when any existing harness is detected. Never modify `CLAUDE.md`, `AGENTS.md`, `.agent/`, `.claude/`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, or other-tool harness artifacts. New files only. Source: [docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md](docs/knowledge/lessons/2026-04-18-parallel-pilots-3-6-consolidated.md) (6 confirmations across full pilot matrix).
 - [2026-04-16] Don't ship future-version skill stubs with `disable-model-invocation: true` at current version. Wait to author the skill when it's being built. Stubs with fake trigger text + the flag make the skill surface actively worse than if it didn't exist. Source: [docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md](docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md)
 

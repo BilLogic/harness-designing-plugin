@@ -2,7 +2,10 @@
 title: "{{TITLE}}"
 date: {{DATE}}
 tags: [{{TAGS}}]
+memory_type: episodic
+importance: {{IMPORTANCE}}
 rule_candidate: {{RULE_CANDIDATE}}
+rule_ref: null
 ---
 
 # Lesson

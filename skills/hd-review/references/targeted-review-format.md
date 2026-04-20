@@ -1,20 +1,20 @@
-# Critique format
+# Targeted-review format
 
-**Purpose:** structured output shape for critique mode. Loaded by [SKILL.md § Critique mode — procedure](../SKILL.md#critique-mode--procedure). Distinct from audit output (which writes a dated lesson file; critique is inline, read-only).
+**Purpose:** structured output shape for targeted review. Loaded by [SKILL.md § Targeted review](../SKILL.md). Distinct from full review output (which writes a dated report file; targeted review is inline by default, optional save to `docs/knowledge/reviews/`).
 
 ## Output structure
 
-Critique emits a single markdown response with three sections:
+Targeted review emits a single markdown response with three sections:
 
 1. **Summary** — 1 paragraph; what the work item is + top-level verdict
 2. **Findings (YAML)** — parseable severity list; each finding tagged with rubric + criterion + suggested fix
 3. **Prose** — 1-3 paragraphs of narrative explanation, plus next-step suggestion
 
-See [`../templates/critique-response.md.template`](../templates/critique-response.md.template) for the canonical template.
+See [`../assets/targeted-review-response.md.template`](../assets/targeted-review-response.md.template) for the canonical template.
 
 ## Severity scale
 
-Three levels. Same scale as audit findings (P1/P2/P3) but applied to work items instead of harness health.
+Three levels. Same scale as full-review findings (P1/P2/P3) but applied to work items instead of harness health.
 
 ### P1 — Blocks approval
 
@@ -137,5 +137,5 @@ Work-item type affects which rubrics apply (accessibility rubric doesn't make se
 ## See also
 
 - [rubric-application.md](rubric-application.md) — the mechanism applying rubrics to work items
-- [`../templates/critique-response.md.template`](../templates/critique-response.md.template) — canonical template
-- [`../templates/starter-rubrics/`](../templates/starter-rubrics/) — shipped rubrics
+- [`../assets/targeted-review-response.md.template`](../assets/targeted-review-response.md.template) — canonical template
+- [`../assets/starter-rubrics/`](../assets/starter-rubrics/) — shipped rubrics

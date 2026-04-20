@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 """detect.py — deterministic harness + tooling detection for hd:setup.
 
-Replaces the v1 detect-mode.sh. Emits JSON matching schema v3 (see
+Replaces the v1 detect-mode.sh. Emits JSON matching schema v4 (see
 `references/hd-config-schema.md`). Exit 0 on success (even if no harness
 detected — "greenfield" is a valid result). Non-zero only on I/O failure.
+
+Schema v4 (3l.3) adds:
+- Probes for .agents/, .cursor/skills/, .windsurf/, .roo/
+- Content-based L1 detection (PRD-shaped filenames, tech-stack docs,
+  design-system dirs scattered across docs/)
+- layers_present_scattered[] field distinguishing scattered from canonical
+- scattered_l1_signals sub-object with evidence
 
 Usage:
     cd <user's repo root>
@@ -44,18 +51,18 @@ def detect_other_harnesses() -> dict:
         "has_claude_dir": (REPO / ".claude").is_dir(),
         "has_codex_dir": (REPO / ".codex").is_dir(),
         "has_agent_dir": (REPO / ".agent").is_dir(),
+        "has_agents_dir": (REPO / ".agents").is_dir(),      # 3l.3: some teams pluralize
+        "has_cursor_skills_dir": (REPO / ".cursor" / "skills").is_dir(),  # 3l.3
+        "has_windsurf_dir": (REPO / ".windsurf").is_dir(),  # 3l.3
+        "has_roo_dir": (REPO / ".roo").is_dir(),            # 3l.3 (Roo Code)
         "has_external_skills": False,
         "has_plans_convention": False,
     }
 
     # Count actual skill files (SKILL.md OR top-level .md) under each skills dir.
-    # Previously counted directory entries, which over-reported (pilot #5 lightning
-    # has 5 skill .md files but 8 directory entries including worktrees/).
-    # Take max across sibling skills dirs — .cursor/skills is often a mirror of
-    # .claude/skills; summing would double-count. Count SKILL.md files plus
-    # bare top-level .md files (lightning pilot mixes both conventions).
+    # Probe all sibling skills locations (.agents/ included per 3l.3).
     skill_md_count = 0
-    for base in (".claude/skills", ".codex/skills", ".cursor/skills"):
+    for base in (".claude/skills", ".codex/skills", ".cursor/skills", ".agent/skills", ".agents/skills"):
         p = REPO / base
         if not p.is_dir():
             continue
@@ -530,16 +537,85 @@ def _meta_harness_entry(dirname: str) -> dict | None:
 
 
 def detect_other_tool_harnesses() -> list[dict]:
-    """Generic enumeration — returns unified array of detected other-tool harnesses."""
+    """Generic enumeration — returns unified array of detected other-tool harnesses.
+
+    Schema v4 (3l.3): probes expanded to include .agents/ (plural), .cursor/skills/,
+    .windsurf/, .roo/ in addition to the original three.
+    """
     entries: list[dict] = []
     comp = _compound_entry()
     if comp is not None:
         entries.append(comp)
-    for dname in (".agent", ".claude", ".codex"):
+    for dname in (".agent", ".agents", ".claude", ".codex", ".cursor", ".windsurf", ".roo"):
         e = _meta_harness_entry(dname)
         if e is not None:
             entries.append(e)
     return entries
+
+
+# --- 3l.3: scattered L1 content detection -------------------------------------
+
+
+_PRD_FILENAME_RE = re.compile(
+    r"^(PRD[_-].*\.md|.*[_-]PRD\.md|.*-prd\.md|PRD\.md|requirements\.md)$", re.I
+)
+_TECH_STACK_FILENAME_RE = re.compile(
+    r"^(TECH[_-]STACK\.md|tech-stack\.md|ARCHITECTURE\.md|architecture\.md|STACK\.md)$", re.I
+)
+
+
+def detect_scattered_l1() -> dict:
+    """3l.3: find scattered Layer 1 content that doesn't live in docs/context/.
+
+    Catches repos where real context exists as PRD docs, tech-stack files,
+    or a design-system folder outside the canonical docs/context/ tree.
+    Oracle-chat example: docs/TECH_STACK.md + docs/PRD_MVP.md + docs/design-system/
+    were present but detect.py reported layers_present: [].
+    """
+    docs_dir = REPO / "docs"
+    if not docs_dir.is_dir():
+        return {
+            "prd_files": [],
+            "tech_stack_files": [],
+            "design_system_dirs": [],
+        }
+
+    prd_files: list[str] = []
+    tech_stack_files: list[str] = []
+
+    # Shallow scan — docs/ top-level + one level deep
+    try:
+        entries = list(docs_dir.iterdir())
+    except OSError:
+        return {"prd_files": [], "tech_stack_files": [], "design_system_dirs": []}
+
+    for entry in entries:
+        if entry.is_file():
+            if _PRD_FILENAME_RE.match(entry.name):
+                prd_files.append(str(entry.relative_to(REPO)))
+            elif _TECH_STACK_FILENAME_RE.match(entry.name):
+                tech_stack_files.append(str(entry.relative_to(REPO)))
+
+    # Check docs/design-system/ + docs/design_system/ (legacy)
+    design_system_dirs: list[str] = []
+    for candidate in ("design-system", "design_system", "design-tokens"):
+        p = docs_dir / candidate
+        if p.is_dir():
+            design_system_dirs.append(str(p.relative_to(REPO)))
+
+    # Also probe src/ + app/ for design-system
+    for src_parent in (REPO / "src", REPO / "app"):
+        if src_parent.is_dir():
+            for candidate in ("design-system", "design_system"):
+                p = src_parent / candidate
+                if p.is_dir():
+                    design_system_dirs.append(str(p.relative_to(REPO)))
+
+    return {
+        "prd_files": sorted(prd_files)[:10],
+        "tech_stack_files": sorted(tech_stack_files)[:5],
+        "design_system_dirs": sorted(design_system_dirs)[:5],
+    }
 
 
 # --- E2.6: markdown-todos PM signal -------------------------------------------
@@ -691,6 +767,22 @@ def main() -> int:
     managed_ds = detect_managed_design_system(deps)
     maturity = detect_maturity_signals(v1["has_ai_docs"])
     other_tool_harnesses = detect_other_tool_harnesses()
+    scattered_l1 = detect_scattered_l1()  # 3l.3
+
+    # 3l.3: compute layers_present_scattered — layers that exist in scattered
+    # form but not in the canonical docs/context/ tree.
+    layers_scattered: list[str] = []
+    has_scattered_l1 = bool(
+        scattered_l1["prd_files"]
+        or scattered_l1["tech_stack_files"]
+        or scattered_l1["design_system_dirs"]
+    )
+    has_canonical_l1 = "L1" in maturity["layers_present"]
+    if has_scattered_l1 and not has_canonical_l1:
+        layers_scattered.append("L1")
+    # L3 scattered: plans/ikideation/brainstorms conventions without docs/orchestration/
+    if other_h["has_plans_convention"]:
+        layers_scattered.append("L3")
 
     # E2.6: append markdown-todos to team_tooling.pm if signal fires
     if detect_markdown_todos():
@@ -713,6 +805,10 @@ def main() -> int:
         "has_claude_dir": other_h["has_claude_dir"],
         "has_codex_dir": other_h["has_codex_dir"],
         "has_agent_dir": other_h["has_agent_dir"],
+        "has_agents_dir": other_h["has_agents_dir"],          # 3l.3
+        "has_cursor_skills_dir": other_h["has_cursor_skills_dir"],  # 3l.3
+        "has_windsurf_dir": other_h["has_windsurf_dir"],      # 3l.3
+        "has_roo_dir": other_h["has_roo_dir"],                # 3l.3
         "has_external_skills": other_h["has_external_skills"],
         "external_skills_count": other_h["external_skills_count"],
         "has_plans_convention": other_h["has_plans_convention"],
@@ -727,6 +823,8 @@ def main() -> int:
         "knowledge_file_count": maturity["knowledge_file_count"],
         "memory_types_present": maturity["memory_types_present"],
         "layers_present": maturity["layers_present"],
+        "layers_present_scattered": layers_scattered,       # 3l.3
+        "scattered_l1_signals": scattered_l1,               # 3l.3
         # E2.2 — managed DS
         "managed_design_system": managed_ds,
         # G3 — user-level MCP scoping (opt-in via --include-user-mcps)
@@ -739,7 +837,7 @@ def main() -> int:
     }
 
     output = {
-        "schema_version": "3",
+        "schema_version": "4",
         "mode": mode,
         "priority_matched": priority,
         "signals": signals,

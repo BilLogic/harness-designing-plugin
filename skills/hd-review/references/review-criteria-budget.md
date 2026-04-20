@@ -73,6 +73,6 @@ check.
 
 - Parent skill: `../SKILL.md`
 - Script source: `../scripts/budget-check.sh`
-- Layer 1 criteria that depend on this: `audit-criteria-l1-context.md` §
-  `tier1-budget`
+- Layer 1 criteria that depend on this: `review-criteria-l1-context.md` §
+  `always-loaded-budget`
 - Cross-cutting coexistence checks: handled by the `coexistence-analyzer` agent (`agents/analysis/coexistence-analyzer.md`)

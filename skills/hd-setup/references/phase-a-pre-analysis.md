@@ -9,7 +9,7 @@ loaded_by: hd-setup
 
 Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / critique / scaffold / skip) and a rubric-gap recommendation so Steps 4–8 (Phase B) feel informed rather than interrogative. Every layer default in Phase B comes from this phase's output.
 
-Loaded when the host supports Task dispatch. Non-Claude hosts (or any host where `Task` is unavailable) skip Phase A entirely and fall back to the per-detection default table in [`per-layer-procedure.md`](per-layer-procedure.md).
+Loaded when the host supports Task dispatch. Non-Claude hosts (or any host where `Task` is unavailable) run Phase A **inline serial** — evaluate each layer against `review-criteria-l<N>.md` one at a time. Same output shape; same health snapshot at the end.
 
 ## Parallel→serial auto-switch
 
@@ -63,12 +63,46 @@ Merge the 6 agent outputs into a single proposal table held in working memory:
 
 Steps 4–8 (Phase B) use this table as the PROPOSE step of the FRAME → SHOW → PROPOSE → ASK → EXECUTE cycle. User can override any default; Phase A never executes actions on its own.
 
+## Render health snapshot (3l.6)
+
+After synthesis completes, emit a 5-row ASCII layer-health snapshot to the chat before moving to Step 3 (tool discovery). Format matches the `/hd:review` summary style:
+
+```
+═══════════════════════════════════════════════════════════════════
+
+Phase A complete — layer snapshot
+
+Layer              Bar          Score   State
+─────────────────  ───────────  ──────  ───────────────────────────
+L1 Context         ████░░░░░░    4.0    scattered, no canonical tree
+L2 Skill Curation  █████████░    9.0    .agent/skills/ with 7 skills
+L3 Orchestration   ██████░░░░    6.0    workflow docs, no gate map
+L4 Rubric Setting  ░░░░░░░░░░    0.0    absent
+L5 Knowledge       ██░░░░░░░░    2.0    docs/solutions/ only
+
+═══════════════════════════════════════════════════════════════════
+
+Proposed per-layer action (override any row to change)
+
+Layer  Action     Rationale
+─────  ─────────  ─────────────────────────────────────────────
+L1     critique   scattered content — review + suggest canonical map
+L2     critique   existing skills — surface skill-quality findings
+L3     critique   workflows implicit — propose explicit gates
+L4     scaffold   absent — starter trio + scope-and-grounding
+L5     scaffold   thin — full knowledge structure
+```
+
+Bar rule: `blocks_filled = round(health_score)`, filled = `█`, empty = `░`. Each row: Layer name (17 chars) · bar · score · state summary. Snapshot is summary-only — never written to any file at Phase A; Step 8.5 preview gates any writes.
+
+**Narrate:** *"Phase A pre-analysis complete. Here's how each layer looks right now. We'll walk through each one next so you can confirm or override."*
+
 ## Guardrail interaction
 
 If the Guardrail (additive-only mode, § SKILL.md) already fired before Phase A:
-- L1/L2/L3 `harness-auditor` dispatches still run, but their `default_action` is overridden to `skip` in the synthesis table.
+- L1/L2/L3 `harness-auditor` dispatches still run; their `default_action` is set to **critique** in the synthesis table (3l.4 — was `skip`).
 - L4/L5 auditor output + `rubric-recommender` output still drive defaults normally.
-- The Guardrail's "flipped friction" is applied post-synthesis, not by the agents themselves.
+- The Guardrail's default now defaults to critique (review + suggest) rather than skip.
 
 ## See also
 

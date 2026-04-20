@@ -43,9 +43,11 @@ Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-p
 
 ## Guardrail — additive-only when existing harness detected
 
-**Signals:** `.agent/` with ≥1 skill/rule, `.claude/` with skills/settings, `AGENTS.md` ≥20 lines of real content, populated `docs/context/` or `docs/knowledge/`, or any other-tool harness flagged by `detect.py`.
+**Signals:** `.agent/` / `.agents/` with ≥1 skill/rule, `.claude/` with skills/settings, `.cursor/skills/` or `.windsurf/`, `AGENTS.md` ≥20 lines of real content, populated `docs/context/` or `docs/knowledge/`, or any other-tool harness flagged by `detect.py`.
 
-If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **skip** for Layers 1/2/3; keep Layer 4/5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
+If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **critique** for Layers 1/2/3 (review existing content + surface improvement suggestions — read-only; 3l.4); keep Layer 4/5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
+
+**Why critique, not skip?** Users running `/hd:setup` on a repo with an existing harness came to improve it. `skip` leaves them with "you already have this, we'll do nothing" — blunt. `critique` reviews what's there read-only and surfaces suggestions. Skip remains a user choice; it's just not the default.
 
 Rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots — additive-only discipline intact.
 
@@ -134,8 +136,8 @@ Report:
 - **Other-tool harnesses respected** (paths untouched)
 - **Next step** tuned to outcome:
   - Mostly scaffold → `/hd:maintain capture` to record first lesson
-  - Mostly link → `/hd:review audit` to audit the combined harness
-  - Mostly critique → address findings; re-run `/hd:review audit`
+  - Mostly link → `/hd:review` to audit the combined harness
+  - Mostly critique → address findings; re-run `/hd:review`
 
 ## Re-run semantics
 
@@ -155,7 +157,7 @@ When invoked on a repo that has `hd-config.md`:
 
 ## What this skill does NOT do
 
-- Concept Q&A → `/hd:learn`; lesson capture → `/hd:maintain`; audit → `/hd:review`
+- Concept Q&A → `/hd:learn`; lesson capture → `/hd:maintain`; review → `/hd:review`
 - Invoke other hd skills directly — always suggest, never invoke
 - Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/` — strict coexistence
 - Write to `docs/solutions/` (reserved for other tools) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)

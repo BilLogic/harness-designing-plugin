@@ -105,5 +105,5 @@ summary:
 ## See also
 
 - `skills/hd-review/references/rubric-application.md` — general rubric-application protocol
-- `skills/hd-review/references/critique-format.md` — output shape
+- `skills/hd-review/references/targeted-review-format.md` — output shape
 - `skills/hd-review/assets/starter-rubrics/` — shipped starter rubrics

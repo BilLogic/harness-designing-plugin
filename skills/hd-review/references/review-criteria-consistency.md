@@ -1,6 +1,6 @@
 ---
 title: Audit criteria — cross-layer consistency + redundancy
-loaded_by: hd-review audit mode (via harness-auditor agent after per-layer checks complete)
+loaded_by: hd-review (via harness-auditor agent after per-layer checks complete)
 ---
 
 # Audit criteria: Cross-layer consistency + redundancy
@@ -89,4 +89,4 @@ Loaded by `harness-auditor` in a final cross-layer pass after each per-layer aud
 
 - Agent: `../../../agents/analysis/harness-auditor.md`
 - Detection script: `../../hd-setup/scripts/detect.py`
-- Consistency check dispatch: `audit-procedure.md` (final synthesis step)
+- Consistency check dispatch: `review-procedure.md` (final synthesis step)

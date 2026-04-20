@@ -46,5 +46,5 @@ Starter rubrics live in `skills/hd-review/assets/starter-rubrics/` and ship read
 ## See also
 
 - [rubric-application.md](rubric-application.md) — how the `rubric-applier` agent walks criteria
-- [critique-format.md](critique-format.md) — output shape for rubric-backed critiques
-- [audit-criteria.md](audit-criteria.md) — rubrics are Layer 4 of the harness; audit treats them as first-class artifacts
+- [targeted-review-format.md](targeted-review-format.md) — output shape for rubric-backed targeted reviews
+- [review-criteria-l4-rubrics.md](review-criteria-l4-rubrics.md) — rubrics are Layer 4; full review treats them as first-class artifacts

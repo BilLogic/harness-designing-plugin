@@ -118,7 +118,7 @@ gaps_surfaced:
 ## See also
 
 - `skills/hd-review/assets/starter-rubrics/` — the 14 starter rubric files this agent ranks
-- `skills/hd-review/references/audit-criteria-l4-rubrics.md` — Layer 4 audit criteria (caller pairs this with `harness-auditor(layer: 4)`)
+- `skills/hd-review/references/review-criteria-l4-rubrics.md` — Layer 4 review criteria (caller pairs this with `harness-auditor(layer: 4)`)
 - `skills/hd-setup/scripts/detect.py` — produces the `detect_json` this agent consumes
-- `agents/analysis/harness-auditor.md` — sibling agent; Layer 4 health report feeds gap-finding in the audit scenario
+- `agents/analysis/harness-auditor.md` — sibling agent; Layer 4 health report feeds gap-finding in the full-review scenario
 - `agents/review/rubric-applier.md` — applies a single rubric to a work item (downstream of this recommender)

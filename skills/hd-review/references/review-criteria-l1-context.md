@@ -118,5 +118,5 @@ Each check produces:
 - Parent skill: `../SKILL.md`
 - Agent: `../../../agents/analysis/harness-auditor.md` (invoked with `layer: 1`)
 - Budget script: `../scripts/budget-check.sh`
-- Cross-cutting: `audit-criteria-budget.md`, `audit-criteria-consistency.md`
+- Cross-cutting: `review-criteria-budget.md`, `review-criteria-consistency.md`
 - Bloat thresholds: `bloat-detection.md`
