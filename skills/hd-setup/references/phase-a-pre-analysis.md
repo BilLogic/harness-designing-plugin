@@ -100,9 +100,12 @@ Bar rule: `blocks_filled = round(health_score)`, filled = `█`, empty = `░`. 
 ## Guardrail interaction
 
 If the Guardrail (additive-only mode, § SKILL.md) already fired before Phase A:
-- L1/L2/L3 `harness-auditor` dispatches still run; their `default_action` is set to **review** in the synthesis table (3l.4 — was `skip`).
+
+- L1/L2/L3 `harness-auditor` dispatches still run. Synthesis decides default-action per-layer by reading `content_status` from the auditor response (3m.2):
+  - ≥1 check reports `content_status` better than `missing` → `default_action: review`
+  - All checks report `content_status: missing` (nominal-only guardrail fire) → `default_action: scaffold`
 - L4/L5 auditor output + `rubric-recommender` output still drive defaults normally.
-- The Guardrail's default now defaults to review (review + suggest) rather than skip.
+- Skip remains available as user-choice override but is no longer auto-selected.
 
 ## See also
 

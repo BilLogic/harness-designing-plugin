@@ -34,6 +34,20 @@ python skills/hd-setup/scripts/detect.py > /tmp/hd-detect.json
 
 Also diff `/tmp/hd-detect.json` vs `hd-config.md` contents. Compare fields: `other_tool_harnesses_detected[]`, `skipped_layers`, `team_tooling`, `skills_by_platform`. Any mismatch queues a `hd-config-stale` finding (p2) for synthesis.
 
+**Step 1.5 — Staleness preflight (3m.5).** Read the most recent prior review from `docs/knowledge/reviews/*-harness-review*.md` (by filename date, then sequence). If none exists, mark `prior_review: null` and skip. If one exists:
+
+1. Parse its P1+P2 findings. Build a set of `(category, check, file)` triples — this is the finding identity used for overlap.
+2. Record `prior_review_date` + `prior_review_path` for Step 8.
+3. After Step 5 synthesis, compute Jaccard similarity: `|new ∩ prior| / |new ∪ prior|` on the finding-identity sets.
+4. Run `git log --oneline --since=<prior_review_date> -- docs/ AGENTS.md skills/ agents/ hd-config.md` → activity summary (capped at 20 entries).
+5. Count lesson captures since `prior_review_date`: `ls docs/knowledge/lessons/ | awk -F- '$1"-"$2"-"$3 >= <prior_review_date>'`.
+
+Outputs for Step 8:
+- `prior_review_date`, `prior_review_path`, `overlap_pct`, `overlapping_findings[]`, `activity_commits_since`, `lessons_since`
+- Decision rule: `overlap_pct >= 70%` → render full Staleness block with suggestion; else render compact one-liner "Staleness: fresh review"
+
+**Narrate:** *"Checking against last review at <prior_review_date>…"* (skip narration if no prior review).
+
 **Step 2 — Per-layer evaluation.**
 
 **Narrate:** *"Evaluating all 5 layers against the review criteria. On this host I'll run [inline serial | parallel via <dispatch-mechanism>]."*
@@ -175,10 +189,69 @@ Consistency      <n>       <evidence>
 
 ═══════════════════════════════════════════════════════════════════
 
+Staleness check
+<!-- If overlap_pct >= 70%, render the full block below.
+     Else, single compact line: "Staleness: fresh review — <N> new findings since <prior_review_date or 'first review'>" -->
+
+Signal           Status         Evidence
+───────────────  ─────────────  ─────────────────────────────────
+Prior review     <date>         <N> commits since · <K> lessons
+                                captured · docs/rubrics/ <unchanged|updated>
+Overlap          <pct>% (<n>/<m>)  Same <n> findings recur:
+                                - [P1] <one-line>
+                                - [P2] <one-line>
+                                - [P2] <one-line>
+
+Suggestion: capture a blocker lesson via /hd:maintain capture
+            explaining why these haven't been addressed, OR
+            mark them deferred in the review file
+
+═══════════════════════════════════════════════════════════════════
+
+Proposed revision
+
+```diff
+  <repo-root>/
+  ├── AGENTS.md                              # ~ edit: +60 lines (harness map)
+  ├── .agent/                                # unchanged
++ ├── hd-config.md                           # + new
++ ├── docs/rubrics/                          # + new (N files)
++ │   ├── accessibility-wcag-aa.md
++ │   └── design-system-compliance.md
++ ├── docs/knowledge/                        # + new (5 files)
++ │   ├── changelog.md
++ │   ├── decisions.md
++ │   ├── ideations.md
++ │   ├── preferences.md
++ │   └── lessons/.gitkeep
+  └── docs/                                  # existing docs unchanged
+```
+
+Total: <N> new files, <M> edits · To apply: /hd:setup --from-review docs/knowledge/reviews/<date>-harness-review.md
+
+═══════════════════════════════════════════════════════════════════
+
 Next · address P1s before ship · full findings + evidence in file
 ```
 
 **Rules:** ASCII bars mandatory. Tables preferred over bullets. Box-drawing `═` for section dividers, `─` inside tables. No emoji, no color codes. Summary has no fixed line cap — length serves clarity.
+
+### Rendering the Proposed revision diff (3m.4)
+
+Purpose: users see the concrete revised file tree inline without re-running `/hd:setup`. Rules:
+
+- **Fence as ```diff** so Markdown renderers highlight `+` / `-` lines.
+- **Row annotations:**
+  - `+ path` → new file/folder (will be created if user acts on findings)
+  - `~ path` → edit to existing file (e.g., AGENTS.md trim, SKILL.md description tighten)
+  - plain path (no `+` or `~`) → unchanged existing file/folder shown for context
+- **Group logically:** existing unchanged lines at top, then new additions, then edits to existing files.
+- **Derive from findings:** extract proposed writes from each finding's `recommendation` field. Heuristic: recommendations containing phrases like "add `<path>`", "create `<path>`", "scaffold `<path>`", "promote `<source>` to `<dest>`", "trim `<path>` to N lines", "update `<path>`" translate to diff rows.
+- **Non-actionable findings** (e.g., "pattern is tribal knowledge", "workflow implicit") do NOT produce diff rows — they stay in the findings list only.
+- **Summary totals:** "Total: `<N>` new files, `<M>` edits" below the diff block.
+- **Apply command:** last line names the exact `/hd:setup --from-review <path>` invocation (3m.3 bridge) so users can act without retyping.
+
+When there are zero actionable findings (review finds only informational items), omit the `Proposed revision` section entirely — the diff would be empty and the summary would be misleading.
 
 → Return to [../SKILL.md](../SKILL.md)
 

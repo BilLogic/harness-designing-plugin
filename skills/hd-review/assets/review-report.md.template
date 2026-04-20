@@ -85,6 +85,35 @@ stale cross-references, hd-config drift. Each entry tags affected_layers: [...] 
 <!-- Fields where detect.py output differs from hd-config.md recorded state.
 Example: "detect.py found .codex/ harness; hd-config.md missing that entry" -->
 
+## Staleness
+
+{{STALENESS_BLOCK}}
+
+<!-- 3m.5 — populated only when a prior review file exists in docs/knowledge/reviews/.
+Format:
+- Prior review date + findings overlap % (Jaccard on {category, check, file} triples)
+- Git log activity since prior review date
+- Lesson captures since prior review (count + list)
+- Suggestion: re-prioritize or capture a blocker lesson (if ≥70% overlap)
+
+When no prior review exists OR overlap < 70%, this block is a single compact line:
+"Staleness: fresh review — <N> new findings since <prior-date or 'first review'>"
+-->
+
+## Proposed revision
+
+{{PROPOSED_REVISION_DIFF}}
+
+<!-- 3m.4 — diff-style file tree showing the concrete revised harness.
+Rendered as a ```diff fenced block with:
+  + path  → new file/folder
+  ~ path  → edit to existing file
+  plain   → unchanged, shown for context
+
+Last line cites the apply command: /hd:setup --from-review <path>
+
+When zero actionable findings exist, this entire section is omitted. -->
+
 ## Suggested actions
 
 {{SUGGESTED_ACTIONS}}

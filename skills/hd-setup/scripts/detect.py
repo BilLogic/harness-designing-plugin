@@ -496,34 +496,95 @@ def _compound_entry() -> dict | None:
 
 
 def _meta_harness_entry(dirname: str) -> dict | None:
-    """Detect a meta-harness directory (.agent, .claude, .codex) at repo root."""
+    """Detect a meta-harness directory (.agent, .claude, .codex, etc.) at repo root.
+
+    3m.1: requires content substance, not just directory existence. A meta-harness
+    must have AT LEAST ONE of:
+      - skills/ with ≥1 SKILL.md or *.md
+      - rules/ with ≥1 *.md
+      - agents/ with ≥1 *.md
+      - commands/ with ≥1 *.md
+      - settings.json or settings.local.json with ≥5 non-blank lines
+      - AGENTS.md or AGENT.md with ≥20 non-blank lines
+
+    Metadata-only dirs (e.g. .claude/worktrees/ alone, .claude/logs/ alone,
+    empty settings.local.json) return None — they don't count as a harness.
+    """
     root = REPO / dirname
     if not root.is_dir():
         return None
     paths_found: list[str] = []
     skill_count = 0
     rule_count = 0
+    has_substance = False
+
     skills_dir = root / "skills"
     if skills_dir.is_dir():
-        paths_found.append(f"{dirname}/skills/")
         skill_mds = list(skills_dir.rglob("SKILL.md"))
         bare_mds = [f for f in skills_dir.iterdir() if f.is_file() and f.suffix == ".md"]
         skill_count = len(skill_mds) + len(bare_mds)
         if skill_count == 0:
             skill_count = sum(1 for f in skills_dir.rglob("*.md") if f.is_file())
+        if skill_count > 0:
+            paths_found.append(f"{dirname}/skills/")
+            has_substance = True
+
     rules_dir = root / "rules"
     if rules_dir.is_dir():
-        paths_found.append(f"{dirname}/rules/")
         rule_count = sum(1 for f in rules_dir.rglob("*.md") if f.is_file())
+        if rule_count > 0:
+            paths_found.append(f"{dirname}/rules/")
+            has_substance = True
+
     commands_dir = root / "commands"
     if commands_dir.is_dir():
-        paths_found.append(f"{dirname}/commands/")
+        cmd_count = sum(1 for f in commands_dir.rglob("*.md") if f.is_file())
+        if cmd_count > 0:
+            paths_found.append(f"{dirname}/commands/")
+            has_substance = True
+
     agents_dir = root / "agents"
     if agents_dir.is_dir():
-        paths_found.append(f"{dirname}/agents/")
-    if not paths_found:
-        # dir exists but empty/no known subdirs — still surface it
-        paths_found.append(f"{dirname}/")
+        agent_count = sum(1 for f in agents_dir.rglob("*.md") if f.is_file())
+        if agent_count > 0:
+            paths_found.append(f"{dirname}/agents/")
+            has_substance = True
+
+    # settings.json / settings.local.json with non-trivial content
+    for settings_name in ("settings.json", "settings.local.json"):
+        settings_path = root / settings_name
+        if settings_path.is_file():
+            try:
+                lines = [
+                    line for line in settings_path.read_text(encoding="utf-8").splitlines()
+                    if line.strip()
+                ]
+                if len(lines) >= 5:
+                    paths_found.append(f"{dirname}/{settings_name}")
+                    has_substance = True
+            except (OSError, UnicodeDecodeError):
+                pass
+
+    # AGENTS.md / AGENT.md inside this dir with ≥20 non-blank lines
+    for agents_md_name in ("AGENTS.md", "AGENT.md"):
+        agents_md_path = root / agents_md_name
+        if agents_md_path.is_file():
+            try:
+                lines = [
+                    line for line in agents_md_path.read_text(encoding="utf-8").splitlines()
+                    if line.strip()
+                ]
+                if len(lines) >= 20:
+                    paths_found.append(f"{dirname}/{agents_md_name}")
+                    has_substance = True
+            except (OSError, UnicodeDecodeError):
+                pass
+
+    if not has_substance:
+        # Dir exists but only contains metadata (worktrees/, logs/, etc.) or
+        # empty/stub configs. NOT a real harness.
+        return None
+
     entry: dict = {
         "name": dirname,
         "type": "meta-harness",

@@ -21,11 +21,12 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 
 **PROPOSE step sourcing.** The default action shown to the user at each layer is looked up from the Phase A synthesis table (Batch 1 `harness-auditor × 5` + Batch 2 `rubric-recommender`). No new agent dispatch happens at the PROPOSE step. The per-detection default table below is the *fallback* when Phase A was skipped OR when the Phase A agent returned inconclusive.
 
-### Default action per detection (post-3l.4)
+### Default action per detection (post-3m.2)
 
 | Condition | Default |
 |---|---|
-| **Existing harness detected** + layer is L1/L2/L3 | **review** (review existing content + surface improvement suggestions; additive-only) |
+| **Existing harness detected** + layer has **non-trivial content** (≥1 per-layer check ≠ `content_status: missing`) | **review** (review existing content + surface improvement suggestions; additive-only) |
+| **Existing harness detected** + layer is **nominal-only** (all per-layer checks report `content_status: missing`) | **scaffold** (nothing of substance to review — propose the canonical tree) |
 | **Existing harness detected** + layer is L4/L5 | scaffold (typical genuine gap) |
 | Nothing detected at this layer + no external tooling mentioned | scaffold |
 | Team tool detected (e.g., notion for L1) + MCP live in session | scaffold + MCP-pull |
@@ -36,7 +37,18 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 
 Default is a **suggestion**, not enforcement. User picks any of 4 options (link / review / scaffold / skip).
 
-**Rationale for review-by-default on L1/L2/L3 when harness exists (3l.4).** Users running `/hd:setup` on a repo with an existing harness came for help improving it — not to be told "you already have this, we'll ignore it." Default shifts from `skip` to `review`: we review their existing layers read-only and surface suggestions. They can still override to `skip` if they genuinely don't want suggestions. Additive-only invariant holds: review writes nothing, and any user-approved scaffolding goes through Step 8.5 preview first.
+**Rationale for content-gated review default (3m.2).** Users running `/hd:setup` on a repo with a **real** existing harness came for help improving it — `review` defaults pay off there. Users running `/hd:setup` on a repo where the guardrail fires on **nominal-only** signals (e.g. `.claude/settings.local.json` with a few lines but no skills/rules) are effectively greenfield at that layer — reviewing "nothing" produces no useful findings, and `scaffold` is the helpful default. Content substance is the switch: if `harness-auditor` reports ≥1 check with `content_status` better than `missing`, default to `review`; else fall through to `scaffold`. Additive-only invariant preserved either way.
+
+**How Phase A synthesizes this default.** For each layer, the `harness-auditor` sub-agent returns per-check `content_status`. Phase A synthesis logic:
+
+```
+non_missing_checks = [c for c in layer.checks if c.content_status != "missing"]
+if guardrail_fired and layer in {L1, L2, L3}:
+    if len(non_missing_checks) >= 1:
+        recommended_action.default = "review"
+    else:
+        recommended_action.default = "scaffold"
+```
 
 ### Link-mode contract — extract + pointer (all layers)
 

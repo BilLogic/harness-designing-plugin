@@ -1,7 +1,7 @@
 ---
 name: hd:setup
 description: Walks the five-layer design harness layer by layer. Detects existing harnesses + tools, offers per-layer link / review / scaffold / skip. Use to set up or revisit any repo.
-argument-hint: "[--reset-skips | --discover-tools]"
+argument-hint: "[--reset-skips | --discover-tools | --from-review <path>]"
 ---
 
 # hd:setup — walk your design harness, layer by layer
@@ -45,9 +45,9 @@ Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-p
 
 **Signals:** `.agent/` / `.agents/` with ≥1 skill/rule, `.claude/` with skills/settings, `.cursor/skills/` or `.windsurf/`, `AGENTS.md` ≥20 lines of real content, populated `docs/context/` or `docs/knowledge/`, or any other-tool harness flagged by `detect.py`.
 
-If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **review** for Layers 1/2/3 (review existing content + surface improvement suggestions — read-only; 3l.4); keep Layer 4/5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
+If any signal fires: announce additive-only mode (no modification of existing harness artifacts); pre-select **review** for L1/L2/L3 when the layer has non-trivial content, else fall through to **scaffold** (3m.2); keep L4/L5 defaults; emit `other_tool_harnesses_detected` into `hd-config.md` listing every artifact so `/hd:review` respects them.
 
-**Why review, not skip?** Users running `/hd:setup` on a repo with an existing harness came to improve it. `skip` leaves them with "you already have this, we'll do nothing" — blunt. `review` reviews what's there read-only and surfaces suggestions. Skip remains a user choice; it's just not the default.
+**Why content-gated default?** A repo with real `.agent/skills/` + `docs/` benefits from review (surface improvement suggestions). A repo whose guardrail only fires on a nominal `.claude/settings.local.json` has nothing to review — scaffold is the helpful default. `harness-auditor` emits `content_status` per check; Phase A synthesis uses it to pick review vs scaffold. Skip remains a user-choice override in all cases.
 
 Rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilots — additive-only discipline intact.
 
@@ -139,6 +139,12 @@ Report:
   - Mostly link → `/hd:review` to review the combined harness
   - Mostly review → address findings; re-run `/hd:review`
 
+## `--from-review` mode (3m.3)
+
+`/hd:setup --from-review <path-to-review-file>` skips Phase A (already ran when the review was produced), extracts write-style findings from the review file, and merges them into Step 8.5 preview as `from-review`-tagged rows. User confirms per the usual `y / revise / cancel` gate.
+
+Extraction heuristic: recommendations containing `"add <path>"`, `"create <path>"`, `"scaffold <path>"`, `"promote <src> to <dest>"`, `"trim/update/tighten <path>"` produce diff rows. Non-actionable findings are skipped. Closes the review → setup loop while preserving preview-before-write safety.
+
 ## Re-run semantics
 
 When invoked on a repo that has `hd-config.md`:
@@ -149,11 +155,11 @@ When invoked on a repo that has `hd-config.md`:
 
 ## Failure modes
 
-- **F1 Tool-discovery loop** — user can't decide. Skip; `team_tooling: {}`; note in prose.
-- **F2 MCP install** — only recommend from [`references/known-mcps.md`](references/known-mcps.md). Unknown → pointer-only.
-- **F3 Other-tool harness conflict** — **link, don't absorb**. Pointer file, never modify.
-- **F4 User stuck on seed questions** — Material 3 / Fluent 2 / awesome-design-md fallbacks. Still stuck → minimal placeholder + revisit-note.
-- **F5 Destructive action** — always show diff preview; require explicit confirmation; never silent.
+- **F1** Tool-discovery loop → skip, `team_tooling: {}`, note in prose
+- **F2** MCP install → only recommend from [`references/known-mcps.md`](references/known-mcps.md); unknown → pointer-only
+- **F3** Other-tool harness conflict → link, don't absorb; never modify
+- **F4** User stuck on seed questions → Material 3 / Fluent 2 / awesome-design-md fallbacks; still stuck → minimal placeholder
+- **F5** Destructive action → always show diff preview; require explicit confirmation; never silent
 
 ## What this skill does NOT do
 
@@ -168,33 +174,25 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Reference files
 
-- [per-layer-procedure.md](references/per-layer-procedure.md) — shared FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + checkpoint
-- Layer guides (concept + procedure + depth): [layer-1-context.md](references/layer-1-context.md) (healthy AGENTS.md patterns + always-loaded budget model + Step 4 procedure), [layer-2-skills.md](references/layer-2-skills.md) (+ Step 5 procedure), [layer-3-orchestration.md](references/layer-3-orchestration.md) (+ Step 6 procedure), [layer-4-rubrics.md](references/layer-4-rubrics.md) (+ Step 7 procedure), [layer-5-knowledge.md](references/layer-5-knowledge.md) (lesson YAML + Step 8 procedure)
-- **Standard:** [standard-harness-structure.md](references/standard-harness-structure.md) (canonical tree, 3k.12), [standard-agent-categories.md](references/standard-agent-categories.md) (5 categories)
-- Shared: [hd-config-schema.md](references/hd-config-schema.md) (schema v3), [known-mcps.md](references/known-mcps.md) (6-category tool map + install table)
+- [per-layer-procedure.md](references/per-layer-procedure.md) — FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + link-mode contract + Step 8.5 preview format
+- [phase-a-pre-analysis.md](references/phase-a-pre-analysis.md) — parallel dispatch + health snapshot render
+- Layer guides: `layer-1-context.md` through `layer-5-knowledge.md` under `references/` (per-layer depth + procedure)
+- **Standard:** [standard-harness-structure.md](references/standard-harness-structure.md) (canonical tree), [standard-agent-categories.md](references/standard-agent-categories.md) (5 categories)
+- Shared: [hd-config-schema.md](references/hd-config-schema.md), [known-mcps.md](references/known-mcps.md)
 
-## Assets
+## Assets + scripts
 
-- [AGENTS.md.template](assets/AGENTS.md.template) — master-index template (harness map + agent persona, per 3k.13)
-- [hd-config.md.template](assets/hd-config.md.template) (schema v3)
-- [context-skeleton/](assets/context-skeleton/)
-- [knowledge-skeleton/](assets/knowledge-skeleton/) — minus retired INDEX.md (per 3k.13)
-- [platform-stubs/](assets/platform-stubs/) — redirect stubs for scattered mode
-
-## Scripts
-
-- `scripts/detect.py` — canonical detector (schema v3 JSON)
-- `scripts/detect-mode.sh` — bash shim → detect.py
+- `assets/AGENTS.md.template` — master-index (harness map + agent persona)
+- `assets/hd-config.md.template` — schema v4 config
+- `assets/context-skeleton/` · `assets/knowledge-skeleton/` · `assets/platform-stubs/`
+- `scripts/detect.py` — canonical detector (schema v4 JSON); `scripts/detect-mode.sh` — bash shim
 
 ## Sub-agents invoked
 
-Fully-qualified `design-harnessing:<category>:<agent>` Task names only. Each parallel batch stays ≤5.
+Fully-qualified `design-harnessing:<category>:<agent>` Task names only; each parallel batch ≤5.
 
-- **Phase A Batch 1** — `analysis:harness-auditor` × 5 (one per layer, `scenario: setup-pre-analysis`)
-- **Phase A Batch 2** — `analysis:rubric-recommender` (scenario: setup-pre-analysis)
-- **Step 3** — `research:lesson-retriever` (solo, topic: tool-discovery)
-- **Step 5 review** — `review:skill-quality-auditor` (solo or batch ≤5)
-- **Step 7 review+extract** — `review:rubric-extractor` (batch ≤5 across AI-doc targets)
-- **Step 8 review** — `analysis:rule-candidate-scorer` (solo, when `has_plans_convention`)
+- Phase A — `analysis:harness-auditor` × 5 + `analysis:rubric-recommender` (scenario: `setup-pre-analysis`)
+- Step 3 — `research:lesson-retriever` (solo, topic: tool-discovery)
+- Per-layer review actions — `review:skill-quality-auditor` (L2), `review:rubric-extractor` (L4 extract), `analysis:rule-candidate-scorer` (L5 when `has_plans_convention`)
 
-`review:rubric-applier` is NOT dispatched here — `/hd:review review` owns apply-mode.
+`review:rubric-applier` is owned by `/hd:review` targeted mode, not dispatched here.

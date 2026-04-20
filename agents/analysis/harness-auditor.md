@@ -81,11 +81,18 @@ Rank findings by severity then by check importance. Return the top 3–5.
 
 ### Phase 5: scenario-specific tail
 
-If `scenario: setup-pre-analysis`, add a `recommended_action` block:
-- `default: link` — existing layer artifact is healthy; link hd-* on top (additive-only)
-- `default: review` — layer exists but has p2+ findings; propose review in the interactive walk
-- `default: scaffold` — layer absent or empty; propose scaffolding from starter assets
-- `default: skip` — adopted rule (2026-04-18) says skip L1/L2/L3 when `.agent/` or `.claude/` detected with ≥1 skill/rule
+If `scenario: setup-pre-analysis`, add a `recommended_action` block per 3m.2 content-gated logic:
+
+```
+non_missing_count = number of checks whose content_status != "missing"
+```
+
+- `default: link` — existing layer artifact is healthy and points to an authoritative source
+- `default: review` — `non_missing_count >= 1` (layer has content to review + suggest on)
+- `default: scaffold` — `non_missing_count == 0` (layer absent or nominal-only; propose canonical tree)
+- `default: skip` — available as user override only; no longer auto-selected from the auditor
+
+Include `non_missing_count` and `total_checks` in the output so the caller can inspect the decision.
 
 If `scenario: full-review`, omit `recommended_action`.
 
