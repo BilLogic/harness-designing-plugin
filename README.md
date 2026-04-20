@@ -1,39 +1,56 @@
 # Harness Designing
 
-A plug-in that helps your design team turn scattered AI usage into a practice that compounds. Four skills assemble the context, skills, orchestration, rubrics, and knowledge you already have—across Notion, Figma, AGENTS.md, chat histories—into a five-layer harness your whole team can share.
+**A plug-in that turns your team's scattered AI usage into a design practice that compounds.**
 
-Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools—see [Installation](#installation) for your host.
+Four skills. Five layers. One harness your whole team inherits—across Notion, Figma, AGENTS.md, and every chat thread.
+
+Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools. [Install →](#installation)
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
 > —from the companion article
 
 ## Thesis
 
-You already have a design harness. It's just scattered—across Slack pins, Notion docs, Figma comments, AGENTS.md rules, and a decade of design reviews. This plug-in assembles that pile into **five layers** every AI-assisted design task inherits. Each layer has its own home and feeds the others:
+**You already have a design harness.** It's scattered—Slack pins, Notion docs, Figma comments, AGENTS.md rules, a decade of design reviews.
 
-| Layer | What lives here | How it connects to the rest |
+This plug-in assembles the pile into **five layers**. Every AI-assisted task inherits all of them. Each layer has its own home and feeds the others.
+
+| Layer | What lives here | How it connects |
 |---|---|---|
-| **1. Context Engineering** | Product facts, users, brand voice, design system tokens, conventions—what's always true | Loaded first on every task; every other layer reads from it |
-| **2. Skill Curation** | Repeatable design jobs (research, plan, prototype, review, compound) | Draws from Context; invokes Rubrics at gates; writes to Knowledge |
-| **3. Workflow Orchestration** | How skills compose into real work—sequences, handoffs, quality gates | Emerges from how Skills dispatch agents |
-| **4. Rubric Setting** | Quality bars—accessibility, design-system compliance, typography, telemetry, i18n | Applied by Skills at workflow gates |
-| **5. Knowledge Compounding** | Lessons, decisions, preferences, changelog—captured per event | Captured by every skill; recurring patterns promote to Context rules |
+| **1. Context Engineering** | Product facts, users, brand voice, design tokens, conventions | Loaded first on every task. Every other layer reads from it. |
+| **2. Skill Curation** | Repeatable jobs (research, plan, prototype, review, compound) | Draws from Context. Invokes Rubrics at gates. Writes to Knowledge. |
+| **3. Workflow Orchestration** | How skills compose into real work—sequences, handoffs, gates | Emerges from how Skills dispatch agents. |
+| **4. Rubric Setting** | Quality bars—a11y, design-system, typography, telemetry, i18n | Applied by Skills at workflow gates. |
+| **5. Knowledge Compounding** | Lessons, decisions, preferences, changelog | Captured by every skill. Recurring patterns promote to Context rules. |
 
 Working memory—the active session—is ephemeral. The five layers control what flows into it each time.
 
-At each layer, four choices: **link** (point at existing source of truth), **review** (apply a rubric + suggest improvements), **scaffold** (seed questions + write files), or **skip**.
+**At each layer, four choices:**
+
+- **link** — point at an existing source of truth
+- **review** — apply a rubric, surface improvement suggestions
+- **scaffold** — seed questions, write new files
+- **skip** — acknowledge the layer, leave it alone
 
 ## Commands
 
-### [`/hd:learn`](skills/hd-learn/SKILL.md)
+### [`/hd:learn`](skills/hd-learn/SKILL.md) — ask about the concept
 
-Ask questions about any layer, memory type, or decision in the harness concept. Ten atomic references (one per layer, plus glossary, FAQ, and memory taxonomy) back the answers; article sections get cited when the corpus is configured. Read-only—no writes.
+Read-only Q&A about any layer, memory type, or decision in the harness frame.
 
-Good for: *"What's the difference between Layer 1 and Layer 5?"* · *"When should I scaffold vs. link at Layer 1?"* · *"Walk me through the five layers for a team just starting out."*
+Ten atomic references back the answers—one per layer, plus glossary, FAQ, and memory taxonomy. Article sections cited when the corpus is configured.
 
-### [`/hd:setup`](skills/hd-setup/SKILL.md)
+**Try:**
 
-Walk your repo layer-by-layer. Detects existing harness artifacts (`.agent/`, `.claude/`, `docs/context/`, etc.), pre-analyzes all five layers in parallel, then walks each layer with a **preview-before-write gate**. Per layer: **link** / **review** / **scaffold** / **skip**.
+- *"What's the difference between Layer 1 and Layer 5?"*
+- *"When should I scaffold vs. link at Layer 1?"*
+- *"Walk me through the five layers for a team just starting out."*
+
+### [`/hd:setup`](skills/hd-setup/SKILL.md) — walk your repo, layer by layer
+
+Detects existing harness artifacts (`.agent/`, `.claude/`, `docs/context/`, etc.). Pre-analyzes all five layers in parallel. Walks each layer with a **preview-before-write gate**.
+
+Per layer: **link** · **review** · **scaffold** · **skip**.
 
 When scaffolding a greenfield repo, it proposes this starting structure:
 
@@ -56,34 +73,54 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 └── agents/                     # L3 emerges from skills ↔ agents dispatch
 ```
 
-This is a starting **template**, not a contract. Every team customizes—rename folders, skip layers, add your own. The plug-in audits what you have, suggests what's missing, and respects what you built (additive-only by default). Full spec at [`skills/hd-setup/references/standard-harness-structure.md`](skills/hd-setup/references/standard-harness-structure.md).
+> **Starting template, not a contract.** Rename folders, skip layers, add your own. The plug-in audits what exists, suggests what's missing, respects what you built (additive-only by default). Full spec: [`standard-harness-structure.md`](skills/hd-setup/references/standard-harness-structure.md).
 
-### [`/hd:maintain`](skills/hd-maintain/SKILL.md)
+### [`/hd:maintain`](skills/hd-maintain/SKILL.md) — capture lessons, promote to rules
 
-Capture a lesson whenever a decision, surprise, or recurring pattern is worth remembering—one dated file per event. When the same pattern shows up three or more times across lessons, `rule-propose` scores the cluster and suggests a new rule for `AGENTS.md`. Rule adoption requires SHA-256 plan-hash proof-of-consent, so rules never land by accident.
+**Capture.** When a decision, surprise, or recurring pattern is worth remembering. One dated file per event.
 
-Good for: *"Capture a lesson: our AntD buttons don't work with dark-mode tokens; reverted to custom overrides."* · *"Propose a rule: we've had three lessons about dark-mode token drift this month."*
+**Propose.** When the same pattern recurs three-plus times, `rule-propose` scores the cluster and suggests a new rule for `AGENTS.md`.
 
-### [`/hd:review`](skills/hd-review/SKILL.md)
+**Adopt.** Rule adoption requires SHA-256 plan-hash proof-of-consent. Rules never land by accident.
 
-**Full review** across all five layers. Writes a dated report to `docs/knowledge/reviews/<date>-harness-review.md` and emits a chat summary with ASCII health bars, priorities table, cross-layer signals, a **Proposed revision** file-tree diff, and a staleness check (compared against any prior review). Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes.
+**Try:**
+
+- *"Capture a lesson: our AntD buttons don't work with dark-mode tokens; reverted to custom overrides."*
+- *"Propose a rule: we've had three lessons about dark-mode token drift this month."*
+
+### [`/hd:review`](skills/hd-review/SKILL.md) — full or targeted review
+
+**Full review** across all five layers:
+
+- Writes a dated report to `docs/knowledge/reviews/<date>-harness-review.md`
+- Emits a chat summary with ASCII health bars, priorities table, cross-layer signals, a **Proposed revision** file-tree diff, and a staleness check against any prior review
+- Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes
 
 **Targeted review** of one layer, file, or rubric against team rubrics.
 
-14 starter rubrics ship in the plug-in—copy any into `docs/rubrics/<name>.md` and customize:
+**14 starter rubrics ship with the plug-in.** Copy any into `docs/rubrics/<name>.md` and customize:
 
-- **Craft** — `accessibility-wcag-aa`, `design-system-compliance`, `component-budget`, `skill-quality`, `interaction-states`, `heuristic-evaluation`
-- **Visual** — `typography`, `color-and-contrast`, `spatial-design`, `motion-design`
-- **Communication** — `ux-writing`, `responsive-design`
-- **Domain-specific** — `telemetry-display`, `i18n-cjk`
+| Category | Rubrics |
+|---|---|
+| **Craft** | `accessibility-wcag-aa`, `design-system-compliance`, `component-budget`, `skill-quality`, `interaction-states`, `heuristic-evaluation` |
+| **Visual** | `typography`, `color-and-contrast`, `spatial-design`, `motion-design` |
+| **Communication** | `ux-writing`, `responsive-design` |
+| **Domain-specific** | `telemetry-display`, `i18n-cjk` |
 
-Each rubric carries a `## Scope & Grounding` section (personas + user stories + scenarios + anti-scenarios) and cites its source. Running rubrics against actual design work happens in whatever AI tool your team uses—this plug-in maintains the library; your AI applies it.
+Each rubric carries a `## Scope & Grounding` block—personas, user stories, scenarios, anti-scenarios—with source citation.
+
+> **The plug-in maintains the library. Your AI applies it** against actual design work.
 
 ## Installation
 
 > **Status—beta testing.** Submitted to Anthropic's plug-in directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below—they work today.
 
-Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended—handles different home directories, shells, and skill-dir conventions for you), or run the exact commands yourself. The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`); same skills, agents, and scripts across all three.
+**Two install patterns per host:**
+
+1. **Copy-paste a natural-language prompt** (recommended). Your AI handles different home directories, shells, and skill-dir conventions for you.
+2. **Run the exact commands yourself.** Every host section includes them in a collapsed block.
+
+One repo ships three sibling manifests (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`)—same skills, agents, scripts across all three.
 
 ### Claude Code
 
