@@ -1,9 +1,9 @@
 ---
-title: Audit criteria — Layer 5 (Knowledge)
-loaded_by: hd-review audit mode (via harness-auditor agent with layer: 5)
+title: Review criteria — Layer 5 (Knowledge)
+loaded_by: hd-review review mode (via harness-auditor agent with layer: 5)
 ---
 
-# Audit criteria: Layer 5 — Knowledge Compounding
+# Review criteria: Layer 5 — Knowledge Compounding
 
 ## Purpose
 

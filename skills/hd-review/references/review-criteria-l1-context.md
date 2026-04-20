@@ -1,13 +1,13 @@
 ---
-title: Audit criteria — Layer 1 (Context)
-loaded_by: hd-review audit mode (via harness-auditor agent with layer: 1)
+title: Review criteria — Layer 1 (Context)
+loaded_by: hd-review review mode (via harness-auditor agent with layer: 1)
 ---
 
-# Audit criteria: Layer 1 — Context Engineering
+# Review criteria: Layer 1 — Context Engineering
 
 ## Purpose
 
-Criteria for auditing the Context layer: `docs/context/` structure, always-loaded budget health, coverage of product / engineering / design-system / conventions, and **content quality**. Loaded by `harness-auditor` when dispatched with `layer: 1`.
+Criteria for reviewing the Context layer: `docs/context/` structure, always-loaded budget health, coverage of product / engineering / design-system / conventions, and **content quality**. Loaded by `harness-auditor` when dispatched with `layer: 1`.
 
 **Grading principle.** Presence of a file or folder is necessary but not sufficient. Each check emits a 4-level `content_status`:
 

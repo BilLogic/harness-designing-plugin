@@ -7,7 +7,7 @@ model: inherit
 
 # lesson-retriever
 
-Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:maintain capture` (Phase 1 research) and by `hd:review audit`/`critique` to surface relevant historical context.
+Find the handful of past lessons most relevant to a current topic. Returns a short ranked list with per-lesson rationale. Used by `hd:maintain capture` (Phase 1 research) and by `hd:review review`/`review` to surface relevant historical context.
 
 Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent NEVER reads other tools' namespaces (e.g., `docs/solutions/`).
 

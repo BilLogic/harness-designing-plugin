@@ -52,7 +52,7 @@ mkdir -p .hd/applied
 mv .hd/propose-<prefix>*.json .hd/applied/
 ```
 
-Keeps a receipt trail for audit while clearing the "pending" slot.
+Keeps a receipt trail for review while clearing the "pending" slot.
 
 **Step 7 — Post-write verify.** `git status` should show exactly 2 modified tracked files (AGENTS.md, docs/knowledge/changelog.md). Untracked `.hd/applied/…` entry is fine. Any other tracked diff → roll back + abort with integrity error.
 
@@ -62,7 +62,7 @@ Graduated: "<rule text>"
 Source lesson preserved: <path>
 AGENTS.md updated; changelog.md updated.
 Artifact archived: .hd/applied/<prefix>.json
-Next: commit + optional `/hd:review audit` to check the harness with new rule.
+Next: commit + optional `/hd:review review` to check the harness with new rule.
 ```
 
 → Return to [../SKILL.md § apply-mode](../SKILL.md#apply-mode)

@@ -12,7 +12,7 @@ A style guide is a PDF that goes stale. A harness is running code the AI uses ev
 
 ## 3. Where does this fit among other AI workflow plug-ins?
 
-This plug-in is scoped specifically to **design** — mockups, rubrics, critique, rule adoption, design-system work. It is namespaced (`/hd:*` commands, `hd-*` skills, `hd-config.md` config, `docs/design-solutions/` output path) so it can run alongside other plug-ins without collision. See article §3 for the positioning argument.
+This plug-in is scoped specifically to **design** — mockups, rubrics, review, rule adoption, design-system work. It is namespaced (`/hd:*` commands, `hd-*` skills, `hd-config.md` config, `docs/design-solutions/` output path) so it can run alongside other plug-ins without collision. See article §3 for the positioning argument.
 
 ## 4. Do I need all five layers?
 
@@ -66,7 +66,7 @@ Three paths, depending on how different your needs are:
 2. **Extend in place:** add criteria to an existing rubric under an `## Extension: <team-name>` section. Keep the starter criteria untouched.
 3. **New rubric:** author from scratch following `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this rubric`. Must cite a `source:` derivation (pattern we adopted from the 12-starter library).
 
-All three paths coexist. `/hd:review critique <rubric-name>` uses your customized version in `docs/rubrics/` over the shipped starter.
+All three paths coexist. `/hd:review review <rubric-name>` uses your customized version in `docs/rubrics/` over the shipped starter.
 
 ## See also
 

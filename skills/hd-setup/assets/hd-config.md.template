@@ -7,9 +7,9 @@ skipped_layers: {{SKIPPED_LAYERS}}
 article_read: {{ARTICLE_READ}}
 
 # Per-layer decisions recorded during the Step 4 layer-walk.
-# One row per layer (L1–L5). `decision` is one of: link | critique | scaffold | skip.
+# One row per layer (L1–L5). `decision` is one of: link | review | scaffold | skip.
 # `why` is a one-line rationale. `files_written` lists relative paths created for that layer
-# (empty list `[]` for link/critique/skip).
+# (empty list `[]` for link/review/skip).
 layer_decisions:
   - layer: L1
     decision: {{L1_DECISION}}
@@ -43,7 +43,7 @@ layer_decisions:
 other_tool_harnesses_detected: {{OTHER_HARNESSES}}
 
 # Flat list of relative paths this /hd:setup run created. Used by future hd-* skills
-# (e.g., /hd:review health) to audit what the harness actually wrote.
+# (e.g., /hd:review health) to review what the harness actually wrote.
 files_written: {{FILES_WRITTEN}}
 ---
 

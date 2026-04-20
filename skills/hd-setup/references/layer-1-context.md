@@ -1,6 +1,6 @@
 # Layer 1 — Context (depth reference)
 
-**Loaded by:** `SKILL.md` Step 4 when scaffolding or critiquing Layer 1. Seed questions + top-level procedure live in SKILL.md; this file provides the per-sub-file detail, full Step-4 procedure, Tier-1 budget model, and healthy AGENTS.md patterns used during scaffolding.
+**Loaded by:** `SKILL.md` Step 4 when scaffolding or reviewing Layer 1. Seed questions + top-level procedure live in SKILL.md; this file provides the per-sub-file detail, full Step-4 procedure, Tier-1 budget model, and healthy AGENTS.md patterns used during scaffolding.
 
 **Concept explainer:** [`hd-learn/references/layer-1-context.md`](../../hd-learn/references/layer-1-context.md) — "what IS Context?"
 
@@ -109,13 +109,13 @@ design-system teams extending the library or studying patterns.
 *Pointer file — authoritative content lives at the source above.*
 ```
 
-**Execute — critique:** apply bloat-detection checks from the *Tier-1 budget model* section below. Surface findings. Don't write.
+**Execute — review:** apply bloat-detection checks from the *Tier-1 budget model* section below. Surface findings. Don't write.
 
 → Return to [../SKILL.md § Step 4 — Layer 1 (Context)](../SKILL.md#step-4--layer-1-context)
 
 ## Tier-1 budget model
 
-The three-tier context loading model `hd:setup` enforces during scaffolding and audit. Shared across all layer scaffolding decisions.
+The three-tier context loading model `hd:setup` enforces during scaffolding and review. Shared across all layer scaffolding decisions.
 
 ### The three tiers
 
@@ -147,9 +147,9 @@ If total >200, surface the budget violation and propose tier promotion:
 - Move non-critical product description lines from `one-pager.md` to `docs/context/product/details.md` (Tier 2)
 - Split oversized AGENTS.md sections into `docs/context/conventions/*.md` files (Tier 2)
 
-### Enforcement at audit time (v1 `hd:review`)
+### Enforcement at review time (v1 `hd:review`)
 
-`hd:review` checks Tier 1 budget during audit. Flags it as a drift signal — teams often add to AGENTS.md over time without noticing budget creep.
+`hd:review` checks Tier 1 budget during review. Flags it as a drift signal — teams often add to AGENTS.md over time without noticing budget creep.
 
 ### Tier 2 triggering — how it works
 

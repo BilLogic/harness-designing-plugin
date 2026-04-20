@@ -44,7 +44,7 @@ mcp_servers_at_setup: [notion, figma, shadcn]
 # alongside each decision.
 layer_decisions:
   - layer: L1
-    decision: link            # link | critique | scaffold | skip
+    decision: link            # link | review | scaffold | skip
     why: ".agent/rules/ IS Layer 1 — overlay would duplicate"
     files_written: []
   - layer: L2
@@ -123,9 +123,9 @@ Free-form notes about the harness — team context, customizations, decisions sp
 | `article_read` | bool | no | `true` \| `false` | User self-reported; default `false`. |
 | `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories: `docs, design, diagramming, analytics, pm, comms`. |
 | `mcp_servers_at_setup` | string list | no | `[notion, figma, ...]` | From parsing `.mcp.json` / `.cursor/mcp.json` / etc. Default `[]`. |
-| `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: link\|critique\|scaffold\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
+| `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: link\|review\|scaffold\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
 | `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `.agent`, `.claude`, `.codex`, or any foreign plug-in slug), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |
-| `files_written` | string list | no | relative paths | Flat list of paths this `/hd:setup` run created. Used by `/hd:review health` to audit harness coverage. Default `[]`. |
+| `files_written` | string list | no | relative paths | Flat list of paths this `/hd:setup` run created. Used by `/hd:review health` to review harness coverage. Default `[]`. |
 
 ## Validation rules (enforced by any skill reading this file)
 
@@ -156,7 +156,7 @@ When `schema_version` bumps, the plug-in ships a migration skill or in-place upg
 
 ## Example (additive-only advanced setup on plus-marketing-website)
 
-Filled-in YAML from the plus-marketing-website pilot (2026-04-18). Shows `layer_decisions` with mixed scaffold/skip, `other_tool_harnesses_detected` respecting an existing `.agent/` framework, and a populated `files_written` audit trail.
+Filled-in YAML from the plus-marketing-website pilot (2026-04-18). Shows `layer_decisions` with mixed scaffold/skip, `other_tool_harnesses_detected` respecting an existing `.agent/` framework, and a populated `files_written` review trail.
 
 ```markdown
 ---
@@ -181,7 +181,7 @@ layer_decisions:
     files_written: []
   - layer: L2
     decision: skip
-    why: ".agent/skills/ IS Layer 2; critique via skill-quality-auditor recommended separately"
+    why: ".agent/skills/ IS Layer 2; review via skill-quality-auditor recommended separately"
     files_written: []
   - layer: L3
     decision: skip

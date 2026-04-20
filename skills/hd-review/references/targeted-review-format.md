@@ -60,7 +60,7 @@ Each finding has:
 ## Example output
 
 ```markdown
-## Critique: docs/proposals/q4-button-refresh.md
+## Review: docs/proposals/q4-button-refresh.md
 
 ### Summary
 
@@ -97,7 +97,7 @@ Component-budget finding (P2) is worth surfacing at review: three variants in on
 
 ### Next step
 
-This critique surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:maintain capture` to log a lesson. After ≥3 similar lessons, `/hd:maintain rule-propose` could formalize the rule.
+This review surfaced a recurring pattern (marketing requests color-token exceptions). Consider `/hd:maintain capture` to log a lesson. After ≥3 similar lessons, `/hd:maintain rule-propose` could formalize the rule.
 ```
 
 ## Rubric attribution
@@ -110,7 +110,7 @@ Every finding attributes its rubric. This lets users:
 
 ## Next-step suggestions
 
-Critique ends with one concrete suggestion. Common patterns:
+Review ends with one concrete suggestion. Common patterns:
 
 - **Findings include a pattern worth capturing** → "Consider `/hd:maintain capture` to log this as a lesson"
 - **All P1 findings are design-system violations** → "Review your design-system/cheat-sheet.md with the team"
@@ -127,12 +127,12 @@ Never suggest another plug-in's commands — stay in our own `/hd:*` verb namesp
 
 Work-item type affects which rubrics apply (accessibility rubric doesn't make sense on a raw token JSON file; design-system-compliance does).
 
-## What critique does NOT do
+## What review does NOT do
 
 - **Does not modify the work item** — read-only
 - **Does not auto-apply fixes** — suggest only
 - **Does not score / grade** — qualitative findings, not numeric scores
-- **Does not replace human review** — critique augments; doesn't substitute
+- **Does not replace human review** — review augments; doesn't substitute
 
 ## See also
 

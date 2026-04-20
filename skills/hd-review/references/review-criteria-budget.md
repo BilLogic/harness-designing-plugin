@@ -1,9 +1,9 @@
 ---
-title: Audit criteria — Budget-check interpretation
-loaded_by: hd-review audit mode (when interpreting budget-check.sh output)
+title: Review criteria — Budget-check interpretation
+loaded_by: hd-review review mode (when interpreting budget-check.sh output)
 ---
 
-# Audit criteria: Budget-check output interpretation
+# Review criteria: Budget-check output interpretation
 
 ## Purpose
 

@@ -84,7 +84,7 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 
 - **Concept questions** → `/hd:learn`
 - **Harness scaffolding** → `/hd:setup`
-- **Harness audit** → `/hd:review`
+- **Harness review** → `/hd:review`
 - **Modify source lessons** — Layer 5 is append-only
 - **Apply rules without plan-hash** — refusal is structural
 

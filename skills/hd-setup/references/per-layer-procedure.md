@@ -25,18 +25,18 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 
 | Condition | Default |
 |---|---|
-| **Existing harness detected** + layer is L1/L2/L3 | **critique** (review existing content + surface improvement suggestions; additive-only) |
+| **Existing harness detected** + layer is L1/L2/L3 | **review** (review existing content + surface improvement suggestions; additive-only) |
 | **Existing harness detected** + layer is L4/L5 | scaffold (typical genuine gap) |
 | Nothing detected at this layer + no external tooling mentioned | scaffold |
 | Team tool detected (e.g., notion for L1) + MCP live in session | scaffold + MCP-pull |
 | Team tool detected + MCP not in session | link + install-walkthrough |
 | Other-tool harness artifact (e.g., `.agent/rules/*` for L1) | link |
-| Existing `docs/<layer>/` file (prior hd-* run) | critique |
-| Bloat detected (L1 only) | critique |
+| Existing `docs/<layer>/` file (prior hd-* run) | review |
+| Bloat detected (L1 only) | review |
 
-Default is a **suggestion**, not enforcement. User picks any of 4 options (link / critique / scaffold / skip).
+Default is a **suggestion**, not enforcement. User picks any of 4 options (link / review / scaffold / skip).
 
-**Rationale for critique-by-default on L1/L2/L3 when harness exists (3l.4).** Users running `/hd:setup` on a repo with an existing harness came for help improving it — not to be told "you already have this, we'll ignore it." Default shifts from `skip` to `critique`: we review their existing layers read-only and surface suggestions. They can still override to `skip` if they genuinely don't want suggestions. Additive-only invariant holds: critique writes nothing, and any user-approved scaffolding goes through Step 8.5 preview first.
+**Rationale for review-by-default on L1/L2/L3 when harness exists (3l.4).** Users running `/hd:setup` on a repo with an existing harness came for help improving it — not to be told "you already have this, we'll ignore it." Default shifts from `skip` to `review`: we review their existing layers read-only and surface suggestions. They can still override to `skip` if they genuinely don't want suggestions. Additive-only invariant holds: review writes nothing, and any user-approved scaffolding goes through Step 8.5 preview first.
 
 ### Link-mode contract — extract + pointer (all layers)
 
@@ -49,7 +49,7 @@ Read the source (via MCP if live, filesystem read for local paths, or pasted con
 After executing an action at a layer, offer before moving on:
 
 ```
-Layer N [link | critique | scaffold | skip] complete. Before Layer N+1:
+Layer N [link | review | scaffold | skip] complete. Before Layer N+1:
   A. Review what landed — /hd:review targeted <path> on it
   B. Capture a lesson — /hd:maintain capture if something surprised you
   C. Inspect manually — open the file, look around
@@ -66,7 +66,7 @@ Before any file write, Step 8.5 renders the proposed-files preview table + asks 
 Layer  Action     Files to write
 ─────  ─────────  ──────────────────────────────────────────────
 L1     link       (no writes — pointer file only)
-L1     critique   (no writes — review only)
+L1     review   (no writes — review only)
 L1     scaffold   docs/context/product/one-pager.md
                   docs/context/design-system/components/cheat-sheet.md
 L4     scaffold   docs/rubrics/accessibility-wcag-aa.md
@@ -87,7 +87,7 @@ Proceed? (y / revise <layer> / cancel)
 
 **Rules:**
 - Each row shows Layer · Action · Path(s) — multi-path actions use indented continuation rows
-- `link` and `critique` rows show `(no writes — …)` to make the zero-write intent explicit
+- `link` and `review` rows show `(no writes — …)` to make the zero-write intent explicit
 - AGENTS.md and hd-config.md always appear at the bottom (always written/merged)
 - Total line summarizes scope
 - Prompt offers three options: `y` (proceed), `revise <layer>` (go back to that layer's step), `cancel` (abort without any write)

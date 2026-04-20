@@ -1,15 +1,15 @@
 ---
 name: rubric-recommender
-description: "Ranks the 14 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (hd:review audit). Solo dispatch."
+description: "Ranks the 14 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (hd:review review). Solo dispatch."
 color: purple
 model: inherit
 ---
 
 # rubric-recommender
 
-Given `detect.py` output plus the starter-rubric inventory, rank-recommend which rubrics to scaffold into the user's `docs/rubrics/` (scenario `setup-scaffold`) or flag as gaps against already-adopted rubrics (scenario `audit-gap-finding`). Deterministic heuristics over detect signals — no LLM judgement on the work itself; the caller still asks the user to confirm before writing.
+Given `detect.py` output plus the starter-rubric inventory, rank-recommend which rubrics to scaffold into the user's `docs/rubrics/` (scenario `setup-scaffold`) or flag as gaps against already-adopted rubrics (scenario `review-gap-finding`). Deterministic heuristics over detect signals — no LLM judgement on the work itself; the caller still asks the user to confirm before writing.
 
-**Dispatch pattern:** **solo**. Invoked once per call from `/hd:setup` Layer 4 scaffolding and from `/hd:review audit` Batch 2 (rubric gap-finding). Does not invoke other agents.
+**Dispatch pattern:** **solo**. Invoked once per call from `/hd:setup` Layer 4 scaffolding and from `/hd:review review` Batch 2 (rubric gap-finding). Does not invoke other agents.
 
 ## Parameters
 
@@ -18,7 +18,7 @@ Given `detect.py` output plus the starter-rubric inventory, rank-recommend which
 | `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Required — all heuristics read from here. |
 | `starter_rubrics_index` | no | Path to starter-rubrics INDEX. Default: `skills/hd-review/assets/starter-rubrics/INDEX.md`. If absent, enumerate `skills/hd-review/assets/starter-rubrics/*.md` directly. |
 | `existing_rubrics_dir` | no | Path to user's adopted rubrics, for gap diff. Default: `<repo_root>/docs/rubrics/` (the repo root is inferred from `detect_json.repo_root`). |
-| `scenario` | no | `setup-scaffold` (default) or `audit-gap-finding`. Affects the `action` values + whether `gaps_surfaced` is populated. |
+| `scenario` | no | `setup-scaffold` (default) or `review-gap-finding`. Affects the `action` values + whether `gaps_surfaced` is populated. |
 
 ## Heuristics
 
@@ -49,8 +49,8 @@ For each rubric the agent evaluates:
    - scenario `setup-scaffold` + already present → `action: already-present` (skip scaffolding)
    - scenario `setup-scaffold` + not present + triggered → `action: scaffold`
    - scenario `setup-scaffold` + not present + not triggered → exclude from output
-   - scenario `audit-gap-finding` + not present + triggered → `action: flag-as-gap` and populate `gaps_surfaced`
-   - scenario `audit-gap-finding` + already present → omit from recommendations (no gap)
+   - scenario `review-gap-finding` + not present + triggered → `action: flag-as-gap` and populate `gaps_surfaced`
+   - scenario `review-gap-finding` + already present → omit from recommendations (no gap)
 4. Compose a one-sentence `why` that cites the exact `detect_json` field.
 
 ## Output shape
@@ -83,7 +83,7 @@ recommended_rubrics:
     confidence: medium
     why: "detect_json.memory_types_present is empty — baseline rubric recommended for new harness"
     action: scaffold
-gaps_surfaced: []     # only populated in scenario=audit-gap-finding
+gaps_surfaced: []     # only populated in scenario=review-gap-finding
 summary:
   total_starters_evaluated: 14
   scaffold_count: 6
@@ -92,7 +92,7 @@ summary:
   excluded_no_signal: 8
 ```
 
-Example of `gaps_surfaced` (scenario `audit-gap-finding`):
+Example of `gaps_surfaced` (scenario `review-gap-finding`):
 
 ```yaml
 gaps_surfaced:

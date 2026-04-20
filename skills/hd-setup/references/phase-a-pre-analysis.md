@@ -7,7 +7,7 @@ loaded_by: hd-setup
 
 ## Purpose
 
-Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / critique / scaffold / skip) and a rubric-gap recommendation so Steps 4–8 (Phase B) feel informed rather than interrogative. Every layer default in Phase B comes from this phase's output.
+Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (link / review / scaffold / skip) and a rubric-gap recommendation so Steps 4–8 (Phase B) feel informed rather than interrogative. Every layer default in Phase B comes from this phase's output.
 
 Loaded when the host supports Task dispatch. Non-Claude hosts (or any host where `Task` is unavailable) run Phase A **inline serial** — evaluate each layer against `review-criteria-l<N>.md` one at a time. Same output shape; same health snapshot at the end.
 
@@ -33,7 +33,7 @@ Task design-harnessing:analysis:harness-auditor(layer: 4, scenario: "setup-pre-a
 Task design-harnessing:analysis:harness-auditor(layer: 5, scenario: "setup-pre-analysis", ...)
 ```
 
-Each layer-auditor returns: `default_action: link|critique|scaffold|skip`, `why: <one-sentence>`, `signals: [...]`.
+Each layer-auditor returns: `default_action: link|review|scaffold|skip`, `why: <one-sentence>`, `signals: [...]`.
 
 ## Batch 2 (parallel, 1 agent): `rubric-recommender`
 
@@ -47,7 +47,7 @@ Task design-harnessing:analysis:rubric-recommender(
 )
 ```
 
-Returns: rubric-gap ranking, recommended starter trio, any `has_ai_docs: true` signal triggering **critique + extract** default for Layer 4.
+Returns: rubric-gap ranking, recommended starter trio, any `has_ai_docs: true` signal triggering **review + extract** default for Layer 4.
 
 ## Synthesis
 
@@ -86,9 +86,9 @@ Proposed per-layer action (override any row to change)
 
 Layer  Action     Rationale
 ─────  ─────────  ─────────────────────────────────────────────
-L1     critique   scattered content — review + suggest canonical map
-L2     critique   existing skills — surface skill-quality findings
-L3     critique   workflows implicit — propose explicit gates
+L1     review   scattered content — review + suggest canonical map
+L2     review   existing skills — surface skill-quality findings
+L3     review   workflows implicit — propose explicit gates
 L4     scaffold   absent — starter trio + scope-and-grounding
 L5     scaffold   thin — full knowledge structure
 ```
@@ -100,12 +100,12 @@ Bar rule: `blocks_filled = round(health_score)`, filled = `█`, empty = `░`. 
 ## Guardrail interaction
 
 If the Guardrail (additive-only mode, § SKILL.md) already fired before Phase A:
-- L1/L2/L3 `harness-auditor` dispatches still run; their `default_action` is set to **critique** in the synthesis table (3l.4 — was `skip`).
+- L1/L2/L3 `harness-auditor` dispatches still run; their `default_action` is set to **review** in the synthesis table (3l.4 — was `skip`).
 - L4/L5 auditor output + `rubric-recommender` output still drive defaults normally.
-- The Guardrail's default now defaults to critique (review + suggest) rather than skip.
+- The Guardrail's default now defaults to review (review + suggest) rather than skip.
 
 ## See also
 
 - [per-layer-procedure.md](per-layer-procedure.md) — Phase B cycle that consumes Phase A's synthesis table
-- [layer-4-rubrics.md](layer-4-rubrics.md) — Step 7 critique+extract branch using `rubric-extractor`
-- [layer-5-knowledge.md](layer-5-knowledge.md) — Step 8 critique branch using `rule-candidate-scorer`
+- [layer-4-rubrics.md](layer-4-rubrics.md) — Step 7 review+extract branch using `rubric-extractor`
+- [layer-5-knowledge.md](layer-5-knowledge.md) — Step 8 review branch using `rule-candidate-scorer`

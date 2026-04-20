@@ -1,6 +1,6 @@
 ---
 name: rubric-applier
-description: "Apply a rubric to a harness artifact; returns structured critique findings. Used by /hd:review critique for non-SKILL.md targets."
+description: "Apply a rubric to a harness artifact; returns structured review findings. Used by /hd:review review for non-SKILL.md targets."
 color: orange
 model: inherit
 ---
@@ -9,13 +9,13 @@ model: inherit
 
 Apply one rubric to one work item. Return structured findings. Generic wrapper — the rubric file itself defines what to check; this agent orchestrates loading + applying + formatting.
 
-Typical examples: `accessibility-wcag-aa` on a design file, `design-system-compliance` on CSS, `interaction-states` on a view component. For SKILL.md critique, use `skill-quality-auditor` instead (specialized logic).
+Typical examples: `accessibility-wcag-aa` on a design file, `design-system-compliance` on CSS, `interaction-states` on a view component. For SKILL.md review, use `skill-quality-auditor` instead (specialized logic).
 
 ## Parameters
 
 | Parameter | Required | Description |
 |---|---|---|
-| `source` | yes | Path to the work item being critiqued (a.k.a. legacy `work_item_path`). |
+| `source` | yes | Path to the work item being reviewed (a.k.a. legacy `work_item_path`). |
 | `rubric_path` | yes | Path to rubric definition file. |
 | `rubric_overrides` | no | Per-criterion severity overrides (typically from `hd-config.md`). |
 
@@ -89,8 +89,8 @@ summary:
 
 ## When NOT to use this agent
 
-- For **SKILL.md critique** — use `skill-quality-auditor` instead (specialized logic for YAML frontmatter parsing, per-section severity handling).
-- For **harness-wide audit** — use `hd:review audit` which dispatches this agent per-rubric.
+- For **SKILL.md review** — use `skill-quality-auditor` instead (specialized logic for YAML frontmatter parsing, per-section severity handling).
+- For **harness-wide review** — use `hd:review review` which dispatches this agent per-rubric.
 - For **non-rubric review** (e.g., "just tell me if this is ok") — that's a direct user conversation, not a rubric-applier job.
 - For **extracting implicit rubric rules from an AI-doc** — use `rubric-extractor` instead.
 

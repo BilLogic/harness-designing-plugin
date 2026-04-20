@@ -1,6 +1,6 @@
 # Bloat detection
 
-**Purpose:** concrete thresholds + tooling for detecting context-budget violations + file-size bloat. Loaded by audit workflows.
+**Purpose:** concrete thresholds + tooling for detecting context-budget violations + file-size bloat. Loaded by review workflows.
 
 ## Tier 1 budget (hardest bar)
 
@@ -30,7 +30,7 @@ Returns JSON with `tier_1.status: "pass" | "fail"` and detailed breakdown. Autho
 | Workflows | 60-250 lines | no hard cap | >300 = P2 |
 | Templates | ≤50 lines | no hard cap | >80 = P3 (templates should be minimal) |
 
-Budget-check script emits `skill_md_lines` map for every SKILL.md in `skills/`; audit compares against thresholds.
+Budget-check script emits `skill_md_lines` map for every SKILL.md in `skills/`; review compares against thresholds.
 
 ## Combined-folder heuristics
 
@@ -79,6 +79,6 @@ A single file is "bloated" when:
 
 ## See also
 
-- [audit-criteria.md](audit-criteria.md) — where bloat fits into the audit framework
+- [review-criteria.md](review-criteria.md) — where bloat fits into the review framework
 - `../scripts/budget-check.sh` — deterministic budget checker
 - Anthropic [Skill best practices § Progressive disclosure](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)

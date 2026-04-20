@@ -1,6 +1,6 @@
 # Layer 4 — Rubrics (depth reference)
 
-**Loaded by:** `SKILL.md` Step 7 when scaffolding or critiquing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
+**Loaded by:** `SKILL.md` Step 7 when scaffolding or reviewing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
 
 **Concept explainer:** [hd-learn `layer-4-rubrics.md`](../../hd-learn/references/layer-4-rubrics.md)
 
@@ -10,7 +10,7 @@ Rubrics are **a behavior of the system, not a folder**. They live in three place
 
 - **Design-system SOURCE content** (what "good" looks like) → `docs/context/design-system/foundations/`, `styles/`, `components/` (Layer 1 territory — tokens, color rules, type scale, principles)
 - **Rubric CHECK files** (how we verify "good") → `docs/rubrics/<name>.md` (Layer 4 — checks against Layer 1 content)
-- **Execution** → `skills/hd-review/` (audit + critique modes run the checks via sub-agents)
+- **Execution** → `skills/hd-review/` (review + review modes run the checks via sub-agents)
 - **Enforcement** → `AGENTS.md` quality gates (what must pass before a change ships)
 
 Key distinction: **design-system holds the source-of-truth CONTENT; rubrics hold the CHECKS against that content.** Don't confuse them. A `typography.md` in `design-system/styles/` defines "we use DM Sans at modular scale 1.25"; a `typography.md` in `docs/rubrics/` defines "headings must use the approved type scale."
@@ -47,7 +47,7 @@ Rubrics are a **behavior of the system**, not a folder. They live distributed:
 
 - **Design-system source content** (what "good" IS) → `docs/context/design-system/` (foundations, styles, components)
 - **Rubric check files** (how we verify good) → `docs/rubrics/<name>.md` (this folder)
-- **Execution** → `skills/hd-review/` (audit + critique runs checks)
+- **Execution** → `skills/hd-review/` (review + review runs checks)
 - **Enforcement** → `AGENTS.md` quality gates
 
 See article §4d for the reasoning.
@@ -58,17 +58,17 @@ See article §4d for the reasoning.
 
 To add: copy a starter from `skills/hd-review/assets/starter-rubrics/` into
 `docs/rubrics/<name>.md` and customize. Then add to your `hd-config.md`
-under `critique_rubrics:` to make it the default for `hd:review critique <path>`.
+under `critique_rubrics:` to make it the default for `hd:review review <path>`.
 ```
 
 Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template).
 
-## When Layer 4 is scaffolded vs linked vs critiqued
+## When Layer 4 is scaffolded vs linked vs reviewed
 
 - **Scaffold** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
 - **Link** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
-- **Critique + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
-- **Critique** (when user points at a specific work item) — hand off to `/hd:review critique <path>`, which dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
+- **Review + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
+- **Review** (when user points at a specific work item) — hand off to `/hd:review review <path>`, which dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
 
 ## Procedure — Step 7
 
@@ -82,14 +82,14 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 
 | Condition | Default |
 |---|---|
-| 1. `has_ai_docs: true` AND combined existing AI-doc size > 200 lines | **critique + extract** (surface implicit rubrics from existing docs; do NOT duplicate as fresh starters) |
+| 1. `has_ai_docs: true` AND combined existing AI-doc size > 200 lines | **review + extract** (surface implicit rubrics from existing docs; do NOT duplicate as fresh starters) |
 | 2. `has_tokens_package` or `has_figma_config` | **scaffold** design-system-compliance rubric referencing actual token paths |
 | 3. `has_external_skills: true` | **scaffold** skill-quality rubric entry |
 | 4. Nothing detected | **scaffold** starter trio (accessibility-wcag-aa + design-system-compliance + component-budget) |
 
 Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A repo with 16 KB of Copilot instructions has implicit rubric content already; duplicating as fresh starters adds noise.
 
-**Execute — critique + extract** (condition 1):
+**Execute — review + extract** (condition 1):
 1. Invoke the rubric-extractor sub-agent against each existing AI-doc (batch-parallel ≤5; serial at 6+ per compound v2.39.0): find rule-like statements that could become explicit rubric criteria.
    ```
    Task design-harnessing:review:rubric-extractor(
@@ -109,7 +109,7 @@ Condition 1 mirrors Layer 1's link-default logic: respect what already exists. A
 - Write `docs/rubrics/INDEX.md` from [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template)
 - Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
 
-**Execute — critique** (targeted, when user explicitly points at a work item): hand off to `/hd:review critique <path>`. That command dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
+**Execute — review** (targeted, when user explicitly points at a work item): hand off to `/hd:review review <path>`. That command dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
 
 → Return to [../SKILL.md § Step 7 — Layer 4 (Rubrics)](../SKILL.md#step-7--layer-4-rubrics)
 

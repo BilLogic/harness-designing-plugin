@@ -3,10 +3,10 @@ memory_type: temporal
 domain: changelog
 split_threshold: 50
 ---
-<!-- Tier: 3 (harness changelog — rarely-read audit trail) -->
+<!-- Tier: 3 (harness changelog — rarely-read review trail) -->
 # Changelog
 
-Harness-structural changes over time. Loaded infrequently; exists so `/hd:review audit` can trace when structural decisions were made.
+Harness-structural changes over time. Loaded infrequently; exists so `/hd:review review` can trace when structural decisions were made.
 
 NOT a changelog for the product itself — that's `CHANGELOG.md` at repo root (if the team maintains one). This file is specifically for changes to the HARNESS structure (layer additions, skill additions, convention changes, major rubric updates).
 

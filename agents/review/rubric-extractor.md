@@ -1,6 +1,6 @@
 ---
 name: rubric-extractor
-description: "Extract implicit rubric rules from a source; returns candidate rule list with severity + source citations. Used by /hd:setup L4 critique-extract and /hd:maintain propose."
+description: "Extract implicit rubric rules from a source; returns candidate rule list with severity + source citations. Used by /hd:setup L4 review-extract and /hd:maintain propose."
 color: orange
 model: inherit
 ---
@@ -11,7 +11,7 @@ Run *inverted* rubric analysis: given an AI-doc with implicit rubric content (AG
 
 The calling skill (e.g. `hd:setup` Layer 4, `hd:maintain` rule-propose) presents candidates to the user, gets per-candidate approval, and materializes files from starter shapes. **This agent never writes files** — it returns candidates only.
 
-**Used by:** `hd:setup` Layer 4 "critique + extract" default when `has_ai_docs` + combined size > 200 lines; `hd:maintain` rule-propose.
+**Used by:** `hd:setup` Layer 4 "review + extract" default when `has_ai_docs` + combined size > 200 lines; `hd:maintain` rule-propose.
 
 ## Parameters
 
@@ -241,7 +241,7 @@ summary:
 ## When NOT to use this agent
 
 - For **applying a known rubric to a work item** — use `rubric-applier` instead.
-- For **SKILL.md critique** — use `skill-quality-auditor` instead.
+- For **SKILL.md review** — use `skill-quality-auditor` instead.
 - For **writing the extracted rubric file to disk** — that's the calling skill's job (e.g., `hd:setup` Layer 4). This agent returns structured candidates or markdown content only.
 
 ## Failure modes

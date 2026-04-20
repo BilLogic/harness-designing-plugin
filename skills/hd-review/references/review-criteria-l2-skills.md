@@ -1,9 +1,9 @@
 ---
-title: Audit criteria — Layer 2 (Skills)
-loaded_by: hd-review audit mode (via harness-auditor agent with layer: 2)
+title: Review criteria — Layer 2 (Skills)
+loaded_by: hd-review review mode (via harness-auditor agent with layer: 2)
 ---
 
-# Audit criteria: Layer 2 — Skill Curation
+# Review criteria: Layer 2 — Skill Curation
 
 ## Purpose
 
@@ -18,7 +18,7 @@ Criteria for the Skills layer: SKILL.md compliance, progressive disclosure, budg
 - **Check:** one of `.agent/skills/`, `.claude/skills/`, `skills/` exists with ≥1 SKILL.md
 - **Default severity:** p1
 - **Source of truth:** `budget-check.sh` → `skill_dir_detected` field
-- **Content check:** `skill_dir_detected != "none"` in the JSON output. If none, the L2 audit score is capped at 3.0 regardless of other findings.
+- **Content check:** `skill_dir_detected != "none"` in the JSON output. If none, the L2 review score is capped at 3.0 regardless of other findings.
 
 ### custom-skill-count
 
@@ -52,7 +52,7 @@ Criteria for the Skills layer: SKILL.md compliance, progressive disclosure, budg
 
 - **Check:** each skill passes the 9-section `skill-quality` rubric
 - **Default severity:** p1 (if ≥2 sections fail at p1)
-- **Audit action:** for every SKILL.md, run `skill-quality` rubric via `skill-quality-auditor`; cite failing section numbers
+- **Review action:** for every SKILL.md, run `skill-quality` rubric via `skill-quality-auditor`; cite failing section numbers
 - **Content check:** fails if SKILL.md has only placeholder content (`{{STEP_1}}`, `TODO:`, etc.)
 
 ### references-exist-and-parse

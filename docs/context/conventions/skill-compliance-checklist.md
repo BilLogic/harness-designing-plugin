@@ -1,6 +1,6 @@
 # Skill compliance checklist
 
-**Loaded when:** authoring or auditing any skill in this plug-in. Tier 2 reference (not loaded every task; read during contribution).
+**Loaded when:** authoring or reviewing any skill in this plug-in. Tier 2 reference (not loaded every task; read during contribution).
 
 
 Verify before committing any skill:

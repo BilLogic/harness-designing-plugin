@@ -1,6 +1,6 @@
 # Layer 3 — Orchestration (depth reference)
 
-**Loaded by:** `SKILL.md` Step 6 when scaffolding or critiquing Layer 3. Seed questions + decision defaults live in SKILL.md; this file provides orchestration patterns + prerequisite checks used during execution.
+**Loaded by:** `SKILL.md` Step 6 when scaffolding or reviewing Layer 3. Seed questions + decision defaults live in SKILL.md; this file provides orchestration patterns + prerequisite checks used during execution.
 
 **Concept explainer:** [hd-learn `layer-3-orchestration.md`](../../hd-learn/references/layer-3-orchestration.md)
 
@@ -44,9 +44,9 @@ Avoid:
 - **Deeply-nested workflows** — ≤4 steps per workflow; if you need more, split into sub-workflows
 - **Workflows with one step** — that's just a skill invocation; not a workflow
 
-## Audit signals
+## Review signals
 
-Audit flags Layer 3 gaps when:
+Review flags Layer 3 gaps when:
 
 - ≥3 Layer 2 skills exist but no workflows defined (skills orphaned, repeating sequences prompt-by-prompt)
 - Handoffs are happening informally (in Slack, comments) instead of as artifacts

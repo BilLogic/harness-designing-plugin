@@ -6,7 +6,7 @@ split_threshold: 15
 <!-- Tier: 2 (append-only ADR log) -->
 # Decisions
 
-ADR-style: "we chose X over Y because Z." Append-only — supersede with new entries, never edit old ones (the audit trail matters).
+ADR-style: "we chose X over Y because Z." Append-only — supersede with new entries, never edit old ones (the review trail matters).
 
 ## Format
 

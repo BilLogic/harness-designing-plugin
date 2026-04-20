@@ -184,7 +184,7 @@ Your repo's actual needs may differ. Some teams:
 - Use `.agent/skills/` instead of `skills/` (Codex-native)
 - Skip `docs/knowledge/ideations.md` entirely (captured in Notion)
 
-All of these are fine. Audit grades on content quality — empty folders fail, missing folders are flagged, but structural deviation is not punished.
+All of these are fine. Review grades on content quality — empty folders fail, missing folders are flagged, but structural deviation is not punished.
 
 ## See also
 

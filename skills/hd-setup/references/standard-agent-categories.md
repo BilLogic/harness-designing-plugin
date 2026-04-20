@@ -1,6 +1,6 @@
 # Standard agent categories
 
-Five recommended categories for organizing `agents/` in a user repo: **`research / planning / generation / review / compound`**. Starting point, not a schema — users can rename, merge, or add categories freely. Audit checks agent frontmatter validity, not category names.
+Five recommended categories for organizing `agents/` in a user repo: **`research / planning / generation / review / compound`**. Starting point, not a schema — users can rename, merge, or add categories freely. Review checks agent frontmatter validity, not category names.
 
 ## The five categories
 
@@ -39,7 +39,7 @@ Five recommended categories for organizing `agents/` in a user repo: **`research
 **Purpose.** Apply rubrics, surface findings, quality-check artifacts.
 
 **Examples:**
-- `rubric-applier` — forward critique against any rubric
+- `rubric-applier` — forward review against any rubric
 - `design-system-auditor` — checks adherence to tokens + components
 - `a11y-checker` — accessibility-specific review
 - `skill-quality-auditor` — applies the 9-section skill rubric
@@ -56,7 +56,7 @@ Five recommended categories for organizing `agents/` in a user repo: **`research
 
 ## Why these five
 
-- **Research / Review / Generation** — the classic critique/create/retrieve split any creative workflow needs
+- **Research / Review / Generation** — the classic review/create/retrieve split any creative workflow needs
 - **Planning** — explicit structuring layer so agents can sequence work, not just execute
 - **Compound** — makes knowledge-compounding a first-class agent category, not an afterthought
 
@@ -70,7 +70,7 @@ Rename or merge whenever:
 - Two categories collapse in practice (e.g. `review/` + `compound/` merged as `quality/`)
 - You need a domain-specific category (e.g. `prototyping/`, `ops/`, `brand/`)
 
-**Audit does not enforce these names.** `agents/whatever/<name>.md` with valid frontmatter passes. The five above are defaults, not a contract.
+**Review does not enforce these names.** `agents/whatever/<name>.md` with valid frontmatter passes. The five above are defaults, not a contract.
 
 ## Frontmatter requirements
 

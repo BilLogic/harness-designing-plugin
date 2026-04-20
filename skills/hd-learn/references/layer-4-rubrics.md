@@ -19,20 +19,20 @@
 The article §4d is emphatic: **rubrics are a *behavior of the system*, not a folder.** They live in three places simultaneously:
 
 1. **Definitions** — `docs/context/design-system/` describes what "good" looks like (Layer 1 territory)
-2. **Execution** — `skills/hd-review/` runs the checks (audit + critique modes)
+2. **Execution** — `skills/hd-review/` runs the checks (review + review modes)
 3. **Enforcement** — `AGENTS.md` lists rubric requirements as quality gates
 
 Centralizing everything in one `rubrics/` folder flattens the structure and breaks the connection between *what good is* (Layer 1) and *how we check for it* (Layer 2 skill + Layer 3 gate).
 
 ## The v0 trade-off
 
-`docs/rubrics/INDEX.md` is a thin pointer file so users can FIND the rubric story when they look. The actual rubrics execute in `hd:review` (audit + critique modes).
+`docs/rubrics/INDEX.md` is a thin pointer file so users can FIND the rubric story when they look. The actual rubrics execute in `hd:review` (review + review modes).
 
 ## What does NOT belong here
 
 - **Rubric definitions** alone — those are Layer 1 context
 - **Rubric execution logic** alone — that's Layer 2 skill code
-- **A specific rubric result** ("yesterday's critique failed 3 checks") — that's a Layer 5 lesson
+- **A specific rubric result** ("yesterday's review failed 3 checks") — that's a Layer 5 lesson
 
 Layer 4 is the *integration* of definitions + execution + enforcement. If one piece is missing, the layer isn't working.
 
@@ -46,7 +46,7 @@ Most design teams have an informal rubric already — "does this match our style
 
 ## Scaffolded by
 
-Partially by `/hd:setup` (it creates `docs/context/design-system/` and `docs/rubrics/INDEX.md`). Fully activated by `/hd:review audit` (harness-wide) or `/hd:review critique <path>` (single work item).
+Partially by `/hd:setup` (it creates `docs/context/design-system/` and `docs/rubrics/INDEX.md`). Fully activated by `/hd:review review` (harness-wide) or `/hd:review review <path>` (single work item).
 
 ## See also
 

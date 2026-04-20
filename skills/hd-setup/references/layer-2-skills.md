@@ -1,6 +1,6 @@
 # Layer 2 — Skills (depth reference)
 
-**Loaded by:** `SKILL.md` Step 5 when scaffolding or critiquing Layer 2. Seed questions + decision defaults live in SKILL.md; this file provides the "what good looks like" criteria and skill-authoring resources.
+**Loaded by:** `SKILL.md` Step 5 when scaffolding or reviewing Layer 2. Seed questions + decision defaults live in SKILL.md; this file provides the "what good looks like" criteria and skill-authoring resources.
 
 **Concept explainer:** [hd-learn `layer-2-skills.md`](../../hd-learn/references/layer-2-skills.md) — "what IS Layer 2?"
 
@@ -9,7 +9,7 @@
 Teams author their own skills — `hd:setup` provides guidance + prerequisite checks, never generates. The skill's Layer 2 step:
 
 - **Scaffold default** — skip (Layer 2 is premature for most teams; revisit when patterns emerge)
-- **Critique default** — invoke `design-harnessing:review:skill-quality-auditor` per existing SKILL.md
+- **Review default** — invoke `design-harnessing:review:skill-quality-auditor` per existing SKILL.md
 - **Link default** — if user has `.claude/skills/` / `.cursor/skills/` / `.agent/skills/` already, write pointer files to those locations
 
 ## What "good Layer 2" looks like
@@ -34,7 +34,7 @@ If the pattern is team-specific and one-off, it's a Layer 1 convention entry, no
 
 ## When `hd:setup` suggests Layer 2 expansion
 
-During advanced audit, `hd:setup` flags Layer 2 as a gap when:
+During advanced review, `hd:setup` flags Layer 2 as a gap when:
 
 - `docs/knowledge/lessons/` has 10+ lessons AND no rule adoptions AND no skills
 - `AGENTS.md` has 20+ rules (promoted or not) — some rules are probably skill-shaped
@@ -56,11 +56,11 @@ Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill complia
 **Show:** `has_external_skills`, `has_claude_dir`, `.agent/skills/` presence.
 
 **Propose default:**
-- `has_external_skills: true` → **critique** via skill-quality rubric
+- `has_external_skills: true` → **review** via skill-quality rubric
 - `.agent/skills/` → **link**
 - Nothing → **skip** (Layer 2 is premature for most teams)
 
-**Execute — critique:** per-skill invocation:
+**Execute — review:** per-skill invocation:
 
 ```
 Task design-harnessing:review:skill-quality-auditor(

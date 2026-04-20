@@ -133,7 +133,7 @@ Some criteria can't be machine-checked precisely (e.g., "is this visually balanc
 
 ### Work item spans multiple files
 
-If a design proposal references 5 other files, critique applies to the top-level proposal only. Referenced files aren't auto-recursed. Users can run critique separately on each.
+If a design proposal references 5 other files, review applies to the top-level proposal only. Referenced files aren't auto-recursed. Users can run review separately on each.
 
 ### Rubric applies but work item missing required context
 

@@ -18,11 +18,11 @@ source:
 
 # Heuristic evaluation (Nielsen 10)
 
-Jakob Nielsen's 10 usability heuristics, adapted as an actionable rubric. These are the most widely-used heuristic lens for UI quality — every critique session should at least run this rubric.
+Jakob Nielsen's 10 usability heuristics, adapted as an actionable rubric. These are the most widely-used heuristic lens for UI quality — every review session should at least run this rubric.
 
 ## Scope & Grounding
 
-Grounded in Nielsen Norman Group's original 10 heuristics (1994, updated 2020) plus Material 3 and Fluent 2 foundations. This rubric is the baseline pass for any UI critique.
+Grounded in Nielsen Norman Group's original 10 heuristics (1994, updated 2020) plus Material 3 and Fluent 2 foundations. This rubric is the baseline pass for any UI review.
 
 ### Personas
 - **Novice user** — first time using the product; needs recognition over recall and clear system status. Pain: invisible state after clicking submit leads to duplicate actions.

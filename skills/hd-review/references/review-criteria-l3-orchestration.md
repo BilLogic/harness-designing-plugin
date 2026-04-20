@@ -1,9 +1,9 @@
 ---
-title: Audit criteria — Layer 3 (Orchestration)
-loaded_by: hd-review audit mode (via harness-auditor agent with layer: 3)
+title: Review criteria — Layer 3 (Orchestration)
+loaded_by: hd-review review mode (via harness-auditor agent with layer: 3)
 ---
 
-# Audit criteria: Layer 3 — Workflow Orchestration
+# Review criteria: Layer 3 — Workflow Orchestration
 
 ## Purpose
 
@@ -46,7 +46,7 @@ Criteria for the Orchestration layer: the **dispatch graph** between `skills/` (
 
 - **Check:** agent categories are reasonable (using standard 5, or team has documented custom categories in AGENTS.md)
 - **Default severity:** p3
-- **Note:** standard categories are `research / planning / generation / review / compound`; users may deviate. Audit does NOT enforce these names, just checks they're documented.
+- **Note:** standard categories are `research / planning / generation / review / compound`; users may deviate. Review does NOT enforce these names, just checks they're documented.
 
 ### workflow-gates-readable
 

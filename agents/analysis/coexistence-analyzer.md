@@ -7,15 +7,15 @@ model: inherit
 
 # coexistence-analyzer
 
-Audit cross-tool coexistence. Read other-tool harness artifacts and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review audit` when `detect.py` flagged `other_tool_harnesses_detected` as non-empty.
+Review cross-tool coexistence. Read other-tool harness artifacts and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review review` when `detect.py` flagged `other_tool_harnesses_detected` as non-empty.
 
-**Dispatch pattern:** **solo**. Invoked at most once per audit run. Does not invoke other agents (the caller pairs this with `harness-auditor(layer: 3)` for orchestration-level concerns).
+**Dispatch pattern:** **solo**. Invoked at most once per review run. Does not invoke other agents (the caller pairs this with `harness-auditor(layer: 3)` for orchestration-level concerns).
 
 ## Parameters
 
 | Parameter | Required | Description |
 |---|---|---|
-| `repo_root` | yes | Path to the repo being audited. |
+| `repo_root` | yes | Path to the repo being reviewed. |
 | `detect_json` | yes | Output of `skills/hd-setup/scripts/detect.py`. Provides `signals.other_tool_harnesses_detected[]` (unified entries with `name`, `type`, `paths_found`, optional `config_file` / `skill_count` / `rule_count`) and platform hints. |
 | `agents_md_path` | no | Path to user's `AGENTS.md`. Default `<repo_root>/AGENTS.md`. Read to note their declared coexistence rules. |
 
@@ -138,4 +138,4 @@ summary:
 
 - `skills/hd-review/SKILL.md` — source of our declared `<protected_artifacts>` block
 - `AGENTS.md` — source of the coexistence section (user's declared rules)
-- `agents/analysis/harness-auditor.md` — sibling agent; Layer 3 orchestration audit pairs with this coexistence report
+- `agents/analysis/harness-auditor.md` — sibling agent; Layer 3 orchestration review pairs with this coexistence report

@@ -17,7 +17,7 @@ Every starter rubric in `skills/hd-review/assets/starter-rubrics/` ships with fo
 
 **Realistic scenarios.** 3–5 grounded situations where the rubric applies. Each names a real surface (a card, a form, a dashboard) and a one-sentence "why it matters" tying it to source material. Scenarios teach by example and give the `rubric-applier` positive anchors for severity calibration. A scenario that matches any well-built product is too generic — ground it in a specific pattern (Material 3 state pattern, impeccable line-length rule, lightning-pilot telemetry shape).
 
-**Anti-scenarios.** 3–5 failure modes — the exact shapes the rubric's concern takes when it goes wrong. Each has a symptom the reader / agent can pattern-match against a critique target. Anti-scenarios are the highest-signal block because they're what critique actually finds. Prefer observable symptoms ("page visibly jumps", "halfwidth comma inside zh string") over abstract descriptions ("bad UX").
+**Anti-scenarios.** 3–5 failure modes — the exact shapes the rubric's concern takes when it goes wrong. Each has a symptom the reader / agent can pattern-match against a review target. Anti-scenarios are the highest-signal block because they're what review actually finds. Prefer observable symptoms ("page visibly jumps", "halfwidth comma inside zh string") over abstract descriptions ("bad UX").
 
 ## Worked example: `typography.md`
 
@@ -27,7 +27,7 @@ The scenarios are similarly non-interchangeable: "article body at 65ch / line-he
 
 ## How `rubric-applier` consumes this
 
-The `rubric-applier` agent (authored in Phase 3i.4) reads Scope & Grounding **before** applying the criteria block. When a critique target clearly matches a persona + scenario, it applies criteria at default severity. When the target doesn't match any persona or scenario, it raises `severity_rationale: persona-scope-mismatch` and either downgrades severity or skips the criterion — instead of forcing an English-centric typography rule onto a Chinese-primary UI, or a long-form-reader rule onto a data-dense admin panel. Anti-scenarios drive the agent's pattern-matching pass: it scans the target for the listed symptoms first, then walks the criteria.
+The `rubric-applier` agent (authored in Phase 3i.4) reads Scope & Grounding **before** applying the criteria block. When a review target clearly matches a persona + scenario, it applies criteria at default severity. When the target doesn't match any persona or scenario, it raises `severity_rationale: persona-scope-mismatch` and either downgrades severity or skips the criterion — instead of forcing an English-centric typography rule onto a Chinese-primary UI, or a long-form-reader rule onto a data-dense admin panel. Anti-scenarios drive the agent's pattern-matching pass: it scans the target for the listed symptoms first, then walks the criteria.
 
 ## Authoring checklist for your own rubrics
 

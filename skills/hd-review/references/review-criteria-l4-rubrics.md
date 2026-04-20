@@ -1,9 +1,9 @@
 ---
-title: Audit criteria — Layer 4 (Rubrics)
-loaded_by: hd-review audit mode (via harness-auditor agent with layer: 4)
+title: Review criteria — Layer 4 (Rubrics)
+loaded_by: hd-review review mode (via harness-auditor agent with layer: 4)
 ---
 
-# Audit criteria: Layer 4 — Rubric Setting
+# Review criteria: Layer 4 — Rubric Setting
 
 ## Purpose
 
@@ -67,7 +67,7 @@ Criteria for the Rubrics layer: `docs/rubrics/` flat structure, AGENTS.md Harnes
 
 ### rubrics-actually-applied
 
-- **Check:** rubrics defined are invoked (via `/hd:review critique`, PR templates, CI)
+- **Check:** rubrics defined are invoked (via `/hd:review review`, PR templates, CI)
 - **Default severity:** p3
 - **Stale signal:** rubric exists >30 days, zero invocations in git log / CI logs
 

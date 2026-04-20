@@ -83,7 +83,7 @@ Rank findings by severity then by check importance. Return the top 3–5.
 
 If `scenario: setup-pre-analysis`, add a `recommended_action` block:
 - `default: link` — existing layer artifact is healthy; link hd-* on top (additive-only)
-- `default: critique` — layer exists but has p2+ findings; propose critique in the interactive walk
+- `default: review` — layer exists but has p2+ findings; propose review in the interactive walk
 - `default: scaffold` — layer absent or empty; propose scaffolding from starter assets
 - `default: skip` — adopted rule (2026-04-18) says skip L1/L2/L3 when `.agent/` or `.claude/` detected with ≥1 skill/rule
 
@@ -117,8 +117,8 @@ top_findings:
     evidence: "SKILL.md links to references/foo.md which doesn't exist on disk"
     recommendation: "Remove orphan link or restore target file"
 recommended_action:      # only present when scenario=setup-pre-analysis
-  default: critique
-  why: "Existing .agent/skills/ corpus has p1+p2 findings — propose critique in interactive walk"
+  default: review
+  why: "Existing .agent/skills/ corpus has p1+p2 findings — propose review in interactive walk"
 scope_loaded:
   - path: skills/hd-review/references/review-criteria-l2-skills.md
   - path: .agent/skills/**

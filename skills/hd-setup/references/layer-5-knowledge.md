@@ -80,11 +80,11 @@ Layer 5 drift signals (per [`../../hd-review/references/review-criteria-l5-knowl
 **Show:** `has_plans_convention` + count, existing lessons count, rule adoption count, `team_tooling.docs` (for retros) and `team_tooling.pm` (for closed-issue decisions).
 
 **Propose default (post-3l.4):**
-- `has_plans_convention: true` or `has_knowledge_dir: true` → **critique** — run `rule-candidate-scorer` on existing entries; surface improvement suggestions
+- `has_plans_convention: true` or `has_knowledge_dir: true` → **review** — run `rule-candidate-scorer` on existing entries; surface improvement suggestions
 - `team_tooling.docs` + MCP live → **scaffold** + offer to pull retro/post-mortem/decision-labeled pages
 - Nothing → **scaffold** the 4 canonical files + empty `lessons/` from [`../assets/knowledge-skeleton/`](../assets/knowledge-skeleton/)
 
-**Execute — critique:** invoke:
+**Execute — review:** invoke:
 
 ```
 Task design-harnessing:analysis:rule-candidate-scorer(

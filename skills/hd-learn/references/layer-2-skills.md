@@ -17,7 +17,7 @@ Reusable capabilities your harness offers. A **skill** is a named, versioned pie
 
 Fictionalized but concrete:
 
-- `dh-critique` — one-shot design review applying the team's accessibility rubric
+- `dh-review` — one-shot design review applying the team's accessibility rubric
 - `dh-spec` — generate a dev spec from a Figma frame
 - `dh-tokens` — check code tokens against the Figma library and flag drift
 - `dh-research` — before proposing a new pattern, check if something similar already exists
@@ -25,9 +25,9 @@ Fictionalized but concrete:
 Real skills from this plug-in:
 
 - `hd-learn` — this skill — answer concept questions
-- `hd-setup` — adaptive scaffold/reorganize/audit
+- `hd-setup` — adaptive scaffold/reorganize/review
 - `hd-maintain` — capture lessons + graduate to rules
-- `hd-review` — audit harness + critique work items
+- `hd-review` — review harness + review work items
 
 ## When to add a skill
 
@@ -54,7 +54,7 @@ Our plug-in's contributor conventions in [AGENTS.md](../../../AGENTS.md) distill
 
 ## Scaffolded by
 
-`/hd:setup` does not actively scaffold Layer 2 at v0.MVP (we don't generate skills for users — they author their own). At v0.5, `hd:setup` advanced-mode audit will flag when a Layer 2 skill is missing but the harness would benefit from one.
+`/hd:setup` does not actively scaffold Layer 2 at v0.MVP (we don't generate skills for users — they author their own). At v0.5, `hd:setup` advanced-mode review will flag when a Layer 2 skill is missing but the harness would benefit from one.
 
 ## See also
 

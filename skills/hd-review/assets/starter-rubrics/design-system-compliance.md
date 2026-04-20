@@ -166,7 +166,7 @@ The core criteria apply to most design systems. Customize by:
 
 ## What this rubric does NOT check
 
-- Whether the design system itself is well-designed (that's a different critique)
+- Whether the design system itself is well-designed (that's a different review)
 - Accessibility (separate rubric: `accessibility-wcag-aa`)
 - Performance (not in this rubric's scope)
 - Cross-browser compatibility

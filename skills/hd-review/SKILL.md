@@ -42,7 +42,7 @@ Multiple review tools can run on the same repo without modifying each other's ou
 - `/hd:review targeted <path> [--rubric <name>]` → **targeted review**
 - `/hd:review <path>` (bare path, no verb) → ask *"Run a full review across all layers, or a targeted review of `<path>`?"*
 
-Default is full review. Ambiguous input asks scope, never "audit vs critique."
+Default is full review. Ambiguous input asks scope (full vs targeted), never legacy "audit vs critique" vocabulary.
 
 ## Workflow checklist (per mode)
 

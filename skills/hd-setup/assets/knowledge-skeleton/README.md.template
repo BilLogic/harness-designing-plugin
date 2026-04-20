@@ -23,7 +23,7 @@ Article §2.5 is the primary vocabulary; the derivative subtypes are operational
 Each memory type has a different *lifecycle*:
 
 - Episodic lessons decay in relevance with time but NEVER delete (history is sacred)
-- Decisions supersede but don't edit (ADR discipline: v1 supersedes v0 as a new entry; v0 stays for audit trail)
+- Decisions supersede but don't edit (ADR discipline: v1 supersedes v0 as a new entry; v0 stays for review trail)
 - Preferences are the only mutable file — taste changes, we update
 - Ideations cross off as ideas either graduate or get rejected
 - Changelog is strictly temporal

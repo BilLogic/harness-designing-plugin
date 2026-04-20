@@ -10,9 +10,9 @@ How skills compose into real work. A **workflow** is a named sequence of skills 
 
 ## Examples of workflows
 
-- **New feature flow** — research (find precedent) → spec (write PRD) → critique (rubric check) → compound (capture lessons on ship)
+- **New feature flow** — research (find precedent) → spec (write PRD) → review (rubric check) → compound (capture lessons on ship)
 - **Design review flow** — spec → review → iterate → approve → handoff
-- **Design system update flow** — audit → propose → review → promote to library → graduate lesson
+- **Design system update flow** — review → propose → review → promote to library → graduate lesson
 
 ## Handoffs
 
@@ -23,7 +23,7 @@ The connector between skills. Handoffs live either in:
 
 ## Gates
 
-Quality checks between skills. Usually pull from Layer 4 rubrics. Example: "design-system compliance check must pass before `/hd:critique` marks work approved."
+Quality checks between skills. Usually pull from Layer 4 rubrics. Example: "design-system compliance check must pass before `/hd:review` marks work approved."
 
 ## Prerequisites
 

@@ -155,7 +155,7 @@ User:  /hd:maintain rule-apply --plan-hash a1b2c3...
 Skill: Hash verified. Writing AGENTS.md line 47. Writing changelog.md entry. Done.
        Graduated: "Don't ship future-version skill stubs..."
        Source lesson preserved: docs/knowledge/lessons/2026-04-16-no-future-version-stubs.md
-       Next: commit this rule, or run `/hd:review` for a harness audit.
+       Next: commit this rule, or run `/hd:review` for a harness review.
 ```
 
 ### Example 2: Drift detected (file changed between propose and apply)
@@ -189,8 +189,8 @@ Skill: Malformed --plan-hash. Expected 64 lowercase hex chars. Got 13 chars.
 
 Plan-hash is tamper-detection, not full cryptographic authentication. It does NOT protect against:
 
-- **Multi-person social attacks.** Someone showing the hash to someone else who then approves via channel outside the skill. (Mitigation: audit `changelog.md` for suspicious entries; revoke a rule if needed.)
-- **Insider tampering.** A maintainer could fabricate a lesson, propose, and apply — the hash doesn't authenticate identity. (Mitigation: branch protection + PR review + `git log` audit.)
+- **Multi-person social attacks.** Someone showing the hash to someone else who then approves via channel outside the skill. (Mitigation: review `changelog.md` for suspicious entries; revoke a rule if needed.)
+- **Insider tampering.** A maintainer could fabricate a lesson, propose, and apply — the hash doesn't authenticate identity. (Mitigation: branch protection + PR review + `git log` review.)
 - **Compromised environment.** If the machine running the skill is compromised, the hash offers no protection — the attacker controls both sides.
 
 Plan-hash IS sufficient for the threat model we care about: preventing **accidental** hallucinated approval from runaway agents, loops, or LLMs that echo "yes" by default. That's the v0.5 scope. Full cryptographic signatures (GPG, WebAuthn) are a post-v1 consideration.

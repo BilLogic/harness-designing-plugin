@@ -13,7 +13,7 @@
   "capabilities": [
     "scaffold",
     "explain",
-    "audit"
+    "review"
   ],
   "keywords": [
     "design",

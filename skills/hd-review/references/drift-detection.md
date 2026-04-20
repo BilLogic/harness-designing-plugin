@@ -1,6 +1,6 @@
 # Drift detection
 
-**Purpose:** stale-file heuristics + rule-adoption-drought signals + coexistence-drift detection. Loaded by audit workflows.
+**Purpose:** stale-file heuristics + rule-adoption-drought signals + coexistence-drift detection. Loaded by review workflows.
 
 ## Stale-file heuristics
 
@@ -65,7 +65,7 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 **Checks:**
 
 1. `find docs/solutions -type f 2>/dev/null` returns any file → structural violation (we never write there)
-2. Any external plug-in's config file at repo root was modified since last audit and last modifier was our skill → we wrote to a foreign config file (severe)
+2. Any external plug-in's config file at repo root was modified since last review and last modifier was our skill → we wrote to a foreign config file (severe)
 3. `hd-config.md` schema invalid per `hd-setup/references/hd-config-schema.md`
 4. Bare Task calls in our skill files (grep for `Task [a-z-]+-[a-z]+\(` without a fully-qualified `<plugin>:<category>:` prefix)
 
@@ -90,7 +90,7 @@ find docs/context -type f -name "*.md" -mtime +180 2>/dev/null
 - >10 user-authored skills in a plug-in that only shipped 4 starter skills → skill proliferation; question cohesion (P3)
 - A user skill with SKILL.md ≤50 lines → probably undercooked (P3)
 
-These are all low-severity — teams have valid reasons for any of these states — but audit surfaces them for review.
+These are all low-severity — teams have valid reasons for any of these states — but review surfaces them for review.
 
 ## Tag consistency
 
@@ -110,10 +110,10 @@ These are all low-severity — teams have valid reasons for any of these states 
 
 **Signal:** `AGENTS.md` references a skill/file that doesn't exist, or a rule cites a source lesson path that doesn't resolve.
 
-**Severity:** P1 structural if skill-referenced (breaks skill discovery); P2 if rule-referenced (audit trail broken).
+**Severity:** P1 structural if skill-referenced (breaks skill discovery); P2 if rule-referenced (review trail broken).
 
 ## See also
 
-- [audit-criteria.md](audit-criteria.md) — priority framework + cross-cutting checks
+- [review-criteria.md](review-criteria.md) — priority framework + cross-cutting checks
 - [bloat-detection.md](bloat-detection.md) — complementary (bloat is volume-based; drift is time- and relation-based)
 - `../../hd-maintain/references/rule-adoption-criteria.md` — when drought can be addressed via rule adoption

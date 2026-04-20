@@ -1,15 +1,15 @@
 ---
-title: Audit criteria — cross-layer consistency + redundancy
+title: Review criteria — cross-layer consistency + redundancy
 loaded_by: hd-review (via harness-auditor agent after per-layer checks complete)
 ---
 
-# Audit criteria: Cross-layer consistency + redundancy
+# Review criteria: Cross-layer consistency + redundancy
 
 ## Purpose
 
 Catch contradictions, duplications, and orphan pointers across the 5 layers. Harness coherence breaks when the same rule appears in two places with different wording, when AGENTS.md points at a file that's been renamed, or when two skills do overlapping jobs.
 
-Loaded by `harness-auditor` in a final cross-layer pass after each per-layer audit completes.
+Loaded by `harness-auditor` in a final cross-layer pass after each per-layer review completes.
 
 **Grading.** Same 4-level `content_status` as other criteria.
 

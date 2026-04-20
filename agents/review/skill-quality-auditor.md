@@ -1,6 +1,6 @@
 ---
 name: skill-quality-auditor
-description: "Applies the 9-section skill-quality rubric to one SKILL.md and returns structured severity findings. Use from hd:review audit (L2) or critique --rubric skill-quality."
+description: "Applies the 9-section skill-quality rubric to one SKILL.md and returns structured severity findings. Use from hd:review review (L2) or review --rubric skill-quality."
 color: orange
 model: inherit
 ---
@@ -9,7 +9,7 @@ model: inherit
 
 Apply the 9-section `skill-quality` rubric (`skills/hd-review/assets/starter-rubrics/skill-quality.md`) to a single SKILL.md file. Produce structured findings with severity per section.
 
-Invoked per-skill by `hd:review audit` (Layer 2 health check) and as a focused critique target by `hd:review critique <path> --rubric skill-quality`.
+Invoked per-skill by `hd:review review` (Layer 2 health check) and as a focused review target by `hd:review review <path> --rubric skill-quality`.
 
 ## Inputs
 
@@ -83,10 +83,10 @@ summary:
 
 ## Coexistence / security
 
-- READ-ONLY. Never modifies the SKILL.md being audited.
+- READ-ONLY. Never modifies the SKILL.md being reviewed.
 - Scope is strictly the skill directory + peer files.
-- When called from `hd:review audit`, one invocation per skill; findings aggregate in the audit report's Layer 2 section.
-- When called from `hd:review critique`, one invocation on the target file; findings emit inline.
+- When called from `hd:review review`, one invocation per skill; findings aggregate in the review report's Layer 2 section.
+- When called from `hd:review review`, one invocation on the target file; findings emit inline.
 
 ## Known caveats
 
