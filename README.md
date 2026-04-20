@@ -3,21 +3,21 @@
 A plug-in for design teams to assemble the AI harness you already have into something that compounds. Ships for [Claude Code](https://claude.com/claude-code), [Codex CLI](https://github.com/openai/codex), and [Cursor](https://cursor.com) from one repo with three sibling manifests.
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
-> — from the companion article
+>—from the companion article
 
 ## Thesis
 
-You already have a design harness. It's just scattered — across Slack pins, Notion docs, Figma comments, AGENTS.md rules, and a decade of design reviews. This plug-in assembles that pile into **five layers** every AI-assisted design task inherits:
+You already have a design harness. It's just scattered—across Slack pins, Notion docs, Figma comments, AGENTS.md rules, and a decade of design reviews. This plug-in assembles that pile into **five layers** every AI-assisted design task inherits:
 
 | Layer | Memory type | What lives here |
 |---|---|---|
-| **1. Context Engineering** | semantic | Product facts, users, brand voice, design system tokens, conventions — what's always true |
+| **1. Context Engineering** | semantic | Product facts, users, brand voice, design system tokens, conventions—what's always true |
 | **2. Skill Curation** | procedural | Repeatable design tasks the agent *does* (research, plan, prototype, review, ship, compound) |
 | **3. Workflow Orchestration** | procedural | When to invoke which skill and in what order; handoffs between skills |
-| **4. Rubric Setting** | procedural (for evaluation) | How to judge "good" — a11y, typography, interaction, telemetry, i18n, … wired between workflow phases |
-| **5. Knowledge Compounding** | episodic | Lessons, decisions, preferences, changelogs, ideations — captured per event, promoted to rules when patterns repeat |
+| **4. Rubric Setting** | procedural (for evaluation) | How to judge "good"—a11y, typography, interaction, telemetry, i18n, … wired between workflow phases |
+| **5. Knowledge Compounding** | episodic | Lessons, decisions, preferences, changelogs, ideations—captured per event, promoted to rules when patterns repeat |
 
-Working memory — the active session — is ephemeral. The five layers control what flows into it each time.
+Working memory—the active session—is ephemeral. The five layers control what flows into it each time.
 
 At each layer, four choices: **link** (pointer to source of truth), **review** (apply a rubric + surface improvement suggestions), **scaffold** (seed questions + write files), or **skip**.
 
@@ -37,7 +37,7 @@ At each layer, four choices: **link** (pointer to source of truth), **review** (
 | [`/hd:learn`](skills/hd-learn/SKILL.md) | Ask questions about the harness concept. 10 atomic references (one per layer + glossary + FAQ + memory-taxonomy). Article § citations when the corpus is configured. No writes. |
 | [`/hd:setup`](skills/hd-setup/SKILL.md) | Walk the five layers in order. Phase A runs parallel pre-analysis (detect + 5× harness-auditor + rubric-recommender). Offer per-layer link / review / scaffold / skip. Write `hd-config.md`. |
 | [`/hd:maintain`](skills/hd-maintain/SKILL.md) | Capture lessons (one dated file per event). Promote lessons to rules in AGENTS.md. Destructive rule adoptions require SHA-256 plan-hash proof-of-consent. |
-| [`/hd:review`](skills/hd-review/SKILL.md) | Full review across all 5 layers (parallel dispatch when host supports it) OR targeted review of one layer / file / rubric. Writes full report to `docs/knowledge/reviews/<date>-harness-review.md`; emits chat summary with ASCII health bars + priorities table + `Proposed revision` file-tree diff + Staleness check (comparing against any prior review). Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes. Not for reviewing design deliverables — that happens outside our scope. |
+| [`/hd:review`](skills/hd-review/SKILL.md) | Full review across all 5 layers (parallel dispatch when host supports it) OR targeted review of one layer / file / rubric. Writes full report to `docs/knowledge/reviews/<date>-harness-review.md`; emits chat summary with ASCII health bars + priorities table + `Proposed revision` file-tree diff + Staleness check (comparing against any prior review). Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes. Not for reviewing design deliverables—that happens outside our scope. |
 
 ## Agents
 
@@ -73,7 +73,7 @@ In [`skills/hd-review/assets/starter-rubrics/`](skills/hd-review/assets/starter-
 
 Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in scaffolds and maintains the rubric library; running rubrics against actual design work happens in whatever AI tool the team uses.
 
-### Quality & craft
+### Quality and craft
 
 | Rubric | Covers |
 |---|---|
@@ -84,7 +84,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 | `interaction-states` | Default / hover / active / focus / disabled / loading / error |
 | `heuristic-evaluation` | Nielsen's 10 |
 
-### Visual & sensory
+### Visual and sensory
 
 | Rubric | Covers |
 |---|---|
@@ -93,7 +93,7 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 | `spatial-design` | Spacing scale, density, alignment |
 | `motion-design` | Duration, easing, purpose, reduced-motion |
 
-### Communication & shape
+### Communication and shape
 
 | Rubric | Covers |
 |---|---|
@@ -111,16 +111,16 @@ Teams copy any starter into `docs/rubrics/<name>.md` and customize. This plug-in
 
 | Script | Purpose |
 |---|---|
-| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v4 repo scan — layer presence + scattered-layer detection, managed design systems, a11y frameworks, other-tool harnesses (`.agent/`, `.agents/`, `.claude/`, `.codex/`, `.cursor/skills/`, `.windsurf/`, `.roo/`), team tooling, MCP servers |
+| [`skills/hd-setup/scripts/detect.py`](skills/hd-setup/scripts/detect.py) | Schema-v4 repo scan—layer presence + scattered-layer detection, managed design systems, a11y frameworks, other-tool harnesses (`.agent/`, `.agents/`, `.claude/`, `.codex/`, `.cursor/skills/`, `.windsurf/`, `.roo/`), team tooling, MCP servers |
 | [`skills/hd-setup/scripts/detect-mode.sh`](skills/hd-setup/scripts/detect-mode.sh) | Bash shim fallback for `detect.py` when python3 unavailable |
 | [`skills/hd-maintain/scripts/compute-plan-hash.sh`](skills/hd-maintain/scripts/compute-plan-hash.sh) | Deterministic canonical-string SHA-256 for rule-adoption consent |
 | [`skills/hd-review/scripts/budget-check.sh`](skills/hd-review/scripts/budget-check.sh) | SKILL.md line budgets + always-loaded combined-context budget |
 
 ## Installation
 
-> **Status — beta testing.** Submitted to Anthropic's plugin directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below — they work today.
+> **Status—beta testing.** Submitted to Anthropic's plug-in directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below—they work today.
 
-The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`) — same skills, agents, scripts. Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended — handles different home dirs, shells, skill-dir conventions for you), OR run the exact commands yourself.
+The plug-in ships three sibling manifests from one repo (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`)—same skills, agents, scripts. Two install patterns per host: **copy-paste a natural-language prompt** and let your AI do the setup (recommended—handles different home dirs, shells, skill-dir conventions for you), or run the exact commands yourself.
 
 ### Claude Code
 
@@ -146,7 +146,7 @@ hd:maintain, and hd:review appear.
 </details>
 
 <details>
-<summary>Alternative — clone + --plugin-dir (for inspecting / forking)</summary>
+<summary>Alternative—clone + --plugin-dir (for inspecting / forking)</summary>
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
@@ -167,7 +167,7 @@ https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
    or wherever Codex expects externally-cloned plugins on my machine)
 2. Register its skills/ directory so hd-learn, hd-setup, hd-maintain, and
    hd-review appear alongside my existing skills (use whichever mechanism
-   my Codex version supports — symlink into ~/.codex/skills/, or the Codex
+   my Codex version supports—symlink into ~/.codex/skills/, or the Codex
    plugin-registration API, or a config entry)
 3. Tell me what to restart / reload so the skills activate
 4. List my skills after restart to confirm the four hd-* skills loaded
@@ -199,11 +199,11 @@ https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
    or wherever Cursor expects externally-cloned plugins on my machine)
 2. Register its skills/ directory so the hd-* skills appear alongside my
    existing skills (typically via ~/.cursor/skills/ or your current
-   skill-loading mechanism — pick what works for my Cursor version)
+   skill-loading mechanism—pick what works for my Cursor version)
 3. Tell me what to restart / reload
 4. Note: if I'm on Cursor CLI rather than the IDE, /hd:review will run
-   inline serial because the CLI doesn't expose the Task tool — same
-   output, just ~1-2 min wall time instead of ~30s
+   inline serial because the CLI doesn't expose the Task tool—same
+   output, just ~1–2 min wall time instead of ~30s
 ```
 
 <details>
@@ -279,9 +279,9 @@ Pin to a specific release:
 cd <clone-path> && git checkout v1.1.0
 ```
 
-### Official directories *(beta — pending marketplace review)*
+### Official directories *(beta—pending marketplace review)*
 
-The plug-in is in **beta testing**. Submitted to Anthropic's Claude Code plugin directory and Cursor's marketplace on 2026-04-18; both are pending reviewer response. Once accepted, installation becomes a one-liner via each platform's native UI (no git clone, no manual registration). Until then the clone-based paths above work on every host today. OpenAI Codex directory opens later.
+The plug-in is in **beta testing**. Submitted to Anthropic's Claude Code plug-in directory and Cursor's marketplace on 2026-04-18; both are pending reviewer response. Once accepted, installation becomes a one-liner via each platform's native UI (no git clone, no manual registration). Until then the clone-based paths above work on every host today. OpenAI Codex directory opens later.
 
 ### Uninstall
 
@@ -296,31 +296,31 @@ rm ~/.cursor/skills/design-harness     # remove symlink (if Cursor)
 rm -rf ~/.codex/harness-designing-plugin   # remove the clone
 ```
 
-The plug-in never modifies files outside its own install dir. Uninstall = delete the clone + any symlinks you created.
+The plug-in never modifies files outside its own install directory. Uninstalling means deleting the clone and any symlinks you created.
 
 ## Credits
 
-**The article** — Bill Guo's Substack series on design harnessing *(URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
+**The article**—Bill Guo's Substack series on design harnessing *(URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
 
-**Harness vocabulary + anatomy (primary inspiration)** — LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17). The noun "harness," the memory-typology framing, and the ownership argument come from here — this is the vocab + concept lineage that made a design-focused harness legible in the first place.
+**Harness vocabulary + anatomy (primary inspiration)**—LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17). The noun "harness," the memory-typology framing, and the ownership argument come from here—this is the vocab + concept lineage that made a design-focused harness legible in the first place.
 
-**Compounding practice + plug-in pattern** — [compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [Kieran Klaassen](https://twitter.com/kieranklaassen) and the [Every](https://every.to) team, with their companion essay [*Compound Engineering*](https://every.to/guides/compound-engineering). Heavy user — their lesson → rule compounding loop inspired the design-focused compounding we wire into the Workflow Orchestration layer. The structural model (`plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow) is also lifted from their work.
+**Compounding practice + plug-in pattern**—[compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [Kieran Klaassen](https://twitter.com/kieranklaassen) and the [Every](https://every.to) team, with their companion essay [*Compound Engineering*](https://every.to/guides/compound-engineering). Heavy user—their lesson → rule compounding loop inspired the design-focused compounding we wire into the Workflow Orchestration layer. The structural model (`plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow) is also lifted from their work.
 
-**Context engineering + harness design for long-running apps** — Anthropic: [*Effective Context Engineering for AI Agents*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) by [Prithvi Rajasekaran](https://x.com/rgb_prithvi), [Ethan Dixon](https://www.linkedin.com/in/eltd/), [Carly Ryan](https://www.linkedin.com/in/carly-ryan-2565b3154/), and [Jeremy Hadfield](https://x.com/jerhadf) of the Applied AI team; [*Harness Design for Long-Running Apps*](https://www.anthropic.com/engineering/harness-design-long-running-apps) by Prithvi Rajasekaran (Labs team); [*Effective Harnesses for Long-Running Agents*](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) by [Justin Young](https://www.linkedin.com/in/jyoung127) with contributions from David Hershey, Prithvi Rajasekaran, Jeremy Hadfield, Naia Bouscal, Michael Tingley, Jesse Mu, Jake Eaton, Marius Buleandara, Maggie Vo, Pedram Navid, Nadine Yasser, and Alex Notov (Claude Code + code RL teams); [*Authoring Skills for Claude*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices); and the [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf). Attention-budget and progressive-disclosure patterns from these.
+**Context engineering + harness design for long-running apps**—Anthropic: [*Effective Context Engineering for AI Agents*](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) by [Prithvi Rajasekaran](https://x.com/rgb_prithvi), [Ethan Dixon](https://www.linkedin.com/in/eltd/), [Carly Ryan](https://www.linkedin.com/in/carly-ryan-2565b3154/), and [Jeremy Hadfield](https://x.com/jerhadf) of the Applied AI team; [*Harness Design for Long-Running Apps*](https://www.anthropic.com/engineering/harness-design-long-running-apps) by Prithvi Rajasekaran (Labs team); [*Effective Harnesses for Long-Running Agents*](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) by [Justin Young](https://www.linkedin.com/in/jyoung127) with contributions from David Hershey, Prithvi Rajasekaran, Jeremy Hadfield, Naia Bouscal, Michael Tingley, Jesse Mu, Jake Eaton, Marius Buleandara, Maggie Vo, Pedram Navid, Nadine Yasser, and Alex Notov (Claude Code + code RL teams); [*Authoring Skills for Claude*](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices); and the [Complete Guide to Building Skills for Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf). Attention-budget and progressive-disclosure patterns from these.
 
 **Rubric source material**
-- [pbakaus/impeccable](https://github.com/pbakaus/impeccable) by [Paul Bakaus](https://twitter.com/paulbakaus) — typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design
-- [Nielsen Norman Group](https://twitter.com/NNgroup) — [Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) by [Jakob Nielsen](https://twitter.com/JakobNielsen) → `heuristic-evaluation`
-- [Material Design 3](https://m3.material.io) — Google → `design-system-compliance`, `interaction-states`
-- [Fluent 2](https://fluent2.microsoft.design) — Microsoft → `accessibility-wcag-aa`, `ux-writing`
+- [pbakaus/impeccable](https://github.com/pbakaus/impeccable) by [Paul Bakaus](https://twitter.com/paulbakaus)—typography, color-and-contrast, spatial-design, motion-design, ux-writing, responsive-design
+- [Nielsen Norman Group](https://twitter.com/NNgroup)—[Nielsen's 10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/) by [Jakob Nielsen](https://twitter.com/JakobNielsen) → `heuristic-evaluation`
+- [Material Design 3](https://m3.material.io)—Google → `design-system-compliance`, `interaction-states`
+- [Fluent 2](https://fluent2.microsoft.design)—Microsoft → `accessibility-wcag-aa`, `ux-writing`
 
-**Adjacent work** — [*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by [Samet Özkale](https://twitter.com/sametozkale) covers context engineering for designers; this plug-in extends to all five layers.
+**Adjacent work**—[*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by [Samet Özkale](https://twitter.com/sametozkale) covers context engineering for designers; this plug-in extends to all five layers.
 
-**Working implementation** — [BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the open-source harness built for a rotating 15-designer team; the patterns templated here are distilled from it.
+**Working implementation**—[BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the open-source harness built for a rotating 15-designer team; the patterns templated here are distilled from it.
 
 ## Known Issues
 
-- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/article-quote-finder-corpus.md` once the series publishes.
+- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/article-quote-finder-corpus.md` once the series is live.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
 - **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
@@ -328,9 +328,9 @@ The plug-in never modifies files outside its own install dir. Uninstall = delete
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
-- **v1.1.0** (2026-04-20) — iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
-- **v1.0.0** (2026-04-18) — distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plugin directory + Cursor marketplace.
+- **v1.1.0** (2026-04-20)—iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
+- **v1.0.0** (2026-04-18)—distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plug-in directory + Cursor marketplace.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT—see [LICENSE](./LICENSE).
