@@ -56,7 +56,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
 
 ```yaml
 - tool_name: notion
-  categories: { primary: docs, secondary: [], all: [docs] }
+  categories: { primary: docs, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -67,7 +67,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://developers.notion.com/reference/intro", notes: "Official Notion API" }
 
 - tool_name: figma
-  categories: { primary: design, secondary: [], all: [design] }
+  categories: { primary: design, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -78,7 +78,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://figma.com/developers/api", notes: "REST API + dev-mode SDK" }
 
 - tool_name: linear
-  categories: { primary: pm, secondary: [], all: [pm] }
+  categories: { primary: pm, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -89,7 +89,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://linear.app/developers/graphql", notes: "GraphQL API" }
 
 - tool_name: github
-  categories: { primary: pm, secondary: [data_api], all: [pm, data_api] }
+  categories: { primary: pm, secondary: [data_api] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -100,7 +100,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://docs.github.com/en/rest", notes: "REST + GraphQL" }
 
 - tool_name: supabase
-  categories: { primary: data_api, secondary: [cli, auth], all: [data_api, cli, auth] }
+  categories: { primary: data_api, secondary: [cli, auth] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -111,7 +111,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://supabase.com/docs/reference/api", notes: "REST + GraphQL + auth" }
 
 - tool_name: firebase
-  categories: { primary: data_api, secondary: [analytics, auth], all: [data_api, analytics, auth] }
+  categories: { primary: data_api, secondary: [analytics, auth] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -122,7 +122,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://firebase.google.com/docs", notes: "Auth + Firestore + Realtime DB + Analytics" }
 
 - tool_name: vercel
-  categories: { primary: cli, secondary: [observability], all: [cli, observability] }
+  categories: { primary: cli, secondary: [observability] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -133,7 +133,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://vercel.com/docs/rest-api", notes: "Deployment + project REST API" }
 
 - tool_name: netlify
-  categories: { primary: cli, secondary: [observability], all: [cli, observability] }
+  categories: { primary: cli, secondary: [observability] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -144,7 +144,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://docs.netlify.com/api/get-started/", notes: "Deployment REST API" }
 
 - tool_name: stripe
-  categories: { primary: data_api, secondary: [cli], all: [data_api, cli] }
+  categories: { primary: data_api, secondary: [cli] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -155,7 +155,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://docs.stripe.com/api", notes: "Payments + subscriptions API" }
 
 - tool_name: sentry
-  categories: { primary: observability, secondary: [], all: [observability] }
+  categories: { primary: observability, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -166,7 +166,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://docs.sentry.io/api/", notes: "Issue + event REST API" }
 
 - tool_name: slack
-  categories: { primary: comms, secondary: [], all: [comms] }
+  categories: { primary: comms, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -177,7 +177,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://api.slack.com/web", notes: "Web API + Events API" }
 
 - tool_name: amplitude
-  categories: { primary: analytics, secondary: [], all: [analytics] }
+  categories: { primary: analytics, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -188,7 +188,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://www.docs.developers.amplitude.com/", notes: "Event tracking + export API" }
 
 - tool_name: mixpanel
-  categories: { primary: analytics, secondary: [], all: [analytics] }
+  categories: { primary: analytics, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -199,7 +199,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://developer.mixpanel.com/reference/overview", notes: "Event ingest + query API" }
 
 - tool_name: posthog
-  categories: { primary: analytics, secondary: [observability], all: [analytics, observability] }
+  categories: { primary: analytics, secondary: [observability] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -210,7 +210,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://posthog.com/docs/api", notes: "Events + session recording + feature flags" }
 
 - tool_name: aws_amplify
-  categories: { primary: data_api, secondary: [auth, cli], all: [data_api, auth, cli] }
+  categories: { primary: data_api, secondary: [auth, cli] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -221,7 +221,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://docs.amplify.aws/", notes: "GraphQL + REST via amplify-js; auth + storage + API" }
 
 - tool_name: hasura
-  categories: { primary: data_api, secondary: [], all: [data_api] }
+  categories: { primary: data_api, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -232,7 +232,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://hasura.io/docs/latest/api-reference/overview/", notes: "GraphQL auto-generated from schema" }
 
 - tool_name: airtable
-  categories: { primary: data_api, secondary: [], all: [data_api] }
+  categories: { primary: data_api, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -243,7 +243,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://airtable.com/developers/web/api/introduction", notes: "REST API + Scripting SDK" }
 
 - tool_name: sanity
-  categories: { primary: data_api, secondary: [cli], all: [data_api, cli] }
+  categories: { primary: data_api, secondary: [cli] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -254,7 +254,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://www.sanity.io/docs/http-api", notes: "GROQ + REST + Webhook" }
 
 - tool_name: contentful
-  categories: { primary: data_api, secondary: [], all: [data_api] }
+  categories: { primary: data_api, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -265,7 +265,7 @@ Pre-verified rows that let `ai-integration-scout` return without hitting the web
     api: { docs_url: "https://www.contentful.com/developers/docs/references/", notes: "Content Delivery + Management API" }
 
 - tool_name: confluence
-  categories: { primary: docs, secondary: [], all: [docs] }
+  categories: { primary: docs, secondary: [] }
   classified_at: "2026-04-21"
   classifier_version: "1"
   source: curated
@@ -282,18 +282,11 @@ Scout appends rows here with `source: "web-search"` or `"rule-based"`. Entries m
 
 <!-- scout appends below this line -->
 
-### Legacy short-form table (deprecated, kept for eyeball audit)
+## Cache limitations (2026-04-21)
 
-| Tool | Summary |
-|---|---|
-| notion | docs — see seeded entry above |
-| figma | design — see seeded entry above |
-| linear | pm — see seeded entry above |
-| github | pm + data_api — see seeded entry above |
-| slack | comms — see seeded entry above |
-| google_docs | docs — no official MCP as of 2026-04 |
+The cache is **local to each user's plug-in install**. There's no shared upstream merge path — every user's first encounter with a novel tool re-pays the web-search cost. A future phase may add a community-seed merge mechanism; for now each harness maintainer grows their own cache through real usage.
 
-**When a tool is NOT in this cache** but the user says they use it:
+When a tool is NOT in this cache but the user says they use it:
 
 1. Dispatch `ai-integration-scout` to research the tool (Phase 2 web search)
 2. If scout finds a high-confidence integration → `available` path; report the install-docs URL + summary; scout writes a new cache row for next time

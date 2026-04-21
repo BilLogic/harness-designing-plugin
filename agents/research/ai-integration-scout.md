@@ -32,7 +32,6 @@ Callers parallelize multiple invocations via existing ≤5 Task-batch convention
 - `tool_name` — string, required. Dep name (`@aws-amplify/auth`), tool identifier (`supabase`), or config filename (`netlify.toml`).
 - `context` — optional layer hint: `l1`|`l2`|`l3`|`l4`|`l5`. Shapes which integration types are prioritized (L1 favors docs-pull; L2 favors CLI wrappers; L5 favors event sources).
 - `cache_path` — optional. Default `skills/hd-setup/references/known-mcps.md`.
-- `large_batch_ceiling` — optional integer (default 50). Caller should confirm before fanning out more than this many scout invocations from one setup run.
 
 ## Category enum (for classify mode)
 
@@ -94,7 +93,6 @@ Parse the top 5 results from each query. Synthesize via LLM with **structured ou
   "categories": {
     "primary": "<one category from enum>",
     "secondary": ["<categories>"],
-    "all": ["<categories>"]
   },
   "confidence": 0.0-1.0,
   "ai_relevant": true | false,
@@ -152,7 +150,6 @@ Return JSON. Classify mode adds `categories` + `confidence` + `ai_relevant`:
   "categories": {
     "primary": "data_api",
     "secondary": ["auth"],
-    "all": ["data_api", "auth"]
   },
   "confidence": 0.92,
   "ai_relevant": true,
@@ -184,8 +181,7 @@ Research mode: drop `mode`, `categories`, `confidence`, `ai_relevant` fields.
 - **Never install anything.** Research + link only; installation is the user's job.
 - **Never read user-level filesystem** (`~/.zshrc`, `~/.mcp.json`, homebrew list). Repo-scope only.
 - **Never transmit repo content** in web searches. Only the `tool_name` leaves the machine.
-- **Large-batch ceiling.** If caller has dispatched more than `large_batch_ceiling` scout invocations from one `/hd:setup` run, emit a warning in `summary` + skip web search (respond from cache only). Caller is responsible for confirming with user before fanning out further.
-- **Respect rate limits.** Phase 2 max 3 queries per invocation.
+- **Respect rate limits.** Phase 2 max 3 queries per invocation. Callers parallelize ≤5 per the standing Task-batch convention — no internal batching machinery.
 - **Copyright.** Quote at most 15 words from any source, in quotation marks. Prefer URL extraction over prose quotation.
 
 ## Degraded mode (no web search available)

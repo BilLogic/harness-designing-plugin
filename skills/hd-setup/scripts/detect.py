@@ -255,7 +255,14 @@ def detect_team_tooling() -> dict[str, list[str]]:
                     if pat.search(text):
                         hits[cat].add(tool)
 
-    return {cat: sorted(tools) for cat, tools in hits.items()}
+    out = {cat: sorted(tools) for cat, tools in hits.items()}
+    # 3o polish — keep empty-array keys for cli + data_api so v5 schema shape
+    # stays stable for downstream consumers. Whitelist categorization is gone
+    # (3o.1); these keys now reflect "nothing pre-categorized" — scout classify
+    # populates semantically from raw_signals.deps at per-layer EXECUTE.
+    out.setdefault("cli", [])
+    out.setdefault("data_api", [])
+    return out
 
 
 # 3o.1 — raw_signals enumeration (universal tool discovery, research-time classification)
@@ -331,10 +338,16 @@ def enumerate_raw_signals() -> dict:
             except (OSError, UnicodeDecodeError):
                 continue
             for m in url_pattern.findall(text):
-                # Strip common noise URLs (docs, schemas, semver-registry).
-                if any(skip in m.lower() for skip in (
+                ml = m.lower()
+                # Strip standards-org + lockfile + sponsor noise
+                if any(skip in ml for skip in (
                     "schema.org", "json-schema.org", "w3.org",
                     "semver.org", "tc39.es", "ecma-international.org",
+                    # 3o polish — filter package-lock + sponsor URLs that dominate raw_signals.urls
+                    "registry.npmjs.org", "registry.yarnpkg.com",
+                    "opencollective.com", "tidelift.com",
+                    "github.com/sponsors", "patreon.com",
+                    "127.0.0.1", "localhost",
                 )):
                     continue
                 urls.add(m)
@@ -778,7 +791,9 @@ def detect_scattered_l1() -> dict:
                 try:
                     if p.stat().st_size <= 512 * 1024:
                         lines = [ln for ln in p.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
-                        if len(lines) >= 10:
+                        # ≥5 non-blank lines (post-retest threshold — caricature's 8-line
+                        # compound-engineering.local.md was missed at the original ≥10 threshold)
+                        if len(lines) >= 5:
                             root_l1_files.append(p.name)
                 except (OSError, UnicodeDecodeError):
                     pass
