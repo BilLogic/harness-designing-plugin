@@ -35,7 +35,7 @@ hd:setup Progress:
 - [ ] Step 7: Layer 4 (Rubrics) — scaffold / review / create / skip
 - [ ] Step 8: Layer 5 (Knowledge) — scaffold / review / create / skip
 - [ ] Step 8.5: Proposed-files preview — show table; user confirms before any write
-- [ ] Step 9: Write hd-config.md (schema v3)
+- [ ] Step 9: Write hd-config.md (schema v5)
 - [ ] Step 10: Summarize decisions + suggest next skill
 ```
 
@@ -53,7 +53,7 @@ Rule (see [AGENTS.md § Rules](../../AGENTS.md#rules)), confirmed across 4 pilot
 
 ## Step 1 — Detect
 
-Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v3 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*` (includes `other_tool_harnesses_detected[]` and `compound_installed`), `mcp_servers[]`, `team_tooling.*`.
+Run [`scripts/detect.py`](scripts/detect.py). Emits JSON schema v5 per [`references/hd-config-schema.md`](references/hd-config-schema.md). Parse and retain all fields: `mode`, `signals.*` (includes `other_tool_harnesses_detected[]` and `compound_installed`), `mcp_servers[]`, `team_tooling.*` (v5 adds `cli[]` + `data_api[]`).
 
 If python3 unavailable → use [`scripts/detect-mode.sh`](scripts/detect-mode.sh) bash shim. If both unavailable (rare), fall back to manual signals via [`references/layer-1-context.md`](references/layer-1-context.md) appendix.
 
@@ -116,10 +116,10 @@ Before any file write, render a proposed-files table (layer → action → paths
 
 ## Step 9 — Write `hd-config.md`
 
-Schema v3 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
+Schema v5 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
 
 Populate:
-- `schema_version: "3"`, `setup_mode`, `setup_date`, `team_size`
+- `schema_version: "5"`, `setup_mode`, `setup_date`, `team_size`
 - `skipped_layers`, `article_read`
 - `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`
 - `other_tool_harnesses_detected`

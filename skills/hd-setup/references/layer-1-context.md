@@ -83,6 +83,17 @@ Diff preview before any write (F4 safety in SKILL.md). If source content is in a
 
 **Execute (3n.5) — offer three fill paths** per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5): (A) wire up a tool via `ai-integration-scout`, (B) paste content via [`paste-organize.md`](paste-organize.md), or (C) create from scratch below. For L1, Path A is default when `team_tooling.docs` or `team_tooling.data_api` has entries (Notion / Supabase / Firebase feed product facts). Otherwise default C.
 
+Path A dispatch (batch ≤5 parallel per tool user names):
+
+```
+Task design-harnessing:research:ai-integration-scout(
+  tool_name: "<notion | supabase | firebase | ...>",
+  context: "l1"
+)
+```
+
+Returns `{mcp, cli, api, install_docs_url}`. Report findings inline + link install docs; user installs themselves. Write pointer file at `docs/context/product/<source-name>.md` referencing the install-docs URL + tool name; user fills in live-data section after install.
+
 **Execute — create:**
 - Load this file for L1 depth (baseline shape + healthy-AGENTS.md patterns below)
 - Ask create depth: **full baseline** (21 files across product/conventions/design-system — matches plus-uno) vs **simple mode** (~4 files — just app.md + tech-stack.md + tokens.md + components/cheat-sheet.md). Default: full baseline for team repos, simple mode for solo.

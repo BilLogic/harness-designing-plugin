@@ -27,9 +27,13 @@ Declares protected paths so any external review/cleanup tool leaves our artifact
 - docs/design-solutions/**
 - docs/knowledge/**
 - docs/context/**
+- docs/plans/**
+- docs/rubrics/**
 - AGENTS.md
 - hd-config.md
+- loading-order.md
 - skills/**
+- agents/**
 </protected_artifacts>
 ```
 
@@ -182,16 +186,6 @@ When the host supports sub-agent dispatch (Claude `Task`, Codex `/agent`, Cursor
 
 All Task calls use fully-qualified names in the `design-harnessing:` namespace. Never dispatches into other plug-ins' namespaces.
 
-**Full review — per-layer evaluation (parallel, 5 agents):**
-- `design-harnessing:analysis:harness-auditor` × 5 — one per layer (`layer: 1` through `layer: 5`)
+**Full review** — Batch 1 (parallel, 5): `design-harnessing:analysis:harness-auditor` × 5 (one per layer). Batch 2 (parallel, 2–3): `analysis:rubric-recommender` + `research:lesson-retriever` + conditional `analysis:coexistence-analyzer` (when `other_tool_harnesses_detected[]` non-empty).
 
-**Full review — cross-cutting (parallel, 2–3 agents):**
-- `design-harnessing:analysis:rubric-recommender` — L4 gap finding
-- `design-harnessing:research:lesson-retriever` — L5 cluster corpus scan
-- `design-harnessing:analysis:coexistence-analyzer` — conditional; dispatched only when `other_tool_harnesses_detected[]` is non-empty
-
-**Targeted review:**
-- `design-harnessing:review:skill-quality-auditor` — targets ending in `SKILL.md`
-- `design-harnessing:review:rubric-applier` — all other targets (batch-parallel ≤5)
-
-**Cross-plug-in (optional):** users list external agents in `hd-config.md:review_agents`. Empty by default.
+**Targeted review** — `review:skill-quality-auditor` for `SKILL.md` targets; `review:rubric-applier` for all other targets (batch-parallel ≤5). Optional external agents from `hd-config.md:review_agents` (empty default).

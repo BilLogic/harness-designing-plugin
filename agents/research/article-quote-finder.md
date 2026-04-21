@@ -19,7 +19,7 @@ Return verbatim article quotes with section citations for a given concept questi
 
 Source list comes from two places, merged in this order:
 
-1. **Default corpus** — `agents/research/article-quote-finder-corpus.md` (this repo). Always read first. While the article series is pre-publication, rows carry the `{{TBD}}` sentinel.
+1. **Default corpus** — `agents/research/references/article-quote-finder-corpus.md` (this repo). Always read first. While the article series is pre-publication, rows carry the `{{TBD}}` sentinel.
 2. **User overrides** — `hd-config.md` in the caller's repo, under `article_sources:`. User values WIN on key collision; new keys are appended to the resolved set.
 
 Typical source keys (corpus rows + common overrides):
@@ -32,7 +32,7 @@ Never guess URLs. Never fabricate quotes.
 ## Procedure
 
 ### Phase 1: resolve source paths
-1. Read `agents/research/article-quote-finder-corpus.md` — parse its corpus table into `{section → url}`.
+1. Read `agents/research/references/article-quote-finder-corpus.md` — parse its corpus table into `{section → url}`.
 2. Read `hd-config.md` for `article_sources` (if present). Merge: user keys override corpus keys with the same section; new user keys are appended.
 3. **Sentinel filter:** drop any entry whose URL equals `{{TBD}}` (the corpus placeholder) and has no user override.
 4. If the resolved set is empty after filtering → emit the graceful empty response below and exit.
@@ -43,7 +43,7 @@ Never guess URLs. Never fabricate quotes.
 concept_question: "<original question>"
 quotes: []
 corpus_status: "not-configured"
-note: "Article corpus has placeholder URLs (article series publication TBD). To populate, either update agents/research/article-quote-finder-corpus.md OR add article_sources to your hd-config.md. See skills/hd-learn/references/ for offline concept content in the meantime."
+note: "Article corpus has placeholder URLs (article series publication TBD). To populate, either update agents/research/references/article-quote-finder-corpus.md OR add article_sources to your hd-config.md. See skills/hd-learn/references/ for offline concept content in the meantime."
 ```
 
 ### Phase 2: locate relevant § sections

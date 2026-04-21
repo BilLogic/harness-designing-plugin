@@ -1,6 +1,6 @@
 ---
 name: ai-integration-scout
-description: "Researches AI-integration options (MCP / CLI wrapper / documented API) for a named tool. Cache-first, web-search fallback. Returns structured findings with install-docs links; never installs."
+description: "Researches MCP / CLI / API integration options for a named tool. Cache-first, web-search fallback. Returns structured findings with install-docs links."
 color: cyan
 model: inherit
 ---
