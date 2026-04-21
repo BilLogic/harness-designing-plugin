@@ -43,7 +43,9 @@ Open questions, unchosen paths, ideas worth revisiting. Append-only; cross off (
 **Current thinking:** (a) for v1 (lowest trust risk). Revisit when we have user feedback on friction.
 **Needed to decide:** 3-5 user runs; log how many times users drop URLs vs paste full content.
 
-## 2026-04-21 — Should `/hd:setup` on the plug-in repo itself author `hd-config.md`?
+## ~~2026-04-21 — Should `/hd:setup` on the plug-in repo itself author `hd-config.md`?~~ → RESOLVED 2026-04-21
+
+**Resolution:** picked option (a) — authored `hd-config.md` by hand same day. Covers all 5 layer decisions as `review` (each layer is populated by the plug-in's own payload; scaffold/create paths don't apply to a plug-in repo). File is a special-case meta-config, documented as such in its own prose. Closes the 2026-04-20 + 2026-04-21 review carry-over.
 
 **Prompt:** The plug-in repo has no `hd-config.md` — flagged by both the 2026-04-20 and 2026-04-21 harness reviews. Running `/hd:setup` on ourselves would scaffold one but feels redundant (this IS the plug-in).
 **Options on the table:** (a) author `hd-config.md` by hand for the advanced-mode case (setup_mode: advanced, with real layer_decisions recorded); (b) run `/hd:setup --discover-tools` on ourselves; (c) officially waive — this is the plug-in repo, not a user repo, so hd-config.md doesn't apply here.
