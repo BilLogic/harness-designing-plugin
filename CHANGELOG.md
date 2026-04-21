@@ -3,6 +3,38 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Phase 3n — external-source fill-path + advisor-not-installer (2026-04-21)
+
+Completed per [`docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md`](docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md). Triggered by a live run on `sense_frontend` where Step 3 (Tool discovery) collapsed silently in additive mode — tester never saw a prompt to name external tools they use. 8 units shipped.
+
+**Principle clarification:** the plug-in is an **advisor, not an installer**. We scan, ask, research, link to install docs. User installs themselves. Parallel path: user pastes or drops files, plug-in organizes into layer sub-folders.
+
+**3n.1 — Lesson captured** (4th confirmation of "spec review misses what live testing finds"). `docs/knowledge/lessons/2026-04-21-external-source-fill-path.md` with `rule_candidate: true` — crosses graduation threshold; ready for `/hd:maintain rule-propose`.
+
+**3n.2 — Step 3 collapsed to scan-summary.** Non-blocking narration only. Tool-offering moved into per-layer EXECUTE where it's contextualized and unmissable. `SKILL.md`.
+
+**3n.3 — New `research:ai-integration-scout` sub-agent.** Cache-first lookup (seeded `known-mcps.md`), falls through to 3 parallel web queries (`<tool> MCP / CLI / API`). Returns structured `{mcp, cli, api, install_docs_url}`. Writes high-confidence finds back to cache. Never installs. Degraded-mode on hosts without web search. `agents/research/ai-integration-scout.md`.
+
+**3n.4 — `known-mcps.md` reframed from whitelist-gate to seeded cache.** Removed "never recommend unknown MCP" rule. Integration-path triage collapsed from 4 paths to 3 (`active` / `available` / `pointer-only` — dropped `install-walkthrough`). Per-tool install walkthroughs replaced with compact docs-pointer entries.
+
+**3n.5 — Per-layer EXECUTE "Fill path" sub-routine.** Three equal paths at `create` + `scaffold`: (A) wire-up-a-tool via scout, (B) paste content via `paste-organize` helper, (C) create from scratch. Defaults per-layer based on `team_tooling` signals (L1: docs/data_api → A; L2: cli → A; L3: pm/cli → A; L4: B when pasted rubrics exist; L5: analytics/pm/comms → A). `per-layer-procedure.md` + all 5 layer references.
+
+**3n.6 — `paste-organize.md` helper.** Keyword-based classification into layer sub-folders (`product/` / `engineering/` / `design-system/` / etc.). Residue → `unsorted.md` (never drops content silently). Secret redaction. Append-don't-overwrite. Reuses Step 8.5 preview-before-write gate.
+
+**3n.7 — `detect.py` schema v5 — additive.** Two new categories:
+- `team_tooling.cli[]` — `vercel`, `supabase`, `wrangler`, `fly`, `railway`, `turbo`, `nx`, `sentry`, `stripe`
+- `team_tooling.data_api[]` — `supabase`, `firebase`, `hasura`, `airtable`, `strapi`, `sanity`, `contentful`
+
+Regex patterns (`package.json` devDeps) + `CONFIG_FILE_SIGNALS` filesystem-existence hook (`vercel.json`, `supabase/config.toml`, `wrangler.toml`, `fly.toml`, `railway.json`, `.sentryclirc`, `turbo.json`, `nx.json`, `firebase.json`, `.firebaserc`, `hasura.config.yaml`). `.toml` added to `SEARCH_EXTENSIONS`. v4 configs parse clean under v5 (missing arrays default to `[]`). Schema doc + template bumped.
+
+**3n.8 — Step 10 research-opportunity closer.** When `team_tooling` has entries, surface re-entry even after create-from-scratch: *"Scanned but didn't wire up: `<tool list>`. Re-run `/hd:setup --discover-tools` or paste content."*
+
+**Budgets:** `hd-setup/SKILL.md` 198/200 lines; 0 violations across all 4 skills + 10 agents.
+
+Commits: `652205d684`, `fba4ab96c7`, `b14105947d`.
+
 ## [1.1.0] — 2026-04-20
 
 Iteration release. Three phases (3k, 3l, 3m) built on top of v1.0.0 distribution-ready baseline. Surfaced by live testing across 10 real repos (plus-uno, sds, plus-marketing-website, caricature, oracle-chat, lightning, cornerstone, Dawnova, compound-designing, plus-vibe-coding-starting-kit). ~25 fixes landed.

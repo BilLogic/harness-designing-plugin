@@ -1,7 +1,7 @@
 ---
 title: "feat: Phase 3n — external-source fill-path + ai-integration-scout"
 type: feat
-status: active
+status: completed
 date: 2026-04-21
 phase: 3n
 ---
