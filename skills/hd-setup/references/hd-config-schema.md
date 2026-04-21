@@ -8,16 +8,20 @@ At the user's **repo root**, alongside `AGENTS.md`. Created by `hd:setup` first 
 
 Never at plug-in root. Never nested inside `docs/`. Never inside `.claude/`.
 
-## Schema — LOCKED (schema_version: "3")
+## Schema — LOCKED (schema_version: "5")
 
-Bumps from `"2"` to `"3"` to generalize other-tool detection: the previously named vendor sub-field is removed; every detected tool (`.agent/`, `.claude/`, `.codex/`, any foreign plug-in, any future addition) becomes one entry in `other_tool_harnesses_detected[]`. No tool is privileged at the schema level. `"2"` files auto-upgrade on next run (any legacy vendor-specific bool synthesized into a generic array entry).
+**v5 (3n.7)** — additive-only. Adds `team_tooling.cli[]` + `team_tooling.data_api[]` for CLI dev tools (vercel / supabase / wrangler / fly / railway / turbo / nx / sentry) and data/API sources (supabase / firebase / hasura / airtable / strapi / sanity / contentful). v4 configs parse clean under v5; missing arrays default to `[]`.
+
+**v4 (3l.3)** — additive probes for `.agents/`, `.cursor/skills/`, `.windsurf/`, `.roo/`; `layers_present_scattered[]` + `scattered_l1_signals` sub-object.
+
+**v3 (earlier)** generalized other-tool detection: every detected tool (`.agent/`, `.claude/`, `.codex/`, any foreign plug-in) becomes one entry in `other_tool_harnesses_detected[]` — no tool privileged at schema level.
 
 Prior: `"1"` → `"2"` added `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`, `files_written`.
 
 ```markdown
 ---
 # Required
-schema_version: "3"                        # semver major; bump on breaking changes
+schema_version: "5"                        # semver major; bump on breaking changes
 setup_mode: greenfield | scattered | advanced | localize
 setup_date: 2026-04-17                     # ISO date; last mutation
 team_size: solo | small | medium | large   # <2 | 2-5 | 5-20 | 20+
@@ -27,7 +31,8 @@ skipped_layers: [1, 2, 3, 4, 5]            # int list; layers user declined to c
 
 article_read: true                         # self-reported; never blocking
 
-# NEW in schema v2 — what tools the team uses, decided per-category at Step 1.5
+# NEW in schema v2 — what tools the team uses, decided per-category at Step 1.5.
+# v5 adds `cli` + `data_api` categories (3n.7).
 team_tooling:
   docs: [notion]                           # detected via URL grep + user confirmation
   design: [figma, pencildev]
@@ -35,6 +40,8 @@ team_tooling:
   analytics: [amplitude]
   pm: [linear]
   comms: [slack]
+  cli: [vercel, supabase, wrangler]        # v5: CLI dev tools (package.json + config files)
+  data_api: [supabase, firebase]           # v5: databases / BaaS / headless CMS
 
 # NEW in schema v2 — MCPs configured at setup time (from .mcp.json, etc.)
 mcp_servers_at_setup: [notion, figma, shadcn]
@@ -121,7 +128,7 @@ Free-form notes about the harness — team context, customizations, decisions sp
 | `team_size` | enum | yes | `solo` \| `small` \| `medium` \| `large` | solo=<2, small=2-5, medium=5-20, large=20+ |
 | `skipped_layers` | int list | no | `[1-5]` | Which layers user declined during setup. Default `[]`. |
 | `article_read` | bool | no | `true` \| `false` | User self-reported; default `false`. |
-| `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories: `docs, design, diagramming, analytics, pm, comms`. |
+| `team_tooling` | map | no | category → list of tool slugs | Default `{}`. Categories (v5): `docs, design, diagramming, analytics, pm, comms, cli, data_api`. |
 | `mcp_servers_at_setup` | string list | no | `[notion, figma, ...]` | From parsing `.mcp.json` / `.cursor/mcp.json` / etc. Default `[]`. |
 | `layer_decisions` | list of objects | no | see below | One entry per layer. Each object: `{layer: L1\|L2\|L3\|L4\|L5, decision: scaffold\|review\|create\|skip, why: <one-line>, files_written: <list of relative paths, `[]` if none>}`. Default `[]`. |
 | `other_tool_harnesses_detected` | list of objects | no | see below | Unified array — every detected tool is one entry, no named special cases. Required keys: `name` (string; e.g. `.agent`, `.claude`, `.codex`, or any foreign plug-in slug), `type` (enum: `plugin` \| `meta-harness` \| `convention` \| `other`), `paths_found` (list of repo-relative paths). Optional keys: `config_file` (string), `skill_count` (int), `rule_count` (int), `owner` (user-set: `user` \| `team` \| `<tool-name>`), `policy` (user-set: `respect` \| `link` \| `coexist`). Default `[]`. |

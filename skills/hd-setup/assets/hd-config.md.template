@@ -1,10 +1,15 @@
 ---
-schema_version: "3"
+schema_version: "5"
 setup_mode: {{SETUP_MODE}}
 setup_date: {{DATE}}
 team_size: {{TEAM_SIZE}}
 skipped_layers: {{SKIPPED_LAYERS}}
 article_read: {{ARTICLE_READ}}
+
+# External tools detected at setup (v5 adds `cli` + `data_api` categories).
+# Populated by detect.py; hd-setup surfaces these as research opportunities per layer.
+team_tooling: {{TEAM_TOOLING}}
+mcp_servers_at_setup: {{MCP_SERVERS}}
 
 # Per-layer decisions recorded during the Step 4 layer-walk.
 # One row per layer (L1–L5). `decision` is one of: scaffold | review | create | skip.

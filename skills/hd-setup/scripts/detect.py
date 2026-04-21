@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """detect.py — deterministic harness + tooling detection for hd:setup.
 
-Replaces the v1 detect-mode.sh. Emits JSON matching schema v4 (see
+Replaces the v1 detect-mode.sh. Emits JSON matching schema v5 (see
 `references/hd-config-schema.md`). Exit 0 on success (even if no harness
 detected — "greenfield" is a valid result). Non-zero only on I/O failure.
 
@@ -11,6 +11,13 @@ Schema v4 (3l.3) adds:
   design-system dirs scattered across docs/)
 - layers_present_scattered[] field distinguishing scattered from canonical
 - scattered_l1_signals sub-object with evidence
+
+Schema v5 (3n.7) adds — additive only, v4 configs still parse:
+- team_tooling.cli[] — CLI dev tools detectable via package.json deps +
+  repo config files (vercel.json, supabase/config.toml, wrangler.toml,
+  fly.toml, railway.json, turbo.json, nx.json, .sentryclirc)
+- team_tooling.data_api[] — databases/BaaS/headless-CMS signals
+  (supabase/, firebase.json, hasura/, @sanity/client, contentful, airtable)
 
 Usage:
     cd <user's repo root>
@@ -196,10 +203,50 @@ CATEGORY_PATTERNS: dict[str, dict[str, re.Pattern[str]]] = {
         "discord": re.compile(r"discord\.(?:com|gg)", re.I),
         "loom": re.compile(r"loom\.com", re.I),
     },
+    # 3n.7 — CLI dev tools (deploy / scaffold / migrate CLIs that could be wrapped as L2 skills).
+    # Matches on package.json devDeps + dep declarations. Filesystem-based signals (vercel.json,
+    # fly.toml, etc.) handled in _detect_config_files() below.
+    "cli": {
+        "vercel": re.compile(r'"vercel"\s*:\s*"', re.I),
+        "supabase": re.compile(r'"supabase"\s*:\s*"|"@supabase/supabase-js"\s*:\s*"', re.I),
+        "wrangler": re.compile(r'"wrangler"\s*:\s*"', re.I),
+        "stripe": re.compile(r'"stripe"\s*:\s*"', re.I),
+        "sentry": re.compile(r'"@sentry/[\w-]+"\s*:\s*"', re.I),
+        "turbo": re.compile(r'"turbo"\s*:\s*"', re.I),
+        "nx": re.compile(r'"nx"\s*:\s*"', re.I),
+    },
+    # 3n.7 — Data/API sources (databases, BaaS, headless CMS) that feed L1 canonical facts
+    # or L5 knowledge. Matches on package-level dep declarations. Config-file existence in hook.
+    "data_api": {
+        "supabase": re.compile(r'"@supabase/supabase-js"\s*:\s*"', re.I),
+        "firebase": re.compile(r'"firebase"\s*:\s*"|"firebase-admin"\s*:\s*"', re.I),
+        "hasura": re.compile(r"hasura\.io", re.I),
+        "airtable": re.compile(r'"airtable"\s*:\s*"', re.I),
+        "strapi": re.compile(r'"@strapi/strapi"\s*:\s*"', re.I),
+        "sanity": re.compile(r'"@sanity/client"\s*:\s*"', re.I),
+        "contentful": re.compile(r'"contentful"\s*:\s*"', re.I),
+    },
 }
 
+# 3n.7 — Config-file signals for cli + data_api (filesystem existence, not content regex).
+# Maps (category, tool) → list of relative paths; any path existing adds the tool.
+CONFIG_FILE_SIGNALS: dict[tuple[str, str], list[str]] = {
+    ("cli", "vercel"): ["vercel.json", ".vercel/project.json"],
+    ("cli", "supabase"): ["supabase/config.toml"],
+    ("cli", "wrangler"): ["wrangler.toml", "wrangler.jsonc"],
+    ("cli", "fly"): ["fly.toml"],
+    ("cli", "railway"): ["railway.json", "railway.toml"],
+    ("cli", "sentry"): [".sentryclirc"],
+    ("cli", "turbo"): ["turbo.json"],
+    ("cli", "nx"): ["nx.json"],
+    ("data_api", "supabase"): ["supabase/schema.sql", "supabase/migrations"],
+    ("data_api", "firebase"): ["firebase.json", ".firebaserc"],
+    ("data_api", "hasura"): ["hasura.config.yaml", "hasura/config.yaml"],
+}
+
+
 SEARCH_EXTENSIONS = {
-    ".md", ".mdx", ".mdc", ".json", ".yml", ".yaml",
+    ".md", ".mdx", ".mdc", ".json", ".yml", ".yaml", ".toml",
     ".ts", ".tsx", ".js", ".jsx", ".html", ".txt",
 }
 SKIP_DIRS = {
@@ -239,6 +286,16 @@ def detect_team_tooling() -> dict[str, list[str]]:
                         continue  # already found
                     if pat.search(text):
                         hits[cat].add(tool)
+
+    # 3n.7 — filesystem config-file signals for cli + data_api (existence, not content).
+    for (cat, tool), paths in CONFIG_FILE_SIGNALS.items():
+        if tool in hits.get(cat, set()):
+            continue  # already found via regex
+        for rel in paths:
+            p = REPO / rel
+            if p.exists():
+                hits.setdefault(cat, set()).add(tool)
+                break
 
     return {cat: sorted(tools) for cat, tools in hits.items()}
 
@@ -898,7 +955,7 @@ def main() -> int:
     }
 
     output = {
-        "schema_version": "4",
+        "schema_version": "5",
         "mode": mode,
         "priority_matched": priority,
         "signals": signals,

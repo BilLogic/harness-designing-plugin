@@ -183,9 +183,9 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 ## Assets + scripts
 
 - `assets/AGENTS.md.template` — master-index (harness map + agent persona)
-- `assets/hd-config.md.template` — schema v4 config
+- `assets/hd-config.md.template` — schema v5 config (adds `cli` + `data_api` categories)
 - `assets/context-skeleton/` · `assets/knowledge-skeleton/` · `assets/platform-stubs/`
-- `scripts/detect.py` — canonical detector (schema v4 JSON); `scripts/detect-mode.sh` — bash shim
+- `scripts/detect.py` — canonical detector (schema v5 JSON); `scripts/detect-mode.sh` — bash shim
 
 ## Sub-agents invoked
 
