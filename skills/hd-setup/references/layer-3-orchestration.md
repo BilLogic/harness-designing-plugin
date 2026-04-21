@@ -63,6 +63,8 @@ Review flags Layer 3 gaps when:
 - `team_tooling.diagramming` → **scaffold** pointers to sequence/state diagrams
 - Fewer than 3 Layer 2 skills → **skip**
 
+**Execute (3n.5):** offer three fill paths per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5). Path A fits when `team_tooling.pm` (Linear/GitHub Issues) or `team_tooling.cli` (Turbo/Nx task graphs) has entries — those surface recurring handoff patterns. Otherwise Path C.
+
 **Execute — create:** seed questions: (1) 3–5 steps from idea to shipped? (2) most common handoff that breaks? Use the "What to build when L3 is active" + "Workflow design patterns" sections above for depth.
 
 → Return to [../SKILL.md § Step 6 — Layer 3 (Orchestration)](../SKILL.md#step-6--layer-3-orchestration)

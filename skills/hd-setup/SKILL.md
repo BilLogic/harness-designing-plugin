@@ -136,6 +136,7 @@ Report:
   - Mostly create → `/hd:maintain capture` to record first lesson
   - Mostly scaffold → `/hd:review` to review the combined harness
   - Mostly review → address findings; re-run `/hd:review`
+- **Research opportunities** (3n.8) — when `team_tooling` has entries, surface re-entry: *"Scanned but didn't wire up: `<tool list>`. Re-run `/hd:setup --discover-tools` to have scout research MCP/CLI/API per tool, or paste content and I'll organize."*
 
 ## `--from-review` mode (3m.3)
 

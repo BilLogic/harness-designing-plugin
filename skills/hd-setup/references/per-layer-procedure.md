@@ -30,7 +30,7 @@ EXECUTE → perform chosen action; checkpoint after (optional review / capture /
 | **Existing harness detected** + layer is L4/L5 | create (typical genuine gap) |
 | Nothing detected at this layer + no external tooling mentioned | create |
 | Team tool detected (e.g., notion for L1) + MCP live in session | create + MCP-pull |
-| Team tool detected + MCP not in session | scaffold + install-walkthrough |
+| Team tool detected + no live MCP in session | scaffold + scout-research (Path A of Fill path) |
 | Other-tool harness artifact (e.g., `.agent/rules/*` for L1) | scaffold |
 | Existing `docs/<layer>/` file (prior hd-* run) | review |
 | Bloat detected (L1 only) | review |
@@ -55,6 +55,38 @@ if guardrail_fired and layer in {L1, L2, L3}:
 When any layer chooses **scaffold**, write a pointer file using [`../assets/pointer-file.md.template`](../assets/pointer-file.md.template). The pointer must include a **3–5 line extracted summary** of the source content in plain prose — not just a bare `See [path]` reference. Pointer files should be useful standalone; the source provides full detail.
 
 Read the source (via MCP if live, filesystem read for local paths, or pasted content from user for URLs without MCP), extract the summary, fill the template, write with explicit confirmation. Step 4 (Layer 1) includes a concrete example.
+
+### Fill path (EXECUTE sub-routine for `create` + `scaffold`, 3n.5)
+
+After user picks `create` or `scaffold` at a layer, offer three equal ways to populate it. Choice is about ergonomics — all three land in the same layer folder.
+
+**Narration template (tune per layer):**
+
+> *"Three ways to fill Layer `<N>` (`<layer-name>`):*
+> *A. **Wire up a tool** — name a tool you use (e.g. `<suggested from scan>`) and I'll research whether there's an MCP / CLI / API to feed this layer. I'll link install docs; you install.*
+> *B. **Paste or drop files** — paste the raw content (markdown, export, bullets, links) and I'll organize it into the right sub-folders.*
+> *C. **Create from scratch** — seeded prompts and I write new files. Classic path."*
+
+**Path A — Wire up a tool**
+1. User names one or more tools
+2. Dispatch `design-harnessing:research:ai-integration-scout` per tool (batch ≤5 parallel)
+3. Report structured findings inline: *"`<tool>` → MCP at `<install_docs>`, CLI at `<url>`, REST API at `<url>`. Install when ready."*
+4. Write a **pointer file** at the layer (scaffold-mode contract above) referencing the tool + install docs, with empty `<!-- live data -->` section the user fills in after install
+5. Record in `hd-config.md:team_tooling.<category>` with `integration: available` status
+
+**Path B — Paste or drop files**
+1. User pastes content or provides local paths
+2. Invoke [`paste-organize.md`](paste-organize.md) helper
+3. Classify + structure → preview-before-write → atomic write
+4. Record files in `hd-config.md:files_written` + `layer_decisions.files_written`
+
+**Path C — Create from scratch**
+1. Walk the layer's existing seeded-prompt flow (see `layer-1-context.md`, `layer-5-knowledge.md`, etc.)
+2. Standard create-from-template path
+
+**Defaults.** If `team_tooling` has entries relevant to this layer (via [`known-mcps.md § Per-layer integration patterns`](known-mcps.md#per-layer-integration-patterns)), default to A. If user mentioned pasting content, default to B. Otherwise C.
+
+All three paths share the same preview-before-write gate at Step 8.5 — no writes land without explicit `y` confirmation.
 
 ### Post-action checkpoint (friction, Layers 1–4)
 

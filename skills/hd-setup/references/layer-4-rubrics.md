@@ -102,6 +102,8 @@ Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exist
 4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
 5. Never modify the source AI-doc file. Extraction is read-only on the source.
 
+**Execute (3n.5):** offer three fill paths per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5). Path B fits when user has existing rubric docs, reviewer checklists, or retro-template content to paste. Path A is rarely primary for L4 (few tools expose rubric-style content directly) but applies when design-system packages expose tokens we can seed `design-system-compliance` from. Otherwise Path C (starter-trio from the 14-rubric library).
+
 **Execute — create** (conditions 2/3/4):
 - Use the "distributed-behavior pattern" + "starter rubric library" sections above for L4 depth (distributed-behavior rationale, 12-starter enumeration, INDEX.md pattern)
 - Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?

@@ -70,6 +70,8 @@ Task design-harnessing:review:skill-quality-auditor(
 
 Aggregate findings. Present to user. Don't modify anything.
 
+**Execute (3n.5):** offer three fill paths per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5). Path A shines for L2 when `team_tooling.cli` has entries — deploy/migration CLIs (`vercel`, `supabase`, `wrangler`) wrap cleanly as skills. Path B works when user has existing skill definitions in Notion/docs. Otherwise Path C below.
+
 **Execute — create:** seed questions: (1) workflow explained 3+ times last month? (2) repetitive task worth automating? Point user at the "What good Layer 2 looks like" section above for authoring discipline.
 
 → Return to [../SKILL.md § Step 5 — Layer 2 (Skills)](../SKILL.md#step-5--layer-2-skills)

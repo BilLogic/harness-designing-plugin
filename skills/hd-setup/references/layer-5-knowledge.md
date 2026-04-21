@@ -95,6 +95,8 @@ Task design-harnessing:analysis:rule-candidate-scorer(
 
 Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for each.
 
+**Execute (3n.5) — offer three fill paths** per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5): (A) wire up a tool via `ai-integration-scout` (ideal when `team_tooling.analytics`, `team_tooling.data_api`, `team_tooling.pm`, or `team_tooling.comms` has entries — those feed L5 lesson candidates from event data, decisions, and pinned threads), (B) paste existing lesson notes or retro docs via [`paste-organize.md`](paste-organize.md), or (C) create the skeleton from scratch below.
+
 **Execute — create:** write exactly these files:
 - `docs/knowledge/changelog.md` (from template)
 - `docs/knowledge/decisions.md` (from template)
