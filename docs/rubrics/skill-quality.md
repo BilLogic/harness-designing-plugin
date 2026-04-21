@@ -20,7 +20,7 @@ This rubric is self-referential: it's the rubric we apply to our own Layer 2 ski
 
 ### Personas
 - **Skill author** — writing or editing a `SKILL.md`. Pain: bloated 800-line SKILL.md with references inlined; progressive disclosure collapses; context window suffers.
-- **Skill reviewer / full reviewor** — running `hd:review` across every skill in `skills/`. Pain: no consistent rubric, so reviews drift by reviewer.
+- **Skill reviewer / auditor** — running `hd:review` across every skill in `skills/`. Pain: no consistent rubric, so reviews drift by reviewer.
 - **New contributor** — shipping their first skill. Pain: doesn't know the 9-section shape; misses "what this skill does NOT do" and triggers on everything.
 - **Skill consumer (the model itself)** — loading the skill at invocation. Pain: vague descriptions and overlapping triggers cause wrong-skill activation.
 
@@ -95,7 +95,7 @@ This rubric is self-referential: it's the rubric we apply to our own Layer 2 ski
 | Template file referenced when output is structured | p1 |
 | Reduces randomness — same inputs produce same-shape output | p2 |
 
-**Pass example:** hd-review full review has a template at `templates/full review-report.md.template` with explicit placeholders.
+**Pass example:** hd-review's full review has a template at `assets/review-report.md.template` with explicit placeholders.
 **Fail example:** "output a summary" with no shape declared — every run looks different.
 
 ## 5. Context design
@@ -137,7 +137,7 @@ This rubric is self-referential: it's the rubric we apply to our own Layer 2 ski
 | `disable-model-invocation: true` set ONLY when skill is genuinely manual-only | p2 |
 
 **Pass example:** `hd:learn` (Q&A) vs `hd:setup` (scaffolding) — clean verb split, zero overlap.
-**Fail example:** two skills named `hd:review-harness` and `hd:full review-harness` with near-identical descriptions.
+**Fail example:** two skills named `hd:review` and `hd:review-harness` with near-identical descriptions.
 
 ## 8. Scalability & maintainability
 
@@ -179,7 +179,7 @@ This rubric is self-referential: it's the rubric we apply to our own Layer 2 ski
 /hd:review targeted skills/hd-foo/SKILL.md --rubric skill-quality
 ```
 
-Produces inline structured targeted review per `references/targeted review-format.md`. Severity overrides from `hd-config.md` apply.
+Produces inline structured targeted review per `references/targeted-review-format.md`. Severity overrides from `hd-config.md` apply.
 
 ### During skill authoring (pre-ship check)
 
@@ -191,18 +191,18 @@ Copy to `docs/context/skill-standards.md` in your repo and:
 
 1. Adjust severity defaults to match your team's tolerance
 2. Add team-specific criteria (e.g., "every skill must cite a PR or design doc")
-3. Reference in `hd-config.md` under `targeted review_rubrics`
+3. Reference in `hd-config.md` under `targeted_review_rubrics`
 
 ## What this rubric does NOT check
 
 - Whether the skill's subject matter is well-chosen (that's a product decision, not a quality check)
 - Whether the references are factually accurate (domain-specific — out of scope)
 - Runtime performance of scripts (not a quality-of-skill-authoring concern)
-- Cross-tool portability (Codex / Cursor / Claude) — covered by `coexistence` checks in `full review-criteria.md`
+- Cross-tool portability (Codex / Cursor / Claude) — covered by `coexistence` checks in `review-criteria-l2-skills.md`
 
 ## See also
 
-- [../../references/full review-criteria.md](../../references/full review-criteria.md) — Layer 2 drift signals that reference this rubric
-- [../../references/targeted review-format.md](../../references/targeted review-format.md) — output shape for `hd:review targeted`
+- [../../references/review-criteria-l2-skills.md](../../skills/hd-review/references/review-criteria-l2-skills.md) — Layer 2 drift signals that reference this rubric
+- [../../references/targeted-review-format.md](../../skills/hd-review/references/targeted-review-format.md) — output shape for `hd:review targeted`
 - Anthropic — [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) (source for sections 1, 3, 5, 7)
 - [component-budget.md](component-budget.md) — parallel rubric for Layer 1 (components); this one is for Layer 2 (skills)
