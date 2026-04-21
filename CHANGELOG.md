@@ -3,7 +3,22 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.2.0] — 2026-04-21
+
+Iteration release. Two phases (3n, 3o) plus post-audit remediation shipped on top of v1.1.0. Triggered by live testing: 3n surfaced by a sense_frontend run where Step 3 tool-discovery collapsed silently; 3o surfaced by a 4-repo dry-run (Lightning, cornerstone, caricature, Oracle Chat) where the 3n.7 detection whitelist missed ≥4 well-known tools in 1 day. Each phase went through the full `/ce:plan` → `/ce:deepen-plan` → `/ce:work` → `/ce:review` cycle on the plug-in itself.
+
+Headlines:
+
+- **Advisor-not-installer principle codified** — plug-in scans, asks, researches AI-integration options (MCP/CLI/API), links install docs. Never installs packages or wires auth. Parallel path: paste-and-organize for users who already have content.
+- **Universal tool discovery** — `detect.py` emits `raw_signals.deps` (all package.json deps, monorepo-aware) + filtered `raw_signals.urls`; `ai-integration-scout` gains `classify` mode with cache-first + web-search fallback + deterministic pre-classifier rules. Whitelist approach deleted. Cache grows organically with usage.
+- **Per-layer EXECUTE "Fill path"** — three equal paths at `create`/`scaffold`: wire-up-a-tool (scout research or classify), paste-and-organize, or create from scratch.
+- **`hd-config.md` authored** for plug-in meta-harness — closes both 2026-04-20 and 2026-04-21 review carry-overs.
+- **3 new rules adopted** — live-testing graduation (4 confirmations), advisor-not-installer, 3-of-14 rubric policy with explicit waivers.
+- **Budgets** — 150/200 always-loaded on plug-in self; 0 skill violations; 0 agent violations; all 4 SKILL.md files ≤200 lines.
+
+Commits: `652205d684`, `fba4ab96c7`, `b14105947d`, `42c87e96ae`, `2005ca5881`, `9b2fbaf7dd`, `034b16fde2`, `d87ebcd496`, `86e5c31f41`, `1ce23239c4`, `fd5961a78d`, `b8bbc360a1`.
+
+Full details per phase below.
 
 ### Phase 3o — universal tool discovery (2026-04-21)
 
