@@ -1,10 +1,11 @@
 ---
 title: "feat: Phase 3o — universal tool discovery (shrink whitelist, scout classifies)"
 type: feat
-status: active
+status: completed
 date: 2026-04-21
 phase: 3o
 deepened: 2026-04-21
+completed: 2026-04-21
 ---
 
 # feat: Phase 3o — universal tool discovery

@@ -83,11 +83,11 @@ Each batch stays ≤5 agents (6+ parallel strains context). Outputs synthesize i
 
 ## Step 3 — Scan summary (inline, non-blocking)
 
-**Narrate** detected tools inline — no blocking question: *"Scanned. Detected: `<team_tooling list>`. I'll surface integration paths per layer as we go — your call on what to wire up."* If `other_tool_harnesses_detected` present, append *"Other-tool harness(es) at `<paths>` — coexisting, won't touch."*
+**Narrate** inline — no block (3n.2 + 3o.3): *"Scanned. Recognized: `<team_tooling list>`. Also found `<N>` uncategorized deps — research per-layer via Path A.2 classify, or skip. Other-tool harness(es) at `<paths>` — coexisting."*
 
-Solo-dispatch `design-harnessing:research:lesson-retriever` (`topic: tool-discovery`) when `docs/knowledge/lessons/` non-empty.
+`<N>` = `len(raw_signals.deps)` from detect.py (3o.1). Solo-dispatch `research:lesson-retriever` (`topic: tool-discovery`) when lessons dir non-empty.
 
-Tool-offering moves to per-layer EXECUTE (3n.2) — pre-layer interrogation collapses silently in additive mode (observed 2026-04-21); contextualized per-layer asks are unmissable. The plug-in is an **advisor, not an installer** — at EXECUTE, dispatch `research:ai-integration-scout` to research MCP/CLI/API support and link official install docs. User installs themselves. See [`references/per-layer-procedure.md § Fill path`](references/per-layer-procedure.md).
+**Advisor, not installer.** Tool research happens at per-layer EXECUTE: dispatch `research:ai-integration-scout` in `research` mode (named tool) or `classify` mode (categorize raw_signals deps). Returns MCP/CLI/API findings + install-docs URLs; user installs. See [`references/per-layer-procedure.md § Fill path`](references/per-layer-procedure.md).
 
 ## Step 3.5 — Structure mode (3k.11)
 

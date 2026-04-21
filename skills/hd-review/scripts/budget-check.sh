@@ -108,9 +108,15 @@ always_loaded_breakdown='[]'
 
 while IFS= read -r f; do
   [ -z "$f" ] && continue
-  lines=$(count_lines "$f")
+  if [ -f "$f" ]; then
+    lines=$(count_lines "$f")
+    status="present"
+  else
+    lines=0
+    status="missing"
+  fi
   always_loaded_total=$((always_loaded_total + lines))
-  entry=$(jq -n --arg path "$f" --argjson lines "$lines" '{path:$path, lines:$lines}')
+  entry=$(jq -n --arg path "$f" --argjson lines "$lines" --arg status "$status" '{path:$path, lines:$lines, status:$status}')
   always_loaded_breakdown=$(jq -n --argjson acc "$always_loaded_breakdown" --argjson v "$entry" '$acc + [$v]')
 done <<< "$always_loaded_files"
 

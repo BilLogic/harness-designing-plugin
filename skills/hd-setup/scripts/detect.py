@@ -604,17 +604,22 @@ def _compound_entry() -> dict | None:
 def _meta_harness_entry(dirname: str) -> dict | None:
     """Detect a meta-harness directory (.agent, .claude, .codex, etc.) at repo root.
 
-    3m.1: requires content substance, not just directory existence. A meta-harness
-    must have AT LEAST ONE of:
+    3m.1: requires content substance, not just directory existence.
+    3o.5b: settings.json alone is NOT substance — it's configuration, not harness
+    content. A real harness must have at least one of:
       - skills/ with ≥1 SKILL.md or *.md
       - rules/ with ≥1 *.md
       - agents/ with ≥1 *.md
       - commands/ with ≥1 *.md
-      - settings.json or settings.local.json with ≥5 non-blank lines
       - AGENTS.md or AGENT.md with ≥20 non-blank lines
 
-    Metadata-only dirs (e.g. .claude/worktrees/ alone, .claude/logs/ alone,
-    empty settings.local.json) return None — they don't count as a harness.
+    Settings files (settings.json / settings.local.json) are recorded as paths_found
+    when non-trivial, but do NOT by themselves qualify a dir as a meta-harness.
+    Any repo that ever opened Claude Code has a settings.local.json; that's
+    metadata, not content. (Oracle Chat false-positive 2026-04-21.)
+
+    Metadata-only dirs (e.g. .claude/worktrees/, .claude/logs/, .claude/ with
+    only settings.local.json) return None.
     """
     root = REPO / dirname
     if not root.is_dir():
@@ -656,7 +661,9 @@ def _meta_harness_entry(dirname: str) -> dict | None:
             paths_found.append(f"{dirname}/agents/")
             has_substance = True
 
-    # settings.json / settings.local.json with non-trivial content
+    # settings.json / settings.local.json — recorded as paths_found but NOT
+    # counted as harness substance on their own (3o.5b). A meta-harness needs
+    # actual content (skills/rules/agents/commands/AGENTS.md) to qualify.
     for settings_name in ("settings.json", "settings.local.json"):
         settings_path = root / settings_name
         if settings_path.is_file():
@@ -667,7 +674,7 @@ def _meta_harness_entry(dirname: str) -> dict | None:
                 ]
                 if len(lines) >= 5:
                     paths_found.append(f"{dirname}/{settings_name}")
-                    has_substance = True
+                    # Deliberately DO NOT set has_substance = True here.
             except (OSError, UnicodeDecodeError):
                 pass
 
@@ -734,27 +741,63 @@ _TECH_STACK_FILENAME_RE = re.compile(
 def detect_scattered_l1() -> dict:
     """3l.3: find scattered Layer 1 content that doesn't live in docs/context/.
 
+    3o.5d: broadened to also catch root-level README.md (≥30 non-blank lines),
+    root-level SKILL.md (a standalone skill definition), and *.local.md config
+    files (e.g. compound-engineering.local.md) — all substantial L1 material
+    that caricature's L1 audit was missing.
+
     Catches repos where real context exists as PRD docs, tech-stack files,
-    or a design-system folder outside the canonical docs/context/ tree.
-    Oracle-chat example: docs/TECH_STACK.md + docs/PRD_MVP.md + docs/design-system/
-    were present but detect.py reported layers_present: [].
+    a design-system folder outside docs/context/, or rich root-level docs.
     """
     docs_dir = REPO / "docs"
+
+    prd_files: list[str] = []
+    tech_stack_files: list[str] = []
+    root_l1_files: list[str] = []  # 3o.5d — root-level L1 substance
+
+    # 3o.5d — root-level README.md with substance
+    root_readme = REPO / "README.md"
+    if root_readme.is_file():
+        try:
+            if root_readme.stat().st_size <= 512 * 1024:
+                lines = [ln for ln in root_readme.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
+                if len(lines) >= 30:
+                    root_l1_files.append("README.md")
+        except (OSError, UnicodeDecodeError):
+            pass
+
+    # 3o.5d — root-level SKILL.md (standalone skill as L1 content)
+    root_skill = REPO / "SKILL.md"
+    if root_skill.is_file():
+        root_l1_files.append("SKILL.md")
+
+    # 3o.5d — *.local.md config files (e.g. compound-engineering.local.md)
+    try:
+        for p in REPO.glob("*.local.md"):
+            if p.is_file():
+                try:
+                    if p.stat().st_size <= 512 * 1024:
+                        lines = [ln for ln in p.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
+                        if len(lines) >= 10:
+                            root_l1_files.append(p.name)
+                except (OSError, UnicodeDecodeError):
+                    pass
+    except OSError:
+        pass
+
     if not docs_dir.is_dir():
         return {
             "prd_files": [],
             "tech_stack_files": [],
             "design_system_dirs": [],
+            "root_l1_files": sorted(root_l1_files)[:5],
         }
-
-    prd_files: list[str] = []
-    tech_stack_files: list[str] = []
 
     # Shallow scan — docs/ top-level + one level deep
     try:
         entries = list(docs_dir.iterdir())
     except OSError:
-        return {"prd_files": [], "tech_stack_files": [], "design_system_dirs": []}
+        return {"prd_files": [], "tech_stack_files": [], "design_system_dirs": [], "root_l1_files": sorted(root_l1_files)[:5]}
 
     for entry in entries:
         if entry.is_file():
@@ -782,20 +825,49 @@ def detect_scattered_l1() -> dict:
         "prd_files": sorted(prd_files)[:10],
         "tech_stack_files": sorted(tech_stack_files)[:5],
         "design_system_dirs": sorted(design_system_dirs)[:5],
+        "root_l1_files": sorted(root_l1_files)[:5],
     }
 
 
 # --- E2.6: markdown-todos PM signal -------------------------------------------
 
 _TODO_FILE_RE = re.compile(r"\d{3}-\w+.*\.md")
+# 3o.5c — additional dated/tagged patterns to tighten the signal
+_DATED_TODO_RE = re.compile(r"^\d{4}-\d{2}-\d{2}")
+_TAGGED_TODO_RE = re.compile(r"\b(p[0-3]|priority-\d|status:|due:)", re.I)
 
 
 def detect_markdown_todos() -> bool:
+    """3o.5c — require ≥3 files AND dated/priority-tagged shape.
+
+    Any repo can have a todos/ dir with random files. Require stricter evidence
+    of an actual PM pattern: (a) ≥3 files matching numbered-sequence convention
+    (001-foo.md pattern), OR (b) ≥3 files dated YYYY-MM-DD, OR (c) ≥3 files with
+    priority/status/due tags in their content.
+    """
     todos_dir = REPO / "todos"
     if not todos_dir.is_dir():
         return False
-    matches = [f for f in todos_dir.iterdir() if f.is_file() and _TODO_FILE_RE.match(f.name)]
-    return len(matches) >= 2
+
+    numbered = 0
+    dated = 0
+    tagged = 0
+    for f in todos_dir.iterdir():
+        if not f.is_file() or f.suffix != ".md":
+            continue
+        if _TODO_FILE_RE.match(f.name):
+            numbered += 1
+        if _DATED_TODO_RE.match(f.name):
+            dated += 1
+        try:
+            if f.stat().st_size <= 64 * 1024:
+                text = f.read_text(encoding="utf-8", errors="replace")
+                if _TAGGED_TODO_RE.search(text[:2000]):
+                    tagged += 1
+        except (OSError, UnicodeDecodeError):
+            pass
+
+    return numbered >= 3 or dated >= 3 or tagged >= 3
 
 
 # --- existing v1 signals (preserved for backward compat) ----------------------
@@ -943,6 +1015,7 @@ def main() -> int:
         scattered_l1["prd_files"]
         or scattered_l1["tech_stack_files"]
         or scattered_l1["design_system_dirs"]
+        or scattered_l1.get("root_l1_files", [])
     )
     has_canonical_l1 = "L1" in maturity["layers_present"]
     if has_scattered_l1 and not has_canonical_l1:

@@ -67,12 +67,34 @@ After user picks `create` or `scaffold` at a layer, offer three equal ways to po
 > *B. **Paste or drop files** — paste the raw content (markdown, export, bullets, links) and I'll organize it into the right sub-folders.*
 > *C. **Create from scratch** — seeded prompts and I write new files. Classic path."*
 
-**Path A — Wire up a tool**
-1. User names one or more tools
-2. Dispatch `design-harnessing:research:ai-integration-scout` per tool (batch ≤5 parallel)
-3. Report structured findings inline: *"`<tool>` → MCP at `<install_docs>`, CLI at `<url>`, REST API at `<url>`. Install when ready."*
-4. Write a **pointer file** at the layer (scaffold-mode contract above) referencing the tool + install docs, with empty `<!-- live data -->` section the user fills in after install
-5. Record in `hd-config.md:team_tooling.<category>` with `integration: available` status
+**Path A — Wire up a tool** (two sub-paths, 3o.3)
+
+Path A.1 — **named tool research** (user already knows what they want):
+1. User names one or more tools (e.g. "notion", "supabase")
+2. Dispatch `research:ai-integration-scout` with `mode: research` per tool (batch ≤5 parallel)
+3. Report structured findings inline: *"`<tool>` → primary `<category>`, MCP at `<install_docs>`, CLI at `<url>`. Install when ready."*
+4. Write pointer file referencing the tool + install docs
+5. Record in `hd-config.md:team_tooling.<category>` with `integration: available`
+
+Path A.2 — **classify raw_signals** (user says "classify my deps" or "research the raw signals" — 3o.3):
+1. Read `raw_signals.deps` from detect.py output (from Step 1 cached state)
+2. Cap at large-batch ceiling (≤50 signals per `/hd:setup` run; if more, ask user to pick top-N)
+3. Dispatch `research:ai-integration-scout` with `mode: classify, tool_name: <dep>` per signal (batch ≤5 parallel)
+4. Aggregate results by category; skip `framework-internal` + `not-ai-relevant`
+5. Report: *"Classified `<M>` deps into `<K>` AI-relevant tools across `<categories>`. Top matches for Layer `<N>`: `<tool1>` (confidence <c>), `<tool2>` (confidence <c>). Which to wire up?"*
+6. For user-selected tools, proceed as Path A.1 (pointer file + config entry)
+
+Concrete dispatch example:
+
+```
+Task design-harnessing:research:ai-integration-scout(
+  mode: "classify",
+  tool_name: "@aws-amplify/auth",
+  context: "l1"
+)
+```
+
+Returns `{categories: {primary: "data_api", secondary: ["auth"]}, confidence: 0.92, integrations: {...}}`. Cache write-back lands in `known-mcps.md`.
 
 **Path B — Paste or drop files**
 1. User pastes content or provides local paths

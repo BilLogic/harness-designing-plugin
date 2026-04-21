@@ -8,9 +8,15 @@ At the user's **repo root**, alongside `AGENTS.md`. Created by `hd:setup` first 
 
 Never at plug-in root. Never nested inside `docs/`. Never inside `.claude/`.
 
+## Backward compatibility contract (3o)
+
+Readers must tolerate unknown top-level fields (ignore, don't error). Writers must not change semantics of existing fields within the same integer version. New fields must have a safe default when absent. Removing / renaming / retyping a field requires a major version bump. K8s / dbt convention: additive changes don't bump the integer. 3o follows this convention — `schema_version: "5"` stays; `raw_signals` is new additive output, readers treat it as optional.
+
 ## Schema — LOCKED (schema_version: "5")
 
-**v5 (3n.7)** — additive-only. Adds `team_tooling.cli[]` + `team_tooling.data_api[]` for CLI dev tools (vercel / supabase / wrangler / fly / railway / turbo / nx / sentry) and data/API sources (supabase / firebase / hasura / airtable / strapi / sanity / contentful). v4 configs parse clean under v5; missing arrays default to `[]`.
+**v5 (3n.7)** — added `team_tooling.cli[]` + `team_tooling.data_api[]` for CLI dev tools and data/API sources. (**3o.1: removed these** from `detect.py` output — moved to scout-classified raw_signals. Retained in schema for backward compat; existing v5 configs with those fields still parse.)
+
+**3o (additive, no version bump)** — `detect.py` now emits `raw_signals: { deps: [...], urls: [...] }` for universal tool discovery (Layer A of the 3o classification split). Deps = package.json dependencies (+ monorepo `apps/*`, `packages/*`, etc. up to depth 3). URLs = deduped external URL list. Categorization happens at research time via `ai-integration-scout` classify mode (Layer B). See [`docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md`](../../../docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md).
 
 **v4 (3l.3)** — additive probes for `.agents/`, `.cursor/skills/`, `.windsurf/`, `.roo/`; `layers_present_scattered[]` + `scattered_l1_signals` sub-object.
 

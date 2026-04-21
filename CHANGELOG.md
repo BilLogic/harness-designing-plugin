@@ -5,6 +5,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3o — universal tool discovery (2026-04-21)
+
+Completed per [`docs/plans/2026-04-21-002-feat-phase-3o-universal-tool-discovery-plan.md`](docs/plans/2026-04-21-002-feat-phase-3o-universal-tool-discovery-plan.md). Triggered by a 4-repo dry-run test after 3n shipped — ≥4 false-negatives on well-known tools (netlify, AWS Amplify, GraphQL-codegen, vercel-via-script-name) surfaced the whitelist-scales-linearly problem. Architectural fix + 4 non-arch polish fixes shipped.
+
+**Principle codified:** *"Detection logic that grows linearly with ecosystem size is an anti-pattern. Split into deterministic enumeration (scales with repo) + research-time classification with cache (scales with usage, not maintainer attention). Denylists are the same anti-pattern as whitelists — avoid both."* Captured at [`docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md`](docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md).
+
+**3o.1 — `detect.py` delete whitelist + emit `raw_signals.deps`.** Removed 45+ hardcoded tool regex entries from `CATEGORY_PATTERNS["cli"]` + `["data_api"]`. Deleted `CONFIG_FILE_SIGNALS`. New `enumerate_raw_signals()` walks `package.json` (+ monorepo `apps/*/pkgs/*/` up to depth 3, ≤10 files) and emits `raw_signals.deps` (all package deps, no categorization, no denylist) + `raw_signals.urls` (deduped external URLs). Schema stays at v5 (K8s/dbt convention — additive doesn't bump integer versions). URL-pattern categories (docs/design/diagramming/analytics/pm/comms) kept unchanged — those aren't the scalability problem.
+
+**3o.2 — `ai-integration-scout` classify mode + seeded 20-tool cache.** New `mode: classify` alongside existing `research` mode. Deterministic pre-classifier rules (package.json `bin` field, `@scope` prefix hints, description keywords) fire before any LLM call. Multi-label category output (`{primary, secondary[], all[]}`). Structured category enum with `uncategorized` escape hatch. Confidence scoring (cache ≥ 0.8; 0.6–0.8 flagged `needs_review`). Provenance fields in cache rows (`classified_at`, `source: curated|web-search|rule-based|manual`, `classifier_version`, `source_sha`). `known-mcps.md` seeded with 20 curated entries (notion, figma, linear, github, supabase, firebase, vercel, netlify, stripe, sentry, slack, amplitude, mixpanel, posthog, aws_amplify, hasura, airtable, sanity, contentful, confluence). Append-only; scout-written rows go to a separate section below curated.
+
+**3o.3 — Fill-path Path A.2 + Step 3 scan-summary narration.** Step 3 surfaces `raw_signals.deps` count (non-blocking): *"Scanned. Recognized: `<team_tooling>`. Also found `<N>` uncategorized deps — research per-layer via Path A.2 classify, or skip."* Fill-path Path A gains sub-path A.2 dispatching scout in `classify` mode for raw signals; A.1 is the existing named-tool `research` mode. Concrete `Task` code-fence example in per-layer-procedure.md.
+
+**3o.4 — Architectural lesson captured.** `rule_candidate: true`. 5th confirmation of the already-graduated live-testing rule. Two independent reviewer agents (`architecture-strategist` + `code-simplicity-reviewer`) converged on Layer C as a coupling hazard during `/ce:deepen-plan` review, which reshaped the plan before implementation.
+
+**3o.5 — small-fix batch** (non-architectural bugs from 4-repo test):
+- **3o.5a** `budget-check.sh` now emits `status: "present" | "missing"` per Tier-1 file (previously `lines: 0` on missing was indistinguishable from empty file). Caught on Lightning + caricature.
+- **3o.5b** `.claude/` meta-harness detection no longer triggers on `settings.local.json` alone. Harness substance requires actual content (skills/rules/agents/commands/AGENTS.md); settings files are recorded as `paths_found` but don't qualify. Caught on Oracle Chat.
+- **3o.5c** `markdown-todos` threshold tightened: requires ≥3 files matching numbered-sequence, dated, OR priority-tagged patterns. Random `todos/` directories no longer trigger. Caught on Lightning + caricature.
+- **3o.5d** Scattered-L1 broadened: root-level `README.md` (≥30 non-blank lines), root-level `SKILL.md`, and `*.local.md` config files (e.g. `compound-engineering.local.md`, ≥10 non-blank lines) now count as scattered L1. Caught on caricature.
+
+**Deepen-plan process signal:** plan was reshaped from 7 units → 5 via `/ce:deepen-plan` (4 parallel research + review agents) *before* implementation. Cut Layer C (hardcoded top-20 dict → seed cache instead), cut `raw_signals.configs` enumeration (speculative), cut pyproject/Gemfile/Cargo scope (out of phase), cut denylist machinery (same anti-pattern as whitelist), cut batch-classify internal interface (existing ≤5 Task-batch suffices), cut schema v5 → v6 bump (K8s convention).
+
+**Budgets:** `hd-setup/SKILL.md` 198/200; `always_loaded_lines` 150/200; 0 skill violations; 0 agent violations.
+
+Commits: `1ce23239c4` (core 3o.1/2/4 + plan) + follow-up 3o.3/3o.5.
+
+---
+
 ### Phase 3n — external-source fill-path + advisor-not-installer (2026-04-21)
 
 Completed per [`docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md`](docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md). Triggered by a live run on `sense_frontend` where Step 3 (Tool discovery) collapsed silently in additive mode — tester never saw a prompt to name external tools they use. 8 units shipped.
