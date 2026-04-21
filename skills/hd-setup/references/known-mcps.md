@@ -1,16 +1,23 @@
-# External tooling — categories, known MCPs, fallback seeds
+# External tooling — categories, scout cache, fallback seeds
 
-**Purpose:** reference spec consulted during the tool-discovery phase of [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery). Lists the 6 tool categories `hd:setup` cares about, the known-installable MCP table (the only MCPs we recommend), and fallback seed sources for teams without external sources.
+**Purpose:** this file is the **seeded cache** for the [`ai-integration-scout`](../../../agents/research/ai-integration-scout.md) sub-agent. Lists the 8 tool categories `hd:setup` cares about, pre-seeded rows for common tools (so the scout returns fast without a web search), and fallback seed sources for teams without external sources.
 
-**Loaded by:** [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery) and [SKILL.md § Per-layer procedure](../SKILL.md#per-layer-procedure-applied-to-layers-15) during tool discovery (ordered procedural steps live there — this file is reference material only).
+**Cache, not gate.** Rows below are **hand-verified seeds** for fast cache hits. `ai-integration-scout` appends new rows on successful web finds (Phase 4 cache write-back). Never rely on this file as a whitelist — always dispatch the scout for fresh or uncached tools.
+
+**Loaded by:**
+- [`ai-integration-scout`](../../../agents/research/ai-integration-scout.md) on Phase 1 cache lookup
+- [`per-layer-procedure.md § Fill path`](per-layer-procedure.md) for category-to-layer mapping
+- [SKILL.md § Step 3 — Scan summary](../SKILL.md#step-3--scan-summary) for the detected tool list
 
 ## Universal principle
 
-**The skill is tool-agnostic.** It never hardcodes a specific tool or vendor. Every tool the skill offers integration with is something the user has (a) already configured, (b) can install themselves, or (c) has credentials for.
+**The plug-in is an advisor, not an installer.** We scan, we ask, we research, and we link to official install docs. The user installs themselves, wires up their own auth, and decides what to adopt. Parallel path: users can paste or drop content into layer folders and ask the plug-in to organize — no MCP/CLI wire-up needed.
+
+The skill is also **tool-agnostic.** It never hardcodes a specific tool or vendor at runtime. Every tool the skill discusses is something the user has (a) already configured, (b) can install themselves, or (c) has credentials for.
 
 Explicitly: if the SKILL session has access to specific MCPs (for example `mcp__notion-plus__*`, `mcp__parsnip__*`), those are **the current user's MCPs**, not something this plug-in provides. Portable plug-in code references MCP servers by **dynamic discovery** (parse `.mcp.json` / check available tools) — never by hardcoded name.
 
-## Six tool categories
+## Eight tool categories (v5, 3n.7)
 
 `hd:setup` cares about these categories because each maps to one or more of the five harness layers:
 
@@ -22,25 +29,26 @@ Explicitly: if the SKILL session has access to specific MCPs (for example `mcp__
 | **analytics** | amplitude, mixpanel, posthog, metabase, hotjar, fullstory | Layer 5 (Knowledge via data) |
 | **pm** | linear, jira, github_issues, asana, monday | Layer 3 (Orchestration), Layer 5 (Knowledge via decisions) |
 | **comms** | slack, discord, loom | Layer 5 (Knowledge via pinned threads, recordings) |
+| **cli** | vercel, supabase, wrangler, fly, railway, turbo, nx, sentry, stripe | Layer 2 (Skills wrap deploys/migrations), Layer 3 (Orchestration sequences) |
+| **data_api** | supabase, firebase, hasura, airtable, strapi, sanity, contentful | Layer 1 (canonical product facts), Layer 5 (event data → lessons) |
 
 Not every team uses every category. Users tag which tools matter; skill records per-category in `hd-config.md`.
 
-## Integration-path triage table
+## Integration-path triage (3 paths, post-3n.4)
 
-When the tool-discovery step (in [SKILL.md § Step 3 — Tool discovery](../SKILL.md#step-3--tool-discovery)) encounters a tool, one of four integration paths applies:
+When a user names a tool during per-layer EXECUTE, one of three integration paths applies:
 
 | Condition | Path | Action |
 |---|---|---|
 | Tool's MCP is live in session (callable as a tool) | **active** | Offer to pull live content during relevant layer scaffolding |
-| Tool's MCP is listed in `detect.py mcp_servers` (configured in `.mcp.json` / `.cursor/mcp.json`) but not live in session | **start-server** | Give the standard start command; user starts it + re-invokes or continues without live content |
-| Tool is in the Known MCP installs table below but nothing configured yet | **install-walkthrough** | Share install command + API-key URL; offer to write the mcp.json stanza |
-| Tool user named but NOT in Known table | **pointer-only** | Record in `team_tooling` + write a pointer file at the relevant layer; no MCP install offered |
+| Scout found AI support (MCP / CLI / API) with verified install docs | **available** | Report findings inline + link install docs; user installs later; record pointer file now |
+| Scout found nothing concrete (or no web search available) | **pointer-only** | Record in `team_tooling` + write a pointer file at the relevant layer |
 
-**Never recommend an MCP package that isn't in the Known table** — broken or unmaintained packages create worse UX than pointer-only.
+The plug-in never walks the user through an install. When a path is `available`, the chat response is "here's where to install it" — not "run these commands."
 
-## Known MCP installs
+## Seeded cache (scout reads + writes here)
 
-Portable install instructions per tool. Keep this table short and accurate — offer only what's actually maintained. **Never offer a broken or unmaintained MCP.** Each row here has a corresponding detail subsection below with full install + wire-up + auth instructions.
+Pre-verified rows that let `ai-integration-scout` return without hitting the web. `scout` appends new rows when Phase 2 finds high-confidence integrations. Never rewrite or reorder existing rows.
 
 | Tool | Package | Auth | Reference |
 |---|---|---|---|
@@ -51,86 +59,45 @@ Portable install instructions per tool. Keep this table short and accurate — o
 | slack | community packages exist; verify maintenance | Slack bot token | [api.slack.com/authentication/token-types](https://api.slack.com/authentication/token-types) |
 | google_docs | via google-workspace MCPs (varies) | OAuth or service-account JSON | — |
 
-**When a tool is NOT in this table** but the user says they use it, the skill should:
+**When a tool is NOT in this cache** but the user says they use it:
 
-1. Not offer an install (avoid recommending unknown packages)
-2. Record as pointer-only
-3. Note in `hd-config.md` under `team_tooling.<category>.<tool>` with `integration: pointer_only`
+1. Dispatch `ai-integration-scout` to research the tool (Phase 2 web search)
+2. If scout finds a high-confidence integration → `available` path; report the install-docs URL + summary; scout writes a new cache row for next time
+3. If scout finds nothing concrete → `pointer-only` path; record in `hd-config.md` under `team_tooling.<category>`
 
-User can manually wire up MCP later and re-run `/hd:setup` to upgrade.
+The plug-in never walks through an install. User reads the docs and wires it up themselves when ready. Re-running `/hd:setup --discover-tools` after install upgrades the path from `pointer-only` → `active`.
 
-## Per-tool install detail
+## Per-tool docs pointer (for the scout to link back to)
+
+Each row below is a cache entry — the fastest-to-link official install docs per tool. The plug-in **links** to these; user installs themselves.
 
 ### figma (dev-mode)
 
-Figma MCP runs as a **local SSE server** spawned by Figma desktop or via `npx`. Claude Code connects over SSE to `localhost:3845`.
-
-**1. Get an access token.** [figma.com/developers/api#access-tokens](https://figma.com/developers/api#access-tokens) — create a personal access token with "File content" scope minimum.
-
-**2. Start the local server.** Two paths:
-- **Figma desktop (recommended):** enable *Preferences → Enable Dev Mode MCP Server*. Figma starts the local server automatically when a design file is open.
-- **Standalone:** `npx -y @figma/mcp` in a separate terminal.
-
-Both expose the SSE endpoint at `http://127.0.0.1:3845/sse`.
-
-**3. Wire Claude Code.**
-
-```bash
-claude mcp add --transport sse figma-dev-mode-mcp-server http://127.0.0.1:3845/sse
-```
-
-**4. Wire Cursor** (if also used). Add to `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "figma-dev-mode": {
-      "transport": "sse",
-      "url": "http://127.0.0.1:3845/sse"
-    }
-  }
-}
-```
-
-**5. Verify.** In Claude Code, the MCP should register as `figma-dev-mode-mcp-server` with tools like `get_code`, `get_variable_defs`, `get_screenshot`. Test with: "List the variable definitions from my current Figma selection."
-
-**Troubleshooting:** if `claude mcp list` shows the server but tools don't appear, confirm Figma desktop is running AND a file is open (the server only runs while a file is active).
+Local SSE server spawned by Figma desktop. Install docs: [figma.com/developers/dev-mode-mcp-server](https://figma.com/developers/dev-mode-mcp-server). Auth: Figma personal access token ([figma.com/developers/api#access-tokens](https://figma.com/developers/api#access-tokens)).
 
 ### notion
 
-**1. Create an integration.** [notion.so/help/create-integrations-with-the-notion-api](https://notion.so/help/create-integrations-with-the-notion-api) — internal integration, grab the integration token.
-
-**2. Share the relevant pages** with the integration (Notion's permissions model is share-per-page, not workspace-wide).
-
-**3. Install + wire.** Package varies — recent options: `@suekou/mcp-notion-server`, or OpenAPI-based `@modelcontextprotocol/server-notion`. Confirm the package is currently maintained before recommending. Once chosen:
-
-```bash
-claude mcp add notion npx -y <package-name> --auth-token $NOTION_TOKEN
-```
+Notion's own integration docs: [notion.so/help/create-integrations-with-the-notion-api](https://notion.so/help/create-integrations-with-the-notion-api). MCP package varies — point the user at the official Notion MCP guide for the current maintained option.
 
 ### linear
 
-**1. Get API key.** [linear.app/settings/api](https://linear.app/settings/api) — personal API key.
-
-**2. Install + wire.** Official-ish package: `@tacticlaunch/mcp-linear` or `@linear/mcp` if/when it ships. Wire:
-
-```bash
-claude mcp add linear npx -y <package-name> --auth-token $LINEAR_API_KEY
-```
+Linear API setup: [linear.app/settings/api](https://linear.app/settings/api). MCP docs: [linear.app/docs/mcp](https://linear.app/docs/mcp) (confirm currency; community alternatives exist).
 
 ### github (issues)
 
-**1. Get personal access token.** [github.com/settings/tokens](https://github.com/settings/tokens) — fine-grained token with `repo` and `issues` scopes.
+Token setup: [github.com/settings/tokens](https://github.com/settings/tokens) — fine-grained token with `repo` + `issues` scopes. MCP server docs: upstream `@modelcontextprotocol/server-github` README.
 
-**2. Install + wire.**
+### supabase
 
-```bash
-claude mcp add github npx -y @modelcontextprotocol/server-github --auth-token $GITHUB_TOKEN
-```
+MCP guide: [supabase.com/docs/guides/getting-started/mcp](https://supabase.com/docs/guides/getting-started/mcp). Also supports CLI ([supabase.com/docs/guides/cli](https://supabase.com/docs/guides/cli)) and REST/GraphQL API.
+
+### vercel
+
+No official MCP at time of seeding — surface as `cli` with deploy-skill wrapper opportunity. Install docs: [vercel.com/docs/cli](https://vercel.com/docs/cli). REST API: [vercel.com/docs/rest-api](https://vercel.com/docs/rest-api).
 
 ### slack, google_docs
 
-Packages vary in maintenance status. **Verify currency** before recommending to a user. If unsure, fall back to pointer-only (record the Slack workspace URL / Google Drive folder URL as a Layer 1 or Layer 5 pointer; user accesses manually).
+Package maintenance varies over time. The scout must verify before recommending — on miss, fall back to `pointer-only` (record workspace/folder URLs at the relevant layer; user accesses manually).
 
 ## Per-layer integration patterns
 
@@ -141,11 +108,16 @@ How discovered tools map into each layer during `five-layer-walk.md`:
 - **design (figma)** — pull variable/token names via `@figma/mcp` and seed `docs/context/design-system/cheat-sheet.md`
 - **diagramming** — ask which diagrams are evergreen (architecture / data-flow), add pointer files
 
+### Layer 1 (Context) — new in v5
+- **data_api (supabase/firebase/hasura/sanity/contentful)** — canonical product facts (schema, tables, content types) feed `docs/context/product/` + `docs/context/engineering/`
+
 ### Layer 2 (Skills)
 - Rarely external-sourced. If the user has team-specific skill definitions in docs/notion, offer to extract and create as `hd-*` / team-prefix skills.
+- **cli (vercel/supabase/wrangler/stripe)** — wrap high-traffic commands as L2 skills (e.g. `deploy-preview.md` wraps `vercel --target preview`; `db-migration.md` wraps `supabase migration new`)
 
 ### Layer 3 (Orchestration)
 - **pm (linear/github_issues)** — scan recent labels / workflows for recurring handoff patterns; seed `docs/orchestration/workflows.md`
+- **cli chains (turbo/nx)** — mono-repo task graphs hint at orchestration sequences
 - **diagramming** — scaffold pointers to sequence/state diagrams
 
 ### Layer 4 (Rubrics)
@@ -155,8 +127,10 @@ How discovered tools map into each layer during `five-layer-walk.md`:
 ### Layer 5 (Knowledge)
 - **docs (notion)** — scan for "retro" / "decision" / "post-mortem" labels → optional lesson imports
 - **analytics (amplitude/posthog)** — ask whether user wants analytics-driven lessons (e.g., "add a lesson when bounce-rate on X jumps > Y%")
+- **data_api (supabase events, firebase analytics)** — event streams as lesson seeds (pattern: "when metric X drifts, log a lesson")
 - **comms (slack)** — pinned threads as lesson seeds (manual for v1.1; MCP-automated for v1.2+)
 - **pm (linear/github_issues)** — closed issues with `design-decision` label → lesson candidates
+- **cli (sentry)** — error trend seeds for L5 quality lessons
 
 ## When the user says "I don't know"
 
@@ -178,13 +152,14 @@ The starter rubrics shipped in `skills/hd-review/templates/starter-rubrics/` alr
 
 ## What this reference does NOT cover
 
-- **Which specific MCP package to install** — only the `Known MCP installs` table above. Outside that, defer to user research.
+- **Installation procedure for any tool.** We link to official docs; users install themselves. The plug-in is an advisor, not an installer.
 - **MCP server authentication details** — point to upstream docs, don't duplicate
 - **Tool-specific layer guides** — those belong in each layer's reference file (`layer-1-context.md`, `layer-5-knowledge.md`, etc.)
 
 ## See also
 
+- [`../../../agents/research/ai-integration-scout.md`](../../../agents/research/ai-integration-scout.md) — the scout agent that reads + writes this cache
 - [`hd-config-schema.md`](hd-config-schema.md) — where `team_tooling` + `mcp_servers_at_setup` land
-- [`../SKILL.md § Per-layer procedure`](../SKILL.md#per-layer-procedure-applied-to-layers-15) — per-layer integration step uses this reference
-- [`../scripts/detect.py`](../scripts/detect.py) — emits raw detection data this reference interprets
-- Ideation doc [`docs/plans/2026-04-17-009-v1.1-skill-ideation.md`](../../../docs/plans/2026-04-17-009-v1.1-skill-ideation.md) C5 / C6 — rationale for this spec
+- [`per-layer-procedure.md`](per-layer-procedure.md) — fill-path sub-routine that dispatches scout on-demand
+- [`../scripts/detect.py`](../scripts/detect.py) — emits raw detection data; includes v5 `cli` + `data_api` categories
+- Phase 3n plan: [`../../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md`](../../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md) — rationale for cache reframe + scout pattern

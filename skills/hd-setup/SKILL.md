@@ -27,7 +27,7 @@ User drives every decision. Skill never merges, absorbs, or overwrites external 
 hd:setup Progress:
 - [ ] Step 1: Detect — run detect.py; parse JSON
 - [ ] Step 2: Onboard check — suggest /hd:learn if first-time user (soft)
-- [ ] Step 3: Tool discovery — surface detected + ask per category
+- [ ] Step 3: Scan summary — narrate detected tools + other-tool note (inline, no block)
 - [ ] Step 3.5: Scaffold mode — additive (default when existing harness) vs use-standard
 - [ ] Step 4: Layer 1 (Context) — scaffold / review / create / skip
 - [ ] Step 5: Layer 2 (Skills) — scaffold / review / create / skip
@@ -81,15 +81,13 @@ Each batch stays ≤5 agents (6+ parallel strains context). Outputs synthesize i
 
 → See [`references/phase-a-pre-analysis.md`](references/phase-a-pre-analysis.md) for full dispatch detail, synthesis schema, and Guardrail interaction.
 
-## Step 3 — Tool discovery
+## Step 3 — Scan summary (inline, non-blocking)
 
-Surface detected `team_tooling` + `mcp_servers` from Step 1. If any `other_tool_harnesses_detected` entries are present, note once: *"Other-tool harness(es) detected at `<paths>` — we coexist by default; won't touch those namespaces."*
+**Narrate** detected tools inline — no blocking question: *"Scanned. Detected: `<team_tooling list>`. I'll surface integration paths per layer as we go — your call on what to wire up."* If `other_tool_harnesses_detected` present, append *"Other-tool harness(es) at `<paths>` — coexisting, won't touch."*
 
-Solo-dispatch `design-harnessing:research:lesson-retriever` with `topic: "tool-discovery"` to surface past tool-adoption lessons. Skip when `docs/knowledge/lessons/` is empty.
+Solo-dispatch `design-harnessing:research:lesson-retriever` (`topic: tool-discovery`) when `docs/knowledge/lessons/` non-empty.
 
-Ask **one batched question** across all 6 categories (docs/wiki, design, diagramming, analytics, PM/issues, comms) with the detected list and category examples. Use "you (or contributors)" framing. Parse free-text reply; map to categories via [`references/known-mcps.md`](references/known-mcps.md). For each confirmed tool, triage per that file's integration-path table: **active** / **start-server** / **install-walkthrough** / **pointer-only**.
-
-Only offer MCPs from the known table. Never recommend unknown packages. Never use plug-in-maintainer's own session MCPs on the user's behalf.
+Tool-offering moves to per-layer EXECUTE (3n.2) — pre-layer interrogation collapses silently in additive mode (observed 2026-04-21); contextualized per-layer asks are unmissable. The plug-in is an **advisor, not an installer** — at EXECUTE, dispatch `research:ai-integration-scout` to research MCP/CLI/API support and link official install docs. User installs themselves. See [`references/per-layer-procedure.md § Fill path`](references/per-layer-procedure.md).
 
 ## Step 3.5 — Structure mode (3k.11)
 
@@ -156,7 +154,7 @@ When invoked on a repo that has `hd-config.md`:
 ## Failure modes
 
 - **F1** Tool-discovery loop → skip, `team_tooling: {}`, note in prose
-- **F2** MCP install → only recommend from [`references/known-mcps.md`](references/known-mcps.md); unknown → pointer-only
+- **F2** Tool integration → dispatch `research:ai-integration-scout` to research AI support; link install docs only, never install; scout cache in [`references/known-mcps.md`](references/known-mcps.md); no concrete finding → `pointer-only`
 - **F3** Other-tool harness conflict → scaffold, don't absorb; never modify
 - **F4** User stuck on seed questions → Material 3 / Fluent 2 / awesome-design-md fallbacks; still stuck → minimal placeholder
 - **F5** Destructive action → always show diff preview; require explicit confirmation; never silent
@@ -166,7 +164,7 @@ When invoked on a repo that has `hd-config.md`:
 - Concept Q&A → `/hd:learn`; lesson capture → `/hd:maintain`; review → `/hd:review`
 - Invoke other hd skills directly — always suggest, never invoke
 - Modify `.agent/`, `.claude/`, `.codex/`, external `.cursor/skills/`, `.windsurf/` — strict coexistence
-- Write to `docs/solutions/` (reserved for other tools) or recommend MCPs outside [`references/known-mcps.md`](references/known-mcps.md)
+- Write to `docs/solutions/` (reserved for other tools) or install any MCP/CLI/package on the user's behalf — we link to install docs; user installs themselves (advisor-not-installer, 3n.2)
 
 ## Coexistence
 
@@ -193,6 +191,7 @@ Fully-qualified `design-harnessing:<category>:<agent>` Task names only; each par
 
 - Phase A — `analysis:harness-auditor` × 5 + `analysis:rubric-recommender` (scenario: `setup-pre-analysis`)
 - Step 3 — `research:lesson-retriever` (solo, topic: tool-discovery)
+- Per-layer EXECUTE fill-path — `research:ai-integration-scout` (on-demand when user names a tool; batch ≤5 parallel)
 - Per-layer review actions — `review:skill-quality-auditor` (L2), `review:rubric-extractor` (L4 extract), `analysis:rule-candidate-scorer` (L5 when `has_plans_convention`)
 
 `review:rubric-applier` is owned by `/hd:review` targeted mode, not dispatched here.
