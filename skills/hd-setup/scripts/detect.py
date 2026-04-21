@@ -203,45 +203,13 @@ CATEGORY_PATTERNS: dict[str, dict[str, re.Pattern[str]]] = {
         "discord": re.compile(r"discord\.(?:com|gg)", re.I),
         "loom": re.compile(r"loom\.com", re.I),
     },
-    # 3n.7 — CLI dev tools (deploy / scaffold / migrate CLIs that could be wrapped as L2 skills).
-    # Matches on package.json devDeps + dep declarations. Filesystem-based signals (vercel.json,
-    # fly.toml, etc.) handled in _detect_config_files() below.
-    "cli": {
-        "vercel": re.compile(r'"vercel"\s*:\s*"', re.I),
-        "supabase": re.compile(r'"supabase"\s*:\s*"|"@supabase/supabase-js"\s*:\s*"', re.I),
-        "wrangler": re.compile(r'"wrangler"\s*:\s*"', re.I),
-        "stripe": re.compile(r'"stripe"\s*:\s*"', re.I),
-        "sentry": re.compile(r'"@sentry/[\w-]+"\s*:\s*"', re.I),
-        "turbo": re.compile(r'"turbo"\s*:\s*"', re.I),
-        "nx": re.compile(r'"nx"\s*:\s*"', re.I),
-    },
-    # 3n.7 — Data/API sources (databases, BaaS, headless CMS) that feed L1 canonical facts
-    # or L5 knowledge. Matches on package-level dep declarations. Config-file existence in hook.
-    "data_api": {
-        "supabase": re.compile(r'"@supabase/supabase-js"\s*:\s*"', re.I),
-        "firebase": re.compile(r'"firebase"\s*:\s*"|"firebase-admin"\s*:\s*"', re.I),
-        "hasura": re.compile(r"hasura\.io", re.I),
-        "airtable": re.compile(r'"airtable"\s*:\s*"', re.I),
-        "strapi": re.compile(r'"@strapi/strapi"\s*:\s*"', re.I),
-        "sanity": re.compile(r'"@sanity/client"\s*:\s*"', re.I),
-        "contentful": re.compile(r'"contentful"\s*:\s*"', re.I),
-    },
-}
-
-# 3n.7 — Config-file signals for cli + data_api (filesystem existence, not content regex).
-# Maps (category, tool) → list of relative paths; any path existing adds the tool.
-CONFIG_FILE_SIGNALS: dict[tuple[str, str], list[str]] = {
-    ("cli", "vercel"): ["vercel.json", ".vercel/project.json"],
-    ("cli", "supabase"): ["supabase/config.toml"],
-    ("cli", "wrangler"): ["wrangler.toml", "wrangler.jsonc"],
-    ("cli", "fly"): ["fly.toml"],
-    ("cli", "railway"): ["railway.json", "railway.toml"],
-    ("cli", "sentry"): [".sentryclirc"],
-    ("cli", "turbo"): ["turbo.json"],
-    ("cli", "nx"): ["nx.json"],
-    ("data_api", "supabase"): ["supabase/schema.sql", "supabase/migrations"],
-    ("data_api", "firebase"): ["firebase.json", ".firebaserc"],
-    ("data_api", "hasura"): ["hasura.config.yaml", "hasura/config.yaml"],
+    # 3o.1 — cli + data_api categories REMOVED from CATEGORY_PATTERNS.
+    # Those tools are now enumerated as raw_signals.deps (see enumerate_raw_signals
+    # below) and categorized on demand by research:ai-integration-scout at per-layer
+    # EXECUTE time. Whitelist-scales-with-ecosystem was an anti-pattern (see
+    # docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md).
+    # URL-pattern categories (docs/design/diagramming/analytics/pm/comms) stay —
+    # URLs ARE the primary signal; vendor domains are stable; no scalability problem.
 }
 
 
@@ -287,17 +255,98 @@ def detect_team_tooling() -> dict[str, list[str]]:
                     if pat.search(text):
                         hits[cat].add(tool)
 
-    # 3n.7 — filesystem config-file signals for cli + data_api (existence, not content).
-    for (cat, tool), paths in CONFIG_FILE_SIGNALS.items():
-        if tool in hits.get(cat, set()):
-            continue  # already found via regex
-        for rel in paths:
-            p = REPO / rel
-            if p.exists():
-                hits.setdefault(cat, set()).add(tool)
+    return {cat: sorted(tools) for cat, tools in hits.items()}
+
+
+# 3o.1 — raw_signals enumeration (universal tool discovery, research-time classification)
+# ---------------------------------------------------------------------------------------
+# Deterministic Layer A output: enumerate what a repo CONTAINS (deps + URLs) without
+# categorization. Scales with repo size, not ecosystem size. The scout agent handles
+# categorization at research time (cache-first, web-search fallback). See lesson
+# 2026-04-21-whitelist-vs-research-time.md.
+
+def enumerate_raw_signals() -> dict:
+    """Emit raw_signals: { deps, urls } — Layer A of the 3o detection split.
+
+    Deps: package.json dependencies + devDependencies (merged, deduped, sorted).
+          Other language ecosystems (pyproject.toml, Gemfile, Cargo.toml) deferred
+          per 3o scope boundary.
+
+    URLs: flatten + dedupe all URLs caught by existing URL-pattern scan in
+          detect_team_tooling() — so callers can see external-tool URLs once
+          regardless of category. Categorized URLs stay in team_tooling.*.
+
+    No categorization, no denylist. Scout classifies on demand.
+    """
+    deps: set[str] = set()
+
+    # Find package.json files: root first, then monorepo-common locations
+    # (apps/*/, packages/*/, services/*/) up to depth 3. Respects SKIP_DIRS.
+    pkg_paths: list[Path] = []
+    root_pkg = REPO / "package.json"
+    if root_pkg.is_file():
+        pkg_paths.append(root_pkg)
+    else:
+        # Monorepo fallback — walk up to depth 3, cap at 10 package.json files
+        for candidate in REPO.rglob("package.json"):
+            rel_parts = candidate.relative_to(REPO).parts
+            if any(part in SKIP_DIRS for part in rel_parts):
+                continue
+            if len(rel_parts) > 4:  # max depth 3 (a/b/c/package.json)
+                continue
+            pkg_paths.append(candidate)
+            if len(pkg_paths) >= 10:
                 break
 
-    return {cat: sorted(tools) for cat, tools in hits.items()}
+    for pkg_path in pkg_paths:
+        try:
+            if pkg_path.stat().st_size > 512 * 1024:
+                continue
+            pkg_text = pkg_path.read_text(encoding="utf-8", errors="replace")
+            pkg_data = json.loads(pkg_text)
+            for section in ("dependencies", "devDependencies", "peerDependencies"):
+                for name in (pkg_data.get(section) or {}).keys():
+                    deps.add(name)
+        except (OSError, UnicodeDecodeError, ValueError):
+            continue  # malformed package.json → skip, don't crash
+
+    # URLs: re-scan briefly for known external-tool URL roots (flat list, dedup).
+    # This is a lightweight secondary pass; the primary URL categorization already
+    # fed team_tooling. Here we just list distinct external URLs the repo references.
+    urls: set[str] = set()
+    url_pattern = re.compile(
+        r"https?://(?:[\w-]+\.)+[\w-]+(?:/[\w./?=&%#_-]*)?",
+        re.I,
+    )
+    for root, dirs, files in os.walk(REPO):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not d.startswith(".cursor")]
+        for fname in files:
+            if not any(fname.endswith(ext) for ext in SEARCH_EXTENSIONS):
+                continue
+            fpath = Path(root) / fname
+            try:
+                if fpath.stat().st_size > 512 * 1024:
+                    continue
+                text = fpath.read_text(encoding="utf-8", errors="replace")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for m in url_pattern.findall(text):
+                # Strip common noise URLs (docs, schemas, semver-registry).
+                if any(skip in m.lower() for skip in (
+                    "schema.org", "json-schema.org", "w3.org",
+                    "semver.org", "tc39.es", "ecma-international.org",
+                )):
+                    continue
+                urls.add(m)
+                if len(urls) >= 200:
+                    break
+        if len(urls) >= 200:
+            break
+
+    return {
+        "deps": sorted(deps),
+        "urls": sorted(urls),
+    }
 
 
 # --- C4: token + figma config signals -----------------------------------------
@@ -962,6 +1011,7 @@ def main() -> int:
         "bloat_overlay": bloat_overlay,
         "mcp_servers": mcp_servers,
         "team_tooling": team_tooling,
+        "raw_signals": enumerate_raw_signals(),
         "tokens_package_paths": config_sot["tokens_package_paths"],
         "detected_a11y_packages": a11y["detected_a11y_packages"],
         "detected_at": datetime.datetime.now(datetime.timezone.utc).strftime(

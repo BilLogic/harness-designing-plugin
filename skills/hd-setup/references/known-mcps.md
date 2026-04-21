@@ -48,16 +48,250 @@ The plug-in never walks the user through an install. When a path is `available`,
 
 ## Seeded cache (scout reads + writes here)
 
-Pre-verified rows that let `ai-integration-scout` return without hitting the web. `scout` appends new rows when Phase 2 finds high-confidence integrations. Never rewrite or reorder existing rows.
+Pre-verified rows that let `ai-integration-scout` return without hitting the web. `scout` appends new rows when Phase 2 finds high-confidence integrations. **Never rewrite or reorder existing rows** — append-only, one source of truth.
 
-| Tool | Package | Auth | Reference |
-|---|---|---|---|
-| notion | `@modelcontextprotocol/server-notion` (varies) | Notion internal integration token | [notion.so/help/create-integrations-with-the-notion-api](https://notion.so/help/create-integrations-with-the-notion-api) |
-| figma | `@figma/mcp` (dev-mode, runs locally on port 3845) | Figma personal access token | [figma.com/developers/api#access-tokens](https://figma.com/developers/api#access-tokens) |
-| linear | `@linear/mcp` or community | Linear API key | [linear.app/settings/api](https://linear.app/settings/api) |
-| github (issues) | `@modelcontextprotocol/server-github` | GitHub personal access token | [github.com/settings/tokens](https://github.com/settings/tokens) |
-| slack | community packages exist; verify maintenance | Slack bot token | [api.slack.com/authentication/token-types](https://api.slack.com/authentication/token-types) |
-| google_docs | via google-workspace MCPs (varies) | OAuth or service-account JSON | — |
+`cache_schema_version: "1"` — bump when category taxonomy or prompt shape changes; invalidates stale rows. Current categories: `cli | data_api | analytics | observability | auth | docs | design | pm | comms | framework-internal | not-ai-relevant | uncategorized`.
+
+### Seeded cache entries (top-20, curated 2026-04-21 per Phase 3o.2)
+
+```yaml
+- tool_name: notion
+  categories: { primary: docs, secondary: [], all: [docs] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "varies (verify currency)", install_docs: "https://notion.so/help/create-integrations-with-the-notion-api", maintained: true, notes: "Notion internal integration token" }
+    cli: null
+    api: { docs_url: "https://developers.notion.com/reference/intro", notes: "Official Notion API" }
+
+- tool_name: figma
+  categories: { primary: design, secondary: [], all: [design] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "@figma/mcp", install_docs: "https://figma.com/developers/dev-mode-mcp-server", maintained: true, notes: "Dev-mode MCP (local SSE on port 3845); requires Figma desktop" }
+    cli: null
+    api: { docs_url: "https://figma.com/developers/api", notes: "REST API + dev-mode SDK" }
+
+- tool_name: linear
+  categories: { primary: pm, secondary: [], all: [pm] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "community + @linear/mcp when shipped", install_docs: "https://linear.app/docs/mcp", maintained: true, notes: "Confirm currency; multiple community packages" }
+    cli: null
+    api: { docs_url: "https://linear.app/developers/graphql", notes: "GraphQL API" }
+
+- tool_name: github
+  categories: { primary: pm, secondary: [data_api], all: [pm, data_api] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "@modelcontextprotocol/server-github", install_docs: "https://github.com/settings/tokens", maintained: true, notes: "Fine-grained token with repo + issues scopes" }
+    cli: { install_docs: "https://cli.github.com/", notes: "gh CLI; wrap as L2 skill for PR automation" }
+    api: { docs_url: "https://docs.github.com/en/rest", notes: "REST + GraphQL" }
+
+- tool_name: supabase
+  categories: { primary: data_api, secondary: [cli, auth], all: [data_api, cli, auth] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: null, install_docs: "https://supabase.com/docs/guides/getting-started/mcp", maintained: true, notes: "Supabase MCP for database query + schema inspection" }
+    cli: { install_docs: "https://supabase.com/docs/guides/cli", notes: "Local dev + migrations + types codegen" }
+    api: { docs_url: "https://supabase.com/docs/reference/api", notes: "REST + GraphQL + auth" }
+
+- tool_name: firebase
+  categories: { primary: data_api, secondary: [analytics, auth], all: [data_api, analytics, auth] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://firebase.google.com/docs/cli", notes: "firebase-tools for deploy + emulators" }
+    api: { docs_url: "https://firebase.google.com/docs", notes: "Auth + Firestore + Realtime DB + Analytics" }
+
+- tool_name: vercel
+  categories: { primary: cli, secondary: [observability], all: [cli, observability] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://vercel.com/docs/cli", notes: "Deploy + preview + logs; wrap as L2 deploy-preview skill" }
+    api: { docs_url: "https://vercel.com/docs/rest-api", notes: "Deployment + project REST API" }
+
+- tool_name: netlify
+  categories: { primary: cli, secondary: [observability], all: [cli, observability] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://docs.netlify.com/cli/get-started/", notes: "netlify-cli for deploy + functions" }
+    api: { docs_url: "https://docs.netlify.com/api/get-started/", notes: "Deployment REST API" }
+
+- tool_name: stripe
+  categories: { primary: data_api, secondary: [cli], all: [data_api, cli] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://docs.stripe.com/stripe-cli", notes: "stripe CLI for webhook testing + events" }
+    api: { docs_url: "https://docs.stripe.com/api", notes: "Payments + subscriptions API" }
+
+- tool_name: sentry
+  categories: { primary: observability, secondary: [], all: [observability] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://docs.sentry.io/product/cli/", notes: "sentry-cli for source-map upload + releases" }
+    api: { docs_url: "https://docs.sentry.io/api/", notes: "Issue + event REST API" }
+
+- tool_name: slack
+  categories: { primary: comms, secondary: [], all: [comms] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "community (verify currency)", install_docs: "https://api.slack.com/authentication/token-types", maintained: true, notes: "Bot token; community packages vary" }
+    cli: null
+    api: { docs_url: "https://api.slack.com/web", notes: "Web API + Events API" }
+
+- tool_name: amplitude
+  categories: { primary: analytics, secondary: [], all: [analytics] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: null
+    api: { docs_url: "https://www.docs.developers.amplitude.com/", notes: "Event tracking + export API" }
+
+- tool_name: mixpanel
+  categories: { primary: analytics, secondary: [], all: [analytics] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: null
+    api: { docs_url: "https://developer.mixpanel.com/reference/overview", notes: "Event ingest + query API" }
+
+- tool_name: posthog
+  categories: { primary: analytics, secondary: [observability], all: [analytics, observability] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: null
+    api: { docs_url: "https://posthog.com/docs/api", notes: "Events + session recording + feature flags" }
+
+- tool_name: aws_amplify
+  categories: { primary: data_api, secondary: [auth, cli], all: [data_api, auth, cli] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://docs.amplify.aws/gen2/build-a-backend/cli/", notes: "amplify-cli for backend provisioning" }
+    api: { docs_url: "https://docs.amplify.aws/", notes: "GraphQL + REST via amplify-js; auth + storage + API" }
+
+- tool_name: hasura
+  categories: { primary: data_api, secondary: [], all: [data_api] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://hasura.io/docs/latest/hasura-cli/overview/", notes: "hasura-cli for migrations + metadata" }
+    api: { docs_url: "https://hasura.io/docs/latest/api-reference/overview/", notes: "GraphQL auto-generated from schema" }
+
+- tool_name: airtable
+  categories: { primary: data_api, secondary: [], all: [data_api] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: null
+    api: { docs_url: "https://airtable.com/developers/web/api/introduction", notes: "REST API + Scripting SDK" }
+
+- tool_name: sanity
+  categories: { primary: data_api, secondary: [cli], all: [data_api, cli] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://www.sanity.io/docs/cli", notes: "sanity CLI for schema + dataset + deploy" }
+    api: { docs_url: "https://www.sanity.io/docs/http-api", notes: "GROQ + REST + Webhook" }
+
+- tool_name: contentful
+  categories: { primary: data_api, secondary: [], all: [data_api] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: null
+    cli: { install_docs: "https://www.contentful.com/developers/docs/tutorials/cli/installation/", notes: "contentful-cli for migrations" }
+    api: { docs_url: "https://www.contentful.com/developers/docs/references/", notes: "Content Delivery + Management API" }
+
+- tool_name: confluence
+  categories: { primary: docs, secondary: [], all: [docs] }
+  classified_at: "2026-04-21"
+  classifier_version: "1"
+  source: curated
+  confidence: 1.0
+  integrations:
+    mcp: { package: "community; verify currency", install_docs: "https://www.atlassian.com/mcp", maintained: true, notes: "Atlassian MCP covers Confluence + Jira" }
+    cli: null
+    api: { docs_url: "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/", notes: "REST v2 API" }
+```
+
+### Scout-written entries (appended on Phase 2 cache write-back)
+
+Scout appends rows here with `source: "web-search"` or `"rule-based"`. Entries may include a `needs_review: true` flag when confidence is in the 0.6–0.8 band.
+
+<!-- scout appends below this line -->
+
+### Legacy short-form table (deprecated, kept for eyeball audit)
+
+| Tool | Summary |
+|---|---|
+| notion | docs — see seeded entry above |
+| figma | design — see seeded entry above |
+| linear | pm — see seeded entry above |
+| github | pm + data_api — see seeded entry above |
+| slack | comms — see seeded entry above |
+| google_docs | docs — no official MCP as of 2026-04 |
 
 **When a tool is NOT in this cache** but the user says they use it:
 

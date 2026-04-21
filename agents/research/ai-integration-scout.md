@@ -7,104 +7,198 @@ model: inherit
 
 # ai-integration-scout
 
-On-demand research agent invoked from `/hd:setup` per-layer EXECUTE when a user names an external tool they use. Checks the `known-mcps.md` cache first, falls through to web search if not cached, returns structured findings pointing at official install docs. **Never installs anything.** User decides whether to wire up based on the findings.
+On-demand research agent with two modes. Called from `/hd:setup` per-layer EXECUTE + `/hd:review audit`. Cache-first, web-search fallback. **Never installs anything.** User decides whether to wire up based on the findings.
 
-Invoked as: `Task design-harnessing:research:ai-integration-scout(tool_name, context?)`
+## Modes
+
+**`research`** (default, from 3n.3) — caller names a specific tool; scout returns MCP/CLI/API integration findings.
+
+**`classify`** (new in 3o.2) — caller passes a single dep name or config identifier from `detect.py raw_signals.deps`; scout returns `{category, integrations, confidence}`. Cache-first; deterministic pre-classifier rules fire before LLM call; LLM as fallback.
+
+Invoked as:
+```
+Task design-harnessing:research:ai-integration-scout(
+  mode: "research" | "classify",
+  tool_name: "<string>",
+  context?: "l1" | "l2" | "l3" | "l4" | "l5"
+)
+```
+
+Callers parallelize multiple invocations via existing ≤5 Task-batch convention. The scout itself processes one signal per call.
 
 ## Inputs
 
-- `tool_name` — string, required. Tool identifier (e.g. `supabase`, `notion`, `vercel`, `linear`).
-- `context` — optional string. Layer context hint: `l1` | `l2` | `l3` | `l4` | `l5`. Shapes which integration types are prioritized (e.g. L1 favors docs-pull via MCP/API; L2 favors CLI wrappers; L5 favors analytics/event sources).
+- `mode` — `"research"` or `"classify"`. Defaults to `"research"` if omitted.
+- `tool_name` — string, required. Dep name (`@aws-amplify/auth`), tool identifier (`supabase`), or config filename (`netlify.toml`).
+- `context` — optional layer hint: `l1`|`l2`|`l3`|`l4`|`l5`. Shapes which integration types are prioritized (L1 favors docs-pull; L2 favors CLI wrappers; L5 favors event sources).
 - `cache_path` — optional. Default `skills/hd-setup/references/known-mcps.md`.
+- `large_batch_ceiling` — optional integer (default 50). Caller should confirm before fanning out more than this many scout invocations from one setup run.
 
-## Procedure
+## Category enum (for classify mode)
+
+Scout picks primary + secondary labels from this closed set. Include definitions inline in the LLM prompt when classify falls through to Phase 2.
+
+| Category | Definition | Examples |
+|---|---|---|
+| `cli` | Command-line tool you install + run | `vercel`, `supabase`, `wrangler`, `netlify-cli`, `gh` |
+| `data_api` | Database, BaaS, or headless CMS exposing data | `@supabase/supabase-js`, `firebase`, `hasura`, `sanity`, `contentful`, `airtable`, `@aws-amplify/*` |
+| `analytics` | Event tracking / product analytics | `mixpanel`, `amplitude`, `posthog`, `@vercel/analytics` |
+| `observability` | Error tracking / APM / logging | `@sentry/*`, `@datadog/*`, `@opentelemetry/*` |
+| `auth` | Auth provider SDK | `@clerk/*`, `@auth0/*`, `next-auth` |
+| `docs` | External docs surface (SaaS) | Notion / Confluence / Coda integrations |
+| `design` | Design-tool integration | `@figma/*` SDK |
+| `pm` | PM / issues / project tool | `@linear/*`, `@octokit/*` (for issues) |
+| `comms` | Slack / Discord / meeting tool | `@slack/*` |
+| `framework-internal` | Language, compiler, bundler, test runner, lint | `react`, `typescript`, `eslint`, `vitest`, `webpack`, `@types/*`, `@babel/*` |
+| `not-ai-relevant` | Utility with no AI-integration path | lodash, date-fns, uuid, zod |
+| `uncategorized` | Escape hatch — model is unsure; do NOT force a label | — |
+
+**Always include `uncategorized`** to prevent forced hallucination on unknown tools.
+
+## Procedure — classify mode
+
+### Phase 0 — deterministic pre-classifier (cheap signals before LLM)
+
+Before any web search or LLM call, try rule-based classification using `package.json` metadata if the tool is an npm package. Read `<repo>/**/package.json` (walk depth ≤3) to find the first one declaring `<tool_name>` as a dep, then inspect:
+
+| Signal | Implication |
+|---|---|
+| `bin` field present OR name ends in `-cli` | **primary: `cli`** |
+| `name` matches `@types/*` or `@babel/*` or `eslint*` or `prettier` or `jest`, `vitest`, `webpack`, `rollup`, `turbo`, `nx` | **`framework-internal`** |
+| `name` starts with `@supabase/` / `@aws-amplify/` / `firebase` / `@sanity/` / `@strapi/` / `contentful` / `airtable` / `hasura` | **primary: `data_api`** |
+| `name` starts with `@sentry/` / `@datadog/` / `@opentelemetry/` | **primary: `observability`** |
+| `name` starts with `@clerk/` / `@auth0/` / `next-auth` | **primary: `auth`** |
+| `description` keyword match (e.g., "command-line", "database", "analytics") | hints primary |
+| `keywords` array contains category token | hints primary |
+
+If rule-based classification lands with confidence ≥ 0.9 (exact name-prefix match + `bin` field), **return immediately** without web search. `source: "rule-based"`. Otherwise pass the signals to Phase 2 as LLM-prompt context.
 
 ### Phase 1 — cache lookup
 
-Read `cache_path`. Search for `<tool_name>` in the per-tool detail sections and the Seeded Cache table. If found:
-
-- Extract `{mcp, cli, api}` findings from the cached entry
+Read `cache_path`. Search for `<tool_name>` in the seeded cache table. If found:
+- Extract full cache entry (categories + integrations + provenance)
 - Return immediately with `source: "cache"`
-- Do not hit the web
 
-### Phase 2 — web search (cache miss)
+### Phase 2 — web search + LLM classification (cache miss + rules indeterminate)
 
-If the tool is not cached, run **up to 3 parallel web-search queries**:
+If the tool is not cached and rules didn't fire, run **up to 3 parallel web-search queries**:
 
-1. `"<tool_name> Model Context Protocol" OR "<tool_name> MCP server"`
-2. `"<tool_name> CLI AI agents" OR "<tool_name> CLI automation"`
-3. `"<tool_name> API documentation official"`
+1. `"<tool_name> purpose what is"` — category context
+2. `"<tool_name> Model Context Protocol" OR "<tool_name> MCP server"` — MCP availability
+3. `"<tool_name> API documentation official"` — API availability
 
-Parse the top 5 results from each query. Prefer:
-- Official project docs (`<tool>.com/docs`, `github.com/<org>/<tool>`)
-- Well-maintained community MCPs (npm/pypi published + recent commits)
-- Ignore spam, content farms, and listicle aggregators
-
-### Phase 3 — synthesis
-
-Classify findings into three buckets:
-
-- **MCP** — Model Context Protocol server (official or well-maintained community). Extract: package name, install docs URL, maintained flag (heuristic: commits within last 6 months).
-- **CLI** — Command-line tool the team can install and that a skill could wrap (e.g. `vercel deploy`, `supabase migration new`). Extract: install docs URL.
-- **API** — Official documented REST/GraphQL API. Extract: docs URL. (APIs are always present for most SaaS; only include if useful for harness integration — i.e. the API can fetch content that feeds a layer.)
-
-If a bucket has no high-confidence finding, set that bucket to `null`.
-
-### Phase 4 — cache write-back
-
-If Phase 2 produced high-confidence findings (MCP or CLI with maintained package + verified install docs), **append a cache row** to `known-mcps.md` under the "Seeded cache" section. Format matches the existing table schema. Never rewrite or reorder existing rows.
-
-Skip the write-back if:
-- All buckets are `null` (nothing found)
-- Findings are low-confidence (unverified, no official URL, unmaintained)
-
-## Output format
-
-Return JSON:
+Parse the top 5 results from each query. Synthesize via LLM with **structured output constraint** requiring:
 
 ```json
 {
-  "tool_name": "supabase",
-  "source": "cache" | "web" | "none",
-  "mcp": {
-    "package": "@supabase/mcp",
-    "install_docs": "https://supabase.com/docs/guides/getting-started/mcp",
-    "maintained": true,
-    "notes": "Official Supabase MCP, covers database query + schema inspection"
-  } | null,
-  "cli": {
-    "install_docs": "https://supabase.com/docs/guides/cli",
-    "notes": "Local dev + migrations CLI"
-  } | null,
-  "api": {
-    "docs_url": "https://supabase.com/docs/reference/api",
-    "notes": "REST + GraphQL for runtime data access"
-  } | null,
-  "cache_updated": true | false,
-  "summary": "One-sentence human-readable recommendation for the hd:setup caller."
+  "categories": {
+    "primary": "<one category from enum>",
+    "secondary": ["<categories>"],
+    "all": ["<categories>"]
+  },
+  "confidence": 0.0-1.0,
+  "ai_relevant": true | false,
+  "mcp": {...} | null,
+  "cli": {...} | null,
+  "api": {...} | null
 }
 ```
 
+Include the category enum + 1-sentence definitions + 1-2 examples each inline in the prompt.
+
+### Phase 3 — synthesis
+
+Emit full output object (see § Output format). Attach `confidence` self-reported by the LLM:
+- ≥ 0.8 — high confidence; cache write-back
+- 0.6 – 0.8 — medium; cache with `needs_review: true` flag
+- < 0.6 — low; return without caching; downstream picks up as "needs manual"
+
+### Phase 4 — cache write-back
+
+If `confidence ≥ 0.8` AND findings are concrete (at least primary category + one verified integration URL), append a cache row to `known-mcps.md` in the **Seeded cache** section. Row schema:
+
+```yaml
+- tool_name: "<name>"
+  categories:
+    primary: "<category>"
+    secondary: ["<categories>"]
+    all: ["<categories>"]
+  classified_at: "YYYY-MM-DD"
+  classifier_version: "1"
+  source: "rule-based" | "web-search" | "curated" | "manual"
+  confidence: 0.0-1.0
+  source_sha: "<sha of fetched npm/github description>" # optional; enables staleness check
+  integrations:
+    mcp: { package, install_docs, maintained, notes } | null
+    cli: { install_docs, notes } | null
+    api: { docs_url, notes } | null
+```
+
+Never rewrite or reorder existing rows. Append-only.
+
+## Procedure — research mode (unchanged from 3n.3)
+
+Legacy mode for when caller already knows the tool name (not a raw_signal). Follows the same Phase 1 (cache) → Phase 2 (web-search) → Phase 3 (synthesis) → Phase 4 (cache write-back) flow, but emits the flatter `{mcp, cli, api}` object used by 3n.3 callers. The classify mode's output is a superset; research-mode output can be derived from classify-mode output (drop `categories` + `confidence`).
+
+## Output format
+
+Return JSON. Classify mode adds `categories` + `confidence` + `ai_relevant`:
+
+```json
+{
+  "tool_name": "@aws-amplify/auth",
+  "mode": "classify",
+  "source": "rule-based" | "cache" | "web-search" | "none",
+  "categories": {
+    "primary": "data_api",
+    "secondary": ["auth"],
+    "all": ["data_api", "auth"]
+  },
+  "confidence": 0.92,
+  "ai_relevant": true,
+  "mcp": {
+    "package": null,
+    "install_docs": "https://docs.amplify.aws/",
+    "maintained": true,
+    "notes": "AWS Amplify; no dedicated MCP; GraphQL API available"
+  },
+  "cli": {
+    "install_docs": "https://docs.amplify.aws/gen2/build-a-backend/cli/",
+    "notes": "amplify-cli for backend provisioning"
+  },
+  "api": {
+    "docs_url": "https://docs.amplify.aws/javascript/build-a-backend/auth/",
+    "notes": "GraphQL + REST via amplify-js client"
+  },
+  "cache_updated": true,
+  "summary": "AWS Amplify — BaaS with auth + storage + API. CLI for backend provisioning; GraphQL API via @aws-amplify/api."
+}
+```
+
+Research mode: drop `mode`, `categories`, `confidence`, `ai_relevant` fields.
+
 ## Guardrails
 
-- **Never fabricate URLs.** If a search result is unverified, omit it rather than guess.
-- **Never recommend unmaintained packages without the `maintained: false` flag.** Callers use this to decide whether to warn the user.
-- **Never install anything.** This agent only researches and links. Installation is the user's job.
+- **Never fabricate URLs.** If a search result is unverified, omit rather than guess.
+- **Never recommend unmaintained packages without `maintained: false` flag.**
+- **Never install anything.** Research + link only; installation is the user's job.
 - **Never read user-level filesystem** (`~/.zshrc`, `~/.mcp.json`, homebrew list). Repo-scope only.
-- **Never transmit the user's repo content** in web searches. Only the `tool_name` leaves the machine.
-- **Respect rate limits.** Phase 2 maximum 3 queries per invocation; no retry loops beyond the tool's own.
-- **Copyright.** Quote at most 15 words from any source, in quotation marks. Prefer structured URL extraction over prose quotation.
+- **Never transmit repo content** in web searches. Only the `tool_name` leaves the machine.
+- **Large-batch ceiling.** If caller has dispatched more than `large_batch_ceiling` scout invocations from one `/hd:setup` run, emit a warning in `summary` + skip web search (respond from cache only). Caller is responsible for confirming with user before fanning out further.
+- **Respect rate limits.** Phase 2 max 3 queries per invocation.
+- **Copyright.** Quote at most 15 words from any source, in quotation marks. Prefer URL extraction over prose quotation.
 
 ## Degraded mode (no web search available)
 
-If the host environment lacks web search (e.g. some Cursor inline mode, air-gapped runs):
+If the host environment lacks web search:
+- Phase 0 (rule-based) + Phase 1 (cache) still run
 - Skip Phase 2
-- Return Phase 1 cache result if hit; else `source: "none"` with all buckets `null`
-- Note in `summary`: `"Cache miss; web search unavailable on this host. Ask user for the tool's docs URL and record pointer-only."`
+- If both Phase 0 + 1 miss, return `source: "none"`, `categories.primary: "uncategorized"`, `confidence: 0.0`
+- Suggest in `summary`: `"Web search unavailable. Use Path B (paste-organize) in per-layer fill-path, or manually record pointer in hd-config.md."`
 
 ## Parallel → serial discipline
 
-Callers dispatching for multiple tools batch ≤5 parallel scout invocations per our standing convention. The scout itself does not dispatch sub-agents.
+Single-signal interface; callers parallelize via the standing ≤5 Task-batch convention. No internal batch concurrency.
 
 ## What this agent does NOT do
 
@@ -112,10 +206,13 @@ Callers dispatching for multiple tools batch ≤5 parallel scout invocations per
 - Read or transmit auth tokens / secrets
 - Modify the user's MCP config files
 - Call into other plug-ins' Task namespaces
-- Recommend tools the user didn't name
+- Recommend tools the user didn't name (research mode)
+- Fabricate classifications for uncached + no-web-search cases — returns `uncategorized` instead
 
 ## Reference
 
 - Cache: [`../../skills/hd-setup/references/known-mcps.md`](../../skills/hd-setup/references/known-mcps.md)
 - Invoked from: [`../../skills/hd-setup/references/per-layer-procedure.md § Fill path`](../../skills/hd-setup/references/per-layer-procedure.md)
-- Phase 3n plan: [`../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md`](../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md) Unit 3
+- Architectural lesson: [`../../docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md`](../../docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md)
+- Phase 3o plan: [`../../docs/plans/2026-04-21-002-feat-phase-3o-universal-tool-discovery-plan.md`](../../docs/plans/2026-04-21-002-feat-phase-3o-universal-tool-discovery-plan.md)
+- Phase 3n plan: [`../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md`](../../docs/plans/2026-04-21-001-feat-phase-3n-external-source-fill-path-plan.md) (research mode origin)
