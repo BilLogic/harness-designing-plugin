@@ -1,9 +1,10 @@
 ---
 title: "feat: Phase 3p — detect-inspect-integrate + setup health disclosure"
 type: feat
-status: active
+status: completed
 date: 2026-04-21
 phase: 3p
+completed: 2026-04-21
 ---
 
 # feat: Phase 3p — detect-inspect-integrate + setup health disclosure

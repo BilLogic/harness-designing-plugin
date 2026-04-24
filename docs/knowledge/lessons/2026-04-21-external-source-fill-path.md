@@ -1,11 +1,23 @@
 ---
 title: "External-source fill-path: the plug-in is an advisor, not an installer"
 date: 2026-04-21
-tags: [live-testing, tool-discovery, advisor-pattern, mcp, cli, api, compounding]
 memory_type: episodic
 importance: 5
+tags: [live-testing, tool-discovery, advisor-pattern, mcp, cli, api, compounding]
+
+# Machine-extractable — 3p.3 schema migration
+applies_to_layers: [l1, l5]
+related_rules: [R_2026_04_21_advisor, R_2026_04_21_live_testing]
+related_lessons:
+  - 2026-04-20-iterative-refinement-3k-to-3m
+  - 2026-04-18-parallel-pilots-3-6-consolidated
+decision_summary: "The plug-in is an advisor: it scans, asks, researches AI-integration options (MCP/CLI/API), links to install docs. Never installs or wires auth on the user's behalf. Parallel path: paste-and-organize."
+result_summary: "Phase 3n shipped 8 units (scout agent, Step 3 collapse, known-mcps as cache, per-layer Fill path, paste-organize helper, Step 10 closer, schema v5). advisor-not-installer graduated to AGENTS.md § Rules same day."
+next_watch: "If any reviewer proposes auto-installing on user's behalf, cite this lesson + rule."
 rule_candidate: true
-rule_ref: null
+rule_ref: R_2026_04_21_advisor
+supersedes: null
+superseded_by: null
 ---
 
 # Lesson

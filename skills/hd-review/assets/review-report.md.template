@@ -53,14 +53,18 @@ P1   1    L2       <one-line>                                   S
 
 {{P1_FINDINGS}}
 
-<!-- Each finding:
+<!-- Each finding (3p.3 schema — machine-extractable for downstream agents):
+- id: F_YYYY_MM_DD_<NN>          # stable finding id for cross-review references
 - severity: p1
-- category: always-loaded-budget | coexistence | protected-artifacts | missing-layer | schema-invalid
+- category: always-loaded-budget | coexistence | protected-artifacts | missing-layer | schema-invalid | ...
 - content_status: missing | present-but-stale | present-and-populated | healthy
 - file: <path>
+- applies_to_layers: [l1, ...]   # which layers the finding affects
 - finding: <one-sentence description>
 - suggested_action: <concrete next step>
+- effort: XS | S | M | L          # for priority sorting
 - detected_by: <agent name; always-present for learnings-researcher matches>
+- related_lesson: <lesson-slug or null>  # if finding cites a past lesson
 -->
 
 ### P2 — drift (should fix)

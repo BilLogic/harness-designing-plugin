@@ -1,11 +1,23 @@
 ---
 title: "Whitelist vs research-time classification: detection that scales with ecosystem is an anti-pattern"
 date: 2026-04-21
-tags: [architecture, detection, classification, scalability, llm-as-fallback, refactor, lesson-from-audit]
 memory_type: episodic
 importance: 5
+tags: [architecture, detection, classification, scalability, llm-as-fallback, refactor, lesson-from-audit]
+
+# Machine-extractable — 3p.3 schema migration
+applies_to_layers: [l1, l3]
+related_rules: []
+related_lessons:
+  - 2026-04-21-external-source-fill-path
+  - 2026-04-21-detect-inspect-integrate
+decision_summary: "Detection logic that grows linearly with ecosystem size is an anti-pattern. Split into (A) deterministic enumeration (scales with repo) + (B) research-time classification with cache (scales with usage). Denylists are the same anti-pattern as whitelists."
+result_summary: "Phase 3o shipped: detect.py emits raw_signals.deps universally; scout gains classify mode; 45-entry whitelist deleted; cache grows organically via scout write-back."
+next_watch: "Second emerging format tempts us to whitelist → apply this pattern instead → graduate to AGENTS.md § Rules at 2nd confirmation."
 rule_candidate: true
 rule_ref: null
+supersedes: null
+superseded_by: null
 ---
 
 # Lesson

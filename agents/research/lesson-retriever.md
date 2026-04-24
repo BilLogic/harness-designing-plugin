@@ -21,8 +21,9 @@ Scope is strictly the user's `docs/knowledge/lessons/` directory — this agent 
 
 ### Phase 1: index
 Enumerate all `*.md` lessons. Extract:
-- `title`, `date`, `tags[]` from YAML frontmatter
-- First 2 sentences of body (surface summary)
+- `title`, `date`, `tags[]`, `memory_type`, `importance` from YAML frontmatter
+- **Machine-extractable fields (3p.3 schema, when present):** `applies_to_layers[]`, `related_rules[]`, `related_lessons[]`, `decision_summary`, `result_summary`, `next_watch`, `rule_candidate`, `supersedes`, `superseded_by`. Query these for deterministic cross-reference instead of grepping prose. Legacy lessons without these fields fall back to markdown body scan.
+- First 2 sentences of body (surface summary, for legacy files)
 - File size + last-modified
 
 ### Phase 2: score each lesson

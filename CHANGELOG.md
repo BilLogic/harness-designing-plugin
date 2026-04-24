@@ -3,6 +3,30 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Phase 3p — detect-inspect-integrate + setup health disclosure (2026-04-21)
+
+Completed per [`docs/plans/2026-04-21-003-feat-phase-3p-detect-inspect-integrate-plan.md`](docs/plans/2026-04-21-003-feat-phase-3p-detect-inspect-integrate-plan.md). Five units shipped, all scope-bounded:
+
+**3p.1 — Post-setup health assessment (Step 10.5).** `/hd:setup` now renders a compact 5-layer ASCII health bar + top-3 priorities table when setup finishes, sourced from Phase A's `harness-auditor × 5` data (previously discarded after proposing defaults). Non-blocking narration; no new agent dispatches. Render spec in `references/post-setup-health.md`. Closes the "did setup work?" feedback loop.
+
+**3p.2 — L1 EXECUTE proactively surfaces detected L1 content.** Before the standard three Fill paths, if `detect.py` surfaced substantive files (PRD docs, tech-stack files, design-system dirs, README.md, `*.local.md`, **or any root-level `*.md` with ≥30 non-blank lines** — catches DESIGN.md / CONTRIBUTING.md / extended AGENTS.md generically), user sees them with a 4-option integration prompt: scaffold pointers / paste-organize / both / skip. **No filename whitelist.** Detector probe `enumerate_raw_signals` gets a generic root-md substance scan (cap 10 files).
+
+**3p.3 — Richer frontmatter on agent-authored templates.** `lesson.md.template` gains machine-extractable fields (`applies_to_layers[]`, `related_rules[]`, `related_lessons[]`, `decision_summary`, `result_summary`, `next_watch`, `supersedes`, `superseded_by`). `decisions.md` format block updated with structured YAML block per entry (`decision_id`, cross-refs). `review-report.md.template` finding schema extended with `id`, `applies_to_layers`, `effort`, `related_lesson`. `lesson-retriever` agent spec updated to query new fields. Two existing recent lessons (`2026-04-21-external-source-fill-path` + `2026-04-21-whitelist-vs-research-time`) migrated as examples. Body prose unchanged; structure-above-the-fold richer. Downstream agents can query deterministically instead of markdown-grep.
+
+**3p.4 — Lesson captured: detect-inspect-integrate.** `docs/knowledge/lessons/2026-04-21-detect-inspect-integrate.md` — rule_candidate; 1st standalone confirmation. Extends the 2026-04-21 advisor-not-installer rule. Candidate rule: *"Detect substantive infrastructure files universally (no filename whitelist). Present as integration candidates. Every integration routes through user decision. 5-layer harness is the coordinating frame; external formats are content-input, not override."* Graduates at 2nd confirmation.
+
+**3p.5 — Explicit `rubric-template.md` starter.** `skills/hd-review/assets/starter-rubrics/rubric-template.md` with `{{PLACEHOLDER}}` fields across frontmatter + full Scope & Grounding (personas/stories/scenarios/anti-scenarios) + criteria + coexistence notes. `rubric-authoring-guide.md` links to it as primary starting point. Lower-friction than copying an existing starter as implicit template.
+
+**Process note:** Phase 3p went through `/ce:plan` → `/ce:deepen-plan` (4 parallel research + review agents) → `/ce:work` → `/ce:review` cycle before shipping. The deepen-plan pass caught one concrete risk: we had initially proposed a `design-md-compliance` starter rubric + DESIGN.md-specific detector probe — same whitelist anti-pattern 3o rejected for CLI/data_api tools. Replaced with generic root-md detection + lesson capturing the principle.
+
+**Budgets:** `hd-setup/SKILL.md` 194/200 (compressed Step 9 + Reference-files + Assets + Sub-agents sections to fit Step 10.5); `always_loaded_lines` 150/200; 0 skill violations; 0 agent violations.
+
+Commits: `d665afe079` (3p.1 + 3p.4 + 3p.5), `24d91c1860` (3p.2), + this commit (3p.3).
+
+---
+
 ## [1.2.0] — 2026-04-21
 
 Iteration release. Two phases (3n, 3o) plus post-audit remediation shipped on top of v1.1.0. Triggered by live testing: 3n surfaced by a sense_frontend run where Step 3 tool-discovery collapsed silently; 3o surfaced by a 4-repo dry-run (Lightning, cornerstone, caricature, Oracle Chat) where the 3n.7 detection whitelist missed ≥4 well-known tools in 1 day. Each phase went through the full `/ce:plan` → `/ce:deepen-plan` → `/ce:work` → `/ce:review` cycle on the plug-in itself.
