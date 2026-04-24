@@ -15,7 +15,7 @@ decision_summary: "Never hardcode known external formats (DESIGN.md, CONTRIBUTIN
 result_summary: "Phase 3p ships generic L1 EXECUTE surfacing (no filename whitelist); our 5-layer structure stays the coordinating frame for external content."
 next_watch: "When a second external format reaches ecosystem adoption (say, agents.md.spec), we should NOT reach for a filename probe. Second confirmation of this pattern graduates the candidate rule."
 rule_candidate: true
-rule_ref: null
+rule_ref: R_2026_04_21_detection_enumeration  # graduated 2026-04-21 (paired with whitelist-vs-research-time)
 supersedes: null
 superseded_by: null
 ---

@@ -3,7 +3,25 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.3.0] — 2026-04-21
+
+Iteration release. One phase (3p) plus post-release polish shipped on top of v1.2.0 — both delivered same day. Triggered by a reflection on the emerging DESIGN.md format at `google-labs-code/design.md` and the setup-flow observation that `/hd:setup` didn't disclose a post-completion health assessment.
+
+Headlines:
+
+- **Step 10.5 post-setup health assessment.** `/hd:setup` now renders a compact 5-layer ASCII health bar + top-3 priorities table at completion, sourced from Phase A's `harness-auditor × 5` data (previously discarded). Non-blocking; reuses data already computed.
+- **L1 EXECUTE proactively surfaces detected content.** Before the three standard Fill paths, if `detect.py` surfaced substantive files (PRD docs, tech-stack files, design-system dirs, README, `*.local.md`, or any root-level `*.md` with ≥30 non-blank lines — catches DESIGN.md / CONTRIBUTING.md / extended AGENTS.md **generically, no filename whitelist**), user sees them with a 4-option integration prompt.
+- **Richer frontmatter on agent-authored templates.** `lesson.md.template` + `decisions.md` + `review-report.md.template` gain machine-extractable fields (`applies_to_layers[]`, `related_rules[]`, `decision_summary`, `result_summary`, `next_watch`, etc.). Downstream agents query frontmatter deterministically instead of grepping prose.
+- **Explicit rubric-template.md starter.** Lower-friction than copying an existing starter as implicit template.
+- **New rule graduated** (`R_2026_04_21_detection_enumeration`): *"Detection logic that grows linearly with ecosystem size is an anti-pattern. Split into deterministic enumeration + research-time classification with organic cache. Denylists are the same anti-pattern as whitelists."* 2 confirmations: 3o whitelist deletion + 3p generic root-md probe.
+- **Rule IDs back-filled** into all 7 `AGENTS.md § Rules` entries for deterministic cross-reference from lessons' `rule_ref` back-refs.
+- **Dogfood run surfaced + fixed** 3 drift items: stale `workflows/` reference in cheat-sheet; "Structure mode" vs "Scaffold mode" label drift in hd-setup SKILL.md; undocumented meta-harness coverage waivers.
+
+**Process milestone:** every shipped change in v1.3.0 went through `/ce:plan` → `/ce:deepen-plan` → `/ce:work` → `/ce:review` → dogfood cycle on the plug-in itself. Same-day iteration: 3p planned, deepened, shipped, reviewed, fixed.
+
+Commits: `d665afe079` (3p.1 + 3p.4 + 3p.5), `24d91c1860` (3p.2), `18c3b377a9` (3p.3 + CHANGELOG), `50d368f198` (dogfood fixes), plus v1.3.0 release commit.
+
+Full details in Phase 3p section below.
 
 ### Phase 3p — detect-inspect-integrate + setup health disclosure (2026-04-21)
 

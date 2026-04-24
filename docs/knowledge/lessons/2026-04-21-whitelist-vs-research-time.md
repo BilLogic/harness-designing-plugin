@@ -15,7 +15,7 @@ decision_summary: "Detection logic that grows linearly with ecosystem size is an
 result_summary: "Phase 3o shipped: detect.py emits raw_signals.deps universally; scout gains classify mode; 45-entry whitelist deleted; cache grows organically via scout write-back."
 next_watch: "Second emerging format tempts us to whitelist → apply this pattern instead → graduate to AGENTS.md § Rules at 2nd confirmation."
 rule_candidate: true
-rule_ref: null
+rule_ref: R_2026_04_21_detection_enumeration  # graduated 2026-04-21 (2nd confirmation paired with detect-inspect-integrate)
 supersedes: null
 superseded_by: null
 ---
