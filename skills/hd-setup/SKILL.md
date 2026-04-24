@@ -36,7 +36,9 @@ hd:setup Progress:
 - [ ] Step 8: Layer 5 (Knowledge) — scaffold / review / create / skip
 - [ ] Step 8.5: Proposed-files preview — show table; user confirms before any write
 - [ ] Step 9: Write hd-config.md (schema v5)
-- [ ] Step 10: Summarize decisions + suggest next skill
+- [ ] Step 10: Summarize decisions
+- [ ] Step 10.5: Post-setup health assessment (ASCII bars + priorities)
+- [ ] Step 11: Suggest next skill
 ```
 
 Steps 4–8 each follow the shared per-layer cycle. See [`references/per-layer-procedure.md`](references/per-layer-procedure.md) for the FRAME → SHOW → PROPOSE → ASK → EXECUTE contract, default-action table, scaffold-mode extract-and-pointer rule, and post-layer checkpoint.
@@ -116,27 +118,24 @@ Before any file write, render a proposed-files table (layer → action → paths
 
 ## Step 9 — Write `hd-config.md`
 
-Schema v5 spec: [`references/hd-config-schema.md`](references/hd-config-schema.md). Template: [`assets/hd-config.md.template`](assets/hd-config.md.template).
+Populate per [schema v5 spec](references/hd-config-schema.md) via [template](assets/hd-config.md.template): `schema_version: "5"`, `setup_mode`, `setup_date`, `team_size`, `skipped_layers`, `article_read`, `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`, `other_tool_harnesses_detected`. Atomic write (temp + `mv`).
 
-Populate:
-- `schema_version: "5"`, `setup_mode`, `setup_date`, `team_size`
-- `skipped_layers`, `article_read`
-- `team_tooling`, `mcp_servers_at_setup`, `layer_decisions`
-- `other_tool_harnesses_detected`
-
-Atomic write (temp file + `mv`).
-
-## Step 10 — Summarize + suggest next
+## Step 10 — Summarize decisions
 
 Report:
 - **Layer decisions table** (5 rows: layer → choice → evidence)
 - **Always-loaded budget snapshot** (run `bash skills/hd-review/scripts/budget-check.sh | jq .always_loaded_lines`)
 - **Other-tool harnesses respected** (paths untouched)
-- **Next step** tuned to outcome:
-  - Mostly create → `/hd:maintain capture` to record first lesson
-  - Mostly scaffold → `/hd:review` to review the combined harness
-  - Mostly review → address findings; re-run `/hd:review`
-- **Research opportunities** (3n.8) — when `team_tooling` has entries, surface re-entry: *"Scanned but didn't wire up: `<tool list>`. Re-run `/hd:setup --discover-tools` to have scout research MCP/CLI/API per tool, or paste content and I'll organize."*
+
+## Step 10.5 — Post-setup health assessment (3p.1)
+
+Render a compact 5-layer ASCII health bar + top-3 priorities using Phase A's per-layer `harness-auditor` data (already computed; previously discarded). Closes the "did setup work?" feedback loop. Non-blocking narration only; no new agent dispatches.
+
+→ See [`references/post-setup-health.md`](references/post-setup-health.md) for exact render spec + bar glyphs + fallback when Phase A skipped.
+
+## Step 11 — Suggest next
+
+Tuned to outcome: create → `/hd:maintain capture`; scaffold → `/hd:review`; review → address findings, re-run `/hd:review`. When `team_tooling` has entries, surface *"Scanned but didn't wire up: `<tool list>`. Re-run `/hd:setup --discover-tools` or paste content."* (3n.8).
 
 ## `--from-review` mode (3m.3)
 
@@ -173,26 +172,23 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Reference files
 
-- [per-layer-procedure.md](references/per-layer-procedure.md) — FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + default-action table + scaffold-mode contract + Step 8.5 preview format
-- [phase-a-pre-analysis.md](references/phase-a-pre-analysis.md) — parallel dispatch + health snapshot render
-- Layer guides: `layer-1-context.md` through `layer-5-knowledge.md` under `references/` (per-layer depth + procedure)
-- **Standard:** [standard-harness-structure.md](references/standard-harness-structure.md) (canonical tree), [standard-agent-categories.md](references/standard-agent-categories.md) (5 categories)
+- [per-layer-procedure.md](references/per-layer-procedure.md) — FRAME/SHOW/PROPOSE/ASK/EXECUTE cycle + Fill path + Step 8.5 preview
+- [phase-a-pre-analysis.md](references/phase-a-pre-analysis.md) — parallel dispatch + health snapshot
+- [post-setup-health.md](references/post-setup-health.md) — Step 10.5 render spec (3p.1)
+- Layer guides: `layer-{1..5}-*.md` (per-layer depth + procedure)
+- Standards: [standard-harness-structure.md](references/standard-harness-structure.md), [standard-agent-categories.md](references/standard-agent-categories.md)
 - Shared: [hd-config-schema.md](references/hd-config-schema.md), [known-mcps.md](references/known-mcps.md)
 
 ## Assets + scripts
 
-- `assets/AGENTS.md.template` — master-index (harness map + agent persona)
-- `assets/hd-config.md.template` — schema v5 config (adds `cli` + `data_api` categories)
-- `assets/context-skeleton/` · `assets/knowledge-skeleton/` · `assets/platform-stubs/`
-- `scripts/detect.py` — canonical detector (schema v5 JSON); `scripts/detect-mode.sh` — bash shim
+- `assets/AGENTS.md.template` · `assets/hd-config.md.template` (v5) · `assets/context-skeleton/` · `assets/knowledge-skeleton/` · `assets/platform-stubs/`
+- `scripts/detect.py` (v5 JSON) · `scripts/detect-mode.sh` (bash shim)
 
 ## Sub-agents invoked
 
-Fully-qualified `design-harnessing:<category>:<agent>` Task names only; each parallel batch ≤5.
+Fully-qualified `design-harnessing:<category>:<agent>` Task names; each parallel batch ≤5.
 
 - Phase A — `analysis:harness-auditor` × 5 + `analysis:rubric-recommender` (scenario: `setup-pre-analysis`)
 - Step 3 — `research:lesson-retriever` (solo, topic: tool-discovery)
-- Per-layer EXECUTE fill-path — `research:ai-integration-scout` (on-demand when user names a tool; batch ≤5 parallel)
-- Per-layer review actions — `review:skill-quality-auditor` (L2), `review:rubric-extractor` (L4 extract), `analysis:rule-candidate-scorer` (L5 when `has_plans_convention`)
-
-`review:rubric-applier` is owned by `/hd:review` targeted mode, not dispatched here.
+- Fill-path — `research:ai-integration-scout` (on-demand; ≤5 parallel)
+- Per-layer review — `review:skill-quality-auditor` (L2), `review:rubric-extractor` (L4), `analysis:rule-candidate-scorer` (L5). `review:rubric-applier` is `/hd:review` territory.

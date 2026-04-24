@@ -43,8 +43,13 @@ The `rubric-applier` agent (authored in Phase 3i.4) reads Scope & Grounding **be
 
 Starter rubrics live in `skills/hd-review/assets/starter-rubrics/` and ship read-only inside the plug-in. Rubrics you author or extend live in `docs/rubrics/<name>.md` in your own repo. When you customize a starter, keep the `source:` frontmatter pointing at the original and append your team's citation (e.g., `source: starter-typography + <team>-customizations`). Never edit the plug-in's starter files directly — those ship to every consumer of the plug-in.
 
+## Starter template
+
+For authoring a fresh rubric, copy [`../assets/starter-rubrics/rubric-template.md`](../assets/starter-rubrics/rubric-template.md) into `docs/rubrics/<name>.md` and fill the `{{PLACEHOLDER}}` fields. Template ships the full 4-block Scope & Grounding skeleton, criteria shape, and coexistence notes — lower friction than copying an existing starter as implicit template.
+
 ## See also
 
 - [rubric-application.md](rubric-application.md) — how the `rubric-applier` agent walks criteria
 - [targeted-review-format.md](targeted-review-format.md) — output shape for rubric-backed targeted reviews
 - [review-criteria-l4-rubrics.md](review-criteria-l4-rubrics.md) — rubrics are Layer 4; full review treats them as first-class artifacts
+- [`../assets/starter-rubrics/rubric-template.md`](../assets/starter-rubrics/rubric-template.md) — explicit starter template with `{{placeholders}}`
