@@ -800,6 +800,29 @@ def detect_scattered_l1() -> dict:
     except OSError:
         pass
 
+    # 3p.2 — any other root-level *.md with ≥30 non-blank lines. Catches DESIGN.md,
+    # CONTRIBUTING.md, extended AGENTS.md, architectural notes, etc. generically —
+    # without hardcoding filenames (see lessons/2026-04-21-detect-inspect-integrate.md).
+    _already_captured = set(root_l1_files) | {"CLAUDE.md", "LICENSE.md"}  # skip shims + LICENSE
+    try:
+        for p in sorted(REPO.glob("*.md")):
+            if not p.is_file() or p.name in _already_captured:
+                continue
+            # Skip files already covered by this function's earlier probes
+            if p.name == "README.md" or p.name == "SKILL.md" or p.name.endswith(".local.md"):
+                continue
+            try:
+                if p.stat().st_size <= 512 * 1024:
+                    lines = [ln for ln in p.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
+                    if len(lines) >= 30:
+                        root_l1_files.append(p.name)
+                        if len(root_l1_files) >= 10:  # cap to prevent runaway
+                            break
+            except (OSError, UnicodeDecodeError):
+                pass
+    except OSError:
+        pass
+
     if not docs_dir.is_dir():
         return {
             "prd_files": [],

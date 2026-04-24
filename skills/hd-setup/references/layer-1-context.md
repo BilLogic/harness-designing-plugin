@@ -81,6 +81,38 @@ Diff preview before any write (F4 safety in SKILL.md). If source content is in a
 
 **Propose default** per [per-layer-procedure.md § Default action per detection](per-layer-procedure.md#default-action-per-detection).
 
+**Pre-Execute (3p.2) — surface detected L1 content first.** Before offering the three standard Fill paths, check `signals.scattered_l1_signals` + `signals.layers_present_scattered` from `detect.py`. If any of the following is non-empty, proactively list them and ask how to incorporate:
+
+- `scattered_l1_signals.prd_files[]` — PRD-shaped markdown
+- `scattered_l1_signals.tech_stack_files[]` — TECH_STACK.md / ARCHITECTURE.md
+- `scattered_l1_signals.design_system_dirs[]` — docs/design-system/, src/design-system/
+- `scattered_l1_signals.root_l1_files[]` — README.md, `*.local.md`, root SKILL.md (3o.5d)
+- Any additional root-level `*.md` file with ≥30 non-blank lines NOT already covered by the above (catches DESIGN.md, CONTRIBUTING.md, architectural notes, etc. generically without naming them)
+
+Narration template:
+
+> *"Found substantive L1 content already in your repo:*
+> *- `<path>` (`<N>` lines)*
+> *- `<path>` (dir, `<N>` files)*
+>
+> *How should I incorporate this into the harness?*
+> *(a) **Scaffold pointers** — thin summary files under `docs/context/` referencing originals (originals stay authoritative).*
+> *(b) **Paste-organize** — extract content into `docs/context/` sub-folders via the paste-organize helper. Reuses 3n Path B flow.*
+> *(c) **Both** — pointer for some, paste-organize for others — tell me which.*
+> *(d) **Skip** — treat as unrelated; I'll create from scratch.*
+>
+> *Whichever path you pick, content lands in our standard structure: `docs/context/product/` / `engineering/` / `design-system/` / `conventions/`."*
+
+**Generic, not filename-specific.** No hardcoded `if filename == "DESIGN.md"` branches. Whatever the generic detector surfaces is what we offer. Keeps us out of the whitelist-scales-with-ecosystem trap (see [lessons/2026-04-21-detect-inspect-integrate.md](../../../docs/knowledge/lessons/2026-04-21-detect-inspect-integrate.md) + [lessons/2026-04-21-whitelist-vs-research-time.md](../../../docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md)).
+
+Chosen option maps to:
+- `(a) Scaffold pointers` → scaffold-mode contract (extract 3–5 line summary from each source into pointer file; see [`per-layer-procedure.md § Scaffold-mode contract`](per-layer-procedure.md#scaffold-mode-contract--extract--pointer-all-layers))
+- `(b) Paste-organize` → invoke [`paste-organize.md`](paste-organize.md) helper with the detected files as content source
+- `(c) Mixed` → apply (a) or (b) per-file based on user's per-item choice
+- `(d) Skip` → proceed to the three standard Fill paths below
+
+If all `scattered_l1_signals` buckets are empty (pure greenfield), skip this pre-execute and go straight to the three standard Fill paths.
+
 **Execute (3n.5) — offer three fill paths** per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5): (A) wire up a tool via `ai-integration-scout`, (B) paste content via [`paste-organize.md`](paste-organize.md), or (C) create from scratch below. For L1, Path A is default when `team_tooling.docs` or `team_tooling.data_api` has entries (Notion / Supabase / Firebase feed product facts). Otherwise default C.
 
 Path A dispatch (batch ≤5 parallel per tool user names):
