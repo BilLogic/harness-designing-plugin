@@ -91,7 +91,7 @@ Each batch stays ≤5 agents (6+ parallel strains context). Outputs synthesize i
 
 **Advisor, not installer.** Tool research happens at per-layer EXECUTE: dispatch `research:ai-integration-scout` in `research` mode (named tool) or `classify` mode (categorize raw_signals deps). Returns MCP/CLI/API findings + install-docs URLs; user installs. See [`references/per-layer-procedure.md § Fill path`](references/per-layer-procedure.md).
 
-## Step 3.5 — Structure mode (3k.11)
+## Step 3.5 — Scaffold mode (3k.11)
 
 **Narrate:** *"Before we walk the layers, pick how to arrange any new files."* Offer two modes:
 

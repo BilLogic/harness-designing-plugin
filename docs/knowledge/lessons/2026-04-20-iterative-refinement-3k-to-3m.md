@@ -5,7 +5,7 @@ tags: [iteration, live-testing, dogfood, compounding, process]
 memory_type: episodic
 importance: 5
 rule_candidate: true
-rule_ref: null
+rule_ref: R_2026_04_21_live_testing  # graduated 2026-04-21 at 4th confirmation
 ---
 
 # Lesson

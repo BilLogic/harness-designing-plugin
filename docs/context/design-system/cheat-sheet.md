@@ -6,7 +6,7 @@ This plug-in has no UI — our "design system" is file and content conventions. 
 
 - **Skills:** `skills/hd-<verb>/SKILL.md` — `hd-` prefix, verb name, kebab-case
 - **References:** `skills/<skill>/references/<topic>.md` — one topic per file, one level deep only
-- **Workflows:** `skills/<skill>/workflows/<procedure>.md` — verb-first name
+- **Procedures:** `skills/<skill>/references/<mode>-procedure.md` — no `workflows/` subdirectory (per AGENTS.md § Repo layout); shared procedures across skills promote to sub-agents
 - **Templates:** `skills/<skill>/templates/<name>.template` or `.md.template` — `.template` suffix is grep-able
 - **Scripts:** `skills/<skill>/scripts/<verb>.sh` — executable (`chmod +x`); bash 3.2+ compatible
 - **Plan files:** `docs/plans/YYYY-MM-DD-NNN-<type>-<slug>-plan.md` — 3-digit daily sequence (compound 2.37.1 convention)
