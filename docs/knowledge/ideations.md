@@ -29,7 +29,9 @@ Open questions, unchosen paths, ideas worth revisiting. Append-only; cross off (
 
 <!-- Add new ideations above this line. -->
 
-## 2026-04-21 — Rubric YAML split: should criteria move from prose tables to frontmatter YAML?
+## ~~2026-04-21 — Rubric YAML split: should criteria move from prose tables to frontmatter YAML?~~ → PROMOTED to Phase 3q plan 2026-04-21
+
+**Resolution:** promoted to [docs/plans/2026-04-21-004-feat-phase-3q-rubric-yaml-split-plan.md](../plans/2026-04-21-004-feat-phase-3q-rubric-yaml-split-plan.md). Scoped to skill-quality.md POC first; propagation to ux-writing + heuristic-evaluation deferred to Phase 3r if the pattern holds.
 
 **Prompt:** Post-3p audit observed that `docs/rubrics/skill-quality.md` mixes YAML-shape tables (criterion rows + severity) with prose (rationale + pass/fail examples). The `review:skill-quality-auditor` agent parses the markdown tables with regex — any prose refactor that shifts table placement silently breaks the audit. DESIGN.md's discipline (normative YAML frontmatter + descriptive prose body) suggests a path.
 **Options on the table:** (a) leave as-is — works today, low-risk markdown; (b) migrate `skill-quality.md` as proof-of-concept: frontmatter holds `sections.<name>.criteria[]` with id+severity, body keeps prose rationale + examples; (c) migrate all 3 adopted rubrics + update `rubric-applier` agent to query YAML deterministically.
