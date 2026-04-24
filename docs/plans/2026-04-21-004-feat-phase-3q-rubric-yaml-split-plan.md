@@ -1,7 +1,7 @@
 ---
 title: "feat: Phase 3q — rubric YAML split (skill-quality.md POC)"
 type: feat
-status: active
+status: completed
 date: 2026-04-21
 phase: 3q
 origin_ideation: docs/knowledge/ideations.md § "Rubric YAML split" (2026-04-21)

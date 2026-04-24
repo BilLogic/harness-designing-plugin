@@ -7,6 +7,17 @@ loaded_by: hd-review
 
 A rubric with criteria but no scope is a ruleset floating in a vacuum. Applied mechanically to the wrong target it produces false positives; applied cautiously it's just a checklist. The **Scope & Grounding** block anchors each rubric to the humans it serves, the situations it fits, and the failure modes it's designed to catch — so both the reader and the `rubric-applier` agent know when a criterion applies and when it should defer.
 
+## Two layers per rubric
+
+Every rubric splits content into two layers with distinct roles:
+
+- **Frontmatter (YAML) — normative.** Criteria with `id`, `severity`, and an imperative `check` string. Machine-queryable; immune to prose refactors. The `rubric-applier` agent reads these deterministically — no markdown-table parsing.
+- **Body (prose) — descriptive.** Scope & Grounding, section rationale, pass/fail examples. Human-authored narrative; layout can change freely without affecting audits.
+
+The schema for the YAML layer is locked at [rubric-yaml-schema.md](rubric-yaml-schema.md); read it before authoring. The body conventions are this guide's domain.
+
+`skill-quality.md` is the Phase 3q reference implementation of this two-layer pattern. Phase 3r will migrate `ux-writing.md` + `heuristic-evaluation.md` once the pattern proves out; until then, those two rubrics use legacy markdown-table criteria and `rubric-applier` handles both shapes.
+
 ## The 4-block schema
 
 Every starter rubric in `skills/hd-review/assets/starter-rubrics/` ships with four sub-sections under `## Scope & Grounding`.
@@ -31,12 +42,15 @@ The `rubric-applier` agent (authored in Phase 3i.4) reads Scope & Grounding **be
 
 ## Authoring checklist for your own rubrics
 
-- [ ] 2–4 personas; each has a one-sentence role + one pain point
-- [ ] 3–5 user stories in "As a `<persona>`, I need `<behavior>` so that `<outcome>`" shape
+- [ ] Frontmatter conforms to [rubric-yaml-schema.md](rubric-yaml-schema.md): `rubric`, `name`, `applies_to[]`, `version: 1`, `severity_defaults`, `source[]`, `sections`
+- [ ] Each `sections.<slug>` declares `order`, `title`, and `criteria[]`; criterion ids are kebab-case and unique within their section
+- [ ] Each criterion's `check` is an imperative one-liner (reads as "Subject verb object.")
+- [ ] 2–4 personas in body; each has a one-sentence role + one pain point
+- [ ] 3–5 user stories in "As a `<persona>`, I need `<behavior>` so that `<outcome>`" shape; each maps to ≥1 criterion in the YAML
 - [ ] 3–5 realistic scenarios — grounded in sources you can cite (impeccable, Material 3, Nielsen, team pilots, etc.)
 - [ ] 3–5 anti-scenarios — the failure modes the rubric is designed to catch, each with an observable symptom
-- [ ] Source citation in frontmatter `source:` field (already present in every starter)
-- [ ] Criteria section follows (unchanged from starter shape: `### criterion-name` + Check / Default severity / Example pass / Example fail)
+- [ ] Source citation in `source:` field
+- [ ] Section bodies hold rationale + pass/fail examples ONLY — no criterion tables (criteria live in the YAML; do not duplicate)
 - [ ] If source material is thin, prefer fewer sharper entries over padding — 2 well-grounded personas beats 4 speculative ones
 
 ## Coexistence
@@ -49,7 +63,9 @@ For authoring a fresh rubric, copy [`../assets/starter-rubrics/rubric-template.m
 
 ## See also
 
-- [rubric-application.md](rubric-application.md) — how the `rubric-applier` agent walks criteria
-- [targeted-review-format.md](targeted-review-format.md) — output shape for rubric-backed targeted reviews
-- [review-criteria-l4-rubrics.md](review-criteria-l4-rubrics.md) — rubrics are Layer 4; full review treats them as first-class artifacts
-- [`../assets/starter-rubrics/rubric-template.md`](../assets/starter-rubrics/rubric-template.md) — explicit starter template with `{{placeholders}}`
+- [rubric-yaml-schema.md](rubric-yaml-schema.md) — YAML frontmatter schema (Phase 3q)
+- [rubric-application.md](rubric-application.md) — how the `rubric-applier` agent walks criteria (handles both YAML and legacy shapes)
+- [targeted-review-format.md](targeted-review-format.md) — output shape for rubric-backed critiques
+- [review-criteria-l4-rubrics.md](review-criteria-l4-rubrics.md) — rubrics are Layer 4; audit treats them as first-class artifacts
+- [`../assets/starter-rubrics/rubric-template.md`](../assets/starter-rubrics/rubric-template.md) — explicit starter template with `{{placeholders}}` using the YAML schema
+- [`../assets/starter-rubrics/skill-quality.md`](../assets/starter-rubrics/skill-quality.md) — Phase 3q reference implementation

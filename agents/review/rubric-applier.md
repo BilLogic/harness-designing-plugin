@@ -24,9 +24,15 @@ Legacy alias: older callers pass `work_item_path` + `rubric_path`. Treat `work_i
 ## Procedure
 
 ### Phase 1: load rubric
-Read the rubric file. Parse:
-- YAML frontmatter: `rubric` name, `applies_to:` list, `severity_defaults`
-- Body: criteria sections. Each criterion has a **check** (what to look for), a **default severity**, and usually pass/fail examples.
+
+Read the rubric file. Parse YAML frontmatter and detect which schema shape it uses:
+
+- **YAML-criteria shape (Phase 3q+).** Frontmatter contains a `sections` map keyed by section slug; each section has `order`, `title`, and `criteria[]` with `id`, `severity`, `check`. Schema documented at `skills/hd-review/references/rubric-yaml-schema.md` (`version: 1` at time of writing). Iterate `sections` in `order` ascending; each criterion is a deterministic record. Emit `schema_version: 1` (or whatever the rubric declares) in the output.
+- **Legacy prose-table shape (pre-3q).** Frontmatter has `rubric`, `name`, `applies_to`, `severity_defaults`, `source` but no `sections` map. Criteria live in markdown tables (`| Criterion | Default severity |`) under `### criterion-name` headings or in numbered `## N. <Section>` sections. Parse the body to extract criteria. Emit `schema_version: legacy` in the output so callers can distinguish.
+
+Detection rule: if frontmatter has a top-level `sections` key whose value is a map → YAML-criteria; otherwise → legacy.
+
+The legacy fallback exists as a transitional mechanism for `ux-writing.md` and `heuristic-evaluation.md`, which migrate in Phase 3r. Once all adopted rubrics are on the YAML shape, the legacy path is removed.
 
 ### Phase 2: verify applicability
 If `applies_to:` list doesn't include this work item's shape (e.g., rubric is for `design-file` and work item is a `.py` file), abort with `error: "rubric not applicable to this work item type"`.
@@ -39,11 +45,16 @@ Load the target file. If the work item is a URL (Figma design file, etc.), use t
 For each criterion in the rubric:
 1. Check the work item for compliance
 2. If non-compliant, produce a finding with:
-   - `criterion` — name from rubric
-   - `severity` — rubric default, potentially overridden
+   - `criterion_id` — kebab-case `id` (YAML shape) or section + heading slug (legacy shape)
+   - `criterion` — `check` string (YAML shape) or human-readable name (legacy shape)
+   - `severity` — rubric default, potentially overridden by `rubric_overrides`
    - `evidence` — file:line or exact quote showing the violation
    - `suggested_fix` — concrete actionable change
 3. If compliant, no finding (silent pass)
+
+**YAML shape:** iterate `sections` by `order`; iterate each section's `criteria[]` in declared order; resolve effective severity as `rubric_overrides[section_slug][criterion.id]` → `criterion.severity` → `severity_defaults.default`.
+
+**Legacy shape:** iterate body sections in document order; extract each table row as a criterion record; resolve effective severity as `rubric_overrides[criterion_name]` → table-row severity → `severity_defaults.default`.
 
 ### Phase 5: aggregate
 Count findings by severity. Compute a composite verdict:
@@ -57,17 +68,21 @@ Count findings by severity. Compute a composite verdict:
 work_item: src/components/Button.tsx
 rubric: design-system-compliance
 rubric_path: skills/hd-review/assets/starter-rubrics/design-system-compliance.md
+schema_version: legacy   # `1` for YAML-criteria rubrics; `legacy` for prose-table rubrics
 composite: degraded
 findings:
-  - criterion: "approved-color-tokens"
+  - criterion_id: approved-color-tokens
+    criterion: "approved-color-tokens"
     severity: p1
     evidence: "Button.tsx:24 — color: #0060FF (not in approved token set)"
     suggested_fix: "Replace with var(--text-primary) or #0051FF if that color is intended"
-  - criterion: "approved-spacing"
+  - criterion_id: approved-spacing
+    criterion: "approved-spacing"
     severity: p2
     evidence: "Button.tsx:31 — padding: 13px (off 8-point grid)"
     suggested_fix: "Use var(--space-2) = 8px or var(--space-3) = 12px"
-  - criterion: "variant-within-approved-set"
+  - criterion_id: variant-within-approved-set
+    criterion: "variant-within-approved-set"
     severity: p1
     evidence: "Button.tsx:8 — variant='primary-gradient' (not in approved set: primary, secondary, ghost)"
     suggested_fix: "Either use an approved variant OR start an RFC to add 'primary-gradient' to the design system"
@@ -99,11 +114,15 @@ summary:
 - `rubric_path` missing → `error: "rubric not found"`
 - `source` / `work_item_path` missing → `error: "source not found"`
 - Rubric's `applies_to:` doesn't include work-item shape → `error: "rubric not applicable"`
+- Rubric YAML malformed (frontmatter unparseable, or `sections` present but missing required keys) → `error: rubric-invalid` with one-line diagnosis
+- Rubric has neither `sections` (YAML shape) nor parseable criterion tables (legacy shape) → `error: rubric-empty` listing what was searched for
 - Work item very large (>5000 lines) → apply per-section; return partial results + note
 - MCP required for work item but unavailable → abort with clear error naming which MCP
 
 ## See also
 
+- `skills/hd-review/references/rubric-yaml-schema.md` — YAML-criteria schema contract (Phase 3q+)
 - `skills/hd-review/references/rubric-application.md` — general rubric-application protocol
 - `skills/hd-review/references/targeted-review-format.md` — output shape
+- `skills/hd-review/assets/starter-rubrics/skill-quality.md` — Phase 3q reference implementation of the YAML-criteria shape
 - `skills/hd-review/assets/starter-rubrics/` — shipped starter rubrics

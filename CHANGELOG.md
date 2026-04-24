@@ -3,6 +3,28 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Phase 3q — rubric YAML split (skill-quality.md POC) (2026-04-21)
+
+Completed per [`docs/plans/2026-04-21-004-feat-phase-3q-rubric-yaml-split-plan.md`](docs/plans/2026-04-21-004-feat-phase-3q-rubric-yaml-split-plan.md). Six units shipped:
+
+**3q.1 — Rubric-YAML schema doc.** `skills/hd-review/references/rubric-yaml-schema.md` documents the YAML frontmatter contract for machine-consumed rubrics: `rubric`, `name`, `applies_to[]`, `version: 1`, `severity_defaults`, `source[]`, `sections.<slug>.criteria[]` with `id` / `severity` / `check`. Validation rules + bump semantics (additive changes don't bump, K8s/dbt convention).
+
+**3q.2 — `skill-quality.md` migrated (both copies).** 9 sections × 37 criteria moved from prose tables to YAML frontmatter; rationale + pass/fail examples remain in body. Compound-severity rows in Section 5 (line caps + description caps) split into separate criteria for clarity. Severity counts preserved exactly: 10 p1, 24 p2, 3 p3. Both `docs/rubrics/skill-quality.md` (dogfood) and `skills/hd-review/assets/starter-rubrics/skill-quality.md` (starter ship) stay diff-clean.
+
+**3q.3 — `skill-quality-auditor` reads YAML deterministically.** Agent spec rewritten to load `sections.*.criteria[]` from frontmatter and emit findings citing each criterion's `id`. Markdown-table parsing removed (clean cut — auditor only consumes skill-quality.md, which IS migrated). Output schema gains `criterion_id` + `section_slug` for cross-review traceability.
+
+**3q.4 — Template + authoring guide updated.** `rubric-template.md` updated with the new YAML-criteria placeholder shape; example body shows "rationale + pass/fail examples (no criterion tables)" pattern. `rubric-authoring-guide.md` introduces the two-layer model up-front (YAML normative, prose descriptive) and links the new schema doc. Future authors ship in the YAML-criteria shape by default.
+
+**3q.5 — `rubric-applier` handles both shapes.** During the 3q→3r transition, `rubric-applier` detects which shape a rubric uses (YAML if `sections` map present; legacy otherwise) and parses accordingly. Output emits `schema_version: 1` or `schema_version: legacy` so callers can distinguish. `ux-writing` + `heuristic-evaluation` stay on legacy parsing until Phase 3r.
+
+**3q.6 — Lesson captured.** `docs/knowledge/lessons/2026-04-21-rubric-yaml-prose-split.md` — rule_candidate; 1st standalone confirmation. Candidate rule: *"When an artifact is both machine-consumed (by an agent) and prose-bearing (by a human), split layers structurally — normative data in YAML frontmatter, descriptive narrative in body."* Graduates at 2nd confirmation (Phase 3r migration of the remaining 2 adopted rubrics).
+
+**Why this matters.** `skill-quality-auditor` parsed criteria via markdown-table regex. The 3l.7 vocab-unification sed pass mangled 16 tokens in `skill-quality.md` table cells without disturbing the audit's regex anchors — caught only by 2026-04-21 dogfood. YAML-criteria removes the parse-fragility class entirely. Adding a criterion is now a YAML edit, not prose-table surgery.
+
+**Scope respected.** No migration of `ux-writing` / `heuristic-evaluation` (Phase 3r). No formal schema lock or validator CLI. No expansion of auditor behavior beyond the parse swap.
+
 ## [1.3.0] — 2026-04-21
 
 Iteration release. One phase (3p) plus post-release polish shipped on top of v1.2.0 — both delivered same day. Triggered by a reflection on the emerging DESIGN.md format at `google-labs-code/design.md` and the setup-flow observation that `/hd:setup` didn't disclose a post-completion health assessment.
