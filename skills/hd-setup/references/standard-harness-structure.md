@@ -126,7 +126,7 @@ Conforms to [Anthropic's skill best practices](https://platform.claude.com/docs/
 
 L3 is **not a folder**. Orchestration is the dispatch graph between skills (which users trigger) and agents (which skills invoke). This mirrors the plug-in's own architecture.
 
-- Skill writes "Dispatch `Task design-harnessing:research:lesson-retriever(…)`"
+- Skill writes "Dispatch `Task harness-designing:research:lesson-retriever(…)`"
 - Agent writes "I am invoked by `hd:maintain` and `hd:review`"
 - AGENTS.md harness map lists both, so the workflow is readable
 

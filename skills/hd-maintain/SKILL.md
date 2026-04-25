@@ -93,7 +93,7 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 - ✅ Writes ONLY to `docs/knowledge/lessons/` (capture) or `AGENTS.md` + `docs/knowledge/changelog.md` (apply)
 - ❌ Never writes to `docs/solutions/` (reserved for other tools)
 - ❌ Never writes to `docs/design-solutions/` in this release (reserved for post-release)
-- ✅ Task calls stay in our own namespace and are fully-qualified: `Task design-harnessing:<category>:<agent>(...)`. We do not invoke any other plug-in's Task namespace.
+- ✅ Task calls stay in our own namespace and are fully-qualified: `Task harness-designing:<category>:<agent>(...)`. We do not invoke any other plug-in's Task namespace.
 
 ## Compact-safe mode
 
@@ -121,9 +121,9 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 
 ## Sub-agents invoked
 
-All dispatch uses fully-qualified `design-harnessing:<category>:<agent>` Task names (compound 2.35.0 convention — bare names get re-prefixed wrong).
+All dispatch uses fully-qualified `harness-designing:<category>:<agent>` Task names (compound 2.35.0 convention — bare names get re-prefixed wrong).
 
-- `design-harnessing:research:lesson-retriever` — Phase 1 research (capture, optional)
-- `design-harnessing:analysis:rule-candidate-scorer` — cluster scoring (propose, required)
-- `design-harnessing:review:rubric-extractor` — optional; dispatched in propose mode when a source lesson contains ≥4 imperative statements (may be promotable to a rubric in its own right)
+- `harness-designing:research:lesson-retriever` — Phase 1 research (capture, optional)
+- `harness-designing:analysis:rule-candidate-scorer` — cluster scoring (propose, required)
+- `harness-designing:review:rubric-extractor` — optional; dispatched in propose mode when a source lesson contains ≥4 imperative statements (may be promotable to a rubric in its own right)
 - `rule-apply` mode runs inline — no agent; `scripts/compute-plan-hash.sh` is authoritative

@@ -9,7 +9,7 @@
 Teams author their own skills — `hd:setup` provides guidance + prerequisite checks, never generates. The skill's Layer 2 step:
 
 - **Scaffold default** — skip (Layer 2 is premature for most teams; revisit when patterns emerge)
-- **Review default** — invoke `design-harnessing:review:skill-quality-auditor` per existing SKILL.md
+- **Review default** — invoke `harness-designing:review:skill-quality-auditor` per existing SKILL.md
 - **Link default** — if user has `.claude/skills/` / `.cursor/skills/` / `.agent/skills/` already, write pointer files to those locations
 
 ## What "good Layer 2" looks like
@@ -63,7 +63,7 @@ Our own conventions in [../../../AGENTS.md](../../../AGENTS.md) § Skill complia
 **Execute — review:** per-skill invocation:
 
 ```
-Task design-harnessing:review:skill-quality-auditor(
+Task harness-designing:review:skill-quality-auditor(
   skill_md_path: "<path>/SKILL.md"
 )
 ```

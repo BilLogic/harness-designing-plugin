@@ -45,7 +45,7 @@ One file per lesson event — **never** append to an existing lesson file. See [
 **Step 3 — Optional retrieval.** If context budget permits, invoke:
 
 ```
-Task design-harnessing:research:lesson-retriever(
+Task harness-designing:research:lesson-retriever(
   lessons_root: "docs/knowledge/lessons/",
   topic: <subject-keywords>,
   max_results: 3

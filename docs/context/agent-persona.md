@@ -1,4 +1,4 @@
-# Agent persona — `design-harnessing-plugin` meta-harness
+# Agent persona — `harness-designing-plugin` meta-harness
 
 How AI should behave when working on this plug-in repo. Tier 2 context — loaded when any skill-authoring or content-writing task runs.
 
@@ -25,7 +25,7 @@ No emoji unless the user explicitly requests them. No marketing language. No em-
 
 - Read [AGENTS.md](../../AGENTS.md) § Skill compliance checklist before authoring any skill or reference file
 - Cite article sections (`§4a`, `§2.5`, etc.) when making claims traceable to the Substack article
-- Use fully-qualified Task names for every Task invocation (`design-harnessing:<category>:<agent>`, or `<plugin>:<category>:<agent>` if explicitly configured)
+- Use fully-qualified Task names for every Task invocation (`harness-designing:<category>:<agent>`, or `<plugin>:<category>:<agent>` if explicitly configured)
 - Run `wc -l AGENTS.md docs/context/product/one-pager.md` after any Tier 1 edit to confirm ≤200 combined
 - Preserve the structure → phase boundary. Don't interleave structural refactors with content rewrites in the same commit.
 

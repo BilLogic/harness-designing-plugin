@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### ⚠️ BREAKING — Phase 3v: Task namespace renamed to align with marketplace slug (2026-04-25)
+
+**Breaking change** for external consumers that referenced `Task design-harnessing:<cat>:<name>` from outside the plug-in. Internal references are migrated; external pins must update to `Task harness-designing:<cat>:<name>`.
+
+Why: three names coexisted (plug-in slug `design-harness`, Task namespace `design-harnessing:`, marketplace/GitHub slug `harness-designing`). Aligning the Task namespace on the most-public name (marketplace + GitHub) is one-time pain that compounds zero. Plug-in slug `design-harness` (no -ing) untouched — different identifier.
+
+Migration scope: 31 live files, 73 → 0 old occurrences, 84 of new. Historical artifacts preserved verbatim: `docs/plans/`, `docs/knowledge/lessons/`, `docs/knowledge/reviews/`, CHANGELOG.md `[1.x.x]` historical entries (history is sacred). Rule `R_2026_04_25_namespace_alignment` graduated (1st-confirmation fast-track).
+
+### Phase 3w — schema SSOT for hd-config.md (2026-04-25)
+
+`skills/hd-setup/scripts/schema.json` is now the authoritative encoding of the hd-config.md schema. `detect.py` imports `SCHEMA_VERSION` at module init via `json.load`; graceful fallback to hardcoded `"5"` with stderr warning if the file is missing/malformed. `hd-config-schema.md` gains a "if drift, schema.json wins" pointer at top + stale `"3"` row corrected to `"5"` (drift caught by 2026-04-21 audit, fixed here).
+
+Pattern generalization: this is the same shape as `R_2026_04_24_rubric_yaml_split` applied to a different artifact (config schema instead of rubric criteria). Rule `R_2026_04_25_schema_ssot` graduated (1st-confirmation fast-track).
+
 ### Phase 3u — release automation script (2026-04-24)
 
 `scripts/release.sh <new-version> [--dry]` replaces the manual ritual: bump 4 manifests (3 sibling plug-in.json + marketplace.json) + close `[Unreleased]` → `[<version>] — <today>` in CHANGELOG.md + commit + annotated tag + branch push. Tag push and `gh release create` remain manual (release-safety convention — operator verifies the commit before publishing the tag). Preflight checks: working tree clean; not on main/master; manifests agree on current version; CHANGELOG.md `[Unreleased]` non-empty.

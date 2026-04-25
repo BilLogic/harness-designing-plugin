@@ -93,7 +93,7 @@ Agents are invoked from skills via fully-qualified Task names:
 Task <namespace>:<category>:<agent-name>(…)
 ```
 
-For our plug-in: `Task design-harnessing:analysis:harness-auditor(…)`. For a user's agents: `Task <their-namespace>:<category>:<agent-name>(…)`.
+For our plug-in: `Task harness-designing:analysis:harness-auditor(…)`. For a user's agents: `Task <their-namespace>:<category>:<agent-name>(…)`.
 
 Users pick their namespace via `hd-config.md:namespace` (defaults to repo-slug).
 

@@ -20,17 +20,17 @@ Each batch stays ≤5 agents. Compound v2.39.0 documents that 6+ parallel Task d
 Dispatch in a single response, one Task call per layer — all fully-qualified:
 
 ```
-Task design-harnessing:analysis:harness-auditor(
+Task harness-designing:analysis:harness-auditor(
   repo_root: ".",
   layer: 1,
   scenario: "setup-pre-analysis",
   detect_json: <output from Step 1>
 )
 
-Task design-harnessing:analysis:harness-auditor(layer: 2, scenario: "setup-pre-analysis", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 3, scenario: "setup-pre-analysis", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 4, scenario: "setup-pre-analysis", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 5, scenario: "setup-pre-analysis", ...)
+Task harness-designing:analysis:harness-auditor(layer: 2, scenario: "setup-pre-analysis", ...)
+Task harness-designing:analysis:harness-auditor(layer: 3, scenario: "setup-pre-analysis", ...)
+Task harness-designing:analysis:harness-auditor(layer: 4, scenario: "setup-pre-analysis", ...)
+Task harness-designing:analysis:harness-auditor(layer: 5, scenario: "setup-pre-analysis", ...)
 ```
 
 Each layer-auditor returns: `default_action: scaffold|review|create|skip`, `why: <one-sentence>`, `signals: [...]`.
@@ -40,7 +40,7 @@ Each layer-auditor returns: `default_action: scaffold|review|create|skip`, `why:
 Dispatched after Batch 1 (separate batch keeps total ≤5 per burst and preserves an ordering tail in case Batch 2 grows with user-configured extras):
 
 ```
-Task design-harnessing:analysis:rubric-recommender(
+Task harness-designing:analysis:rubric-recommender(
   repo_root: ".",
   scenario: "setup-pre-analysis",
   detect_json: <output from Step 1>

@@ -17,7 +17,7 @@ On-demand research agent with two modes. Called from `/hd:setup` per-layer EXECU
 
 Invoked as:
 ```
-Task design-harnessing:research:ai-integration-scout(
+Task harness-designing:research:ai-integration-scout(
   mode: "research" | "classify",
   tool_name: "<string>",
   context?: "l1" | "l2" | "l3" | "l4" | "l5"

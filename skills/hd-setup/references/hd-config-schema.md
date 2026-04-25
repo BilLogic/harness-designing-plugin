@@ -1,5 +1,7 @@
 # `hd-config.md` schema
 
+**Single source of truth (3w):** [`scripts/schema.json`](../scripts/schema.json) is authoritative. This file is the human-readable derivation; `detect.py` imports `SCHEMA_VERSION` from `schema.json` at module init. If the two ever drift (this doc says vN, `schema.json` says vM), `schema.json` wins — fix the drift in `schema.json` first, then mirror to this doc.
+
 **Purpose:** machine-parseable spec for the local config file every hd-* skill reads and writes. LOCKED for v0.MVP — subsequent skills (hd-maintain v0.5, hd-review v1) depend on stability.
 
 ## File location
@@ -117,7 +119,7 @@ files_written:
   - "hd-config.md"
 ---
 
-# design-harnessing — local config
+# harness-designing — local config
 
 Prose section for humans. Skills only read the YAML frontmatter above.
 
@@ -128,7 +130,7 @@ Free-form notes about the harness — team context, customizations, decisions sp
 
 | Field | Type | Required | Values | Notes |
 |---|---|---|---|---|
-| `schema_version` | string | yes | `"3"` | Semver major. Bump on breaking changes. `"1"` and `"2"` files are upgraded on next run. |
+| `schema_version` | string | yes | `"5"` | Semver major. Bump on breaking changes. `"1"`–`"4"` files are upgraded on next run. Synced from `scripts/schema.json` (SSOT). |
 | `setup_mode` | enum | yes | `greenfield` \| `scattered` \| `advanced` \| `localize` | Matches `detect.py` output `mode` field |
 | `setup_date` | date (ISO) | yes | `YYYY-MM-DD` | Last time this file was mutated by a skill |
 | `team_size` | enum | yes | `solo` \| `small` \| `medium` \| `large` | solo=<2, small=2-5, medium=5-20, large=20+ |

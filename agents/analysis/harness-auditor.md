@@ -145,7 +145,7 @@ summary:
 - Never reads outside `repo_root` (plus the plug-in's own `skills/hd-review/references/` for the criteria file).
 - Never reads `docs/solutions/` (reserved for other tools).
 - Respects the additive-only protection (adopted rule 2026-04-18): reports on existing harness artifacts but flags them `protected: true` in evidence so the caller knows not to propose modification.
-- Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 review, it dispatches `Task design-harnessing:analysis:rubric-recommender(...)` separately.
+- Never invokes other agents. If the caller needs rubric gap-finding on top of a Layer 4 review, it dispatches `Task harness-designing:analysis:rubric-recommender(...)` separately.
 
 ## Failure modes
 

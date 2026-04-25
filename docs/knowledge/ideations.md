@@ -82,9 +82,9 @@ Open questions, unchosen paths, ideas worth revisiting. Append-only; cross off (
 **Current thinking:** (a) — authoring by hand captures intent cleanly and stops the audit from re-flagging. Document that the plug-in repo's own `hd-config.md` is special-case.
 **Needed to decide:** nothing; just pick a half-hour slot.
 
-## 2026-04-18 — Namespace rename: design-harnessing → harness-designing at Phase 3k+
+## 2026-04-18 — Namespace rename: harness-designing → harness-designing at Phase 3k+
 
-**Prompt:** Repo + marketplace slug is `harness-designing-plugin` but the Task namespace (`design-harnessing:<cat>:<name>`) and some internal strings still read `design-harnessing`. Noticed during the 3i consistency sweep.
-**Options on the table:** (a) keep both (repo slug = noun-phrase, Task namespace = gerund); (b) align everything on `harness-designing`; (c) align everything on `design-harnessing`.
+**Prompt:** Repo + marketplace slug is `harness-designing-plugin` but the Task namespace (`harness-designing:<cat>:<name>`) and some internal strings still read `harness-designing`. Noticed during the 3i consistency sweep.
+**Options on the table:** (a) keep both (repo slug = noun-phrase, Task namespace = gerund); (b) align everything on `harness-designing`; (c) align everything on `harness-designing`.
 **Current thinking:** lean (b) — the shipping artifact name wins; internal namespace should match. Defer until Phase 3k+ to avoid breaking in-flight pilot configs.
 **Needed to decide:** (1) confirm no external consumers pin the Task namespace yet; (2) one-pass migration plan that covers manifests + skills + agents + docs in a single commit.

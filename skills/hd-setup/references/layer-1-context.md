@@ -118,7 +118,7 @@ If all `scattered_l1_signals` buckets are empty (pure greenfield), skip this pre
 Path A dispatch (batch ≤5 parallel per tool user names):
 
 ```
-Task design-harnessing:research:ai-integration-scout(
+Task harness-designing:research:ai-integration-scout(
   tool_name: "<notion | supabase | firebase | ...>",
   context: "l1"
 )

@@ -32,6 +32,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import json
 import os
 import re
 import subprocess
@@ -45,6 +46,19 @@ PLACEHOLDER_MIN_HITS = 3
 PLANS_CONVENTION_MIN = 3
 
 REPO = Path(".").resolve()
+
+# --- SSOT schema import (Phase 3w) --------------------------------------------
+# schema.json is the single source of truth for hd-config.md schema. detect.py
+# imports SCHEMA_VERSION from it at module init so emit + spec doc + template
+# stay in lockstep. If schema.json is missing or unparseable, fall back to the
+# last-known v5 to avoid breaking detect runs (warn to stderr).
+SCHEMA_PATH = Path(__file__).parent / "schema.json"
+try:
+    _schema_data = json.loads(SCHEMA_PATH.read_text())
+    SCHEMA_VERSION = _schema_data["schema_version"]
+except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+    print(f"warn: schema.json unreadable ({e}); falling back to SCHEMA_VERSION='5'", file=sys.stderr)
+    SCHEMA_VERSION = "5"
 
 # --- C1: other-tool harness detection -----------------------------------------
 
@@ -1115,7 +1129,7 @@ def main() -> int:
     }
 
     output = {
-        "schema_version": "5",
+        "schema_version": SCHEMA_VERSION,
         "mode": mode,
         "priority_matched": priority,
         "signals": signals,

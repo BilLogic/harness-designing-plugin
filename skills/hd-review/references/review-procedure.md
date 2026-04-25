@@ -55,7 +55,7 @@ Outputs for Step 8:
 **On hosts with parallel dispatch (Claude Code, Codex with agents SDK, Cursor IDE):** dispatch 5 isolated sub-agents in one parallel burst:
 
 ```
-Task design-harnessing:analysis:harness-auditor(
+Task harness-designing:analysis:harness-auditor(
   repo_root: ".",
   layer: 1,
   scenario: "full-review",
@@ -63,10 +63,10 @@ Task design-harnessing:analysis:harness-auditor(
   budget_json: <contents of /tmp/hd-budget.json>
 )
 
-Task design-harnessing:analysis:harness-auditor(layer: 2, scenario: "full-review", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 3, scenario: "full-review", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 4, scenario: "full-review", ...)
-Task design-harnessing:analysis:harness-auditor(layer: 5, scenario: "full-review", ...)
+Task harness-designing:analysis:harness-auditor(layer: 2, scenario: "full-review", ...)
+Task harness-designing:analysis:harness-auditor(layer: 3, scenario: "full-review", ...)
+Task harness-designing:analysis:harness-auditor(layer: 4, scenario: "full-review", ...)
+Task harness-designing:analysis:harness-auditor(layer: 5, scenario: "full-review", ...)
 ```
 
 **On hosts without parallel dispatch (Cursor CLI, Windsurf, plain terminal):** loop through layers 1–5 inline. For each, read the matching `review-criteria-l<N>.md`, apply Phase 3 grading (presence → content → drift per 3k.1), emit findings YAML. Same output shape as the agent returns.
@@ -80,13 +80,13 @@ Each layer-auditor (parallel) or inline pass uses its own `review-criteria-l<N>.
 **With parallel dispatch:** Batch 2 in parallel (2–3 agents):
 
 ```
-Task design-harnessing:analysis:rubric-recommender(
+Task harness-designing:analysis:rubric-recommender(
   repo_root: ".",
   scenario: "review-gap-finding",
   detect_json: <contents of /tmp/hd-detect.json>
 )
 
-Task design-harnessing:research:lesson-retriever(
+Task harness-designing:research:lesson-retriever(
   lessons_root: "docs/knowledge/lessons/",
   rules_log: "docs/knowledge/changelog.md",
   scenario: "review-drift-scan"
@@ -96,7 +96,7 @@ Task design-harnessing:research:lesson-retriever(
 Conditional third dispatch — only when `other_tool_harnesses_detected` is non-empty:
 
 ```
-Task design-harnessing:analysis:coexistence-analyzer(
+Task harness-designing:analysis:coexistence-analyzer(
   repo_root: ".",
   detect_json: <contents of /tmp/hd-detect.json>
 )

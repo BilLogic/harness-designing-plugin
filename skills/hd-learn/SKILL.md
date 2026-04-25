@@ -113,7 +113,7 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 
 Fully-qualified Task names only.
 
-- `design-harnessing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus
+- `harness-designing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus
 
 ## Reference files
 

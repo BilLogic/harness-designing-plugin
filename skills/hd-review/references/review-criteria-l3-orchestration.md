@@ -40,7 +40,7 @@ Criteria for the Orchestration layer: the **dispatch graph** between `skills/` (
 - **Check:** every agent referenced by a skill exists on disk
 - **Default severity:** p1
 - **Content check:** for every `Task ns:cat:agent` in any SKILL.md, verify `agents/<cat>/<agent>.md` (or equivalent path) exists
-- **Stale signal:** skill references `design-harnessing:analysis:foo` but `agents/analysis/foo.md` doesn't exist
+- **Stale signal:** skill references `harness-designing:analysis:foo` but `agents/analysis/foo.md` doesn't exist
 
 ### category-naming-sanity
 

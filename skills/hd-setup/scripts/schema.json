@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Single source of truth for hd-config.md schema. detect.py imports SCHEMA_VERSION + REQUIRED_FIELDS from this file. References/hd-config-schema.md is the human doc derived from this spec; if they drift, this file wins. Bump major version (integer) only on breaking changes; additive fields don't bump (K8s / dbt convention).",
+  "title": "hd-config.md schema",
+  "schema_version": "5",
+  "additive_changes_since_lock": [
+    {
+      "version": "5",
+      "phase": "3o",
+      "added": [
+        "raw_signals.deps[]",
+        "raw_signals.urls[]"
+      ],
+      "note": "Universal tool discovery — Layer A enumeration; categorization happens at research time via ai-integration-scout"
+    },
+    {
+      "version": "5",
+      "phase": "3p",
+      "added": [
+        "signals.scattered_l1_signals.root_l1_files[]"
+      ],
+      "note": "Generic root-level *.md probe (≥30 non-blank lines) for external formats like DESIGN.md / CONTRIBUTING.md — no filename whitelist"
+    }
+  ],
+  "required_top_level_fields": [
+    "schema_version",
+    "setup_mode",
+    "setup_date",
+    "team_size"
+  ],
+  "optional_top_level_fields": [
+    "skipped_layers",
+    "article_read",
+    "team_tooling",
+    "mcp_servers_at_setup",
+    "layer_decisions",
+    "other_tool_harnesses_detected",
+    "files_written",
+    "scaffold_mode"
+  ],
+  "field_types": {
+    "schema_version": {"type": "string", "enum": ["5"], "note": "Quoted string, not bare int. K8s/dbt convention."},
+    "setup_mode": {"type": "string", "enum": ["greenfield", "scattered", "advanced", "localize"]},
+    "setup_date": {"type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "team_size": {"type": "string", "enum": ["solo", "small", "medium", "large"]},
+    "skipped_layers": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 5}},
+    "article_read": {"type": "boolean"},
+    "team_tooling": {
+      "type": "object",
+      "categories": ["docs", "design", "diagramming", "analytics", "pm", "comms", "cli", "data_api"],
+      "note": "v5 added cli + data_api categories (3n.7); 3o removed CATEGORY_PATTERNS — categorization now happens at research time via scout"
+    },
+    "mcp_servers_at_setup": {"type": "array", "items": {"type": "string"}},
+    "layer_decisions": {
+      "type": "array",
+      "items_required": ["layer", "decision", "files_written"],
+      "items_optional": ["why"],
+      "decision_enum": ["scaffold", "review", "create", "skip"],
+      "layer_enum": ["L1", "L2", "L3", "L4", "L5"]
+    },
+    "other_tool_harnesses_detected": {
+      "type": "array",
+      "items_required": ["name", "type", "paths_found"],
+      "items_optional": ["config_file", "skill_count", "rule_count", "owner", "policy"],
+      "type_enum": ["plugin", "meta-harness", "convention", "other"]
+    },
+    "files_written": {"type": "array", "items": {"type": "string"}},
+    "scaffold_mode": {"type": "string", "enum": ["additive", "use-standard"]}
+  },
+  "additive_runtime_fields": {
+    "raw_signals": {
+      "added_phase": "3o",
+      "shape": {
+        "deps": {"type": "array", "items": {"type": "string"}, "note": "Package.json dependencies, monorepo-aware to depth 3"},
+        "urls": {"type": "array", "items": {"type": "string"}, "note": "Deduped external URL list filtered for noise"}
+      },
+      "consumer": "ai-integration-scout classify mode (Layer B)"
+    }
+  },
+  "validation_rules": [
+    "YAML frontmatter parses as valid YAML",
+    "schema_version present and string-typed (not bare number)",
+    "setup_mode is one of the 4 enum values",
+    "setup_date matches YYYY-MM-DD (10 chars, ISO date)",
+    "team_size is one of the 4 enum values",
+    "If layer_decisions present, each entry has `layer`, `decision`, and `files_written` keys",
+    "If other_tool_harnesses_detected present, each entry has `name`, `type`, and `paths_found` keys",
+    "Missing optional fields default to: skipped_layers=[], article_read=false, layer_decisions=[], other_tool_harnesses_detected=[], files_written=[]"
+  ],
+  "version_bump_policy": {
+    "additive_no_bump": [
+      "Add new optional top-level field",
+      "Add new optional sub-field on existing object",
+      "Add new enum value (e.g., new team_tooling category)"
+    ],
+    "breaking_bump_required": [
+      "Make optional field required",
+      "Rename existing field",
+      "Retype existing field (string → int, etc.)",
+      "Remove enum value",
+      "Change semantics of existing field"
+    ],
+    "convention": "K8s / dbt — additive changes don't bump; breaking changes do"
+  },
+  "consumers": [
+    "skills/hd-setup/scripts/detect.py — imports SCHEMA_VERSION at module init; emits in JSON output",
+    "skills/hd-setup/references/hd-config-schema.md — human-readable derivation; cite this file as authoritative",
+    "skills/hd-setup/assets/hd-config.md.template — example values; update when schema changes",
+    "skills/hd-review/scripts/budget-check.sh — does not consume schema, but reads hd-config.md alongside",
+    "Any /hd:* skill that reads hd-config.md — must tolerate unknown top-level fields per backward-compat contract"
+  ]
+}

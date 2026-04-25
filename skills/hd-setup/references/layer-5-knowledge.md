@@ -51,7 +51,7 @@ Default is per-date. Teams can switch by setting `hd-config.md:lessons_format: d
 When an episodic-lesson pattern recurs 3+ times on the same topic:
 
 1. User runs `/hd:maintain rule-propose <topic>`
-2. Sub-agent `design-harnessing:analysis:rule-candidate-scorer` evaluates clusters on 3 dimensions (recurrence × clean-imperative × team-agreement)
+2. Sub-agent `harness-designing:analysis:rule-candidate-scorer` evaluates clusters on 3 dimensions (recurrence × clean-imperative × team-agreement)
 3. Clusters scoring ≥ 3.5 get a proposed rule + SHA-256 plan hash
 4. User reviews, runs `/hd:maintain rule-apply --plan-hash <sha>`
 5. Rule lands in `AGENTS.md` under "Rules"; meta-entry in `changelog.md`; **source entries untouched — history is sacred**
@@ -87,7 +87,7 @@ Layer 5 drift signals (per [`../../hd-review/references/review-criteria-l5-knowl
 **Execute — review:** invoke:
 
 ```
-Task design-harnessing:analysis:rule-candidate-scorer(
+Task harness-designing:analysis:rule-candidate-scorer(
   lessons_root: "docs/knowledge/lessons/",
   rules_log: "docs/knowledge/changelog.md"
 )
@@ -100,7 +100,7 @@ Surface ready clusters to user. Suggest `/hd:maintain rule-propose <topic>` for 
 Path A dispatch (batch ≤5 parallel per tool user names):
 
 ```
-Task design-harnessing:research:ai-integration-scout(
+Task harness-designing:research:ai-integration-scout(
   tool_name: "<linear | amplitude | posthog | supabase | slack | ...>",
   context: "l5"
 )

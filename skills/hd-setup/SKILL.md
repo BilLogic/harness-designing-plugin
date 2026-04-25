@@ -76,8 +76,8 @@ Default to B on silence. Never block.
 
 Runs AFTER Step 2 and BEFORE Step 3. Pre-computes per-layer proposals (scaffold / review / create / skip) so Phase B (Steps 4–8) feels informed rather than interrogative.
 
-- **Batch 1** (parallel, 5 agents): `design-harnessing:analysis:harness-auditor` × 5 — one per layer, `scenario: setup-pre-analysis`
-- **Batch 2** (parallel, 1 agent): `design-harnessing:analysis:rubric-recommender` — rubric-gap ranking + starter-trio recommendation
+- **Batch 1** (parallel, 5 agents): `harness-designing:analysis:harness-auditor` × 5 — one per layer, `scenario: setup-pre-analysis`
+- **Batch 2** (parallel, 1 agent): `harness-designing:analysis:rubric-recommender` — rubric-gap ranking + starter-trio recommendation
 
 Each batch stays ≤5 agents (6+ parallel strains context). Outputs synthesize into a per-layer default table consumed by Phase B. Non-Claude hosts skip Phase A and fall back to the per-detection default table in [`per-layer-procedure.md`](references/per-layer-procedure.md).
 
@@ -168,7 +168,7 @@ When invoked on a repo that has `hd-config.md`:
 
 ## Coexistence
 
-Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses another plug-in's config file, no rivalry language. All Task calls stay in our own namespace (`Task design-harnessing:<cat>:<name>(...)`) — we do not invoke other plug-ins' Task namespaces.
+Reads other-tool harnesses + external tooling for detection + link targets; writes pointer files when link chosen. Never writes to `docs/solutions/`, never uses another plug-in's config file, no rivalry language. All Task calls stay in our own namespace (`Task harness-designing:<cat>:<name>(...)`) — we do not invoke other plug-ins' Task namespaces.
 
 ## Reference files
 
@@ -186,7 +186,7 @@ Reads other-tool harnesses + external tooling for detection + link targets; writ
 
 ## Sub-agents invoked
 
-Fully-qualified `design-harnessing:<category>:<agent>` Task names; each parallel batch ≤5.
+Fully-qualified `harness-designing:<category>:<agent>` Task names; each parallel batch ≤5.
 
 - Phase A — `analysis:harness-auditor` × 5 + `analysis:rubric-recommender` (scenario: `setup-pre-analysis`)
 - Step 3 — `research:lesson-retriever` (solo, topic: tool-discovery)

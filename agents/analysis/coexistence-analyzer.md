@@ -126,7 +126,7 @@ summary:
 - **READ-ONLY.** Never modifies any file, never writes to any detected tool's namespace.
 - Never reads *inside* another tool's non-public artifacts beyond what's needed for existence + counting (e.g., list `.agent/skills/` contents but do not read skill bodies).
 - Never reads foreign namespace contents (e.g., `docs/solutions/`) beyond existence + path listing.
-- Fully-qualified Task invocation if another agent is referenced: `Task design-harnessing:analysis:harness-auditor(...)` (but this agent does NOT invoke others; the caller orchestrates).
+- Fully-qualified Task invocation if another agent is referenced: `Task harness-designing:analysis:harness-auditor(...)` (but this agent does NOT invoke others; the caller orchestrates).
 
 ## Failure modes
 

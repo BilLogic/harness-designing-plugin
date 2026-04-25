@@ -1,4 +1,4 @@
-# How we work — `design-harnessing-plugin`
+# How we work — `harness-designing-plugin`
 
 Tier 2 context. Repo-level conventions for authoring + shipping this plug-in.
 

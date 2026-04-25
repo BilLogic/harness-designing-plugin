@@ -85,7 +85,7 @@ Design / Productivity
 - Validated across 10 repos total: 6-repo pilot matrix (figma/sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno) + 4 Phase 3k–3m test repos (cornerstone, Dawnova, compound-designing, plus-vibe-coding-starting-kit).
 - All four SKILL.md files ≤200 lines.
 - `<protected_artifacts>` block declared in `hd-review` so external review/cleanup tools leave our outputs alone.
-- No cross-plugin Task invocations — we stay entirely within the `design-harnessing:<category>:<agent>` namespace and respect other tools' namespaces (`docs/solutions/`, foreign config files, foreign command prefixes).
+- No cross-plugin Task invocations — we stay entirely within the `harness-designing:<category>:<agent>` namespace and respect other tools' namespaces (`docs/solutions/`, foreign config files, foreign command prefixes).
 - v1.0.0 shipped 2026-04-18; v1.1.0 shipped 2026-04-20 (3k/3l/3m iteration, ~25 fixes from live testing).
 - GitHub release: https://github.com/BilLogic/harness-designing-plugin/releases/tag/v1.1.0
 

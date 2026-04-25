@@ -26,6 +26,20 @@ NOT a changelog for the plug-in's shipped features — that's `CHANGELOG.md` at 
 
 <!-- Add new entries above this line, most recent first. -->
 
+## 2026-04-25 — Phase 3v + 3w + 2 rule adoptions (namespace alignment + schema SSOT)
+
+**Changed:** L3 namespace + L1 schema-SSOT mechanism + AGENTS.md § Rules
+
+**Before:** Three names coexisted: plug-in slug `design-harness`, Task namespace `design-harnessing:`, marketplace/GitHub slug `harness-designing`. Schema for hd-config.md encoded in 3 places (detect.py emitting v5; hd-config-schema.md saying v3; template saying v5) — drift caught by 2026-04-21 audit.
+
+**After:** Task namespace + prose mentions aligned on `harness-designing:` (matches marketplace + GitHub slug). 31 live files migrated; 73 → 0 occurrences of old; 84 of new. Plug-in slug `design-harness` untouched (different identifier). Schema authoritative in `skills/hd-setup/scripts/schema.json`; detect.py imports `SCHEMA_VERSION` at module init with graceful fallback; hd-config-schema.md gains "if drift, schema.json wins" pointer; stale v3 reference corrected to v5.
+
+**Why:** Both decisions came from "deferred until trigger" ideations that had accumulated audit drift weight; both executions were mechanical; both patterns generalize. Two rules graduated same day: `R_2026_04_25_namespace_alignment` (shipping artifact name wins) + `R_2026_04_25_schema_ssot` (designate one authoritative encoding). Both 1st-confirmation graduations on the fast-track basis (general pattern + mechanical execution + cost-of-not-codifying).
+
+**Source:** [`docs/knowledge/lessons/2026-04-25-namespace-rename.md`](lessons/2026-04-25-namespace-rename.md) + [`docs/knowledge/lessons/2026-04-25-schema-ssot.md`](lessons/2026-04-25-schema-ssot.md)
+
+This is a breaking change for any external consumer that pinned to `Task design-harnessing:*`. Versioned as v2.0.0 per semver.
+
 ## 2026-04-24 — Phase 3r + rule adoption (rubric-YAML-split graduates)
 
 **Changed:** L4 rubric corpus + L3 `rubric-applier` agent + AGENTS.md § Rules

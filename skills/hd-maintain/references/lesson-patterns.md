@@ -10,7 +10,7 @@ Lessons live in `docs/knowledge/lessons/YYYY-MM-DD-<slug>.md` — **one file per
 - `lessons/2026-04-17-pilot-figma-sds.md`
 - `lessons/2026-04-18-parallel-pilots-3-6-consolidated.md`
 
-**Tags (not filenames) are the organizing dimension.** Cross-domain retrieval happens via tag search; the `design-harnessing:research:lesson-retriever` sub-agent ranks on tag overlap + recency, not on directory structure.
+**Tags (not filenames) are the organizing dimension.** Cross-domain retrieval happens via tag search; the `harness-designing:research:lesson-retriever` sub-agent ranks on tag overlap + recency, not on directory structure.
 
 ### Why date-slug, not domain-grouped
 

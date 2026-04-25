@@ -16,7 +16,7 @@ Step-by-step procedure for `/hd:maintain rule-propose <topic>`: score candidate 
 **Step 2 — Run scorer.** Invoke:
 
 ```
-Task design-harnessing:analysis:rule-candidate-scorer(
+Task harness-designing:analysis:rule-candidate-scorer(
   lessons_root: "docs/knowledge/lessons/",
   topic_filter: <topic>,
   rules_log: "docs/knowledge/changelog.md"
@@ -38,7 +38,7 @@ Abort cleanly. Don't silently proceed.
 **Step 4b — (Optional, conditional) Rubric-extractor handoff.** If any source lesson in the cluster contains ≥4 imperative statements ("must", "always", "never", "should"), the lesson may itself be rubric-promotable. Dispatch:
 
 ```
-Task design-harnessing:review:rubric-extractor(
+Task harness-designing:review:rubric-extractor(
   source_path: "<lesson file path>",
   mode: "extract"
 )

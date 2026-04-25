@@ -1,4 +1,4 @@
-# Rubrics Index — `design-harnessing-plugin` meta-harness
+# Rubrics Index — `harness-designing-plugin` meta-harness
 
 Layer 4 of the five-layer design harness. For this plug-in's own dogfood.
 
@@ -49,7 +49,7 @@ Per [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist", every 
 - One-level reference links
 - Imperative/infinitive voice
 - Markdown lint clean
-- Coexistence rules (no writes to `docs/solutions/`, fully-qualified Task names in our own `design-harnessing:*` namespace)
+- Coexistence rules (no writes to `docs/solutions/`, fully-qualified Task names in our own `harness-designing:*` namespace)
 
 ## `hd:review` execution
 

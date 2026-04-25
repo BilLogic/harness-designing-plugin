@@ -67,8 +67,8 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 
 - **Create** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
 - **Scaffold** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
-- **Review + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `design-harnessing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
-- **Review** (when user points at a specific work item) — hand off to `/hd:review review <path>`, which dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
+- **Review + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `harness-designing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
+- **Review** (when user points at a specific work item) — hand off to `/hd:review review <path>`, which dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
 
 ## Procedure — Step 7
 
@@ -92,7 +92,7 @@ Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exist
 **Execute — review + extract** (condition 1):
 1. Invoke the rubric-extractor sub-agent against each existing AI-doc (batch-parallel ≤5; serial at 6+ per compound v2.39.0): find rule-like statements that could become explicit rubric criteria.
    ```
-   Task design-harnessing:review:rubric-extractor(
+   Task harness-designing:review:rubric-extractor(
      source_path: ".github/copilot-instructions.md",
      mode: "extract"
    )
@@ -111,7 +111,7 @@ Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exist
 - Write `docs/rubrics/INDEX.md` from [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template)
 - Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
 
-**Execute — review** (targeted, when user explicitly points at a work item): hand off to `/hd:review review <path>`. That command dispatches `design-harnessing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
+**Execute — review** (targeted, when user explicitly points at a work item): hand off to `/hd:review review <path>`. That command dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
 
 → Return to [../SKILL.md § Step 7 — Layer 4 (Rubrics)](../SKILL.md#step-7--layer-4-rubrics)
 

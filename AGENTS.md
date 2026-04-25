@@ -22,7 +22,7 @@ Layer-to-path mapping is in § Harness map below. See [`docs/knowledge/reviews/`
 |---|---|---|
 | **L1 Context** | `docs/context/` + `AGENTS.md` + `loading-order.md` | product/one-pager, design-system/cheat-sheet (file conventions), agent-persona, conventions/. `AGENTS.md` is the master index per 3k.13. |
 | **L2 Skills** | `skills/hd-{learn,setup,maintain,review}/` | 4 shipped skills, each with `SKILL.md` + `references/` + optional `assets/` + `scripts/`. |
-| **L3 Orchestration** | `agents/{analysis,research,review}/` + Task invocations in each `SKILL.md` | 10 sub-agents dispatched via fully-qualified `design-harnessing:<cat>:<name>` Task names; parallel→serial ≤5. |
+| **L3 Orchestration** | `agents/{analysis,research,review}/` + Task invocations in each `SKILL.md` | 10 sub-agents dispatched via fully-qualified `harness-designing:<cat>:<name>` Task names; parallel→serial ≤5. |
 | **L4 Rubrics** | `docs/rubrics/` + `skills/hd-review/assets/starter-rubrics/` | 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) + 14 starters available for user scaffolding. Waivers dated in § Rules. |
 | **L5 Knowledge** | `docs/knowledge/` | `lessons/` (episodic) + `changelog.md` (rule-adoption log) + `decisions.md` (ADRs) + `ideations.md` + `preferences.md` + `reviews/` (dated harness reviews). |
 
@@ -44,9 +44,9 @@ Categories:
 
 **Invocation convention from skills:** fully-qualified Task names only. From inside our skills:
 ```
-Task design-harnessing:<category>:<agent-name>(...)
+Task harness-designing:<category>:<agent-name>(...)
 ```
-Never bare names — bare names get re-prefixed wrong. Our namespace is strictly `design-harnessing:<cat>:<name>`; we do not invoke any other plug-in's Task namespace.
+Never bare names — bare names get re-prefixed wrong. Our namespace is strictly `harness-designing:<cat>:<name>`; we do not invoke any other plug-in's Task namespace.
 
 **When to create a new agent:** prove ≥2 invocation sites across ≥2 skills, OR a case where an isolated context window measurably improves quality (heavy reads, parallel dispatch). Don't create speculatively.
 
@@ -70,7 +70,7 @@ Users often run multiple AI plug-ins in the same repo. Our discipline:
 - Our config file is `hd-config.md` at repo root.
 - We write knowledge under `docs/design-solutions/` (activated v0.5), `docs/knowledge/`, and `docs/rubrics/` — namespaces unique to this plug-in.
 - `<protected_artifacts>` in `hd-review/SKILL.md` declares paths external review/cleanup tools should leave alone.
-- Our Task calls are always `Task design-harnessing:<category>:<agent-name>(...)` — fully-qualified, never bare. We do not call into any other plug-in's Task namespace.
+- Our Task calls are always `Task harness-designing:<category>:<agent-name>(...)` — fully-qualified, never bare. We do not call into any other plug-in's Task namespace.
 
 ## Skill compliance
 
@@ -99,7 +99,7 @@ Required reading before authoring any skill:
 - **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions).
 - **Lesson files** use `YYYY-MM-DD-slug.md` in `docs/knowledge/lessons/`.
 - **Never write to `docs/solutions/`** — reserved for other tools. Our equivalent is `docs/design-solutions/` (v0.5+).
-- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task design-harnessing:<category>:<agent-name>(...)`.
+- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task harness-designing:<category>:<agent-name>(...)`.
 
 ## Rules
 
@@ -107,6 +107,8 @@ Rules that earned their place via episodic lesson → team rule. Each entry date
 
 <!-- Add new rules above this line. -->
 
+- [2026-04-25] `rule_id: R_2026_04_25_namespace_alignment` — **The shipping artifact name wins** when product slug, repo URL, marketplace listing, and Task namespace disagree. Aligning code on the most-public name (here: marketplace + GitHub slug `harness-designing`) is one-time pain that compounds zero ongoing maintenance; alternatives (keep both / migrate later / introduce a third name) compound. Phase 3v executed: 31 live files migrated `design-harnessing:` → `harness-designing:` (Task namespace + prose mentions); historical `docs/plans/`, `docs/knowledge/lessons/`, `docs/knowledge/reviews/`, and CHANGELOG.md historical entries preserved verbatim (history is sacred). Plug-in slug `design-harness` (no -ing) untouched — different identifier, different concern. Source: [docs/knowledge/lessons/2026-04-25-namespace-rename.md](docs/knowledge/lessons/2026-04-25-namespace-rename.md) + ideation entry parked since 2026-04-18.
+- [2026-04-25] `rule_id: R_2026_04_25_schema_ssot` — **When a schema is encoded in N>1 places, designate one as authoritative and derive the others.** Drift is otherwise inevitable — pre-3w, `detect.py` emitted v5 while `hd-config-schema.md` still said v3 (caught by 2026-04-21 audit). Phase 3w established `skills/hd-setup/scripts/schema.json` as SSOT; `detect.py` imports `SCHEMA_VERSION` at module init; `hd-config-schema.md` is human-readable derivation with a "if drift, schema.json wins" pointer at top. Pattern generalizes: any artifact encoding a contract (rubric YAML, skill frontmatter, audit-criteria) benefits from this discipline; rubric-YAML-split (`R_2026_04_24_rubric_yaml_split`) is the same shape applied to Layer 4. Source: [docs/knowledge/lessons/2026-04-25-schema-ssot.md](docs/knowledge/lessons/2026-04-25-schema-ssot.md).
 - [2026-04-24] `rule_id: R_2026_04_24_rubric_yaml_split` — **When an artifact is both machine-consumed (by an agent) and prose-bearing (by a human), split layers structurally — normative data in YAML frontmatter, descriptive narrative in body.** Agents query frontmatter deterministically; humans read body for rationale; neither couples to the other's layout. Removes the prose-layout-fragility class (e.g. the 3l.7 sed mishap mangled 16 tokens in `skill-quality.md` table cells without disturbing the audit's regex anchors — silently corrupted audit). 2 confirmations: Phase 3q migrated `skill-quality.md` (37 criteria) + Phase 3r migrated `ux-writing.md` + `heuristic-evaluation.md` (10+10 criteria, mechanical second pass). Legacy prose-table parser removed from `rubric-applier` (clean cut — all adopted rubrics on YAML schema). Source: [docs/knowledge/lessons/2026-04-21-rubric-yaml-prose-split.md](docs/knowledge/lessons/2026-04-21-rubric-yaml-prose-split.md) + [docs/knowledge/lessons/2026-04-21-sed-vocabulary-rename-mishap.md](docs/knowledge/lessons/2026-04-21-sed-vocabulary-rename-mishap.md).
 - [2026-04-21] `rule_id: R_2026_04_21_detection_enumeration` — **Detection logic that grows linearly with ecosystem size is an anti-pattern.** Split into (A) deterministic enumeration of what a repo contains (scales with repo, not ecosystem) + (B) research-time classification with cache that grows organically via scout write-back (scales with usage, not maintainer attention). Denylists are the same anti-pattern as whitelists — avoid both. External formats (DESIGN.md, CONTRIBUTING.md, etc.) are content-input to our 5-layer structure, not privileged special cases. 2 confirmations: 3o whitelist deletion (cli/data_api CATEGORY_PATTERNS removed; scout classify mode shipped) + 3p generic root-md probe (no filename whitelist for emerging external formats). Source: [docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md](docs/knowledge/lessons/2026-04-21-whitelist-vs-research-time.md) + [docs/knowledge/lessons/2026-04-21-detect-inspect-integrate.md](docs/knowledge/lessons/2026-04-21-detect-inspect-integrate.md).
 - [2026-04-21] `rule_id: R_2026_04_21_meta_harness_waivers` — **Meta-harness L1 coverage waivers** (this plug-in only). `docs/context/product/` ships only `one-pager.md` — the 5 canonical product files (users-and-personas, user-journeys, capability-map, success-metrics, glossary) are intentionally omitted because the plug-in has no product users distinct from design-team readers of this repo. `docs/context/engineering/` is intentionally absent because the plug-in's "engineering stack" is markdown + bash + python `detect.py` + 3 sibling plug-in manifests, fully documented in AGENTS.md § Repo layout + README. `docs/context/design-system/` ships only `cheat-sheet.md` (file conventions) — the canonical `styles/` + `foundations/` + `components/` sub-folders are intentionally omitted because the plug-in authors markdown + scripts, not UI components, so there are no design-system primitives to catalog. These waivers apply only to this meta-harness — user-repo scaffolds ship all 6 product files + full engineering/ tree + populated design-system/ via `/hd:setup`. Source: 2026-04-21 L1 dogfood audit + 2026-04-21 post-3q L1 audit.

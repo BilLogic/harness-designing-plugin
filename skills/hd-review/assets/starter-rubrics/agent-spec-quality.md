@@ -75,7 +75,7 @@ sections:
         check: "If the agent might be tempted to access MCPs (Figma / Notion / etc.), the spec states explicitly that it only uses MCPs the calling skill provides — never accesses the plug-in maintainer's own MCPs"
       - id: fully-qualified-task-names
         severity: p1
-        check: "Any Task invocation references in the spec use fully-qualified `design-harnessing:<category>:<agent-name>` form — never bare names"
+        check: "Any Task invocation references in the spec use fully-qualified `harness-designing:<category>:<agent-name>` form — never bare names"
 
   failure-modes:
     order: 5
@@ -118,7 +118,7 @@ Grounded in:
 
 ### Personas
 - **Agent author** — writing or editing an agent spec under `agents/<cat>/`. Pain: skill-quality rubric is wrong-fit; flags missing "router" / "templates/" sections that don't apply.
-- **Skill that dispatches the agent** — invokes via `Task design-harnessing:<cat>:<agent>(...)`. Pain: agent spec missing `## Inputs` section means caller has to read the procedure to learn parameters.
+- **Skill that dispatches the agent** — invokes via `Task harness-designing:<cat>:<agent>(...)`. Pain: agent spec missing `## Inputs` section means caller has to read the procedure to learn parameters.
 - **Model selecting an agent** — picks agent by matching user prompt against `description:`. Pain: vague description ("Helps with reviews") collides with sibling agents.
 - **Caller parsing output** — expects a stable shape. Pain: agent spec only shows success-path example; error shapes undocumented; caller gets a surprise.
 - **Reviewer auditing the corpus** — wants to verify agents respect coexistence boundaries. Pain: no `## Coexistence` section; can't confirm agent isn't writing where it shouldn't.
@@ -216,7 +216,7 @@ Grounded in:
 
 ### fully-qualified-task-names
 
-**Pass:** any Task call cited as `Task design-harnessing:review:skill-quality-auditor(...)`.
+**Pass:** any Task call cited as `Task harness-designing:review:skill-quality-auditor(...)`.
 **Fail:** bare `Task skill-quality-auditor(...)` — coexistence-collision red flag.
 
 ### failure-modes-section-present

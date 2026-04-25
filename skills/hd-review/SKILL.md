@@ -184,8 +184,8 @@ When the host supports sub-agent dispatch (Claude `Task`, Codex `/agent`, Cursor
 
 ## Sub-agents dispatched (when host supports parallel)
 
-All Task calls use fully-qualified names in the `design-harnessing:` namespace. Never dispatches into other plug-ins' namespaces.
+All Task calls use fully-qualified names in the `harness-designing:` namespace. Never dispatches into other plug-ins' namespaces.
 
-**Full review** — Batch 1 (parallel, 5): `design-harnessing:analysis:harness-auditor` × 5 (one per layer). Batch 2 (parallel, 2–3): `design-harnessing:analysis:rubric-recommender` + `design-harnessing:research:lesson-retriever` + conditional `design-harnessing:analysis:coexistence-analyzer` (when `other_tool_harnesses_detected[]` non-empty).
+**Full review** — Batch 1 (parallel, 5): `harness-designing:analysis:harness-auditor` × 5 (one per layer). Batch 2 (parallel, 2–3): `harness-designing:analysis:rubric-recommender` + `harness-designing:research:lesson-retriever` + conditional `harness-designing:analysis:coexistence-analyzer` (when `other_tool_harnesses_detected[]` non-empty).
 
-**Targeted review** — `design-harnessing:review:skill-quality-auditor` for `SKILL.md` targets; `design-harnessing:review:rubric-applier` for all other targets (batch-parallel ≤5). Optional external agents from `hd-config.md:review_agents` (empty default).
+**Targeted review** — `harness-designing:review:skill-quality-auditor` for `SKILL.md` targets; `harness-designing:review:rubric-applier` for all other targets (batch-parallel ≤5). Optional external agents from `hd-config.md:review_agents` (empty default).

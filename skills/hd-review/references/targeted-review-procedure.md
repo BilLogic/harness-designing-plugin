@@ -32,7 +32,7 @@ If ambiguous, ask: *"Which rubric? Available: [list]"*
 
 **With parallel dispatch:**
 ```
-Task design-harnessing:review:skill-quality-auditor(
+Task harness-designing:review:skill-quality-auditor(
   skill_md_path: <path>,
   rubric_overrides: <map from Step 2.5>
 )
@@ -46,7 +46,7 @@ If multiple SKILL.md paths were passed, dispatch in a single parallel batch (up 
 
 **With parallel dispatch:**
 ```
-Task design-harnessing:review:rubric-applier(
+Task harness-designing:review:rubric-applier(
   source: <path>,
   rubric_path: <rubric file>,
   rubric_overrides: <map from Step 2.5>
@@ -57,7 +57,7 @@ Task design-harnessing:review:rubric-applier(
 
 If multiple rubrics apply to one target, dispatch one `rubric-applier` per rubric in a single parallel batch (up to 5; serial at 6+).
 
-Note: `rubric-applier` is apply-mode only. For extract-mode (surfacing implicit rubric criteria from an AI-doc corpus) use `design-harnessing:review:rubric-extractor` — that path is owned by `/hd:setup` Step 7 and `/hd:maintain rule-propose` Step 4b, not by `/hd:review targeted`.
+Note: `rubric-applier` is apply-mode only. For extract-mode (surfacing implicit rubric criteria from an AI-doc corpus) use `harness-designing:review:rubric-extractor` — that path is owned by `/hd:setup` Step 7 and `/hd:maintain rule-propose` Step 4b, not by `/hd:review targeted`.
 
 **Step 4 — Aggregate per [`targeted-review-format.md`](targeted-review-format.md).**
 

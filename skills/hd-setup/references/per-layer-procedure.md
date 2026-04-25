@@ -87,7 +87,7 @@ Path A.2 — **classify raw_signals** (user says "classify my deps" or "research
 Concrete dispatch example:
 
 ```
-Task design-harnessing:research:ai-integration-scout(
+Task harness-designing:research:ai-integration-scout(
   mode: "classify",
   tool_name: "@aws-amplify/auth",
   context: "l1"

@@ -75,7 +75,7 @@ If no lessons score above 2.0, return empty `retrieved_lessons[]` and set `summa
 
 ## Scope
 
-- **Use `design-harnessing:research:lesson-retriever`** for design-harness lessons under `docs/knowledge/lessons/` (Layer 5), filtered and weighted. That is this agent's only corpus.
+- **Use `harness-designing:research:lesson-retriever`** for design-harness lessons under `docs/knowledge/lessons/` (Layer 5), filtered and weighted. That is this agent's only corpus.
 
 ## Failure modes
 
