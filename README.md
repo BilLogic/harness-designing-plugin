@@ -251,21 +251,29 @@ bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
 
 ### Updating
 
-All install paths share the same update command:
+**Marketplace install (Claude Code):**
 
 ```bash
-# Claude Code marketplace
+# Refresh the marketplace catalog (pulls our latest marketplace.json)
 /plugin marketplace update BilLogic/harness-designing-plugin
 
-# Any clone-based install
-cd <clone-path> && git pull
+# Update an installed plug-in to the latest tagged version
+/plugin update design-harness
+
+# Or update everything
+/plugin update
 ```
 
-Pin to a specific release:
+How it works: we tag releases (currently `v2.1.0`). Each release bumps `version` in our `marketplace.json` + `plugin.json`. Claude Code resolves your installed version against ours and pulls only when they differ. If you have auto-update enabled in your settings, this happens silently; otherwise run `/plugin update` after we ship a new tag.
+
+**Clone-based install (any host):**
 
 ```bash
-cd <clone-path> && git checkout v2.0.0
+cd <clone-path> && git pull             # latest commit on main (= latest tag)
+cd <clone-path> && git checkout v2.1.0  # pin to a specific release
 ```
+
+**Migrating from v1.x → v2.0.0+:** v2.0.0 renamed our Task namespace `design-harnessing:` → `harness-designing:` to align with the marketplace + GitHub slug. Update any external code that referenced our agents directly (`Task design-harnessing:<cat>:<name>` → `Task harness-designing:<cat>:<name>`). End users invoking via `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review` are unaffected — those slash commands didn't change.
 
 ### Official directories
 
