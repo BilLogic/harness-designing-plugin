@@ -111,7 +111,7 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 ## Installation
 
-> **Status—beta testing.** Submitted to Anthropic's plug-in directory and Cursor's marketplace on 2026-04-18; both pending review. Once approved, one-line installs land via the official UI. Until then, use the per-host instructions below—they work today.
+> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v2.0.0). Cursor marketplace pending review. Codex directory opens later. Self-hosted clone-install paths below also work on every host today.
 
 **Two install patterns per host:**
 
@@ -262,12 +262,18 @@ cd <clone-path> && git pull
 Pin to a specific release:
 
 ```bash
-cd <clone-path> && git checkout v1.1.0
+cd <clone-path> && git checkout v2.0.0
 ```
 
-### Official directories *(beta—pending marketplace review)*
+### Official directories
 
-The plug-in is in **beta testing**. Submitted to Anthropic's Claude Code plug-in directory and Cursor's marketplace on 2026-04-18; both are pending reviewer response. Once accepted, installation becomes a one-liner via each platform's native UI (no git clone, no manual registration). Until then the clone-based paths above work on every host today. OpenAI Codex directory opens later.
+**Claude Code** — live in Anthropic's plug-in directory as of 2026-04-25 (v2.0.0). One-line install via the platform UI; alternatively the self-hosted clone-install paths above work today.
+
+**Cursor** — marketplace submission pending reviewer response.
+
+**OpenAI Codex** — directory opens later; clone-install path works today on the Codex CLI.
+
+⚠️ **Breaking change in v2.0.0:** Task namespace renamed `design-harnessing:` → `harness-designing:` to align with the marketplace + GitHub slug. External consumers that referenced our agents via `Task design-harnessing:<cat>:<name>` must update to `Task harness-designing:<cat>:<name>`. The plug-in slug `design-harness` (no -ing) is unchanged. See [CHANGELOG.md](./CHANGELOG.md#200--2026-04-25) for migration details.
 
 ### Uninstall
 
@@ -306,7 +312,7 @@ The plug-in never modifies files outside its own install directory. Uninstalling
 
 ## Known Issues
 
-- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/references/article-quote-finder-corpus.md` once the series is live.
+- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/references/article-quote-finder-corpus.md` once the Substack series is live (`agents/research/references/README.md` documents the convention).
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
 - **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
@@ -314,8 +320,12 @@ The plug-in never modifies files outside its own install directory. Uninstalling
 
 See [CHANGELOG.md](./CHANGELOG.md).
 
-- **v1.1.0** (2026-04-20)—iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
-- **v1.0.0** (2026-04-18)—distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plug-in directory + Cursor marketplace.
+- **v2.0.0** (2026-04-25) — ⚠️ BREAKING. Task namespace renamed `design-harnessing:` → `harness-designing:` to align with marketplace + GitHub slug. `hd-config.md` schema gets a single source of truth at `skills/hd-setup/scripts/schema.json` (detect.py imports SCHEMA_VERSION at module init). Three new self-targeted rubrics shipped (`plan-quality`, `lesson-quality`, `agent-spec-quality`). `/hd:setup` Step 10.5 now appends a deterministic `Next step:` action hand-off. New `scripts/release.sh` automates version bumps + tag + push. Two rules graduated: namespace-alignment + schema-SSOT.
+- **v1.4.0** (2026-04-24) — rubric-YAML-split graduates. All 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) migrate from prose-table criteria to YAML-criteria-in-frontmatter + prose-rationale-in-body. `rubric-applier` agent reads YAML deterministically (legacy parser removed via clean cut). Removes the prose-layout-fragility class entirely. Rule `R_2026_04_24_rubric_yaml_split` adopted.
+- **v1.3.0** (2026-04-21) — detect-inspect-integrate + setup health disclosure. `/hd:setup` Step 10.5 renders compact 5-layer ASCII health bar + top-3 priorities at completion. L1 EXECUTE proactively surfaces detected substantive files (DESIGN.md, CONTRIBUTING.md, extended AGENTS.md) generically — no filename whitelist. Lesson + decision frontmatter gain machine-extractable fields (3p.3 enriched schema).
+- **v1.2.0** (2026-04-21) — universal tool discovery + advisor-not-installer. `detect.py` schema v5 emits `raw_signals.deps` universally; `ai-integration-scout` classify mode replaces hardcoded CATEGORY_PATTERNS. The plug-in is an advisor, not an installer: surfaces MCP/CLI/API options + install-doc links; never installs on the user's behalf.
+- **v1.1.0** (2026-04-20) — iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
+- **v1.0.0** (2026-04-18) — distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plug-in directory + Cursor marketplace.
 
 ## License
 
