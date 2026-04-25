@@ -2,6 +2,16 @@
 
 **Form:** https://cursor.com/marketplace/publish
 
+## Changes since the v1.0 submission (2026-04-18)
+
+For re-submission / metadata-refresh — the plug-in has shipped 5 minor versions + 1 major since the original packet:
+
+- **v1.1–v1.4** unified review vocabulary; YAML-criteria rubric schema; Step 10.5 post-setup health bar
+- **v2.0.0** ⚠️ **BREAKING** — Task namespace renamed `design-harnessing:` → `harness-designing:` (matches marketplace + GitHub slug); schema-SSOT for `hd-config.md`
+- **v2.1.0** 3 new self-targeted rubrics (`plan-quality`, `lesson-quality`, `agent-spec-quality`); actionable Step 10.5 hand-off; release automation; **bundles `context7` MCP** as Connector
+
+**Counts updated:** 4 skills, **10 sub-agents**, **17 starter rubrics**, **6 adopted rubrics**.
+
 ## Pre-filled content
 
 ### Plugin name (lowercase kebab-case, per Cursor schema)
@@ -31,14 +41,14 @@ Four skills:
 
 Host-agnostic: same output on Claude, Codex, Cursor, any terminal. Parallel sub-agent dispatch is an optional speed-up.
 
-Ships 9 sub-agents and 14 starter rubrics (pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section (personas, user stories, scenarios, anti-scenarios).
+Ships 10 sub-agents and 17 starter rubrics on a YAML-criteria schema (pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section (personas, user stories, scenarios, anti-scenarios). Bundles `context7` MCP as a Connector (HTTP transport; anonymous tier by default; users opt into auth via `CONTEXT7_API_KEY` env var).
 
 Validated across 10 repos (6-repo pilot matrix + 4 Phase 3k–3m test repos). Companion toolkit to Bill Guo's Substack series on design harnessing.
 ```
 
 ### Version
 ```
-1.1.0
+2.1.0
 ```
 
 ### Repository URL

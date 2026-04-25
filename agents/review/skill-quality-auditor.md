@@ -110,6 +110,10 @@ summary:
 - When called from `hd:review audit`, one invocation per skill; findings aggregate in the audit report's Layer 2 section.
 - When called from `hd:review critique`, one invocation on the target file; findings emit inline.
 
+## Opportunistic MCPs
+
+**`context7`** — when verifying external citations referenced in a SKILL.md (e.g. "Anthropic skill best practices" link, framework doc URL), prefer context7 lookup to confirm the source is current. Falls back to WebFetch on miss. Non-blocking: if context7 unreachable, skip the verification and continue the audit. Bundled via `.mcp.json`.
+
 ## Known caveats
 
 - Composite verdict is a heuristic — user may override per-criterion severity in `hd-config.md:critique_rubrics.skill_quality`.

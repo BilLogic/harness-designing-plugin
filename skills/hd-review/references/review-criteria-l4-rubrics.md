@@ -40,7 +40,7 @@ Criteria for the Rubrics layer: `docs/rubrics/` flat structure, AGENTS.md Harnes
 
 ### starter-coverage
 
-- **Check:** team has adopted or intentionally deferred each of the 14 starter rubrics
+- **Check:** team has adopted or intentionally deferred each of the 17 starter rubrics
 - **Default severity:** p2
 - **Pass signal:** team's rubrics cover the critical starters (a11y, design-system, skill-quality) OR has a note in AGENTS.md explaining deferrals
 

@@ -2,6 +2,19 @@
 
 **Form:** https://clau.de/plugin-directory-submission
 
+## Changes since the v1.0 submission (2026-04-18)
+
+For re-submission / metadata-refresh purposes — the plug-in has shipped 5 minor versions + 1 major since the original packet:
+
+- **v1.1.0** unified `audit/critique` vocabulary into `review`; file-first reporting with `Proposed revision` diffs; `/hd:setup --from-review` bridge; Staleness check; host-agnostic execution
+- **v1.2.0** universal tool discovery (`raw_signals.deps`); `ai-integration-scout` classify mode; advisor-not-installer rule graduated
+- **v1.3.0** Step 10.5 post-setup health rollup (5-layer ASCII bars + priorities); generic root-md detection (DESIGN.md / CONTRIBUTING.md without filename whitelist); 3p.3 enriched lesson frontmatter
+- **v1.4.0** all 3 then-adopted rubrics migrated to YAML-criteria schema; `rubric-applier` legacy parser removed
+- **v2.0.0** ⚠️ **BREAKING** — Task namespace renamed `design-harnessing:` → `harness-designing:` to align with marketplace + GitHub slug; `hd-config.md` schema gets a single source of truth at `skills/hd-setup/scripts/schema.json`
+- **v2.1.0** 3 new self-targeted rubrics added (`plan-quality`, `lesson-quality`, `agent-spec-quality`); Step 10.5 actionable hand-off (`Next step:` line); `scripts/release.sh` automation; **bundles `context7` MCP** as Connector for library doc lookup (HTTP transport, anonymous tier by default)
+
+**Counts updated:** 4 skills, **10 sub-agents** (was 9; +1 from `ai-integration-scout`), **17 starter rubrics** (was 14; +3 from Phase 3s), **6 adopted rubrics** in `docs/rubrics/` (was 3).
+
 ## Pre-filled content (copy-paste into form fields)
 
 ### Plugin name
@@ -30,7 +43,7 @@ Harness Designing Plugin helps design teams turn their scattered AI setup — No
 
 Host-agnostic by construction: inline serial execution is the baseline; parallel sub-agent dispatch is an optional speed-up for hosts that support it (Claude Task, Codex /agent, Cursor subagents API). Same output on every host.
 
-Ships 9 sub-agents and 14 starter rubrics (distilled from pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section with personas, user stories, realistic scenarios, and anti-scenarios. Validated across 10 repos (6-repo pilot matrix + 4 Phase 3k-3m test repos).
+Ships 10 sub-agents and 17 starter rubrics on a YAML-criteria schema (distilled from pbakaus/impeccable, Nielsen's 10 heuristics, Material 3, Fluent 2). Each rubric carries a Scope & Grounding section with personas, user stories, realistic scenarios, and anti-scenarios. Bundles `context7` MCP as a Connector for library doc lookup (HTTP transport, anonymous tier by default; users opt into auth via `CONTEXT7_API_KEY` env var). Validated across 10 repos (6-repo pilot matrix + 4 Phase 3k-3m test repos).
 
 This plug-in is the companion toolkit to Bill Guo's Substack series on design harnessing.
 ```
@@ -70,7 +83,7 @@ Design / Productivity
 
 ### Version
 ```
-1.1.0
+2.1.0
 ```
 
 ## Plugin self-host URL (for users to add before official review lands)

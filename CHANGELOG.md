@@ -3,6 +3,20 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Phase 3x — context7 MCP bundling + count-drift cleanup + submission refresh (2026-04-25)
+
+**Bundles `context7` as a Connector.** New `.mcp.json` at repo root uses the Compound-Engineering pattern (HTTP transport + `x-api-key: ${CONTEXT7_API_KEY:-}` env-var-with-empty-default) — we ship the connection scaffold; user controls auth via their own env var; works anonymously if unset. Marketplace listing now shows "Connectors: 1". This refines `R_2026_04_21_advisor` without amending it: `${KEY:-}` is hosting a placeholder, not wiring auth. Captured in `docs/knowledge/lessons/2026-04-25-context7-mcp-bundling.md` with a 4-point checklist for future MCP bundling decisions.
+
+**3 agents declare opportunistic context7 use** — `ai-integration-scout` (research + classify modes), `article-quote-finder` (when corpus URL is context7-indexed), `skill-quality-auditor` (external citation verification). All three retain their existing fallbacks (WebSearch / WebFetch / skip-and-continue), so behavior is strictly additive: when `context7` is present, output is richer; when absent, behavior unchanged from v2.0.
+
+**Count-drift cleanup.** Live count claims hadn't been propagated since Phase 3n added `ai-integration-scout` (+1 agent → 10) and Phase 3s added 3 self-targeted rubrics (+3 starters → 17, +3 adopted → 6). Fixed in 11 places: `marketplace.json` (description + plug-in description), `AGENTS.md` (harness map), `README.md`, `agents/analysis/rubric-recommender.md` (description + body), `agents/review/rubric-applier.md`, `docs/rubrics/INDEX.md`, `hd-config.md`, `skills/hd-review/references/review-criteria-l4-rubrics.md`. Historical files (`CHANGELOG.md` `[1.x.x]` sections, `docs/knowledge/changelog.md`, `docs/knowledge/decisions.md`) preserved.
+
+**`marketplace.json` description refresh.** Stale v1.0-era description replaced with current capability summary covering 4 skills + 10 sub-agents + 17 starter rubrics on YAML-criteria schema + context7 connector. Both `metadata.description` and `plugins[0].description` updated.
+
+**Submission packets refreshed for re-submission.** `docs/submissions/anthropic-submission.md` + `cursor-submission.md` gain a "Changes since v1.0 submission" footnote covering v1.1 → v2.1 progression. Long-description updated with current counts + context7 mention. Version field bumped 1.1.0 → 2.1.0.
+
 ## [2.0.0] — 2026-04-25
 
 ### ⚠️ BREAKING — Phase 3v: Task namespace renamed to align with marketplace slug (2026-04-25)

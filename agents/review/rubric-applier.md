@@ -41,7 +41,7 @@ Read the rubric file. Parse YAML frontmatter and validate the schema (per [`../.
 | Present, value is a map but ≥1 section is missing `criteria` or has an empty `criteria[]` | `error: rubric-invalid` — list which section(s) |
 | Present, value is a non-empty map with each section having a non-empty `criteria[]` list | Proceed to Phase 2 |
 
-Never silently default a malformed rubric. Phase 3r removed the legacy prose-table fallback — all 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) ship on the YAML schema. Custom user rubrics must conform to the schema or fail loudly.
+Never silently default a malformed rubric. Phase 3r removed the legacy prose-table fallback; Phase 3s expanded the adopted set — all 6 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`) ship on the YAML schema. Custom user rubrics must conform to the schema or fail loudly.
 
 ### Phase 2: verify applicability
 If `applies_to:` list doesn't include this work item's shape (e.g., rubric is for `design-file` and work item is a `.py` file), abort with `error: "rubric not applicable to this work item type"`.

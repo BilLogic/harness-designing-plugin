@@ -96,7 +96,7 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 
 **Targeted review** of one layer, file, or rubric against team rubrics.
 
-**14 starter rubrics ship with the plug-in.** Copy any into `docs/rubrics/<name>.md` and customize:
+**17 starter rubrics ship with the plug-in** (all on YAML-criteria schema). Copy any into `docs/rubrics/<name>.md` and customize:
 
 | Category | Rubrics |
 |---|---|
@@ -111,7 +111,9 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 ## Installation
 
-> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v2.0.0). Cursor marketplace pending review. Codex directory opens later. Self-hosted clone-install paths below also work on every host today.
+> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v2.1.0). Cursor marketplace pending review. Codex directory opens later. Self-hosted clone-install paths below also work on every host today.
+
+> **Connectors:** ships [context7](https://context7.com) as an HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, and `/hd:learn`). Works anonymously by default; set `CONTEXT7_API_KEY` env var for higher rate limits (free key at [context7.com/dashboard](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}` with empty default.
 
 **Two install patterns per host:**
 

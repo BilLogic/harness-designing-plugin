@@ -40,7 +40,7 @@ layer_decisions:
     files_written: []
   - layer: L4
     decision: review
-    why: "3-of-14 starter rubrics adopted per 2026-04-21 policy (skill-quality, ux-writing, heuristic-evaluation). 10 visual rubrics waived, component-budget waived as duplicative with budget-check.sh, i18n-cjk deferred. See AGENTS.md § Rules 2026-04-21"
+    why: "6-of-17 starter rubrics adopted (skill-quality, ux-writing, heuristic-evaluation per 2026-04-21 policy; plan-quality, lesson-quality, agent-spec-quality added 2026-04-24 in Phase 3s). 10 visual rubrics waived, component-budget waived as duplicative with budget-check.sh, i18n-cjk deferred. See AGENTS.md § Rules 2026-04-21 + 2026-04-24"
     files_written: []
   - layer: L5
     decision: review

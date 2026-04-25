@@ -1,6 +1,6 @@
 ---
 name: rubric-recommender
-description: "Ranks the 14 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (hd:review review). Solo dispatch."
+description: "Ranks the 17 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (hd:review review). Solo dispatch."
 color: purple
 model: inherit
 ---
@@ -117,7 +117,7 @@ gaps_surfaced:
 
 ## See also
 
-- `skills/hd-review/assets/starter-rubrics/` — the 14 starter rubric files this agent ranks
+- `skills/hd-review/assets/starter-rubrics/` — the 17 starter rubric files this agent ranks
 - `skills/hd-review/references/review-criteria-l4-rubrics.md` — Layer 4 review criteria (caller pairs this with `harness-auditor(layer: 4)`)
 - `skills/hd-setup/scripts/detect.py` — produces the `detect_json` this agent consumes
 - `agents/analysis/harness-auditor.md` — sibling agent; Layer 4 health report feeds gap-finding in the full-review scenario

@@ -9,6 +9,10 @@ model: inherit
 
 Return verbatim article quotes with section citations for a given concept question. Grounds answers in the source material instead of relying on model memory. Enables grounded, source-cited answers; used by `hd:learn` to enrich responses with verbatim article quotes instead of paraphrasing.
 
+## Opportunistic MCPs
+
+**`context7`** — when a configured article source is hosted on a context7-indexed surface (e.g., a docs site context7 has indexed), prefer context7 lookup over raw WebFetch. Falls back to WebFetch / local file read on miss. Bundled via `.mcp.json`; works anonymously with optional `CONTEXT7_API_KEY` env var.
+
 ## Inputs
 
 - `concept_question` — the user's question or topic (required)

@@ -23,7 +23,7 @@ Layer-to-path mapping is in § Harness map below. See [`docs/knowledge/reviews/`
 | **L1 Context** | `docs/context/` + `AGENTS.md` + `loading-order.md` | product/one-pager, design-system/cheat-sheet (file conventions), agent-persona, conventions/. `AGENTS.md` is the master index per 3k.13. |
 | **L2 Skills** | `skills/hd-{learn,setup,maintain,review}/` | 4 shipped skills, each with `SKILL.md` + `references/` + optional `assets/` + `scripts/`. |
 | **L3 Orchestration** | `agents/{analysis,research,review}/` + Task invocations in each `SKILL.md` | 10 sub-agents dispatched via fully-qualified `harness-designing:<cat>:<name>` Task names; parallel→serial ≤5. |
-| **L4 Rubrics** | `docs/rubrics/` + `skills/hd-review/assets/starter-rubrics/` | 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) + 14 starters available for user scaffolding. Waivers dated in § Rules. |
+| **L4 Rubrics** | `docs/rubrics/` + `skills/hd-review/assets/starter-rubrics/` | 6 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`) + 17 starters available for user scaffolding. Waivers dated in § Rules. |
 | **L5 Knowledge** | `docs/knowledge/` | `lessons/` (episodic) + `changelog.md` (rule-adoption log) + `decisions.md` (ADRs) + `ideations.md` + `preferences.md` + `reviews/` (dated harness reviews). |
 
 ## `docs/` is our meta-harness

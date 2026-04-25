@@ -56,7 +56,7 @@ Per [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist", every 
 `hd:review` executes rubric checks programmatically:
 
 - See `skills/hd-review/SKILL.md` § Review mode and § Review mode for the procedures (parallel 2-batch review dispatch; review applies rubrics to a single work item).
-- Starter rubrics ship at `skills/hd-review/assets/starter-rubrics/` (14 rubrics, for users to copy into `docs/rubrics/<name>.md` and customize). See `skills/hd-review/references/rubric-authoring-guide.md` for the authoring spec.
+- Starter rubrics ship at `skills/hd-review/assets/starter-rubrics/` (17 rubrics, for users to copy into `docs/rubrics/<name>.md` and customize). See `skills/hd-review/references/rubric-authoring-guide.md` for the authoring spec.
 
 Run `/hd:review review` for harness health; `/hd:review review <path-or-url>` for single-work-item rubric application.
 

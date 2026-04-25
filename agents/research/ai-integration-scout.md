@@ -9,6 +9,10 @@ model: inherit
 
 On-demand research agent with two modes. Called from `/hd:setup` per-layer EXECUTE + `/hd:review audit`. Cache-first, web-search fallback. **Never installs anything.** User decides whether to wire up based on the findings.
 
+## Opportunistic MCPs
+
+**`context7`** — when present, prefer over WebSearch for library doc lookup. Reduces hallucination on package details (install commands, current API surface, MCP availability). Fall back to WebSearch on context7 timeout / missing-tool / rate-limit. Bundled via `.mcp.json` (HTTP transport, anonymous tier by default; `CONTEXT7_API_KEY` env var unlocks higher rate limits).
+
 ## Modes
 
 **`research`** (default, from 3n.3) — caller names a specific tool; scout returns MCP/CLI/API integration findings.
