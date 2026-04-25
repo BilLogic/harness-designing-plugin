@@ -1,0 +1,25 @@
+# About {{PRODUCT_NAME}}
+
+Single source of truth for what this product IS. First paragraph is the elevator pitch; following sections give structure for AI agents working on it.
+
+## Elevator pitch
+
+{{ONE_SENTENCE_FOR_A_NEW_TEAMMATE}}
+
+## Core thesis
+
+{{WHY_THIS_EXISTS_AND_WHY_NOW}}
+
+## Current stage
+
+{{MVP_GROWING_SCALING_SUNSETTING_ETC}} — {{ONE_SENTENCE_CONTEXT}}
+
+## Out of scope
+
+{{WHAT_THIS_PRODUCT_EXPLICITLY_IS_NOT}}
+
+## Links
+
+- **Live site:** {{URL}}
+- **Design file (Figma / other):** {{URL}}
+- **Internal wiki / Notion:** {{URL}}

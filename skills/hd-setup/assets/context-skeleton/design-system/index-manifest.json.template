@@ -1,0 +1,18 @@
+{
+  "schema_version": "1",
+  "updated_for_branch": "main",
+  "description": "Federated index of design-system JSON indexes. Loading guides (e.g., foundations/tokens.md) is the default; load these JSON indexes only when exhaustive machine-readable lookup is needed.",
+  "indexes": {
+    "components": "docs/context/design-system/components/components-index.json",
+    "tokens": "{{path_to_tokens_index_if_machine-readable_exists}}",
+    "patterns": "{{path_to_patterns_index_if_any}}"
+  },
+  "usage": {
+    "rule": "Load the .md reference guide first (foundations/*, styles/*, components/*). Load these JSON indexes only when exhaustive lookup is needed.",
+    "selection_hint": {
+      "foundations": "Shared baseline context: accessibility, layout, principles, tokens, content-voice",
+      "styles": "Look + feel: color, typography, spacing, elevation, iconography",
+      "components": "What primitives exist + where they live"
+    }
+  }
+}

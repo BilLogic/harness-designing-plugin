@@ -1,0 +1,22 @@
+{
+  "name": "harness-designing",
+  "version": "3.0.0",
+  "displayName": "Design Harness",
+  "description": "Design-focused AI harness. 4 skills for learning, setting up, maintaining, and reviewing a five-layer design harness (Context, Skills, Orchestration, Rubrics, Knowledge).",
+  "author": {
+    "name": "Bill Guo"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/BilLogic/harness-designing-plugin",
+  "repository": "https://github.com/BilLogic/harness-designing-plugin",
+  "logo": "./assets/logo.png",
+  "keywords": [
+    "design",
+    "design-harness",
+    "design-systems",
+    "context-engineering",
+    "knowledge-management",
+    "ai-workflows",
+    "rubrics"
+  ]
+}

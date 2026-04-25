@@ -1,0 +1,29 @@
+# Component patterns
+
+Composition patterns that recur across the product. Not primitives — these are higher-level structures.
+
+## Pattern — Action bar
+
+**Shape:** `<Card>` + `<h2>` + right-aligned `<Button>` row
+**When:** settings section, list header
+**Example:** {{path_to_canonical_example_in_repo}}
+
+## Pattern — Form row
+
+**Shape:** `<FormField>` (label + input + helper + error) stacked
+**When:** any form field
+**Example:** {{...}}
+
+## Pattern — Inline action confirmation
+
+**Shape:** button → confirm state (button changes to `<>Cancel> <>Confirm>`) → success toast
+**When:** destructive actions that don't warrant a modal
+
+## Anti-patterns to avoid
+
+- Deeply nested cards-in-cards (visual noise + unclear hierarchy)
+- Modals inside modals
+- Mixed loading states on the same page (some skeletons, some spinners)
+- Inline error messages that disappear on focus (user loses context)
+
+<!-- Document patterns as they solidify. An informal pattern that works is better than a formal one that doesn't. -->

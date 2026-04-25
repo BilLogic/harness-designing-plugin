@@ -1,0 +1,76 @@
+---
+schema_version: "5"
+setup_mode: {{SETUP_MODE}}
+setup_date: {{DATE}}
+team_size: {{TEAM_SIZE}}
+skipped_layers: {{SKIPPED_LAYERS}}
+article_read: {{ARTICLE_READ}}
+
+# External tools detected at setup (v5 adds `cli` + `data_api` categories).
+# Populated by detect.py; hd-setup surfaces these as research opportunities per layer.
+team_tooling: {{TEAM_TOOLING}}
+mcp_servers_at_setup: {{MCP_SERVERS}}
+
+# Per-layer decisions recorded during the Step 4 layer-walk.
+# One row per layer (L1–L5). `decision` is one of: scaffold | review | create | skip.
+# `why` is a one-line rationale. `files_written` lists relative paths created for that layer
+# (empty list `[]` for scaffold/review/skip).
+layer_decisions:
+  - layer: L1
+    decision: {{L1_DECISION}}
+    why: {{L1_WHY}}
+    files_written: {{L1_FILES}}
+  - layer: L2
+    decision: {{L2_DECISION}}
+    why: {{L2_WHY}}
+    files_written: {{L2_FILES}}
+  - layer: L3
+    decision: {{L3_DECISION}}
+    why: {{L3_WHY}}
+    files_written: {{L3_FILES}}
+  - layer: L4
+    decision: {{L4_DECISION}}
+    why: {{L4_WHY}}
+    files_written: {{L4_FILES}}
+  - layer: L5
+    decision: {{L5_DECISION}}
+    why: {{L5_WHY}}
+    files_written: {{L5_FILES}}
+
+# Other-tool harnesses detected by /hd:setup and left untouched (additive-only discipline).
+# Unified array — every detected tool is one entry (.agent, .claude, .codex, any
+# foreign plug-in slug). Required keys per entry: `name`, `type`, `paths_found`.
+# Optional: `config_file`, `skill_count`, `rule_count`, `owner`, `policy`.
+#   type      — plugin | meta-harness | convention | other
+#   owner     — user | team | <tool-name>
+#   policy    — respect (never modified) | link (referenced from pointer files)
+#               | coexist (runs alongside hd-* without collision)
+other_tool_harnesses_detected: {{OTHER_HARNESSES}}
+
+# Flat list of relative paths this /hd:setup run created. Used by future hd-* skills
+# (e.g., /hd:review health) to review what the harness actually wrote.
+files_written: {{FILES_WRITTEN}}
+---
+
+# harness-designing — local config
+
+Local config for `{{TEAM_NAME}}` — this repo's harness-designing state.
+
+The YAML frontmatter above is the machine-parseable part. Every `hd-*` skill reads it to understand setup history. The prose below is for humans — free-form notes about this harness.
+
+## Setup notes
+
+Set up on {{DATE}} in `{{SETUP_MODE}}` mode. Team size: `{{TEAM_SIZE}}`.
+
+{{COEXISTENCE_NOTE}}
+
+## Customizations
+
+<!-- Free-form notes: decisions specific to this repo, team quirks, escape-hatch patterns. -->
+<!-- Add notes here as you evolve the harness. -->
+
+## Schema
+
+See [skills/hd-setup/references/hd-config-schema.md](https://github.com/BilLogic/harness-designing-plugin/blob/main/skills/hd-setup/references/hd-config-schema.md) for the full schema spec.
+
+**Don't edit `schema_version`.** Migration happens via future plug-in updates when schema bumps.

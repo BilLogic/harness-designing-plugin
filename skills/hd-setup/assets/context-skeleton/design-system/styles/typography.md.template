@@ -1,0 +1,30 @@
+# Typography
+
+Type scale, font pairing, and typographic rules.
+
+## Fonts
+
+- **Primary sans:** {{DM_Sans_/_Inter_/_system-ui}}
+- **Mono:** {{Geist_Mono_/_JetBrains_Mono}}
+- **Display** (headlines): {{same_as_sans_/_separate_display_family}}
+
+## Scale
+
+Modular scale based on {{1.2_/_1.25_/_1.333}}. Size tokens:
+
+| Token | Size | Line-height | Weight | Use |
+|---|---|---|---|---|
+| `--text-xs` | {{12px}} | {{1.5}} | {{400}} | {{captions,_meta}} |
+| `--text-sm` | {{14px}} | {{1.5}} | {{400}} | {{body}} |
+| `--text-base` | {{16px}} | {{1.5}} | {{400}} | {{default_body}} |
+| `--text-lg` | {{18px}} | {{1.4}} | {{500}} | {{lead}} |
+| `--text-xl` | {{20px}} | {{1.4}} | {{600}} | {{H3}} |
+| `--text-2xl` | {{24px}} | {{1.3}} | {{600}} | {{H2}} |
+| `--text-3xl` | {{30px}} | {{1.2}} | {{700}} | {{H1}} |
+| {{...}} | {{...}} | {{...}} | {{...}} | {{...}} |
+
+## Rules
+
+- Use token classes (e.g. Tailwind `text-base`) — never inline `font-size` values
+- Max line-length 65–75ch for long-form reading
+- Heading hierarchy reflects semantic structure (don't skip levels for styling)

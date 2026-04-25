@@ -1,0 +1,32 @@
+# Iconography
+
+Which icon set the product uses, sizing conventions, accessibility rules.
+
+## Icon library
+
+- **Library:** {{Lucide_/_Heroicons_/_Phosphor_/_custom}}
+- **Import path:** {{lucide-react_/_...}}
+- **Default size:** {{16px_/_20px_/_24px}}
+
+## Sizing scale
+
+| Token | Size | Use |
+|---|---|---|
+| `--icon-xs` | {{12px}} | inline text-badges |
+| `--icon-sm` | {{16px}} | default inline |
+| `--icon-md` | {{20px}} | buttons, input affordances |
+| `--icon-lg` | {{24px}} | prominent actions |
+| `--icon-xl` | {{32px+}} | hero / empty-state |
+
+## Rules
+
+- Icon-only buttons must have `aria-label`
+- Decorative icons get `aria-hidden="true"`
+- Color from semantic token (`--color-text-primary` etc.), never hard-coded
+- Icon + text pairings: icon leads for actions (`[icon] Save`), text leads for metadata (`Created: [icon]`)
+
+## Custom icons
+
+- **Where they live:** {{src/icons/_/_public/icons/}}
+- **Naming convention:** {{kebab-case.svg}}
+- **Requirements:** {{single_color_via_currentColor;_no_fills_hardcoded;_24x24_viewbox}}

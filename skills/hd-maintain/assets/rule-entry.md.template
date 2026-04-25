@@ -1,0 +1,15 @@
+## {{DATE}} — {{TITLE}}
+
+**Rule (now in AGENTS.md):** *"{{RULE_TEXT}}"*
+
+**Source lesson:** [{{LESSON_FILENAME}}]({{LESSON_PATH}})
+
+**Occurrences before adoption:** {{OCCURRENCE_COUNT}} lessons matching topic {{TOPIC_TAGS}}
+
+**Proposer:** {{PROPOSER}}
+
+**Approved by:** {{APPROVER}}
+
+**Plan hash:** `{{PLAN_HASH}}`
+
+---

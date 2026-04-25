@@ -1,0 +1,44 @@
+{
+  "name": "harness-designing",
+  "version": "3.0.0",
+  "description": "Design-focused AI harness. 4 skills for learning, setting up, maintaining, and reviewing a five-layer design harness (Context, Skills, Orchestration, Rubrics, Knowledge).",
+  "author": {
+    "name": "Bill Guo",
+    "url": "https://github.com/BilLogic"
+  },
+  "homepage": "https://github.com/BilLogic/harness-designing-plugin",
+  "repository": "https://github.com/BilLogic/harness-designing-plugin",
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "design-harness",
+    "design-systems",
+    "context-engineering",
+    "knowledge-management",
+    "ai-workflows",
+    "rubrics"
+  ],
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Design Harness",
+    "shortDescription": "Set up, review, and maintain a five-layer design AI harness.",
+    "longDescription": "Harness Designing turns scattered design-team AI practices into a reusable five-layer harness: Context, Skills, Orchestration, Rubrics, and Knowledge. It bundles four skills for learning the framework, setting up a repo, capturing lessons, and reviewing harness health, plus starter rubrics and a Context7 MCP connector for documentation lookup.",
+    "developerName": "Bill Guo",
+    "category": "Design",
+    "capabilities": [
+      "Scaffold",
+      "Explain",
+      "Review",
+      "Knowledge management"
+    ],
+    "websiteURL": "https://github.com/BilLogic/harness-designing-plugin",
+    "defaultPrompt": [
+      "Use Design Harness to explain the five-layer design harness framework.",
+      "Use Design Harness to set up a design AI harness in this repo.",
+      "Use Design Harness to review this repo's current design harness health."
+    ],
+    "brandColor": "#2F5233",
+    "logo": "./assets/logo.png"
+  }
+}

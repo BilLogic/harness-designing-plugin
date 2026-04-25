@@ -1,0 +1,37 @@
+---
+memory_type: temporal
+domain: changelog
+split_threshold: 50
+---
+<!-- Tier: 3 (harness changelog — rarely-read review trail) -->
+# Changelog
+
+Harness-structural changes over time. Loaded infrequently; exists so `/hd:review full` can trace when structural decisions were made.
+
+NOT a changelog for the product itself — that's `CHANGELOG.md` at repo root (if the team maintains one). This file is specifically for changes to the HARNESS structure (layer additions, skill additions, convention changes, major rubric updates).
+
+## Format
+
+```markdown
+## YYYY-MM-DD — <short-change-title>
+
+**Changed:** <what part of the harness changed>
+**Before:** <what it was>
+**After:** <what it is now>
+**Why:** <brief rationale>
+```
+
+## Entries
+
+<!-- Add new harness-evolution entries above this line, most recent first. -->
+
+<!--
+Example (uncomment when first structural change lands):
+
+## 2026-04-16 — Adopted hd-config.md naming
+
+**Changed:** setup config file name
+**Before:** `design-harnessing.local.md` (compound-mirror pattern)
+**After:** `hd-config.md`
+**Why:** shorter, matches /hd:* command prefix, drops awkward .local.md naming
+-->

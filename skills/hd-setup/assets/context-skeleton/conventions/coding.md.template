@@ -1,0 +1,25 @@
+# Coding conventions
+
+How code is written in this repo. Focused on what AI agents need to match team style.
+
+## Language + tooling
+
+- **Primary language:** {{TypeScript_/_Python_/_Ruby_/_etc}}
+- **Framework:** {{Next.js_/_Rails_/_etc}}
+- **Test runner:** {{vitest_/_jest_/_rspec}}
+- **Lint/format:** {{eslint+prettier_/_ruff_/_biome}}
+
+## Rules the team follows
+
+- {{e.g._prefer_functional_React_components_over_class}}
+- {{e.g._always_type-annotate_function_signatures}}
+- {{...}}
+
+## Anti-patterns we've learned to avoid
+
+- {{e.g._do_not_create_one-off_utility_files;_add_to_lib/}}
+- {{...}}
+
+## Where to look for examples
+
+- **Reference implementations:** {{paths_in_the_repo_that_exemplify_good_style}}

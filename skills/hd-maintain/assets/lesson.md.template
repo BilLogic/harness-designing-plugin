@@ -1,0 +1,41 @@
+---
+title: "{{TITLE}}"
+date: {{DATE}}
+memory_type: episodic
+importance: {{IMPORTANCE}}                      # 1–5; 5 = high, rule-candidate territory
+tags: [{{TAGS}}]
+
+# Machine-extractable — agents cross-reference via frontmatter (3p.3)
+applies_to_layers: [{{LAYERS}}]                 # subset of [l1, l2, l3, l4, l5]; which layers this lesson informs
+related_rules: [{{RELATED_RULES}}]              # AGENTS.md rule IDs that cite this lesson (empty array if none)
+related_lessons: [{{RELATED_LESSONS}}]          # sibling lesson slugs (dates, no extension)
+decision_summary: "{{DECISION_SUMMARY}}"        # one-sentence extractable decision
+result_summary: "{{RESULT_SUMMARY}}"            # one-sentence extractable outcome
+next_watch: "{{NEXT_WATCH}}"                    # what future signal confirms or disconfirms
+rule_candidate: {{RULE_CANDIDATE}}              # true if this is candidate territory
+rule_ref: null                                   # populated when lesson graduates to a rule
+supersedes: null                                 # slug of prior lesson this replaces (if any)
+superseded_by: null                              # populated by future lesson that replaces this one
+---
+
+# Lesson
+
+## Context
+
+{{CONTEXT — 2–4 paragraphs grounding the situation. What prompted the lesson. Who was involved. What was tried.}}
+
+## Decision / Observation
+
+{{DECISION — the core insight, pattern, or principle surfaced. What changed in our thinking.}}
+
+## Result
+
+{{RESULT — what actually happened after applying the insight. Evidence that supports it (or doesn't).}}
+
+## Graduation-readiness
+
+{{GRADUATION — is this rule-candidate material? How many confirmations so far? What's the graduation threshold? When should it promote to AGENTS.md § Rules?}}
+
+## Next
+
+{{NEXT — what to watch for. Future signal that confirms or disconfirms. Follow-up actions.}}

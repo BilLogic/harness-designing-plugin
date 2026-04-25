@@ -1,0 +1,35 @@
+# Elevation + radius
+
+Shadow scales, border-radius conventions, and depth language.
+
+## Elevation / shadow scale
+
+| Token | Use |
+|---|---|
+| `--elevation-0` | Flush / flat; no shadow |
+| `--elevation-1` | Cards, list items |
+| `--elevation-2` | Popovers, dropdowns |
+| `--elevation-3` | Modals, sheets |
+| `--elevation-4` | Toasts, tooltips |
+
+Shadow values:
+- `--shadow-sm`: {{e.g._0_1px_2px_rgba(0,0,0,0.05)}}
+- `--shadow-md`: {{...}}
+- `--shadow-lg`: {{...}}
+
+## Radius scale
+
+| Token | Value | Typical use |
+|---|---|---|
+| `--radius-none` | 0 | — |
+| `--radius-sm` | {{4px}} | inputs, small buttons |
+| `--radius-md` | {{8px}} | default buttons, cards |
+| `--radius-lg` | {{12px}} | modals |
+| `--radius-xl` | {{16px+}} | hero cards, pills |
+| `--radius-full` | 9999 | avatars, pills |
+
+## Rules
+
+- Radius tokens only — no arbitrary `border-radius: 6px`
+- Shadow tokens only — no arbitrary shadow values
+- Elevation hierarchy matches visual stacking (modal above popover above card)

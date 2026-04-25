@@ -1,0 +1,25 @@
+# Accessibility foundations
+
+Baseline a11y commitments for this product. Concrete, non-negotiable.
+
+## Target standard
+
+- **Conformance:** {{WCAG_2.1_AA_/_WCAG_2.2_AA_/_...}}
+- **Review cadence:** {{every_release_/_quarterly_/_...}}
+
+## Non-negotiables
+
+- Color contrast ≥ 4.5:1 for body text, ≥ 3:1 for large text (WCAG AA)
+- All interactive elements keyboard-operable with visible focus
+- ARIA labels on icon-only buttons
+- Error states announced to screen readers (not just colored red)
+- Tap targets ≥ 44×44pt on touch devices
+
+## Tools in use
+
+- {{e.g._axe-core_via_@storybook/addon-a11y,_Playwright_a11y_snapshot_tests}}
+- {{...}}
+
+## Known gaps to close
+
+- {{e.g._we_haven't_verified_VoiceOver_support_on_flow_X_yet}}

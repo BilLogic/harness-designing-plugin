@@ -1,0 +1,21 @@
+{
+  "schema_version": "1",
+  "description": "Machine-readable index of components. Build pipelines and agents can read this to answer 'does X exist?' without reading every component file.",
+  "components": [
+    {
+      "name": "Button",
+      "path": "src/components/ui/button.tsx",
+      "variants": ["primary", "secondary", "ghost", "destructive"],
+      "sizes": ["sm", "md", "lg"],
+      "status": "stable",
+      "last_updated": "YYYY-MM-DD"
+    },
+    {
+      "name": "{{ComponentName}}",
+      "path": "{{path}}",
+      "variants": [],
+      "status": "stable | experimental | deprecated",
+      "last_updated": "YYYY-MM-DD"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "harness-designing",
+  "owner": {
+    "name": "Bill Guo",
+    "url": "https://github.com/BilLogic"
+  },
+  "metadata": {
+    "description": "A design-focused AI harness. 4 skills + 10 sub-agents + 17 starter rubrics on YAML-criteria schema. Walks teams through scaffolding, reviewing, and compounding lessons across the five-layer harness (Context, Skills, Orchestration, Rubrics, Knowledge). Bundles context7 connector.",
+    "version": "3.0.0"
+  },
+  "plugins": [
+    {
+      "name": "harness-designing",
+      "source": "./",
+      "description": "Design-focused AI harness for design teams. 4 skills + 10 sub-agents + 17 starter rubrics on YAML-criteria schema. context7 connector for library doc lookup.",
+      "version": "3.0.0",
+      "author": {
+        "name": "Bill Guo",
+        "url": "https://github.com/BilLogic"
+      },
+      "homepage": "https://github.com/BilLogic/harness-designing-plugin",
+      "repository": "https://github.com/BilLogic/harness-designing-plugin",
+      "license": "MIT",
+      "keywords": [
+        "design",
+        "design-harness",
+        "design-systems",
+        "context-engineering",
+        "knowledge-management"
+      ]
+    }
+  ]
+}

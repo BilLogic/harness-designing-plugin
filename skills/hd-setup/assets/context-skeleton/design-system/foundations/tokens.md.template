@@ -1,0 +1,27 @@
+# Design tokens
+
+Single source of truth for color, spacing, typography, radius, motion, and elevation values used across the product.
+
+## Where tokens live
+
+- **Authoritative source:** {{path_to_tokens_file_—_e.g._src/styles/tokens.css_/_tokens/tokens.json_/_Figma_variables}}
+- **Build pipeline:** {{how_tokens_flow_from_source_to_runtime_CSS_/_JS_—_or_"direct_import"}}
+- **Refresh cadence:** {{every_design_review_/_release-locked_/_...}}
+
+## Token categories
+
+- **Color** — see [`../styles/color.md`](../styles/color.md) for scales + usage rules
+- **Typography** — see [`../styles/typography.md`](../styles/typography.md)
+- **Spacing** — see [`../styles/spacing.md`](../styles/spacing.md)
+- **Radius** — see [`../styles/elevation.md`](../styles/elevation.md) or a dedicated radius file
+- **Motion** — see motion rubric in `docs/rubrics/motion-design.md`
+
+## Rules
+
+- **Never use raw hex / rgb / px values in components** — always reference a token
+- **Token additions go through** {{PR_review_/_RFC_/_design_crit}} — not ad-hoc
+- **Deprecate instead of delete** — mark tokens removed with `@deprecated` comment for at least one release before removing
+
+## Tokens index
+
+Machine-readable: [`../index-manifest.json`](../index-manifest.json) (populated by build or by hand).

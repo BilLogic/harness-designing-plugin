@@ -1,0 +1,14 @@
+# Product pillars
+
+The 3–5 non-negotiable principles that guide every product decision. If a feature conflicts with a pillar, the pillar wins.
+
+## Pillar 1 — {{NAME}}
+
+**Statement:** {{ONE_SENTENCE_PRINCIPLE}}
+**Why:** {{WHY_IT_MATTERS}}
+**Example of pillar respected:** {{CONCRETE_EXAMPLE}}
+**Example of pillar violated:** {{WHAT_WE_SAID_NO_TO}}
+
+## Pillar 2 — {{...}}
+
+<!-- Keep to 3–5. More than 5 and they stop being pillars. -->

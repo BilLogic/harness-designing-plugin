@@ -1,0 +1,14 @@
+# Users
+
+Who uses this product and what they need. Prefer concrete personas over generic "end user".
+
+## Primary — {{PERSONA_NAME}}
+
+**Context:** {{WHO_THEY_ARE_AND_CONTEXT}}
+**Goals:** {{WHAT_THEY_WANT_TO_ACCOMPLISH}}
+**Constraints:** {{WHAT_LIMITS_THEM_TIME_BUDGET_SKILL_ETC}}
+**Success signal:** {{HOW_WE_KNOW_WE_HELPED_THEM}}
+
+## Secondary — {{...}}
+
+<!-- 1–3 personas total. If more, you probably have multiple products — consider splitting the repo. -->
