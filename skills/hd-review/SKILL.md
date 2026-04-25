@@ -176,7 +176,7 @@ When the host supports sub-agent dispatch (Claude `Task`, Codex `/agent`, Cursor
 
 - [assets/review-report.md.template](assets/review-report.md.template) — full-review output file format
 - [assets/targeted-review-response.md.template](assets/targeted-review-response.md.template) — targeted review response format
-- [assets/starter-rubrics/](assets/starter-rubrics/) — 14 shipped rubrics with `## Scope & Grounding` sections
+- [assets/starter-rubrics/](assets/starter-rubrics/) — 17 shipped rubrics + 1 `rubric-template.md`, all with `## Scope & Grounding` sections
 
 ## Scripts
 

@@ -26,6 +26,35 @@ NOT a changelog for the plug-in's shipped features — that's `CHANGELOG.md` at 
 
 <!-- Add new entries above this line, most recent first. -->
 
+## 2026-04-25 — AGENTS.md distillation + Agent role section + inconsistency sweep
+
+**Changed:** AGENTS.md § Rules + new § Agent role + § Repo-level contributor rules consolidation; cross-doc cleanup of phantom paths and stale counts.
+
+**Before:** § Rules carried 10 timestamped `R_2026_*` entries with multi-paragraph adoption stories — heavy phase archeology (3w/3y/3l/etc.) for readers who only need active rules. AGENTS.md had no statement of agent role/voice/boundaries. Several internal inconsistencies: phantom `docs/design-solutions/` directory referenced 3x (never existed); phantom `templates/` directory in semantic-split vocabulary; "AGENTS.md is the master index per 3k.13" leaked phase reference; "§ Rules" pointer stale after rename; `hd-review/SKILL.md:179` said "14 shipped rubrics"; `agent-persona.md:38` referenced `skills/hd-setup/templates/` (same phantom-path bug class).
+
+**After:** AGENTS.md gains § Agent role (responsibilities, voice, boundaries) right after the intro. § Rules → § Operating rules: 11 plain-language bullets, each parenthetically tagged with its `R_2026_*` ID for traceability back to changelog + lessons. Repo-level contributor rules slimmed to file-naming conventions only (overlapping namespace + docs/solutions rules absorbed into Operating rules). Phantom-path drift eliminated (AGENTS.md + agent-persona.md). `hd-review/SKILL.md:179` count corrected to "17 shipped rubrics + 1 template". `docs/rubrics/INDEX.md` § Adopted rubrics expanded from 3 to 6 entries (catches up with 2026-04-24 Phase 3s adoptions).
+
+**Why:** Operating rules surface should be readable in one screen and oriented around active behavior, not adoption history. Source linkage preserved via `R_*` IDs and changelog/lessons backlink. Phantom-path drift was the same bug class twice — sweep both files together to close it. Stale counts in two places (SKILL.md + INDEX.md) were independent drifts caught only by post-distillation review.
+
+**Source:** Commits `3e8d43ce` (distill operating rules), `7efd8c17` (fix internal inconsistencies), and post-distillation `/hd:review full` report at [`reviews/2026-04-25-harness-review-post-distillation.md`](reviews/2026-04-25-harness-review-post-distillation.md).
+
+## 2026-04-24 — Phase 3s rubric adoptions (plan-quality + lesson-quality + agent-spec-quality)
+
+**Changed:** `docs/rubrics/` adopted set grew from 3 to 6.
+
+**Before:** 3 rubrics adopted to plug-in's own dogfood (`skill-quality`, `ux-writing`, `heuristic-evaluation`). 14 starter rubrics waived or untouched.
+
+**After:** 3 additional rubrics adopted, each scoped to a distinct meta-harness artifact class:
+- `plan-quality` — applied to `docs/plans/*.md` (the 21 plan files driving each phase)
+- `lesson-quality` — applied to `docs/knowledge/lessons/*.md` (the 22 dated lesson files)
+- `agent-spec-quality` — applied to `agents/*/*.md` (the 10 sub-agent specs)
+
+These are the three artifact classes that already exist in the meta-harness with enough volume + variation to warrant a rubric. Visual/UI starters remain waived (no runtime UI in this repo). `R_2026_04_21_rubric_policy` updated from "3 of 17" to "6 of 17".
+
+**Why:** Phase 3s gap-finding identified that the meta-harness was producing plans, lessons, and agent specs without consistent quality bars. Adopting starters here catches drift before it propagates to user-repo scaffolding via `/hd:setup`.
+
+**Source:** Phase 3s plan + 2026-04-21 L4 audit ([`reviews/2026-04-21-harness-review.md`](reviews/2026-04-21-harness-review.md)). Backfilled 2026-04-25 during post-distillation review — the original adoption was not logged in this changelog at the time.
+
 ## 2026-04-25 — Phase 3v + 3w + 2 rule adoptions (namespace alignment + schema SSOT)
 
 **Changed:** L3 namespace + L1 schema-SSOT mechanism + AGENTS.md § Rules

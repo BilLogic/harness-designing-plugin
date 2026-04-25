@@ -126,17 +126,19 @@ Distilled rules currently in force. Each is sourced to a lesson; full adoption h
 
 <!-- Add new rules above this line. -->
 
-- **Advisor, not installer.** Scan, ask, recommend, link to official install docs. Never install packages, wire auth tokens, or modify external configs on the user's behalf.
-- **Additive-only in user repos.** When any existing harness is detected (`.agent/`, `.claude/`, `AGENTS.md`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, etc.), only add new files. Never modify or overwrite.
-- **Review, don't replace.** When a user already has L1/L2/L3 artifacts, default to read-only review with improvement suggestions. Scaffold only the layers they're missing (typically L4 rubrics + L5 knowledge).
-- **Namespace discipline.** Commands `/hd:*`, skills `hd-*`, config `hd-config.md`, agents `Task harness-designing:<cat>:<name>(...)`. Never bare names; never call into another plug-in's namespace.
-- **No future-version stubs.** Don't ship skill stubs with `disable-model-invocation: true`. Author skills only when they're being built.
-- **Schema single source of truth.** `skills/hd-setup/scripts/schema.json` is authoritative; `hd-config-schema.md` is derived. Same shape applies to other contracts (rubric YAML, skill frontmatter).
-- **Rubric YAML/prose split.** Rubrics carry normative data in YAML frontmatter and narrative in body — never couple agent parsing to prose layout.
-- **Live test before "done".** Spec review and dry runs miss what live runs catch. Budget at least one live run per repo-type before declaring a feature shipped.
-- **Detection scales with the repo, not the ecosystem.** Enumerate what's actually present; defer classification to research-time with cached lookups. No whitelists or denylists of tools/formats.
-- **Adopted rubrics: 6.** `skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`. The other 11 starters remain available for downstream user harnesses via `/hd:setup` L4.
-- **Meta-harness L1 waivers.** This repo intentionally omits `docs/context/engineering/`, most of `docs/context/product/`, and `docs/context/design-system/{styles,foundations,components}/` because the plug-in is markdown + bash + python, not a UI product. User scaffolds ship the full L1 tree.
+- **Advisor, not installer.** Scan, ask, recommend, link to official install docs. Never install packages, wire auth tokens, or modify external configs on the user's behalf. (`R_2026_04_21_advisor`)
+- **Additive-only in user repos.** When any existing harness is detected (`.agent/`, `.claude/`, `AGENTS.md`, `docs/context/`, `docs/knowledge/`, `docs/rubrics/`, etc.), only add new files. Never modify or overwrite. (`R_2026_04_18_additive_only`)
+- **Review, don't replace.** When a user already has L1/L2/L3 artifacts, default to read-only review with improvement suggestions. Scaffold only the layers they're missing (typically L4 rubrics + L5 knowledge). (`R_2026_04_20_review_default`)
+- **Namespace discipline.** Commands `/hd:*`, skills `hd-*`, config `hd-config.md`, agents `Task harness-designing:<cat>:<name>(...)`. Never bare names; never call into another plug-in's namespace. (`R_2026_04_25_namespace_alignment`)
+- **No future-version stubs.** Don't ship skill stubs with `disable-model-invocation: true`. Author skills only when they're being built. (`R_2026_04_16_no_stubs`)
+- **Schema single source of truth.** `skills/hd-setup/scripts/schema.json` is authoritative; `hd-config-schema.md` is derived. Same shape applies to other contracts (rubric YAML, skill frontmatter). (`R_2026_04_25_schema_ssot`)
+- **Rubric YAML/prose split.** Rubrics carry normative data in YAML frontmatter and narrative in body — never couple agent parsing to prose layout. (`R_2026_04_24_rubric_yaml_split`)
+- **Live test before "done".** Spec review and dry runs miss what live runs catch. Budget at least one live run per repo-type before declaring a feature shipped. (`R_2026_04_21_live_testing`)
+- **Detection scales with the repo, not the ecosystem.** Enumerate what's actually present; defer classification to research-time with cached lookups. No whitelists or denylists of tools/formats. (`R_2026_04_21_detection_enumeration`)
+- **Adopted rubrics: 6.** `skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`. The other 11 starters remain available for downstream user harnesses via `/hd:setup` L4. (`R_2026_04_21_rubric_policy`)
+- **Meta-harness L1 waivers.** This repo intentionally omits `docs/context/engineering/`, most of `docs/context/product/`, and `docs/context/design-system/{styles,foundations,components}/` because the plug-in is markdown + bash + python, not a UI product. User scaffolds ship the full L1 tree. (`R_2026_04_21_meta_harness_waivers`)
+
+Full adoption history for each `R_*` ID lives in [`docs/knowledge/changelog.md`](docs/knowledge/changelog.md) and the dated lessons under [`docs/knowledge/lessons/`](docs/knowledge/lessons/).
 
 ## Pre-commit checklist
 
