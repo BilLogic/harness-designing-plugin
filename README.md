@@ -111,214 +111,80 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 ## Installation
 
-> **Status (2026-04-25, v3.0.0)** — distributed via self-hosted marketplace on every host today. Submitted to Anthropic's Claude Code plug-in directory ([clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission)) and Cursor's marketplace; both pending reviewer response. Codex directory still "coming soon" per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Once approved, we'll appear in `claude-plugins-official` (Claude Code) and Cursor's default catalog — until then the self-hosted commands below are the install path. Same distribution shape as compound-engineering and other third-party plug-ins.
+> **Status (v3.0.0)** — distributed via self-hosted marketplace today. Pending review in Anthropic's and Cursor's directories; same flow as compound-engineering and other third-party plug-ins. Codex official directory still ["coming soon"](https://developers.openai.com/codex/plugins/build).
 
-> **Connectors:** ships [context7](https://context7.com) as an HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, and `/hd:learn`). Works anonymously by default; set `CONTEXT7_API_KEY` env var for higher rate limits (free key at [context7.com/dashboard](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}` with empty default.
-
-**Two install patterns per host:**
-
-1. **Copy-paste a natural-language prompt** (recommended). Your AI handles different home directories, shells, and skill-dir conventions for you.
-2. **Run the exact commands yourself.** Every host section includes them in a collapsed block.
-
-One repo ships three sibling manifests (`.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`)—same skills, agents, scripts across all three.
+> **Bundled connector** — [context7](https://context7.com) HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, `/hd:learn`). Works anonymously out of the box; set `CONTEXT7_API_KEY` env var for higher rate limits ([free key](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}`.
 
 ### Claude Code
-
-**Paste this into Claude Code:**
-
-```
-Install the Harness Designing Plugin from https://github.com/BilLogic/harness-designing-plugin
-using the self-hosted marketplace. Run these in order:
-  /plugin marketplace add BilLogic/harness-designing-plugin
-  /plugin install harness-designing
-Then list my available skills so I can confirm hd:learn, hd:setup,
-hd:maintain, and hd:review appear.
-```
-
-<details>
-<summary>Or run the commands directly</summary>
 
 ```
 /plugin marketplace add BilLogic/harness-designing-plugin
 /plugin install harness-designing
 ```
 
-</details>
+### Cursor
 
-<details>
-<summary>Alternative—clone + --plugin-dir (for inspecting / forking)</summary>
-
-```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
-claude --plugin-dir ~/plugins/harness-designing
-```
-
-</details>
-
-### Codex CLI
-
-Two paths — the official marketplace flow (when supported) or clone-and-symlink (proven fallback).
-
-**Marketplace flow (primary, when Codex supports it):**
-
-```bash
-codex plugin marketplace add BilLogic/harness-designing-plugin
-# Then launch codex, run /plugins, find Harness Designing in the marketplace, choose Install
-```
-
-⚠️ **Codex caveat:** Codex's plugin spec doesn't register custom sub-agents yet (per Codex docs). Our 10 sub-agents (`harness-auditor`, `rubric-applier`, etc.) are dispatched from inside our skills via the Task tool — that path works on hosts that expose Task. On Codex CLI without Task, skills run inline serially (same output, ~1–2 min wall time vs ~30s parallel).
-
-**Clone-and-symlink fallback (proven, works today):**
-
-```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
-mkdir -p ~/.codex/skills
-ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/harness-designing
-# Then restart Codex
-```
-
-Update: `cd ~/.codex/harness-designing-plugin && git pull`
-
-<details>
-<summary>Natural-language prompt for an AI to execute either path</summary>
-
-```
-Install the Harness Designing Plugin from
-https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
-
-1. Try first: codex plugin marketplace add BilLogic/harness-designing-plugin
-   then launch codex /plugins TUI to install
-2. If that's not supported on my Codex version, fall back to:
-   clone the repo, symlink its skills/ directory into ~/.codex/skills/
-3. Tell me what to restart / reload so the skills activate
-4. List my skills after restart to confirm the four hd-* skills loaded
-```
-
-</details>
-
-### Cursor (IDE + CLI)
-
-**One-liner in Cursor Agent chat (once our submission is approved):**
+In Cursor Agent chat (once submission approved):
 
 ```
 /add-plugin harness-designing
 ```
 
-Or search for "harness designing" in the Cursor plugin marketplace UI.
+Or search "harness designing" in the plugin marketplace UI. Until approved, use the clone fallback at the bottom of this section.
 
-⚠️ **Status:** Cursor marketplace submission pending reviewer response (v3.0.0 re-submission queued). Until approved, use the clone-and-symlink fallback below — it works today.
+### Codex CLI
 
-**Clone-and-symlink fallback (proven, works today):**
-
-```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
-mkdir -p ~/.cursor/skills
-ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/harness-designing
-# Then restart Cursor
-```
-
-⚠️ **Cursor CLI note:** if you're on Cursor CLI rather than the IDE, `/hd:review` runs inline serial (no Task tool) — same output, ~1–2 min wall time instead of ~30s parallel.
-
-<details>
-<summary>Natural-language prompt for an AI to execute either path</summary>
-
-```
-Install the Harness Designing Plugin from
-https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
-
-1. Try first: /add-plugin harness-designing in Cursor Agent chat (works
-   if our marketplace submission has been approved)
-2. If that fails, fall back to: clone the repo, symlink its skills/
-   directory into ~/.cursor/skills/
-3. Tell me what to restart / reload so the skills activate
-```
-
-</details>
-
-### Windsurf / plain terminal / any other host
-
-**Paste this into your AI:**
-
-```
-Install the Harness Designing Plugin from
-https://github.com/BilLogic/harness-designing-plugin on my current host:
-
-1. Clone the repo to a stable location on my machine
-2. Set up whatever pointer / env var / config entry my host needs so its
-   skill-loader or agent-loader can find the SKILL.md files under skills/
-3. If my host has no skill-loader, just confirm the clone location so
-   I can invoke scripts directly (e.g. the detect.py and budget-check.sh
-   from skills/hd-*/scripts/)
-4. Tell me how to restart / reload so the skills activate
-```
-
-<details>
-<summary>Or run the commands directly</summary>
+Codex's official plugin directory is still "coming soon" — clone-install works today:
 
 ```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/harness-designing
-export DESIGN_HARNESS=~/harness-designing
-
-# Direct script invocation (hosts without skill-loader convention):
-python3 $DESIGN_HARNESS/skills/hd-setup/scripts/detect.py
-bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
+git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
+mkdir -p ~/.codex/skills
+ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/harness-designing
+# Restart Codex
 ```
 
-</details>
+⚠️ Codex's plugin spec doesn't register custom sub-agents yet, so our 10 sub-agents only dispatch via Task on hosts that expose it. On Codex CLI, skills run inline serial (~1–2 min) instead of parallel (~30s). Same output.
+
+### Other hosts (Windsurf, plain terminal)
+
+```bash
+git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
+```
+
+Configure your host's skill-loader to read `~/plugins/harness-designing/skills/`, or invoke scripts directly (`python3 ~/plugins/harness-designing/skills/hd-setup/scripts/detect.py`).
 
 ### Updating
 
-**Marketplace install (Claude Code):**
+Claude Code:
 
-```bash
-# Refresh the marketplace catalog (pulls our latest marketplace.json)
-/plugin marketplace update BilLogic/harness-designing-plugin
-
-# Update an installed plug-in to the latest tagged version
+```
 /plugin update harness-designing
-
-# Or update everything
-/plugin update
 ```
 
-How it works: we tag releases (currently `v3.0.0`). Each release bumps `version` in our `marketplace.json` + `plugin.json`. Claude Code resolves your installed version against ours and pulls only when they differ. If you have auto-update enabled in your settings, this happens silently; otherwise run `/plugin update` after we ship a new tag.
+Clone-based: `cd <clone> && git pull` (or `git checkout v3.0.0` to pin).
 
-**Clone-based install (any host):**
+### Migrating from v1.x or v2.x
 
-```bash
-cd <clone-path> && git pull             # latest commit on main (= latest tag)
-cd <clone-path> && git checkout v3.0.0  # pin to a specific release
-```
+- **v1.x → v2.0** — Task namespace renamed `design-harnessing:` → `harness-designing:`. Update any external code that referenced our agents.
+- **v2.x → v3.0** — Plug-in slug renamed `design-harness` → `harness-designing`. If you previously installed:
 
-**Migrating from earlier versions:**
+  ```
+  /plugin uninstall design-harness
+  /plugin install harness-designing
+  ```
 
-- **v1.x → v2.0.0**: Task namespace renamed `design-harnessing:` → `harness-designing:`. Update external code: `Task design-harnessing:<cat>:<name>` → `Task harness-designing:<cat>:<name>`.
-- **v2.x → v3.0.0**: plug-in slug renamed `design-harness` → `harness-designing` (final alignment). Install command becomes `/plugin install harness-designing`. If you previously installed: run `/plugin uninstall design-harness` then `/plugin install harness-designing`.
-
-End users on `/hd:learn` / `/hd:setup` / `/hd:maintain` / `/hd:review` are unaffected by either change — slash commands didn't move. Only external code that pinned our Task namespace or install slug needs updating.
-
-### Official directories
-
-**Claude Code** — submitted to Anthropic's plug-in directory; pending merge into [`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official). Once merged, we'll be discoverable by default in the `/plugin` UI without the user having to add our marketplace manually. Until then, install via the self-hosted marketplace path above (`/plugin marketplace add BilLogic/harness-designing-plugin` then `/plugin install harness-designing`) — same pattern as other third-party plug-ins like compound-engineering.
-
-**Cursor** — submitted to [cursor.com/marketplace](https://cursor.com/marketplace); pending reviewer response. v3.0.0 re-submission queued (refreshed metadata: new slug + context7 connector + current capability list).
-
-**OpenAI Codex** — official directory still **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build) (no self-serve publishing yet). Clone-install path works today on the Codex CLI; we'll submit to the official directory the moment it opens.
-
-⚠️ **Breaking changes across v2.0.0 + v3.0.0** — see Migrating section above. End users on `/hd:*` slash commands are unaffected. See [CHANGELOG.md](./CHANGELOG.md) for full migration details.
+`/hd:*` slash commands didn't change — end users are unaffected. See [CHANGELOG.md](./CHANGELOG.md) for full migration details.
 
 ### Uninstall
 
-```bash
-# Claude Code
+Claude Code:
+
+```
 /plugin uninstall harness-designing
 /plugin marketplace remove harness-designing
-
-# Codex CLI / Cursor / Windsurf (clone-based)
-rm ~/.codex/skills/harness-designing      # remove symlink (if Codex)
-rm ~/.cursor/skills/harness-designing     # remove symlink (if Cursor)
-rm -rf ~/.codex/harness-designing-plugin   # remove the clone
 ```
+
+Clone-based: remove the clone + any symlinks (`~/.codex/skills/harness-designing`, etc.).
 
 The plug-in never modifies files outside its own install directory. Uninstalling means deleting the clone and any symlinks you created.
 
