@@ -109,84 +109,97 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 > **The plug-in maintains the library. Your AI applies it** against actual design work.
 
-## Installation
-
-> **Status (v3.0.0)** — distributed via self-hosted marketplace today. Pending review in Anthropic's and Cursor's directories; same flow as compound-engineering and other third-party plug-ins. Codex official directory still ["coming soon"](https://developers.openai.com/codex/plugins/build).
-
-> **Bundled connector** — [context7](https://context7.com) HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, `/hd:learn`). Works anonymously out of the box; set `CONTEXT7_API_KEY` env var for higher rate limits ([free key](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}`.
+## Install
 
 ### Claude Code
 
-```
+```text
 /plugin marketplace add BilLogic/harness-designing-plugin
 /plugin install harness-designing
 ```
 
 ### Cursor
 
-In Cursor Agent chat (once submission approved):
+In Cursor Agent chat:
 
-```
+```text
 /add-plugin harness-designing
 ```
 
-Or search "harness designing" in the plugin marketplace UI. Until approved, use the clone fallback at the bottom of this section.
+Or search "harness designing" in the plug-in marketplace.
 
-### Codex CLI
+### Codex
 
-Codex's official plugin directory is still "coming soon" — clone-install works today:
+Two steps — register the marketplace, then install through Codex's TUI.
+
+1. **Register the marketplace:**
+
+   ```bash
+   codex plugin marketplace add BilLogic/harness-designing-plugin
+   ```
+
+2. **Install through the TUI:** launch `codex`, run `/plugins`, find the **harness-designing** marketplace, select **harness-designing**, and choose **Install**. Restart Codex when it finishes. Codex's CLI doesn't currently have a subcommand for installing a plug-in from an added marketplace—the `/plugins` TUI is the canonical flow.
+
+> **Heads up:** Codex's plug-in spec doesn't register custom sub-agents yet, so our 10 sub-agents only dispatch via the Task tool when the host exposes it. On Codex CLI without Task, `/hd:review` runs inline serial (~1–2 min) instead of parallel (~30s). Same output.
+
+### GitHub Copilot
+
+For **VS Code Copilot Agent Plugins**:
+
+1. Run `Chat: Install Plugin from Source` from the VS Code command palette
+2. Use `BilLogic/harness-designing-plugin` for the repo
+3. Select `harness-designing` when VS Code lists the plug-ins in this repository
+
+For **Copilot CLI**:
+
+Inside Copilot CLI:
+
+```text
+/plugin marketplace add BilLogic/harness-designing-plugin
+/plugin install harness-designing@harness-designing-plugin
+```
+
+From a shell with the `copilot` binary:
 
 ```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
-mkdir -p ~/.codex/skills
-ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/harness-designing
-# Restart Codex
+copilot plugin marketplace add BilLogic/harness-designing-plugin
+copilot plugin install harness-designing@harness-designing-plugin
 ```
 
-⚠️ Codex's plugin spec doesn't register custom sub-agents yet, so our 10 sub-agents only dispatch via Task on hosts that expose it. On Codex CLI, skills run inline serial (~1–2 min) instead of parallel (~30s). Same output.
+Copilot CLI reads the same Claude Code-compatible manifest we ship, so no separate install step is needed.
 
-### Other hosts (Windsurf, plain terminal)
+### Factory Droid
+
+From a shell with the `droid` binary:
 
 ```bash
-git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
+droid plugin marketplace add https://github.com/BilLogic/harness-designing-plugin
+droid plugin install harness-designing@harness-designing-plugin
 ```
 
-Configure your host's skill-loader to read `~/plugins/harness-designing/skills/`, or invoke scripts directly (`python3 ~/plugins/harness-designing/skills/hd-setup/scripts/detect.py`).
+Droid uses `plugin@marketplace` IDs — `harness-designing` is the plug-in, `harness-designing-plugin` is the marketplace name. Droid reads our Claude Code-compatible manifest and translates the format on install.
 
-### Updating
+### Qwen Code
 
-Claude Code:
-
-```
-/plugin update harness-designing
+```bash
+qwen extensions install BilLogic/harness-designing-plugin:harness-designing
 ```
 
-Clone-based: `cd <clone> && git pull` (or `git checkout v3.0.0` to pin).
+Qwen Code reads the same Claude Code-compatible manifest from GitHub and converts the format during install.
 
-### Migrating from v1.x or v2.x
+### OpenCode, Pi, Gemini, and Kiro
 
-- **v1.x → v2.0** — Task namespace renamed `design-harnessing:` → `harness-designing:`. Update any external code that referenced our agents.
-- **v2.x → v3.0** — Plug-in slug renamed `design-harness` → `harness-designing`. If you previously installed:
+These hosts don't yet read Claude Code-compatible plug-in manifests natively, and we don't ship a converter the way some plug-ins do. The install path is manual until host support lands:
 
-  ```
-  /plugin uninstall design-harness
-  /plugin install harness-designing
-  ```
+1. Clone the repo to a stable location:
 
-`/hd:*` slash commands didn't change — end users are unaffected. See [CHANGELOG.md](./CHANGELOG.md) for full migration details.
+   ```bash
+   git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
+   ```
 
-### Uninstall
+2. Point your host's skill-loader at `~/plugins/harness-designing/skills/`, or copy / symlink the four skill directories (`hd-learn`, `hd-setup`, `hd-maintain`, `hd-review`) into the path your host expects.
 
-Claude Code:
-
-```
-/plugin uninstall harness-designing
-/plugin marketplace remove harness-designing
-```
-
-Clone-based: remove the clone + any symlinks (`~/.codex/skills/harness-designing`, etc.).
-
-The plug-in never modifies files outside its own install directory. Uninstalling means deleting the clone and any symlinks you created.
+The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations work wherever your host loads them. Sub-agent dispatch via the Task tool needs explicit host support; without it, skills run inline serial (same output, slower wall time).
 
 ## Credits
 
@@ -213,17 +226,6 @@ The plug-in never modifies files outside its own install directory. Uninstalling
 - **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/references/article-quote-finder-corpus.md` once the Substack series is live (`agents/research/references/README.md` documents the convention).
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
 - **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
-
-## Version History
-
-See [CHANGELOG.md](./CHANGELOG.md).
-
-- **v2.0.0** (2026-04-25) — ⚠️ BREAKING. Task namespace renamed `design-harnessing:` → `harness-designing:` to align with marketplace + GitHub slug. `hd-config.md` schema gets a single source of truth at `skills/hd-setup/scripts/schema.json` (detect.py imports SCHEMA_VERSION at module init). Three new self-targeted rubrics shipped (`plan-quality`, `lesson-quality`, `agent-spec-quality`). `/hd:setup` Step 10.5 now appends a deterministic `Next step:` action hand-off. New `scripts/release.sh` automates version bumps + tag + push. Two rules graduated: namespace-alignment + schema-SSOT.
-- **v1.4.0** (2026-04-24) — rubric-YAML-split graduates. All 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) migrate from prose-table criteria to YAML-criteria-in-frontmatter + prose-rationale-in-body. `rubric-applier` agent reads YAML deterministically (legacy parser removed via clean cut). Removes the prose-layout-fragility class entirely. Rule `R_2026_04_24_rubric_yaml_split` adopted.
-- **v1.3.0** (2026-04-21) — detect-inspect-integrate + setup health disclosure. `/hd:setup` Step 10.5 renders compact 5-layer ASCII health bar + top-3 priorities at completion. L1 EXECUTE proactively surfaces detected substantive files (DESIGN.md, CONTRIBUTING.md, extended AGENTS.md) generically — no filename whitelist. Lesson + decision frontmatter gain machine-extractable fields (3p.3 enriched schema).
-- **v1.2.0** (2026-04-21) — universal tool discovery + advisor-not-installer. `detect.py` schema v5 emits `raw_signals.deps` universally; `ai-integration-scout` classify mode replaces hardcoded CATEGORY_PATTERNS. The plug-in is an advisor, not an installer: surfaces MCP/CLI/API options + install-doc links; never installs on the user's behalf.
-- **v1.1.0** (2026-04-20) — iteration release. Unified vocabulary (audit/critique → review), file-first reporting with `Proposed revision` file-tree diffs, `/hd:setup --from-review` bridge, Staleness check, content-quality grading, host-agnostic execution, schema-v4 detector. ~25 fixes surfaced by live testing across 10 repos.
-- **v1.0.0** (2026-04-18) — distribution-ready. Validated across 6-repo pilot matrix (sds, plus-marketing-website, caricature, oracle-chat, lightning, plus-uno). Submitted to Anthropic Claude Code plug-in directory + Cursor marketplace.
 
 ## License
 
