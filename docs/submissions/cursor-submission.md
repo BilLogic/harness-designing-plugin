@@ -9,6 +9,7 @@ For re-submission / metadata-refresh — the plug-in has shipped 5 minor version
 - **v1.1–v1.4** unified review vocabulary; YAML-criteria rubric schema; Step 10.5 post-setup health bar
 - **v2.0.0** ⚠️ **BREAKING** — Task namespace renamed `design-harnessing:` → `harness-designing:` (matches marketplace + GitHub slug); schema-SSOT for `hd-config.md`
 - **v2.1.0** 3 new self-targeted rubrics (`plan-quality`, `lesson-quality`, `agent-spec-quality`); actionable Step 10.5 hand-off; release automation; **bundles `context7` MCP** as Connector
+- **v3.0.0** ⚠️ **BREAKING** — plug-in slug renamed `design-harness` → `harness-designing` (final alignment with marketplace + repo + Task namespace); install command becomes `/plugin install harness-designing`
 
 **Counts updated:** 4 skills, **10 sub-agents**, **17 starter rubrics**, **6 adopted rubrics**.
 
@@ -16,7 +17,7 @@ For re-submission / metadata-refresh — the plug-in has shipped 5 minor version
 
 ### Plugin name (lowercase kebab-case, per Cursor schema)
 ```
-design-harness
+harness-designing
 ```
 
 ### Display name
@@ -48,7 +49,7 @@ Validated across 10 repos (6-repo pilot matrix + 4 Phase 3k–3m test repos). Co
 
 ### Version
 ```
-2.1.0
+3.0.0
 ```
 
 ### Repository URL
@@ -63,7 +64,7 @@ https://github.com/BilLogic/harness-designing-plugin
 
 ### Keywords
 ```
-design, design-harness, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics
+design, harness-designing, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics
 ```
 
 ### Logo
@@ -83,9 +84,9 @@ MIT
 
 Detected from plug-in structure:
 - `skills/` — 4 SKILL.md files (hd-learn, hd-setup, hd-maintain, hd-review)
-- `agents/` — 9 sub-agent files across 3 categories (analysis/, research/, review/)
+- `agents/` — 10 sub-agent files across 3 categories (analysis/, research/, review/)
 - No `rules/` directory (we use AGENTS.md at repo root for conventions)
-- No `mcp.json` (no bundled MCP servers)
+- `.mcp.json` — bundles `context7` MCP server (HTTP transport, anonymous tier by default)
 - No `hooks/` (no automation scripts required for the plug-in itself)
 - No `commands/` (commands are skills via `name: hd:*` frontmatter)
 
@@ -104,7 +105,7 @@ Three sibling manifests ship from the same repo.
 ## Cursor-specific checklist (per cursor.com/docs/plugins/building)
 
 - [x] Valid `.cursor-plugin/plugin.json` manifest
-- [x] Unique kebab-case name (`design-harness`)
+- [x] Unique kebab-case name (`harness-designing`)
 - [x] Clear description
 - [x] Complete frontmatter metadata on all SKILL.md files (verified by budget-check.sh)
 - [x] Relative paths (no absolute)

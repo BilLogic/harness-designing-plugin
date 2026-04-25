@@ -1,6 +1,10 @@
 # Codex CLI plugin directory — submission packet (HOLDING)
 
-**Status:** OpenAI's official Codex plugin directory is **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Self-serve publishing not yet open.
+**Status:** OpenAI's official Codex plugin directory is **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Self-serve publishing not yet open. Verified 2026-04-25 — directory text reads: *"Adding plugins to the official Plugin Directory is coming soon"* + *"Self-serve plugin publishing and management are coming soon."*
+
+**Action:** packet kept current with each release (slug + version + capability list mirror v3.0.0). Submit immediately when self-serve publishing lands.
+
+**Monitoring:** check developers.openai.com/codex/plugins/build monthly; the `Publish your plugin` section appearing is the trigger.
 
 ## Interim distribution
 
@@ -11,7 +15,7 @@ Self-hosted via `marketplace.json` + user-level install. Users can add:
 {
   "plugins": [
     {
-      "name": "design-harness",
+      "name": "harness-designing",
       "source": "git+https://github.com/BilLogic/harness-designing-plugin"
     }
   ]
@@ -24,7 +28,7 @@ Or directly via `codex plugins add` once the CLI supports git-URL installs.
 
 ### Plugin name
 ```
-design-harness
+harness-designing
 ```
 
 ### Display name
@@ -57,7 +61,7 @@ https://github.com/BilLogic/harness-designing-plugin
 
 ### Keywords
 ```
-design, design-harness, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics
+design, harness-designing, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics
 ```
 
 ### Logo

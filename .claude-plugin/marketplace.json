@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "design-harness",
+      "name": "harness-designing",
       "source": "./",
       "description": "Design-focused AI harness for design teams. 4 skills + 10 sub-agents + 17 starter rubrics on YAML-criteria schema. context7 connector for library doc lookup.",
       "version": "2.1.0",

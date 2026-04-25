@@ -12,6 +12,7 @@ For re-submission / metadata-refresh purposes — the plug-in has shipped 5 mino
 - **v1.4.0** all 3 then-adopted rubrics migrated to YAML-criteria schema; `rubric-applier` legacy parser removed
 - **v2.0.0** ⚠️ **BREAKING** — Task namespace renamed `design-harnessing:` → `harness-designing:` to align with marketplace + GitHub slug; `hd-config.md` schema gets a single source of truth at `skills/hd-setup/scripts/schema.json`
 - **v2.1.0** 3 new self-targeted rubrics added (`plan-quality`, `lesson-quality`, `agent-spec-quality`); Step 10.5 actionable hand-off (`Next step:` line); `scripts/release.sh` automation; **bundles `context7` MCP** as Connector for library doc lookup (HTTP transport, anonymous tier by default)
+- **v3.0.0** ⚠️ **BREAKING** — plug-in slug renamed `design-harness` → `harness-designing` (final alignment: marketplace name = repo name = plug-in slug = Task namespace). Install command becomes `/plugin install harness-designing`. Slash commands `/hd:*` unchanged.
 
 **Counts updated:** 4 skills, **10 sub-agents** (was 9; +1 from `ai-integration-scout`), **17 starter rubrics** (was 14; +3 from Phase 3s), **6 adopted rubrics** in `docs/rubrics/` (was 3).
 
@@ -24,7 +25,7 @@ Harness Designing Plugin
 
 ### Plugin slug / package name
 ```
-design-harness
+harness-designing
 ```
 
 ### Short description (1 line, ~160 chars)
@@ -70,7 +71,7 @@ Bill Guo (@BilLogic)
 
 ### Keywords / tags
 ```
-design, design-harness, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics, design-review, harness-engineering, agentic-design
+design, harness-designing, design-systems, context-engineering, knowledge-management, ai-workflows, rubrics, design-review, harness-engineering, agentic-design
 ```
 
 ### Logo
@@ -83,14 +84,14 @@ Design / Productivity
 
 ### Version
 ```
-2.1.0
+3.0.0
 ```
 
 ## Plugin self-host URL (for users to add before official review lands)
 
 ```
 /plugin marketplace add BilLogic/harness-designing-plugin
-/plugin install design-harness
+/plugin install harness-designing
 ```
 
 ## Additional notes (if the form has an open text field)

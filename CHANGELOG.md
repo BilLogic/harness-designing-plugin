@@ -1,7 +1,31 @@
 # Changelog
 
-All notable changes to the `design-harness` plug-in are documented here.
+All notable changes to the `harness-designing` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+
+### ⚠️ BREAKING — Phase 3y: plug-in slug renamed `design-harness` → `harness-designing` (2026-04-25)
+
+Closes the namespace alignment arc started in v2.0.0. v2.0.0 renamed the Task namespace + repo + marketplace name to `harness-designing` but explicitly preserved the plug-in slug `design-harness` as a deliberate carve-out (concerned about external pins). User confirmed no external consumers exist yet → carve-out justification gone → close the loop.
+
+**After v3.0.0, ONE name across all surfaces:**
+- GitHub repo: `BilLogic/harness-designing-plugin`
+- Plug-in slug (in `plugin.json`): `harness-designing` ← **renamed from `design-harness`**
+- Marketplace name (in `marketplace.json`): `harness-designing`
+- Task namespace: `harness-designing:`
+- Install command: `/plugin install harness-designing`
+- Slash prefix: `/hd:*` (unchanged — short form earns its place at daily-use surface)
+
+**Migration:** if you previously installed via `/plugin install design-harness`, run `/plugin uninstall design-harness` then `/plugin install harness-designing`. End users on `/hd:learn` / `/hd:setup` / `/hd:maintain` / `/hd:review` are unaffected — slash commands didn't change.
+
+**Scope:** 4 manifests (3 sibling `plugin.json` + `marketplace.json`); README install commands across 5 host sections + Migration callout; AGENTS.md H1 + rule entry; 3 submission packets refreshed (Anthropic / Cursor / Codex). Refines `R_2026_04_25_namespace_alignment` (extends from "Task namespace" to "ALL identifier surfaces"). New lesson at `docs/knowledge/lessons/2026-04-25-plugin-slug-alignment.md` codifies the carve-out-and-close pattern.
+
+**Verification:**
+- All 4 manifests on v3.0.0 with new slug; valid JSON
+- 0 live-file references to `/plugin install design-harness` or `"name": "design-harness"`
+- Always-loaded budget: 155/200 unchanged
+- 0 skill / 0 agent violations
 
 ## [2.1.0] — 2026-04-25
 

@@ -111,7 +111,7 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 ## Installation
 
-> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v2.1.0). Cursor marketplace pending review. Codex directory opens later. Self-hosted clone-install paths below also work on every host today.
+> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v3.0.0). Cursor marketplace pending review (v3.0.0 re-submission queued). Codex directory still "coming soon" per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build); clone-install path works today on the Codex CLI. Self-hosted clone-install paths below also work on every host today.
 
 > **Connectors:** ships [context7](https://context7.com) as an HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, and `/hd:learn`). Works anonymously by default; set `CONTEXT7_API_KEY` env var for higher rate limits (free key at [context7.com/dashboard](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}` with empty default.
 
@@ -130,7 +130,7 @@ One repo ships three sibling manifests (`.claude-plugin/`, `.codex-plugin/`, `.c
 Install the Harness Designing Plugin from https://github.com/BilLogic/harness-designing-plugin
 using the self-hosted marketplace. Run these in order:
   /plugin marketplace add BilLogic/harness-designing-plugin
-  /plugin install design-harness
+  /plugin install harness-designing
 Then list my available skills so I can confirm hd:learn, hd:setup,
 hd:maintain, and hd:review appear.
 ```
@@ -140,7 +140,7 @@ hd:maintain, and hd:review appear.
 
 ```
 /plugin marketplace add BilLogic/harness-designing-plugin
-/plugin install design-harness
+/plugin install harness-designing
 ```
 
 </details>
@@ -179,7 +179,7 @@ https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
 mkdir -p ~/.codex/skills
-ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/design-harness
+ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/harness-designing
 # Then restart Codex
 ```
 
@@ -212,7 +212,7 @@ https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
 mkdir -p ~/.cursor/skills
-ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/design-harness
+ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/harness-designing
 # Then restart Cursor
 ```
 
@@ -258,43 +258,48 @@ bash $DESIGN_HARNESS/skills/hd-review/scripts/budget-check.sh
 /plugin marketplace update BilLogic/harness-designing-plugin
 
 # Update an installed plug-in to the latest tagged version
-/plugin update design-harness
+/plugin update harness-designing
 
 # Or update everything
 /plugin update
 ```
 
-How it works: we tag releases (currently `v2.1.0`). Each release bumps `version` in our `marketplace.json` + `plugin.json`. Claude Code resolves your installed version against ours and pulls only when they differ. If you have auto-update enabled in your settings, this happens silently; otherwise run `/plugin update` after we ship a new tag.
+How it works: we tag releases (currently `v3.0.0`). Each release bumps `version` in our `marketplace.json` + `plugin.json`. Claude Code resolves your installed version against ours and pulls only when they differ. If you have auto-update enabled in your settings, this happens silently; otherwise run `/plugin update` after we ship a new tag.
 
 **Clone-based install (any host):**
 
 ```bash
 cd <clone-path> && git pull             # latest commit on main (= latest tag)
-cd <clone-path> && git checkout v2.1.0  # pin to a specific release
+cd <clone-path> && git checkout v3.0.0  # pin to a specific release
 ```
 
-**Migrating from v1.x → v2.0.0+:** v2.0.0 renamed our Task namespace `design-harnessing:` → `harness-designing:` to align with the marketplace + GitHub slug. Update any external code that referenced our agents directly (`Task design-harnessing:<cat>:<name>` → `Task harness-designing:<cat>:<name>`). End users invoking via `/hd:learn`, `/hd:setup`, `/hd:maintain`, `/hd:review` are unaffected — those slash commands didn't change.
+**Migrating from earlier versions:**
+
+- **v1.x → v2.0.0**: Task namespace renamed `design-harnessing:` → `harness-designing:`. Update external code: `Task design-harnessing:<cat>:<name>` → `Task harness-designing:<cat>:<name>`.
+- **v2.x → v3.0.0**: plug-in slug renamed `design-harness` → `harness-designing` (final alignment). Install command becomes `/plugin install harness-designing`. If you previously installed: run `/plugin uninstall design-harness` then `/plugin install harness-designing`.
+
+End users on `/hd:learn` / `/hd:setup` / `/hd:maintain` / `/hd:review` are unaffected by either change — slash commands didn't move. Only external code that pinned our Task namespace or install slug needs updating.
 
 ### Official directories
 
-**Claude Code** — live in Anthropic's plug-in directory as of 2026-04-25 (v2.0.0). One-line install via the platform UI; alternatively the self-hosted clone-install paths above work today.
+**Claude Code** — live in Anthropic's plug-in directory as of 2026-04-25 (v3.0.0). One-line install via the platform UI; alternatively the self-hosted clone-install paths above work today.
 
-**Cursor** — marketplace submission pending reviewer response.
+**Cursor** — marketplace submission pending reviewer response. v3.0.0 re-submission queued (refreshed metadata: new slug + context7 connector + current capability list).
 
-**OpenAI Codex** — directory opens later; clone-install path works today on the Codex CLI.
+**OpenAI Codex** — official directory still **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build) (no self-serve publishing yet). Clone-install path works today on the Codex CLI; we'll submit to the official directory the moment it opens.
 
-⚠️ **Breaking change in v2.0.0:** Task namespace renamed `design-harnessing:` → `harness-designing:` to align with the marketplace + GitHub slug. External consumers that referenced our agents via `Task design-harnessing:<cat>:<name>` must update to `Task harness-designing:<cat>:<name>`. The plug-in slug `design-harness` (no -ing) is unchanged. See [CHANGELOG.md](./CHANGELOG.md#200--2026-04-25) for migration details.
+⚠️ **Breaking changes across v2.0.0 + v3.0.0** — see Migrating section above. End users on `/hd:*` slash commands are unaffected. See [CHANGELOG.md](./CHANGELOG.md) for full migration details.
 
 ### Uninstall
 
 ```bash
 # Claude Code
-/plugin uninstall design-harness
+/plugin uninstall harness-designing
 /plugin marketplace remove harness-designing
 
 # Codex CLI / Cursor / Windsurf (clone-based)
-rm ~/.codex/skills/design-harness      # remove symlink (if Codex)
-rm ~/.cursor/skills/design-harness     # remove symlink (if Cursor)
+rm ~/.codex/skills/harness-designing      # remove symlink (if Codex)
+rm ~/.cursor/skills/harness-designing     # remove symlink (if Cursor)
 rm -rf ~/.codex/harness-designing-plugin   # remove the clone
 ```
 
