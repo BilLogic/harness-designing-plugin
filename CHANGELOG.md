@@ -3,6 +3,18 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Phase 3s — three new self-targeted rubrics (2026-04-24)
+
+The plug-in's own `docs/plans/`, `docs/knowledge/lessons/`, and `agents/<cat>/<name>.md` corpora went unscored — `skill-quality.md` is wrong-fit (router/references/templates ≠ plan/lesson/agent shape). Phase 3s closes those gaps with three new starter rubrics, all on the YAML-criteria schema (Phase 3r baseline).
+
+- **`plan-quality.md`** — 5 sections, 15 criteria (6 p1 / 6 p2 / 3 p3). Covers framing, scope, units, acceptance, references. Catches plans missing scope-boundaries / measurable acceptance / regression checks.
+- **`lesson-quality.md`** — 4 sections, 20 criteria (7 p1 / 11 p2 / 2 p3). Covers frontmatter conformance (3p.3 enriched schema), graduation state (catches the post-graduation `rule_candidate: true` drift class that surfaced in Phase 3r), body shape, scope discipline.
+- **`agent-spec-quality.md`** — 6 sections, 20 criteria (9 p1 / 7 p2 / 4 p3). Covers frontmatter, procedure, output schema, coexistence, failure modes, references. Replaces wrong-fit application of `skill-quality` to the 10 sub-agents.
+
+All 3 rubrics adopted into `docs/rubrics/` + shipped as starters in `skills/hd-review/assets/starter-rubrics/`. Both copies byte-identical per the dogfood + starter-ship convention. AGENTS.md `R_2026_04_21_rubric_policy` updated: adoption now 6 of 17 starters (was 3 of 14 — both numerator and denominator grew).
+
 ## [1.4.0] — 2026-04-24
 
 Iteration release. Two phases (3q + 3r) closing out the rubric YAML-split arc — POC → mechanical propagation → rule graduation. Plus targeted polish across review surface + post-graduation hygiene.
