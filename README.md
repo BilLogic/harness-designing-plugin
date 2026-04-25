@@ -111,7 +111,7 @@ Each rubric carries a `## Scope & Grounding` block—personas, user stories, sce
 
 ## Installation
 
-> **Status — live in Anthropic's Claude Code plug-in directory** as of 2026-04-25 (v3.0.0). Cursor marketplace pending review (v3.0.0 re-submission queued). Codex directory still "coming soon" per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build); clone-install path works today on the Codex CLI. Self-hosted clone-install paths below also work on every host today.
+> **Status (2026-04-25, v3.0.0)** — distributed via self-hosted marketplace on every host today. Submitted to Anthropic's Claude Code plug-in directory ([clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission)) and Cursor's marketplace; both pending reviewer response. Codex directory still "coming soon" per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Once approved, we'll appear in `claude-plugins-official` (Claude Code) and Cursor's default catalog — until then the self-hosted commands below are the install path. Same distribution shape as compound-engineering and other third-party plug-ins.
 
 > **Connectors:** ships [context7](https://context7.com) as an HTTP MCP for library doc lookup (used by `ai-integration-scout`, `skill-quality-auditor`, and `/hd:learn`). Works anonymously by default; set `CONTEXT7_API_KEY` env var for higher rate limits (free key at [context7.com/dashboard](https://context7.com/dashboard)). We never wire your key — `.mcp.json` reads `${CONTEXT7_API_KEY:-}` with empty default.
 
@@ -299,9 +299,9 @@ End users on `/hd:learn` / `/hd:setup` / `/hd:maintain` / `/hd:review` are unaff
 
 ### Official directories
 
-**Claude Code** — live in Anthropic's plug-in directory as of 2026-04-25 (v3.0.0). One-line install via the platform UI; alternatively the self-hosted clone-install paths above work today.
+**Claude Code** — submitted to Anthropic's plug-in directory; pending merge into [`anthropics/claude-plugins-official`](https://github.com/anthropics/claude-plugins-official). Once merged, we'll be discoverable by default in the `/plugin` UI without the user having to add our marketplace manually. Until then, install via the self-hosted marketplace path above (`/plugin marketplace add BilLogic/harness-designing-plugin` then `/plugin install harness-designing`) — same pattern as other third-party plug-ins like compound-engineering.
 
-**Cursor** — marketplace submission pending reviewer response. v3.0.0 re-submission queued (refreshed metadata: new slug + context7 connector + current capability list).
+**Cursor** — submitted to [cursor.com/marketplace](https://cursor.com/marketplace); pending reviewer response. v3.0.0 re-submission queued (refreshed metadata: new slug + context7 connector + current capability list).
 
 **OpenAI Codex** — official directory still **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build) (no self-serve publishing yet). Clone-install path works today on the Codex CLI; we'll submit to the official directory the moment it opens.
 
