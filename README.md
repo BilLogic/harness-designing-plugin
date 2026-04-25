@@ -157,24 +157,18 @@ claude --plugin-dir ~/plugins/harness-designing
 
 ### Codex CLI
 
-**Paste this into Codex:**
+Two paths — the official marketplace flow (when supported) or clone-and-symlink (proven fallback).
 
-```
-Install the Harness Designing Plugin from
-https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
+**Marketplace flow (primary, when Codex supports it):**
 
-1. Clone the repo to a stable location (e.g. ~/.codex/harness-designing-plugin
-   or wherever Codex expects externally-cloned plugins on my machine)
-2. Register its skills/ directory so hd-learn, hd-setup, hd-maintain, and
-   hd-review appear alongside my existing skills (use whichever mechanism
-   my Codex version supports—symlink into ~/.codex/skills/, or the Codex
-   plugin-registration API, or a config entry)
-3. Tell me what to restart / reload so the skills activate
-4. List my skills after restart to confirm the four hd-* skills loaded
+```bash
+codex plugin marketplace add BilLogic/harness-designing-plugin
+# Then launch codex, run /plugins, find Harness Designing in the marketplace, choose Install
 ```
 
-<details>
-<summary>Or run the commands directly</summary>
+⚠️ **Codex caveat:** Codex's plugin spec doesn't register custom sub-agents yet (per Codex docs). Our 10 sub-agents (`harness-auditor`, `rubric-applier`, etc.) are dispatched from inside our skills via the Task tool — that path works on hosts that expose Task. On Codex CLI without Task, skills run inline serially (same output, ~1–2 min wall time vs ~30s parallel).
+
+**Clone-and-symlink fallback (proven, works today):**
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/.codex/harness-designing-plugin
@@ -185,35 +179,58 @@ ln -sf ~/.codex/harness-designing-plugin/skills ~/.codex/skills/harness-designin
 
 Update: `cd ~/.codex/harness-designing-plugin && git pull`
 
+<details>
+<summary>Natural-language prompt for an AI to execute either path</summary>
+
+```
+Install the Harness Designing Plugin from
+https://github.com/BilLogic/harness-designing-plugin into my Codex CLI:
+
+1. Try first: codex plugin marketplace add BilLogic/harness-designing-plugin
+   then launch codex /plugins TUI to install
+2. If that's not supported on my Codex version, fall back to:
+   clone the repo, symlink its skills/ directory into ~/.codex/skills/
+3. Tell me what to restart / reload so the skills activate
+4. List my skills after restart to confirm the four hd-* skills loaded
+```
+
 </details>
 
 ### Cursor (IDE + CLI)
 
-**Paste this into Cursor:**
+**One-liner in Cursor Agent chat (once our submission is approved):**
 
 ```
-Install the Harness Designing Plugin from
-https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
-
-1. Clone the repo to a stable location (e.g. ~/cursor-plugins/harness-designing
-   or wherever Cursor expects externally-cloned plugins on my machine)
-2. Register its skills/ directory so the hd-* skills appear alongside my
-   existing skills (typically via ~/.cursor/skills/ or your current
-   skill-loading mechanism—pick what works for my Cursor version)
-3. Tell me what to restart / reload
-4. Note: if I'm on Cursor CLI rather than the IDE, /hd:review will run
-   inline serial because the CLI doesn't expose the Task tool—same
-   output, just ~1–2 min wall time instead of ~30s
+/add-plugin harness-designing
 ```
 
-<details>
-<summary>Or run the commands directly</summary>
+Or search for "harness designing" in the Cursor plugin marketplace UI.
+
+⚠️ **Status:** Cursor marketplace submission pending reviewer response (v3.0.0 re-submission queued). Until approved, use the clone-and-symlink fallback below — it works today.
+
+**Clone-and-symlink fallback (proven, works today):**
 
 ```bash
 git clone https://github.com/BilLogic/harness-designing-plugin ~/cursor-plugins/harness-designing
 mkdir -p ~/.cursor/skills
 ln -sf ~/cursor-plugins/harness-designing/skills ~/.cursor/skills/harness-designing
 # Then restart Cursor
+```
+
+⚠️ **Cursor CLI note:** if you're on Cursor CLI rather than the IDE, `/hd:review` runs inline serial (no Task tool) — same output, ~1–2 min wall time instead of ~30s parallel.
+
+<details>
+<summary>Natural-language prompt for an AI to execute either path</summary>
+
+```
+Install the Harness Designing Plugin from
+https://github.com/BilLogic/harness-designing-plugin into my Cursor setup:
+
+1. Try first: /add-plugin harness-designing in Cursor Agent chat (works
+   if our marketplace submission has been approved)
+2. If that fails, fall back to: clone the repo, symlink its skills/
+   directory into ~/.cursor/skills/
+3. Tell me what to restart / reload so the skills activate
 ```
 
 </details>
