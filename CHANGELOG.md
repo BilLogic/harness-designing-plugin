@@ -3,7 +3,7 @@
 All notable changes to the `harness-designing` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [3.0.0] — 2026-04-25
 
 ### ⚠️ BREAKING — Phase 3y: plug-in slug renamed `design-harness` → `harness-designing` (2026-04-25)
 
