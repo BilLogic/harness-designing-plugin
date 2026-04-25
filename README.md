@@ -1,3 +1,5 @@
+![Harness Designing banner — stop chasing design tools, start building a design harness](assets/banner.png)
+
 # Harness Designing
 
 **A plug-in that turns your team's scattered AI usage into a design practice that compounds.**
