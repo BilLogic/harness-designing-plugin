@@ -221,7 +221,7 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 **Adjacent work**—[*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by [Samet Özkale](https://twitter.com/sametozkale) covers context engineering for designers; this plug-in extends to all five layers.
 
-**Working implementation**—[BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the open-source harness built for a rotating 15-designer team; the patterns templated here are distilled from it.
+**Working implementation**—[BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the source repo this plug-in was distilled from: a production design harness running across a rotating ~15-designer team, used daily for prototyping, design-system work, and AI-assisted critique. It is where the five-layer structure (context, skills, workflows, evaluation, knowledge) was first stress-tested across real projects, real reviews, and real handoffs before being templated into the starter scaffolds shipped here. Read it as the "fully populated" reference for what each layer can grow into once a team has been compounding lessons for a while.
 
 ## Known Issues
 
