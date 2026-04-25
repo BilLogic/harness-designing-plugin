@@ -2,7 +2,7 @@
 
 **A plug-in that turns your team's scattered AI usage into a design practice that compounds.**
 
-Four skills. Five layers. One harness your whole team inherits—across Notion, Figma, AGENTS.md, and every chat thread.
+Four skills. Five layers. One harness your whole team inherits—across Notion, Figma, design.md, and every chat thread.
 
 Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools. [Install →](#installation)
 
