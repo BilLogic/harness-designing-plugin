@@ -3,7 +3,7 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [2.1.0] — 2026-04-25
 
 ### Phase 3x — context7 MCP bundling + count-drift cleanup + submission refresh (2026-04-25)
 

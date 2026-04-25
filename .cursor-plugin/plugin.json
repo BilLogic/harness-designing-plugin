@@ -1,6 +1,6 @@
 {
   "name": "design-harness",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "displayName": "Design Harness",
   "description": "Design-focused AI harness. 4 skills for learning, setting up, maintaining, and reviewing a five-layer design harness (Context, Skills, Orchestration, Rubrics, Knowledge).",
   "author": {
