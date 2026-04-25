@@ -30,7 +30,19 @@ Read the rubric file. Parse YAML frontmatter and detect which schema shape it us
 - **YAML-criteria shape (Phase 3q+).** Frontmatter contains a `sections` map keyed by section slug; each section has `order`, `title`, and `criteria[]` with `id`, `severity`, `check`. Schema documented at `skills/hd-review/references/rubric-yaml-schema.md` (`version: 1` at time of writing). Iterate `sections` in `order` ascending; each criterion is a deterministic record. Emit `schema_version: 1` (or whatever the rubric declares) in the output.
 - **Legacy prose-table shape (pre-3q).** Frontmatter has `rubric`, `name`, `applies_to`, `severity_defaults`, `source` but no `sections` map. Criteria live in markdown tables (`| Criterion | Default severity |`) under `### criterion-name` headings or in numbered `## N. <Section>` sections. Parse the body to extract criteria. Emit `schema_version: legacy` in the output so callers can distinguish.
 
-Detection rule: if frontmatter has a top-level `sections` key whose value is a map → YAML-criteria; otherwise → legacy.
+**Detection rule (strict — handle malformed cases explicitly):**
+
+| `sections` state | Action |
+|---|---|
+| Absent (key not present) | Legacy path — parse markdown tables |
+| Present, value is a non-empty map (≥1 section key) with each section having a non-empty `criteria[]` list | YAML path |
+| Present, value is `null` | `error: rubric-invalid` — `sections` declared but null |
+| Present, value is `{}` (empty map) | `error: rubric-empty` — no sections declared |
+| Present, value is a list `[...]` (wrong type) | `error: rubric-invalid` — `sections` must be a map, not a list |
+| Present, value is a map but ≥1 section is missing `criteria` or has an empty `criteria[]` | `error: rubric-invalid` — list which section(s) |
+| Present, value is a scalar (string/int/bool) | `error: rubric-invalid` — `sections` must be a map |
+
+Never silently fall through to legacy when `sections` is malformed — that hides a real error as a successful-but-empty audit. Validation rule 4 of [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md) is enforced at this gate.
 
 The legacy fallback exists as a transitional mechanism for `ux-writing.md` and `heuristic-evaluation.md`, which migrate in Phase 3r. Once all adopted rubrics are on the YAML shape, the legacy path is removed.
 

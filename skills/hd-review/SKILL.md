@@ -186,6 +186,6 @@ When the host supports sub-agent dispatch (Claude `Task`, Codex `/agent`, Cursor
 
 All Task calls use fully-qualified names in the `design-harnessing:` namespace. Never dispatches into other plug-ins' namespaces.
 
-**Full review** — Batch 1 (parallel, 5): `design-harnessing:analysis:harness-auditor` × 5 (one per layer). Batch 2 (parallel, 2–3): `analysis:rubric-recommender` + `research:lesson-retriever` + conditional `analysis:coexistence-analyzer` (when `other_tool_harnesses_detected[]` non-empty).
+**Full review** — Batch 1 (parallel, 5): `design-harnessing:analysis:harness-auditor` × 5 (one per layer). Batch 2 (parallel, 2–3): `design-harnessing:analysis:rubric-recommender` + `design-harnessing:research:lesson-retriever` + conditional `design-harnessing:analysis:coexistence-analyzer` (when `other_tool_harnesses_detected[]` non-empty).
 
-**Targeted review** — `review:skill-quality-auditor` for `SKILL.md` targets; `review:rubric-applier` for all other targets (batch-parallel ≤5). Optional external agents from `hd-config.md:review_agents` (empty default).
+**Targeted review** — `design-harnessing:review:skill-quality-auditor` for `SKILL.md` targets; `design-harnessing:review:rubric-applier` for all other targets (batch-parallel ≤5). Optional external agents from `hd-config.md:review_agents` (empty default).

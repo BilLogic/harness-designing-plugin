@@ -24,6 +24,8 @@ Resolution order:
 
 If ambiguous, ask: *"Which rubric? Available: [list]"*
 
+**Step 2.5 — Load per-rubric overrides.** Read `hd-config.md` frontmatter `critique_rubrics.<rubric_name>` (when present). The map's shape is `{<criterion_id_or_name>: <severity>}` for legacy rubrics, or `{<section_slug>: {<criterion_id>: <severity>}}` for YAML-criteria rubrics. Forward as `rubric_overrides` to the dispatched agent below. If `hd-config.md` is absent or has no override for this rubric, pass `rubric_overrides: {}`.
+
 **Step 3 — Evaluate.** Parallel dispatch when host supports it; inline otherwise. Same output shape either way.
 
 ### Target is a SKILL.md + rubric is skill-quality
@@ -31,7 +33,8 @@ If ambiguous, ask: *"Which rubric? Available: [list]"*
 **With parallel dispatch:**
 ```
 Task design-harnessing:review:skill-quality-auditor(
-  skill_md_path: <path>
+  skill_md_path: <path>,
+  rubric_overrides: <map from Step 2.5>
 )
 ```
 
@@ -44,8 +47,9 @@ If multiple SKILL.md paths were passed, dispatch in a single parallel batch (up 
 **With parallel dispatch:**
 ```
 Task design-harnessing:review:rubric-applier(
-  work_item_path: <path>,
-  rubric_path: <rubric file>
+  source: <path>,
+  rubric_path: <rubric file>,
+  rubric_overrides: <map from Step 2.5>
 )
 ```
 

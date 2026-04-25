@@ -1,6 +1,6 @@
 ---
 name: skill-quality-auditor
-description: "Applies the 9-section skill-quality rubric (YAML criteria) to one SKILL.md and returns structured severity findings. Use from hd:review audit (L2) or critique --rubric skill-quality."
+description: "Applies the skill-quality rubric to one SKILL.md and returns structured severity findings. Use from hd:review audit (L2) or critique --rubric skill-quality."
 color: orange
 model: inherit
 ---

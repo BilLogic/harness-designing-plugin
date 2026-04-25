@@ -42,6 +42,19 @@ Polish-level observations:
 - Minor optimization opportunities
 - Suggestions for future iterations
 
+## Header schema
+
+Each targeted-review response begins with a small YAML header so callers know which parse path produced the findings:
+
+```yaml
+rubric: <rubric-name>                   # rubric file stem (e.g., skill-quality)
+schema_version: 1 | legacy              # 1 = YAML-criteria shape (Phase 3q+); legacy = prose-table
+work_item: <path or URL>
+composite: healthy | degraded | critical_fail
+```
+
+`schema_version` is emitted by `rubric-applier` and `skill-quality-auditor`; surface it verbatim so users running `/hd:review targeted` can see whether a rubric has been migrated to YAML-criteria yet.
+
 ## Finding YAML schema
 
 Each finding has:
@@ -49,13 +62,14 @@ Each finding has:
 ```yaml
 - severity: p1 | p2 | p3
   rubric: <rubric-name>                 # matches rubric file in starter-rubrics/ or user's custom
-  criterion: <criterion-name>           # matches a criterion within that rubric
+  criterion_id: <criterion-id>          # kebab-case id (YAML shape) — stable across versions; absent for legacy shape
+  criterion: <criterion-name>           # human-readable name or `check` string
   finding: <one-sentence description>   # what's wrong
   suggested_fix: <one-sentence>         # how to fix
   location: <where in the work item>    # file:line, Figma node ID, DOM selector, etc.
 ```
 
-`location` is optional (some findings apply to the work item as a whole).
+`location` is optional (some findings apply to the work item as a whole). `criterion_id` is present for YAML-criteria rubrics (`schema_version: 1`); legacy rubrics omit it until they migrate in Phase 3r.
 
 ## Example output
 

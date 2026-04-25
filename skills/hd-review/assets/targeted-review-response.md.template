@@ -1,5 +1,14 @@
 ## Review: {{WORK_ITEM_NAME}}
 
+```yaml
+rubric: {{RUBRIC_NAME}}
+schema_version: {{1_OR_LEGACY}}
+work_item: {{WORK_ITEM_PATH}}
+composite: {{HEALTHY_OR_DEGRADED_OR_CRITICAL_FAIL}}
+```
+
+<!-- schema_version: 1 = YAML-criteria rubric (Phase 3q+); legacy = prose-table rubric (pre-3q). Surface verbatim from rubric-applier / skill-quality-auditor output. -->
+
 ### Summary
 
 {{ONE_PARAGRAPH_SUMMARY}}
@@ -15,7 +24,8 @@
 <!-- Each finding:
 - severity: p1 | p2 | p3
   rubric: <rubric-slug>
-  criterion: <criterion-slug>
+  criterion_id: <criterion-id>          # kebab-case (YAML shape only); omit for legacy shape
+  criterion: <criterion-slug-or-name>
   finding: <one-sentence description>
   suggested_fix: <one-sentence action>
   location: <file:line OR figma-node-id OR selector — optional>

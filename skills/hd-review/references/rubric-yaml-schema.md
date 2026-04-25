@@ -84,33 +84,13 @@ Rubrics whose frontmatter does NOT include a `sections:` map are treated as **le
 
 The 11 unadopted starter rubrics ship as reference material only — they migrate when adopted.
 
-## Schema version semantics
+## Validation + version semantics
 
-`version: 1` is the initial shape (Phase 3q). Bump rules:
+Readers enforce the field-definitions table above. Malformed YAML, missing required keys, wrong types, duplicate section `order`, or duplicate criterion `id` within a section all surface as `error: rubric-invalid` with a one-line diagnosis.
 
-| Change | Bump |
-|---|---|
-| Add an OPTIONAL field on a criterion (e.g., `evidence_hint`) | no bump (additive) |
-| Add an OPTIONAL field on a section (e.g., `subtitle`) | no bump (additive) |
-| Add a new top-level field (e.g., `tags[]`) | no bump (additive) |
-| Make an OPTIONAL field REQUIRED | bump |
-| Rename or retype an existing field | bump |
-| Change semantics of `severity` (e.g., add `p0`) | bump |
+`version: 1` is the initial shape (Phase 3q). Additive changes (new optional fields) don't bump. Required-field promotion, type changes, or `severity` enum changes do bump. K8s / dbt convention; matches `hd-config.md` schema.
 
-K8s / dbt convention: integer versions don't bump for additive changes. Same convention used in `hd-config.md` schema.
-
-## Validation rules (enforced by readers)
-
-1. YAML frontmatter parses as valid YAML
-2. `rubric`, `name`, `applies_to`, `version`, `severity_defaults`, `source`, `sections` all present
-3. `version` is an integer (not a string)
-4. `sections` is a map (not a list); each section slug is kebab-case
-5. Each section has `order`, `title`, `criteria`
-6. Each criterion has `id` and `check`
-7. `severity` (when present) is one of `p1`, `p2`, `p3`
-8. `severity_defaults.default` is one of `p1`, `p2`, `p3`
-9. Section `order` values are unique within the rubric
-10. Criterion `id` values are unique within their section
+> **Type note:** `version` here is bare `int` (`1`) — distinct from `hd-config.md`'s `schema_version: "5"` (quoted string). Both follow the same additive-vs-breaking rules; only the type representation differs.
 
 Validation failure: agent emits `error: rubric-invalid` + a brief diagnosis; the layer L4 audit reports it as a P1 meta-finding. Never silently default a malformed rubric.
 
