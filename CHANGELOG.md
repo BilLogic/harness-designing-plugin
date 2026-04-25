@@ -3,7 +3,7 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [2.0.0] — 2026-04-25
 
 ### ⚠️ BREAKING — Phase 3v: Task namespace renamed to align with marketplace slug (2026-04-25)
 
