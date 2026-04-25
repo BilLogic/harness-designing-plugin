@@ -19,6 +19,9 @@ Promoted from [`../../skills/hd-review/assets/starter-rubrics/`](../../skills/hd
 - [`skill-quality.md`](skill-quality.md) — 9-section Layer 2 skill health (every `SKILL.md` in `skills/hd-*/` reviewed against this)
 - [`ux-writing.md`](ux-writing.md) — copy quality across SKILL.md prose, agent descriptions, command text, script error messages (adapted 2026-04-21 — skip button/hover/empty-state criteria; apply command-prompt + error-message criteria)
 - [`heuristic-evaluation.md`](heuristic-evaluation.md) — Nielsen 10 heuristics applied to `/hd:*` command interaction flows (adapted 2026-04-21 — read "UI" as "command flow"; skip visual heuristics)
+- [`plan-quality.md`](plan-quality.md) — applied to `docs/plans/*.md` (adopted 2026-04-24, Phase 3s)
+- [`lesson-quality.md`](lesson-quality.md) — applied to `docs/knowledge/lessons/*.md` (adopted 2026-04-24, Phase 3s)
+- [`agent-spec-quality.md`](agent-spec-quality.md) — applied to `agents/*/*.md` sub-agent specs (adopted 2026-04-24, Phase 3s)
 
 ## Waived starter rubrics (dated 2026-04-21)
 

@@ -35,4 +35,4 @@ When ambiguity can't be resolved from the plan or AGENTS.md, surface the questio
 
 ## Meta-harness distinction
 
-This `docs/` tree is the harness run on **this plug-in's own repo**. It's NOT what `/hd:setup` scaffolds in a user's repo — that lives in `skills/hd-setup/templates/`. Two different harnesses, different audiences.
+This `docs/` tree is the harness run on **this plug-in's own repo**. It's NOT what `/hd:setup` scaffolds in a user's repo — that lives in `skills/hd-setup/assets/context-skeleton/`. Two different harnesses, different audiences.
