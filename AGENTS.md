@@ -20,7 +20,7 @@ You are a **harness-design collaborator** for a design team. Your job is to help
 
 **Boundaries**
 - Advisor, not installer (see Operating rules below). Never install packages or wire auth on a user's behalf.
-- Never write to `docs/solutions/` (reserved for other tools). Use `docs/design-solutions/` or `docs/knowledge/`.
+- Never write to `docs/solutions/` (reserved for other tools). Use `docs/knowledge/` for our own knowledge artifacts.
 - Stay in our namespace: commands `/hd:*`, skills `hd-*`, agents `harness-designing:<cat>:<name>`. Never call into another plug-in's namespace.
 
 ## Philosophy
@@ -41,10 +41,10 @@ Layer-to-path mapping is in § Harness map below. See [`docs/knowledge/reviews/`
 
 | Layer | Path | What's here |
 |---|---|---|
-| **L1 Context** | `docs/context/` + `AGENTS.md` + `loading-order.md` | product/one-pager, design-system/cheat-sheet (file conventions), agent-persona, conventions/. `AGENTS.md` is the master index per 3k.13. |
+| **L1 Context** | `docs/context/` + `AGENTS.md` + `loading-order.md` | product/one-pager, design-system/cheat-sheet (file conventions), agent-persona, conventions/. `AGENTS.md` is the master index. |
 | **L2 Skills** | `skills/hd-{learn,setup,maintain,review}/` | 4 shipped skills, each with `SKILL.md` + `references/` + optional `assets/` + `scripts/`. |
 | **L3 Orchestration** | `agents/{analysis,research,review}/` + Task invocations in each `SKILL.md` | 10 sub-agents dispatched via fully-qualified `harness-designing:<cat>:<name>` Task names; parallel→serial ≤5. |
-| **L4 Evaluation Design** | `docs/rubrics/` + `skills/hd-review/assets/starter-rubrics/` | Rubrics are the concrete check files: 6 adopted (`skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`) + 17 starters available for user scaffolding. Waivers dated in § Rules. |
+| **L4 Evaluation Design** | `docs/rubrics/` + `skills/hd-review/assets/starter-rubrics/` | Rubrics are the concrete check files: 6 adopted (`skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`) + 17 starters available for user scaffolding. Meta-harness waivers in § Operating rules. |
 | **L5 Knowledge** | `docs/knowledge/` | `lessons/` (episodic) + `changelog.md` (rule-adoption log) + `decisions.md` (ADRs) + `ideations.md` + `preferences.md` + `reviews/` (dated harness reviews). |
 
 ## `docs/` is our meta-harness
@@ -89,7 +89,7 @@ Users often run multiple AI plug-ins in the same repo. Our discipline:
 - All commands are `/hd:*` — we do not define or shadow any other plug-in's command prefix.
 - All skills are `hd-*` — we do not collide with skill prefixes from other plug-ins.
 - Our config file is `hd-config.md` at repo root.
-- We write knowledge under `docs/design-solutions/` (activated v0.5), `docs/knowledge/`, and `docs/rubrics/` — namespaces unique to this plug-in.
+- We write knowledge under `docs/knowledge/` and `docs/rubrics/` — namespaces unique to this plug-in. Never write to `docs/solutions/` (reserved for other tools).
 - `<protected_artifacts>` in `hd-review/SKILL.md` declares paths external review/cleanup tools should leave alone.
 - Our Task calls are always `Task harness-designing:<category>:<agent-name>(...)` — fully-qualified, never bare. We do not call into any other plug-in's Task namespace.
 
@@ -102,9 +102,8 @@ Full checklist (YAML frontmatter rules, reference-link rules, budgets, writing s
 When describing skill components, use these exact verbs:
 
 - **`references/`** = READ (loaded into context on demand)
-- **`templates/`** = COPY + FILL (scaffolding files for user's repo)
 - **`scripts/`** = EXECUTE (bash/python tools; output consumed, source not loaded)
-- **`assets/`** = ASSETS (templates + starters + skeletons; referenced by skill logic)
+- **`assets/`** = ASSETS (templates as `*.template` files, starters, skeletons; copied/filled into the user's repo or referenced by skill logic). No separate `templates/` directory — template files live inside `assets/`.
 
 Per-mode procedures live in `SKILL.md` inline OR in `references/<mode>-procedure.md` files (e.g., `capture-procedure.md`, `review-procedure.md`). No separate `workflows/` subdirectory — procedures are either the router's body or referenced via progressive disclosure. Shared procedures spanning multiple skills promote to sub-agents in `agents/<category>/`.
 
@@ -115,12 +114,11 @@ Required reading before authoring any skill:
 - Anthropic — [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 - Anthropic — [Complete Guide to Building Skills for Claude (PDF)](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf)
 
-## Repo-level contributor rules
+## File naming conventions
 
-- **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions).
-- **Lesson files** use `YYYY-MM-DD-slug.md` in `docs/knowledge/lessons/`.
-- **Never write to `docs/solutions/`** — reserved for other tools. Our equivalent is `docs/design-solutions/` (v0.5+).
-- **No cross-plug-in Task calls.** Our skills/agents only invoke `Task harness-designing:<category>:<agent-name>(...)`.
+- **Plan files** use `YYYY-MM-DD-NNN-slug.md` naming (3-digit daily sequence to prevent collisions) under `docs/plans/`.
+- **Lesson files** use `YYYY-MM-DD-slug.md` under `docs/knowledge/lessons/`.
+- **Review reports** use `YYYY-MM-DD-harness-review.md` under `docs/knowledge/reviews/`.
 
 ## Operating rules
 
