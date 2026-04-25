@@ -26,7 +26,33 @@ Top 3 priorities from setup:
   <Sev>  <Layer>  <one-line finding>                      <Effort>
   <Sev>  <Layer>  <one-line finding>                      <Effort>
   <Sev>  <Layer>  <one-line finding>                      <Effort>
+
+Next step: <one concrete suggested command>
 ```
+
+### Next-step suggestion (the actionable hand-off)
+
+After the priorities table, append exactly one line: **`Next step: <command>`** that closes the disclosure → action loop. Pick by severity + layer of the top P1 (or top P2 if no P1):
+
+| Top finding shape | Suggested next step |
+|---|---|
+| Top finding has `file_path` (concrete file) AND severity ≥ P2 | `/hd:review critique <file_path> --rubric <rubric_for_layer>` |
+| Top finding is L1 / L2 / L3 / L5 with no specific file (structural drift) | `/hd:review critique skills/<top-layer-skill>/SKILL.md --rubric skill-quality` (or sister rubric matching the layer) |
+| Top finding suggests capturing a lesson (e.g., recurring drift pattern) | `/hd:maintain capture` |
+| All findings are P3 polish | `/hd:review audit` (run a full audit when convenient — current state is healthy) |
+| No findings (ideal post-setup) | `/hd:maintain capture` to log first lesson; OR `/hd:review audit` to baseline |
+
+Layer → rubric mapping (when no explicit `rubric:` field on the finding):
+
+| Layer | Default rubric |
+|---|---|
+| L1 Context | `skill-quality` (for SKILL.md targets) or no rubric (for context docs — surface as "review docs/context/X manually") |
+| L2 Skill Curation | `skill-quality` |
+| L3 Orchestration | `agent-spec-quality` (for agent specs) |
+| L4 Rubric Setting | `lesson-quality` (when finding is about a rubric's grounding evidence) — usually no auto-suggestion (rubrics are content; review them manually) |
+| L5 Knowledge | `lesson-quality` (for lessons), `plan-quality` (for plans) |
+
+**Discipline:** never suggest a destructive command (`/hd:setup` again with `--force`, etc.) as the next step. The hand-off must be a *review* / *capture* / *audit* — read-mostly. User decides whether to act on the review's findings.
 
 ## Rendering rules
 
@@ -71,7 +97,13 @@ Print a note under the table: *"Health shown from default heuristic — Phase A 
 
 - **Distinct from Step 10** — Step 10 reports *what setup did* (decisions + budget + harnesses respected); Step 10.5 reports *what shape we're in now*. Decisions × shape = complete picture.
 - **Distinct from `/hd:review audit`** — full review produces a comprehensive report (findings + cross-layer + staleness + proposed-revision). Step 10.5 is a compact 5-row rollup + 3-row priority table, rendered inline. Different artifact for a different moment.
-- **Non-blocking** — setup proceeds to Step 11 (next-step suggestion) regardless. User can address priorities immediately via suggested follow-up commands or defer indefinitely.
+- **Non-blocking** — setup proceeds to Step 11 (next-step suggestion) regardless. User can address priorities immediately via the suggested `Next step:` line or defer indefinitely.
+
+## Phase 3t addition: actionable hand-off
+
+The `Next step:` line is the closing of a feedback loop that v1.3.0 left open: setup rendered the bar but stopped there, leaving the user to decide which low-layer to address. v1.5.0+ Step 10.5 always renders one concrete suggested command — picked deterministically from the top finding's severity + layer (see "Next-step suggestion" table above).
+
+Why one command, not a menu? Decision fatigue at setup-end is real; the user just walked 10 steps. A single suggested action (which they can accept, modify, or ignore) is lower-friction than "here are 5 things you could do."
 
 ## See also
 

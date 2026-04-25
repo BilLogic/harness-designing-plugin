@@ -98,9 +98,9 @@ sections:
       - id: see-also-cites-related-agents
         severity: p3
         check: "`## See also` section cites related agents and reference docs — sets context for archaeologists + invokers"
-      - id: no-lone-references-subdirectory
+      - id: references-subdirectory-self-documenting
         severity: p3
-        check: "Agent does NOT have a lone-file `references/` sibling subdirectory (orphan-structure smell). If references are needed, place under skill's references/ or merge into agent body"
+        check: "If agent category has a `references/` sibling subdirectory, it contains EITHER ≥2 files OR a single file plus a README.md explaining the directory's purpose; lone-file subdirs without README are pattern-in-waiting drift"
 ---
 
 # Agent spec quality
@@ -239,10 +239,10 @@ Grounded in:
 **Pass:** `## See also` lists rubric-yaml-schema.md + sister agents + adjacent reference docs.
 **Fail:** missing — archaeologist re-derives context.
 
-### no-lone-references-subdirectory
+### references-subdirectory-self-documenting
 
-**Pass:** agent body has no `references/` sibling subdir, OR if a subdir exists it has ≥2 files (not a lone artifact).
-**Fail:** `agents/research/references/article-quote-finder-corpus.md` lone (current orphan-structure example).
+**Pass:** `agents/research/references/` has 2 files: `article-quote-finder-corpus.md` (loaded by the agent) + `README.md` explaining the directory's purpose. Lone-file pattern resolved into a documented convention.
+**Fail:** category has a `references/` subdirectory with a single file and no README.md — pattern-in-waiting; future readers can't tell if it's intentional or vestigial.
 
 ## Extending this rubric
 

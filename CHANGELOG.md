@@ -5,7 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Phase 3u — release automation script (2026-04-24)
+
+`scripts/release.sh <new-version> [--dry]` replaces the manual ritual: bump 4 manifests (3 sibling plug-in.json + marketplace.json) + close `[Unreleased]` → `[<version>] — <today>` in CHANGELOG.md + commit + annotated tag + branch push. Tag push and `gh release create` remain manual (release-safety convention — operator verifies the commit before publishing the tag). Preflight checks: working tree clean; not on main/master; manifests agree on current version; CHANGELOG.md `[Unreleased]` non-empty.
+
+### Phase 3t — Step 10.5 actionable hand-off (2026-04-24)
+
+`/hd:setup` Step 10.5 health rollup now appends one `Next step: <command>` line after the priorities table. Closes the v1.3.0 disclosure → v1.5.0 action loop: setup rendered the bar but stopped there, leaving the user to manually decide which low-layer to address. Suggestion is picked deterministically from the top finding's severity + layer (P1 with concrete file → `/hd:review critique <file> --rubric <rubric>`; structural drift → critique on the relevant SKILL.md; recurring-pattern findings → `/hd:maintain capture`; all-P3 → `/hd:review audit`). Layer→rubric mapping included; never suggests destructive commands. Render spec updated in `skills/hd-setup/references/post-setup-health.md`.
+
 ### Phase 3s — three new self-targeted rubrics (2026-04-24)
+
+Includes follow-up cleanup of `agents/research/references/` orphan-pattern flagged by the new agent-spec-quality rubric: added `README.md` documenting the directory's purpose; tightened `references-subdirectory-self-documenting` criterion (was `no-lone-references-subdirectory`) to recognize a single file + README as legitimate.
 
 The plug-in's own `docs/plans/`, `docs/knowledge/lessons/`, and `agents/<cat>/<name>.md` corpora went unscored — `skill-quality.md` is wrong-fit (router/references/templates ≠ plan/lesson/agent shape). Phase 3s closes those gaps with three new starter rubrics, all on the YAML-criteria schema (Phase 3r baseline).
 

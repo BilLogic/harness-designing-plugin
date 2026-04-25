@@ -127,11 +127,11 @@ Report:
 - **Always-loaded budget snapshot** (run `bash skills/hd-review/scripts/budget-check.sh | jq .always_loaded_lines`)
 - **Other-tool harnesses respected** (paths untouched)
 
-## Step 10.5 — Post-setup health assessment (3p.1)
+## Step 10.5 — Post-setup health assessment (3p.1 + 3t)
 
-Render a compact 5-layer ASCII health bar + top-3 priorities using Phase A's per-layer `harness-auditor` data (already computed; previously discarded). Closes the "did setup work?" feedback loop. Non-blocking narration only; no new agent dispatches.
+Render a compact 5-layer ASCII health bar + top-3 priorities using Phase A's per-layer `harness-auditor` data (already computed; previously discarded). After the table, append exactly one `Next step: <command>` line — one concrete suggested action picked deterministically from the top finding's severity + layer. Closes the "did setup work?" → "what do I do now?" loop. Non-blocking narration only; no new agent dispatches.
 
-→ See [`references/post-setup-health.md`](references/post-setup-health.md) for exact render spec + bar glyphs + fallback when Phase A skipped.
+→ See [`references/post-setup-health.md`](references/post-setup-health.md) for exact render spec + bar glyphs + next-step suggestion table + fallback when Phase A skipped.
 
 ## Step 11 — Suggest next
 
