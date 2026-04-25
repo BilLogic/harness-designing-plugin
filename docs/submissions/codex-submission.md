@@ -1,28 +1,42 @@
-# Codex CLI plugin directory — submission packet (HOLDING)
+# Codex Plugin Directory — submission packet (HOLDING)
 
-**Status:** OpenAI's official Codex plugin directory is **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Self-serve publishing not yet open. Verified 2026-04-25 — directory text reads: *"Adding plugins to the official Plugin Directory is coming soon"* + *"Self-serve plugin publishing and management are coming soon."*
+**Status:** OpenAI's official Codex Plugin Directory is **"coming soon"** per [developers.openai.com/codex/plugins/build](https://developers.openai.com/codex/plugins/build). Self-serve publishing is not open yet. Verified 2026-04-25 — the docs say: *"Adding plugins to the official Plugin Directory is coming soon"* and *"Self-serve plugin publishing and management are coming soon."*
 
 **Action:** packet kept current with each release (slug + version + capability list mirror v3.0.0). Submit immediately when self-serve publishing lands.
 
 **Monitoring:** check developers.openai.com/codex/plugins/build monthly; the `Publish your plugin` section appearing is the trigger.
 
-## Interim distribution
+## Interim distribution (clone-install)
 
-Self-hosted via `marketplace.json` + user-level install. Users can add:
+The plug-in package ships [`.codex-plugin/plugin.json`](../../.codex-plugin/plugin.json) — the canonical manifest. While the official Codex Plugin Directory is closed, users self-host via a user-level marketplace catalog pointing at a clone of this repo.
+
+**Step 1.** Clone the repo to a stable location:
 
 ```bash
-# In ~/.agents/plugins/marketplace.json OR $REPO_ROOT/.agents/plugins/marketplace.json
+git clone https://github.com/BilLogic/harness-designing-plugin ~/plugins/harness-designing
+```
+
+**Step 2.** Add an entry to `~/.agents/plugins/marketplace.json` (or a repo-level catalog at `$REPO_ROOT/.agents/plugins/marketplace.json`):
+
+```json
 {
   "plugins": [
     {
       "name": "harness-designing",
-      "source": "git+https://github.com/BilLogic/harness-designing-plugin"
+      "source": {
+        "source": "local",
+        "path": "~/plugins/harness-designing"
+      }
     }
   ]
 }
 ```
 
-Or directly via `codex plugins add` once the CLI supports git-URL installs.
+The `path` resolves from the marketplace catalog's location, so use an absolute path (or a path relative to wherever the catalog file lives) — never `./`. If you keep multiple plug-ins under `~/plugins/`, your catalog can list them as siblings.
+
+**Step 3.** Install via Codex's TUI (`/plugins`) or the CLI once `codex plugins add` supports git-URL installs.
+
+**Updates:** `cd ~/plugins/harness-designing && git pull` — the marketplace entry follows the clone.
 
 ## Packet (ready to submit when directory opens)
 
@@ -33,7 +47,7 @@ harness-designing
 
 ### Display name
 ```
-Harness Designing Plugin
+Design Harness
 ```
 
 ### Short description
@@ -46,7 +60,7 @@ Same as Cursor/Anthropic packet — copy from either when submitting.
 
 ### Version
 ```
-1.1.0
+3.0.0
 ```
 
 ### Repository
@@ -77,15 +91,9 @@ Bill Guo
 MIT
 ```
 
-### Codex-specific manifest fields (already in `.codex-plugin/plugin.json`)
+### Codex-specific manifest
 
-```json
-{
-  "skills": "./skills",
-  "category": "design",
-  "capabilities": ["scaffold", "explain", "review"]
-}
-```
+[`.codex-plugin/plugin.json`](../../.codex-plugin/plugin.json) is the single source of truth for Codex-specific fields (skills path, MCP servers ref, interface metadata, capabilities). Don't duplicate those fields here — submission-time, point the reviewer at the manifest file directly to avoid drift between this packet and what actually ships.
 
 ### Category
 ```
