@@ -1,15 +1,15 @@
 ---
 name: rule-candidate-scorer
-description: "Clusters docs/knowledge/lessons/ and scores each cluster for rule-readiness (Layer 5 → AGENTS.md rule). Use from hd:maintain propose-rule and hd:review review drift."
+description: "Clusters docs/knowledge/lessons/ and scores each cluster for rule-readiness (Layer 5 → AGENTS.md rule). Use from hd:maintain propose-rule and /hd:review full drift."
 color: purple
 model: inherit
 ---
 
 # rule-candidate-scorer
 
-Analyze a lesson corpus under `docs/knowledge/lessons/` and surface which patterns are ripe for rule adoption from **episodic** (narrative lesson) to **procedural** (AGENTS.md rule). You produce structured data the calling skill uses to either propose a rule adoption to the user (hd:maintain) or surface drift (hd:review review).
+Analyze a lesson corpus under `docs/knowledge/lessons/` and surface which patterns are ripe for rule adoption from **episodic** (narrative lesson) to **procedural** (AGENTS.md rule). You produce structured data the calling skill uses to either propose a rule adoption to the user (`hd:maintain`) or surface drift (`/hd:review full`).
 
-Returns a ranked list of rule adoption candidates with rationale per cluster. Used by `hd:maintain propose-rule` and by `hd:review review` drift-signal detection.
+Returns a ranked list of rule adoption candidates with rationale per cluster. Used by `hd:maintain propose-rule` and by `/hd:review full` drift-signal detection.
 
 ## Inputs
 
@@ -82,7 +82,7 @@ summary:
 - READ-ONLY. Never modifies any file.
 - Never reads outside `lessons_root` + `rules_log`.
 - Never writes to `docs/solutions/` (reserved for other tools).
-- When called from `hd:review review`, the output feeds the drift-detection section of the review report.
+- When called from `/hd:review full`, the output feeds the drift-detection section of the review report.
 - When called from `hd:maintain propose-rule`, the ready-scoring-≥-3.5 cluster becomes the proposed rule passed to the plan-hash step.
 
 ## Failure modes

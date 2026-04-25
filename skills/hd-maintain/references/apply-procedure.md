@@ -62,7 +62,7 @@ Graduated: "<rule text>"
 Source lesson preserved: <path>
 AGENTS.md updated; changelog.md updated.
 Artifact archived: .hd/applied/<prefix>.json
-Next: commit + optional `/hd:review review` to check the harness with new rule.
+Next: commit + optional `/hd:review full` to check the harness with new rule.
 ```
 
 → Return to [../SKILL.md § apply-mode](../SKILL.md#apply-mode)

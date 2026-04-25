@@ -1,13 +1,13 @@
 ---
-title: Review criteria — Layer 4 (Rubrics)
+title: Review criteria — Layer 4 (Evaluation Design)
 loaded_by: hd-review review mode (via harness-auditor agent with layer: 4)
 ---
 
-# Review criteria: Layer 4 — Rubric Setting
+# Review criteria: Layer 4 — Evaluation Design
 
 ## Purpose
 
-Criteria for the Rubrics layer: `docs/rubrics/` flat structure, AGENTS.md Harness map inclusion, scope-and-grounding completeness, and usage. Loaded by `harness-auditor` with `layer: 4`.
+Criteria for the Evaluation Design layer: `docs/rubrics/` flat structure, AGENTS.md Harness map inclusion, scope-and-grounding completeness, and usage. Rubrics are the concrete check files. Loaded by `harness-auditor` with `layer: 4`.
 
 **Grading.** 4-level `content_status`: `missing` · `present-but-stale` · `present-and-populated` · `healthy`.
 
@@ -67,7 +67,7 @@ Criteria for the Rubrics layer: `docs/rubrics/` flat structure, AGENTS.md Harnes
 
 ### rubrics-actually-applied
 
-- **Check:** rubrics defined are invoked (via `/hd:review review`, PR templates, CI)
+- **Check:** rubrics defined are invoked (via `/hd:review full`, `/hd:review targeted`, PR templates, CI)
 - **Default severity:** p3
 - **Stale signal:** rubric exists >30 days, zero invocations in git log / CI logs
 

@@ -165,7 +165,7 @@ Layer              Bar          Score   State
 L1 Context         ████████░░    8.0    <one-line summary>
 L2 Skill Curation  ██░░░░░░░░    2.0    <one-line summary>
 L3 Orchestration   ██████░░░░    6.0    <one-line summary>
-L4 Rubric Setting  ████░░░░░░    4.0    <one-line summary>
+L4 Evaluation      ████░░░░░░    4.0    <one-line summary>
 L5 Knowledge       █████░░░░░    5.0    <one-line summary>
 
 ═══════════════════════════════════════════════════════════════════
@@ -289,7 +289,7 @@ Layer              Bar          Score   State
 L1 Context         ████░░░░░░    4.0    <one-line from signals>
 L2 Skill Curation  █████████░    9.0    <one-line from signals>
 L3 Orchestration   ██████░░░░    6.0    <one-line from signals>
-L4 Rubric Setting  ░░░░░░░░░░    0.0    <one-line from signals>
+L4 Evaluation      ░░░░░░░░░░    0.0    <one-line from signals>
 L5 Knowledge       ██░░░░░░░░    2.0    <one-line from signals>
 
 ═══════════════════════════════════════════════════════════════════

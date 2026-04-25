@@ -1,6 +1,6 @@
 ---
 name: rubric-applier
-description: "Apply a rubric to a harness artifact; returns structured review findings. Used by /hd:review review for non-SKILL.md targets."
+description: "Apply a rubric to a harness artifact; returns structured review findings. Used by /hd:review targeted for non-SKILL.md targets."
 color: orange
 model: inherit
 ---
@@ -116,7 +116,7 @@ summary:
 ## When NOT to use this agent
 
 - For **SKILL.md review** — use `skill-quality-auditor` instead (specialized logic for YAML frontmatter parsing, per-section severity handling).
-- For **harness-wide review** — use `hd:review review` which dispatches this agent per-rubric.
+- For **harness-wide review** — use `/hd:review full`; targeted rubric application uses `/hd:review targeted`.
 - For **non-rubric review** (e.g., "just tell me if this is ok") — that's a direct user conversation, not a rubric-applier job.
 - For **extracting implicit rubric rules from an AI-doc** — use `rubric-extractor` instead.
 

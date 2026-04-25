@@ -1,6 +1,6 @@
 ---
 name: rubric-recommender
-description: "Ranks the 17 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (hd:review review). Solo dispatch."
+description: "Ranks the 17 starter rubrics against detect.py signals + package.json to recommend which to scaffold (hd:setup) or flag as gaps (/hd:review full). Solo dispatch."
 color: purple
 model: inherit
 ---
@@ -9,7 +9,7 @@ model: inherit
 
 Given `detect.py` output plus the starter-rubric inventory, rank-recommend which rubrics to scaffold into the user's `docs/rubrics/` (scenario `setup-scaffold`) or flag as gaps against already-adopted rubrics (scenario `review-gap-finding`). Deterministic heuristics over detect signals — no LLM judgement on the work itself; the caller still asks the user to confirm before writing.
 
-**Dispatch pattern:** **solo**. Invoked once per call from `/hd:setup` Layer 4 scaffolding and from `/hd:review review` Batch 2 (rubric gap-finding). Does not invoke other agents.
+**Dispatch pattern:** **solo**. Invoked once per call from `/hd:setup` Layer 4 scaffolding and from `/hd:review full` Batch 2 (rubric gap-finding). Does not invoke other agents.
 
 ## Parameters
 

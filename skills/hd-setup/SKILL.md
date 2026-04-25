@@ -107,7 +107,7 @@ Each step uses Phase A's pre-computed proposal as PROPOSE. No new Task dispatche
 - **Step 4 — Layer 1 (Context).** Semantic memory. Create under `docs/context/`; scaffold writes pointer files with 3–5 line extracted summaries; review applies bloat-detection. → [layer-1-context.md](references/layer-1-context.md)
 - **Step 5 — Layer 2 (Skills).** Procedural memory. Default typically **skip** or **review** via `review:skill-quality-auditor`. → [layer-2-skills.md](references/layer-2-skills.md)
 - **Step 6 — Layer 3 (Orchestration).** Handoffs across PM tools. Default **scaffold** when PM tool detected, **skip** when <3 skills. → [layer-3-orchestration.md](references/layer-3-orchestration.md)
-- **Step 7 — Layer 4 (Rubrics).** Default from `rubric-recommender`: if AI-docs > 200 lines → **review + extract** via `review:rubric-extractor` (batch ≤5); else **create** starter trio. `rubric-applier` (apply-mode) is `/hd:review review` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
+- **Step 7 — Layer 4 (Evaluation Design).** Default from `rubric-recommender`: if AI-docs > 200 lines → **review + extract** via `review:rubric-extractor` (batch ≤5); else **create** starter trio. `rubric-applier` is `/hd:review targeted` territory, not here. Rubrics live in `docs/rubrics/`. → [layer-4-rubrics.md](references/layer-4-rubrics.md)
 - **Step 8 — Layer 5 (Knowledge).** Default from Phase A's L5 auditor; deep review re-uses `analysis:rule-candidate-scorer` (solo) when `has_plans_convention`. → [layer-5-knowledge.md](references/layer-5-knowledge.md)
 
 ## Step 8.5 — Proposed-files preview (3k.3)

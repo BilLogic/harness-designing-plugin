@@ -7,7 +7,7 @@ model: inherit
 
 # coexistence-analyzer
 
-Review cross-tool coexistence. Read other-tool harness artifacts and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review review` when `detect.py` flagged `other_tool_harnesses_detected` as non-empty.
+Review cross-tool coexistence. Read other-tool harness artifacts and produce a coverage report that names each detected tool, maps our declared protections against theirs, and surfaces collision risks. Invoked conditionally by `/hd:review full` when `detect.py` flagged `other_tool_harnesses_detected` as non-empty.
 
 **Dispatch pattern:** **solo**. Invoked at most once per review run. Does not invoke other agents (the caller pairs this with `harness-auditor(layer: 3)` for orchestration-level concerns).
 
