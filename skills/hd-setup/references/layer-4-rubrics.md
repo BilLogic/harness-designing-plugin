@@ -1,23 +1,23 @@
-# Layer 4 — Rubrics (depth reference)
+# Layer 4 — Evaluation Design (rubrics depth reference)
 
-**Loaded by:** `SKILL.md` Step 7 when setting up or reviewing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the 12 starter-rubric categories shipped.
+**Loaded by:** `SKILL.md` Step 7 when setting up or reviewing Layer 4. Seed questions + decision defaults live in SKILL.md; this file provides the distributed-pattern rationale + `INDEX.md` template text + the starter-rubric categories shipped.
 
 **Concept explainer:** [hd-learn `layer-4-rubrics.md`](../../hd-learn/references/layer-4-rubrics.md)
 
 ## The distributed-behavior pattern (load-bearing)
 
-Rubrics are **a behavior of the system, not a folder**. They live in three places simultaneously:
+Evaluation design is **a behavior of the system, not a folder**. Rubrics are the concrete check files and live in relation to three other loci:
 
 - **Design-system SOURCE content** (what "good" looks like) → `docs/context/design-system/foundations/`, `styles/`, `components/` (Layer 1 territory — tokens, color rules, type scale, principles)
 - **Rubric CHECK files** (how we verify "good") → `docs/rubrics/<name>.md` (Layer 4 — checks against Layer 1 content)
-- **Execution** → `skills/hd-review/` (review + review modes run the checks via sub-agents)
+- **Execution** → `skills/hd-review/` (full + targeted review modes run the checks via sub-agents)
 - **Enforcement** → `AGENTS.md` quality gates (what must pass before a change ships)
 
 Key distinction: **design-system holds the source-of-truth CONTENT; rubrics hold the CHECKS against that content.** Don't confuse them. A `typography.md` in `design-system/styles/` defines "we use DM Sans at modular scale 1.25"; a `typography.md` in `docs/rubrics/` defines "headings must use the approved type scale."
 
-Per article §4d: centralizing CHECKS + ENFORCEMENT into design-system/ would break the connection between *what good is* (Layer 1 source content) and *how we check for it* (Layer 4 rubrics). `hd:setup` creates `docs/rubrics/INDEX.md` as a **thin pointer file** explaining this distributed pattern — it's navigational.
+Per article §4d: centralizing CHECKS + ENFORCEMENT into design-system/ would break the connection between *what good is* (Layer 1 source content) and *how we check for it* (Layer 4 evaluation). `hd:setup` creates `docs/rubrics/INDEX.md` as a **thin pointer file** explaining this distributed pattern — it's navigational.
 
-## Starter rubric library (12 shipped)
+## Starter rubric library (17 shipped)
 
 Located at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/). `hd:setup` Step 7 create action copies user-chosen starters into `docs/rubrics/<name>.md` for customization.
 
@@ -35,6 +35,11 @@ Located at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/st
 | 10 | `motion-design.md` | design/css/component | reduced-motion + duration + easing + purpose (Impeccable + Material 3) |
 | 11 | `ux-writing.md` | design/component | error/empty/success copy + voice + banned phrases (Impeccable + Fluent 2) |
 | 12 | `responsive-design.md` | design/css/component | mobile-first + fluid + touch targets + safe area (Impeccable + Material 3) |
+| 13 | `telemetry-display.md` | realtime/product UI | freshness, device-state, alerts |
+| 14 | `i18n-cjk.md` | bilingual/CJK products | dual-script, IME, font stack |
+| 15 | `plan-quality.md` | planning docs | evidence, acceptance, sequencing |
+| 16 | `lesson-quality.md` | lesson files | frontmatter, result, promotion readiness |
+| 17 | `agent-spec-quality.md` | agent specs | frontmatter, inputs, output shape, coexistence |
 
 Teams extend by authoring more specific rubrics: team-voice, product-specific patterns, i18n, performance-perception, etc. Copy a starter to `docs/rubrics/<name>-<team>.md` and customize.
 
@@ -43,11 +48,11 @@ Teams extend by authoring more specific rubrics: team-voice, product-specific pa
 ```markdown
 # Rubrics Index
 
-Rubrics are a **behavior of the system**, not a folder. They live distributed:
+Evaluation design is a **behavior of the system**, not a folder. Rubrics are the check files that make it concrete:
 
 - **Design-system source content** (what "good" IS) → `docs/context/design-system/` (foundations, styles, components)
 - **Rubric check files** (how we verify good) → `docs/rubrics/<name>.md` (this folder)
-- **Execution** → `skills/hd-review/` (review + review runs checks)
+- **Execution** → `skills/hd-review/` (full + targeted review runs checks)
 - **Enforcement** → `AGENTS.md` quality gates
 
 See article §4d for the reasoning.
@@ -58,7 +63,7 @@ See article §4d for the reasoning.
 
 To add: copy a starter from `skills/hd-review/assets/starter-rubrics/` into
 `docs/rubrics/<name>.md` and customize. Then add to your `hd-config.md`
-under `critique_rubrics:` to make it the default for `hd:review review <path>`.
+under `critique_rubrics:` to make it the default for `/hd:review targeted <path>`.
 ```
 
 Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template).
@@ -68,11 +73,11 @@ Source: [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.templ
 - **Create** (default when nothing detected) — write `docs/rubrics/INDEX.md` + copy user-chosen starter rubrics into `docs/rubrics/<name>.md`. Design-system source content under `docs/context/design-system/` is separate (Part A territory).
 - **Scaffold** (default when user points at Figma / existing rubric dir elsewhere) — write pointer files at `docs/rubrics/<name>.md` using pointer-file template
 - **Review + extract** (default when `has_ai_docs: true` AND combined AI-doc size > 200 lines) — invoke `harness-designing:review:rubric-extractor` against existing AI-docs; promote approved candidates to `docs/rubrics/<name>.md`
-- **Review** (when user points at a specific work item) — hand off to `/hd:review review <path>`, which dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
+- **Review** (when user points at a specific work item) — hand off to `/hd:review targeted <path>`, which dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself only does extract-mode.
 
 ## Procedure — Step 7
 
-**Frame:** "Layer 4 — Rubrics. Taste embedded as checks. Distributed pattern (article §4d)."
+**Frame:** "Layer 4 — Evaluation Design. Standards embedded as checks through rubrics. Distributed pattern (article §4d)."
 
 **Show:** `has_tokens_package` + `tokens_package_paths`, `has_figma_config`, `a11y_framework_in_use` + `detected_a11y_packages`, existing `docs/rubrics/` or `docs/context/design-system/` rubric files, combined size of existing AI-docs (AGENTS.md + CLAUDE.md + `.cursor/rules/` + `.github/copilot-instructions.md` + DESIGN.md).
 
@@ -102,16 +107,16 @@ Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exist
 4. For candidates the user rejects: record in `hd-config.md` prose section as "surfaced but declined" so re-runs don't re-propose.
 5. Never modify the source AI-doc file. Extraction is read-only on the source.
 
-**Execute (3n.5):** offer three fill paths per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5). Path B fits when user has existing rubric docs, reviewer checklists, or retro-template content to paste. Path A is rarely primary for L4 (few tools expose rubric-style content directly) but applies when design-system packages expose tokens we can seed `design-system-compliance` from. Otherwise Path C (starter-trio from the 14-rubric library).
+**Execute (3n.5):** offer three fill paths per [per-layer-procedure.md § Fill path](per-layer-procedure.md#fill-path-execute-sub-routine-for-create--scaffold-3n5). Path B fits when user has existing rubric docs, reviewer checklists, or retro-template content to paste. Path A is rarely primary for L4 (few tools expose rubric-style content directly) but applies when design-system packages expose tokens we can seed `design-system-compliance` from. Otherwise Path C (starter-trio from the 17-rubric library).
 
 **Execute — create** (conditions 2/3/4):
-- Use the "distributed-behavior pattern" + "starter rubric library" sections above for L4 depth (distributed-behavior rationale, 12-starter enumeration, INDEX.md pattern)
+- Use the "distributed-behavior pattern" + "starter rubric library" sections above for L4 depth (distributed-behavior rationale, 17-starter enumeration, INDEX.md pattern)
 - Seed questions (open-ended first): (1) first thing you check when reviewing? (2) mistake seen twice? (3) one bar new designer should clear?
-- If "no clear criteria yet" → offer the 12 starter rubrics at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) (distilled from Impeccable + Nielsen + Material 3 + Fluent 2) + fallback baselines
+- If "no clear criteria yet" → offer the 17 starter rubrics at [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) (distilled from Impeccable + Nielsen + Material 3 + Fluent 2 + this plug-in's own dogfood rubrics) + fallback baselines
 - Write `docs/rubrics/INDEX.md` from [`../assets/rubrics-index.md.template`](../assets/rubrics-index.md.template)
 - Copy user-selected starter rubrics into `docs/rubrics/<name>.md` (NOT `docs/context/design-system/` — that's Layer 1 source content; rubrics are checks against it)
 
-**Execute — review** (targeted, when user explicitly points at a work item): hand off to `/hd:review review <path>`. That command dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
+**Execute — review** (targeted, when user explicitly points at a work item): hand off to `/hd:review targeted <path>`. That command dispatches `harness-designing:review:rubric-applier`. `/hd:setup` itself does not run apply-mode.
 
 → Return to [../SKILL.md § Step 7 — Layer 4 (Rubrics)](../SKILL.md#step-7--layer-4-rubrics)
 
@@ -119,5 +124,4 @@ Condition 1 mirrors Layer 1's scaffold-default logic: respect what already exist
 
 - [layer-1-context.md](layer-1-context.md) — where design-system SOURCE content lives (distinct from rubric checks)
 - [hd-learn/references/layer-4-rubrics.md](../../hd-learn/references/layer-4-rubrics.md) — concept explainer
-- [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) — 12 starter rubrics shipped
-- [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) — 5 shipped starters (a11y, design-system, component-budget, interaction-states, skill-quality)
+- [`../../hd-review/assets/starter-rubrics/`](../../hd-review/assets/starter-rubrics/) — 17 starter rubrics shipped

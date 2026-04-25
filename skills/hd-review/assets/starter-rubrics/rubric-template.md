@@ -104,14 +104,14 @@ sections:
 
 ## How to apply this rubric
 
-### During audit
+### During full review
 
-{{How the rubric slots into `/hd:review audit`. Which layer's auditor surfaces it (usually L4 rubric-recommender flags the gap, then rubric-applier walks criteria from the YAML). Severity rollup → P1 / P2 / P3 buckets in the report.}}
+{{How the rubric slots into `/hd:review full`. Which layer's auditor surfaces it (usually L4 rubric-recommender flags the gap, then rubric-applier walks criteria from the YAML). Severity rollup → P1 / P2 / P3 buckets in the report.}}
 
-### During critique
+### During targeted review
 
 ```
-/hd:review critique <path-or-url> --rubric {{rubric-name}}
+/hd:review targeted <path-or-url> --rubric {{rubric-name}}
 ```
 
 {{Produces inline structured findings per `references/targeted-review-format.md`. Severity overrides from `hd-config.md:critique_rubrics` apply. Scope & Grounding gates criterion application — if the target doesn't match any persona / scenario, `rubric-applier` downgrades severity or skips with `severity_rationale: persona-scope-mismatch`.}}

@@ -40,7 +40,7 @@ Solo is fine — Layer 5 rule-adoption machinery can wait. `/hd:setup` has a `so
 
 ## 10. Where does this plug-in come from?
 
-Extracted from plus-uno (Bill's personal working implementation at [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)). Companion to a Substack article series making the thesis (§2, §3, §4a-e, §6).
+Extracted from plus-uno (Bill's personal working implementation at [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)). Companion to "Stop Chasing Design Tools. Start Building a Design Harness" (§2, §3, §4a-e, §6).
 
 ## 11. Why five layers specifically? Why not 3 or 7?
 
@@ -66,7 +66,7 @@ Three paths, depending on how different your needs are:
 2. **Extend in place:** add criteria to an existing rubric under an `## Extension: <team-name>` section. Keep the starter criteria untouched.
 3. **New rubric:** author from scratch following `skills/hd-review/assets/starter-rubrics/skill-quality.md § Extending this rubric`. Must cite a `source:` derivation (pattern we adopted from the 12-starter library).
 
-All three paths coexist. `/hd:review review <rubric-name>` uses your customized version in `docs/rubrics/` over the shipped starter.
+All three paths coexist. `/hd:review targeted <path> --rubric <rubric-name>` uses your customized version in `docs/rubrics/` over the shipped starter.
 
 ## See also
 

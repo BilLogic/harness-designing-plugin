@@ -170,17 +170,17 @@ sections:
 
 # Skill quality
 
-Evaluates a Layer 2 skill (SKILL.md + its references / templates / scripts) against Anthropic's skill-authoring discipline and progressive-disclosure conventions. Apply during `hd:review audit` (every skill in `skills/` gets checked) or `hd:review critique skills/<name>/SKILL.md` (focused review on one).
+Evaluates a Layer 2 skill (SKILL.md + its references / templates / scripts) against Anthropic's skill-authoring discipline and progressive-disclosure conventions. Apply during `/hd:review full` (every skill in `skills/` gets checked) or `/hd:review targeted skills/<name>/SKILL.md --rubric skill-quality` (focused review on one).
 
 The 9 sections below map 1:1 to the nine-point checklist Bill uses for his own skill evaluations. Each section pairs prose rationale with pass/fail examples. The normative criteria live in this rubric's frontmatter (machine-queryable); this body is the human-readable "why".
 
 ## Scope & Grounding
 
-This rubric is self-referential: it's the rubric we apply to our own Layer 2 skills during `hd:review audit`. Grounded in Anthropic's skill-authoring guidance and the 9-section checklist Bill uses for every `hd-*` skill.
+This rubric is self-referential: it's the rubric we apply to our own Layer 2 skills during `/hd:review full`. Grounded in Anthropic's skill-authoring guidance and the 9-section checklist Bill uses for every `hd-*` skill.
 
 ### Personas
 - **Skill author** — writing or editing a `SKILL.md`. Pain: bloated 800-line SKILL.md with references inlined; progressive disclosure collapses; context window suffers.
-- **Skill reviewer / auditor** — running `hd:review audit` across every skill in `skills/`. Pain: no consistent rubric, so reviews drift by reviewer.
+- **Skill reviewer / auditor** — running `/hd:review full` across every skill in `skills/`. Pain: no consistent rubric, so reviews drift by reviewer.
 - **New contributor** — shipping their first skill. Pain: doesn't know the 9-section shape; misses "what this skill does NOT do" and triggers on everything.
 - **Skill consumer (the model itself)** — loading the skill at invocation. Pain: vague descriptions and overlapping triggers cause wrong-skill activation.
 
@@ -278,14 +278,14 @@ Explicit "What this skill does NOT do" prevents over-triggering on adjacent prom
 
 ## How to apply this rubric
 
-### During audit (across all skills)
+### During full review (across all skills)
 
-`hd:review audit` iterates every `skills/*/SKILL.md` and dispatches `skill-quality-auditor` per skill. The auditor reads this rubric's frontmatter `sections.*.criteria[]`, walks the criteria deterministically, and emits findings. Severity rollup → audit report P1 / P2 / P3 buckets. Each finding cites the section's `order` + the criterion `id` so the fix is obvious.
+`/hd:review full` iterates every `skills/*/SKILL.md` and dispatches `skill-quality-auditor` per skill. The auditor reads this rubric's frontmatter `sections.*.criteria[]`, walks the criteria deterministically, and emits findings. Severity rollup → review report P1 / P2 / P3 buckets. Each finding cites the section's `order` + the criterion `id` so the fix is obvious.
 
-### During critique (focused on one skill)
+### During targeted review (focused on one skill)
 
 ```
-/hd:review critique skills/hd-foo/SKILL.md --rubric skill-quality
+/hd:review targeted skills/hd-foo/SKILL.md --rubric skill-quality
 ```
 
 Produces inline structured findings per `references/targeted-review-format.md`. Severity overrides from `hd-config.md:critique_rubrics.skill_quality` apply.
@@ -313,6 +313,6 @@ Copy to `docs/rubrics/skill-quality.md` in your repo and:
 ## See also
 
 - [`../../skills/hd-review/references/review-criteria-l2-skills.md`](../../skills/hd-review/references/review-criteria-l2-skills.md) — Layer 2 drift signals that reference this rubric
-- [`../../skills/hd-review/references/targeted-review-format.md`](../../skills/hd-review/references/targeted-review-format.md) — output shape for `hd:review critique`
+- [`../../skills/hd-review/references/targeted-review-format.md`](../../skills/hd-review/references/targeted-review-format.md) — output shape for targeted reviews
 - [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md) — schema for this rubric's YAML frontmatter
 - Anthropic — [Skill best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) (source for sections 1, 3, 5, 7)

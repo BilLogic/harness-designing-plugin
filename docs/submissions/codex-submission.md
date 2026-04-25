@@ -79,7 +79,7 @@ design, harness-designing, design-systems, context-engineering, knowledge-manage
 ```
 
 ### Logo
-`./assets/logo.svg`
+`./assets/logo.png`
 
 ### Author
 ```

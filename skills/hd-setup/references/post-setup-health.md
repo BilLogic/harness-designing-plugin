@@ -19,7 +19,7 @@ Layer              Bar          Score   State
 L1 Context         ████████░░    8.0    <overall_health summary, ≤40 chars>
 L2 Skill Curation  █████████░    9.0    <summary>
 L3 Orchestration   ██████░░░░    6.0    <summary>
-L4 Rubric Setting  ██████████  10.0    <summary>
+L4 Evaluation      ██████████  10.0    <summary>
 L5 Knowledge       ████████░░    8.0    <summary>
 
 Top 3 priorities from setup:
@@ -49,7 +49,7 @@ Layer → rubric mapping (when no explicit `rubric:` field on the finding):
 | L1 Context | `skill-quality` (for SKILL.md targets) or no rubric (for context docs — surface as "review docs/context/X manually") |
 | L2 Skill Curation | `skill-quality` |
 | L3 Orchestration | `agent-spec-quality` (for agent specs) |
-| L4 Rubric Setting | `lesson-quality` (when finding is about a rubric's grounding evidence) — usually no auto-suggestion (rubrics are content; review them manually) |
+| L4 Evaluation | `lesson-quality` (when finding is about a rubric's grounding evidence) — usually no auto-suggestion (rubrics are content; review them manually) |
 | L5 Knowledge | `lesson-quality` (for lessons), `plan-quality` (for plans) |
 
 **Discipline:** never suggest a destructive command (`/hd:setup` again with `--force`, etc.) as the next step. The hand-off must be a *review* / *capture* / *audit* — read-mostly. User decides whether to act on the review's findings.

@@ -75,7 +75,7 @@ design, harness-designing, design-systems, context-engineering, knowledge-manage
 ```
 
 ### Logo
-File: `assets/logo.svg` in the repository root. Already referenced from `.claude-plugin/plugin.json` indirectly via the sibling manifests.
+File: `assets/logo.png` in the repository root. Already referenced from the sibling manifests.
 
 ### Category
 ```

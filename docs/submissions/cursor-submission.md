@@ -68,7 +68,7 @@ design, harness-designing, design-systems, context-engineering, knowledge-manage
 ```
 
 ### Logo
-File: `assets/logo.svg` (relative repo path)
+File: `assets/logo.png` (relative repo path)
 
 ### Author
 ```

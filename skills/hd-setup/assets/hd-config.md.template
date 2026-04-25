@@ -52,9 +52,9 @@ other_tool_harnesses_detected: {{OTHER_HARNESSES}}
 files_written: {{FILES_WRITTEN}}
 ---
 
-# design-harnessing — local config
+# harness-designing — local config
 
-Local config for `{{TEAM_NAME}}` — this repo's design-harness state.
+Local config for `{{TEAM_NAME}}` — this repo's harness-designing state.
 
 The YAML frontmatter above is the machine-parseable part. Every `hd-*` skill reads it to understand setup history. The prose below is for humans — free-form notes about this harness.
 
@@ -71,6 +71,6 @@ Set up on {{DATE}} in `{{SETUP_MODE}}` mode. Team size: `{{TEAM_SIZE}}`.
 
 ## Schema
 
-See [skills/hd-setup/references/hd-config-schema.md](https://github.com/BilLogic/design-harnessing-plugin/blob/main/skills/hd-setup/references/hd-config-schema.md) for the full schema spec.
+See [skills/hd-setup/references/hd-config-schema.md](https://github.com/BilLogic/harness-designing-plugin/blob/main/skills/hd-setup/references/hd-config-schema.md) for the full schema spec.
 
 **Don't edit `schema_version`.** Migration happens via future plug-in updates when schema bumps.

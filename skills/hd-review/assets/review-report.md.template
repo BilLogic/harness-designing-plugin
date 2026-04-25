@@ -133,10 +133,10 @@ When zero actionable findings exist, this entire section is omitted. -->
 {{AGENT_LIST}}
 
 <!-- List of agents that contributed findings. Examples:
-- design-harnessing:analysis:harness-auditor (×5, one per layer)
-- design-harnessing:analysis:rubric-recommender
-- design-harnessing:research:lesson-retriever
-- design-harnessing:analysis:coexistence-analyzer (conditional)
+- harness-designing:analysis:harness-auditor (×5, one per layer)
+- harness-designing:analysis:rubric-recommender
+- harness-designing:research:lesson-retriever
+- harness-designing:analysis:coexistence-analyzer (conditional)
 - (plus any user-configured external agents from hd-config.md review_agents)
 Inline-serial mode: "none — evaluated inline against review-criteria-l*.md" -->
 

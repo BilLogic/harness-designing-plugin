@@ -20,7 +20,7 @@ This plug-in assembles the pile into **five layers**. Every AI-assisted task inh
 | **1. Context Engineering** | Product facts, users, brand voice, design tokens, conventions | Loaded first on every task. Every other layer reads from it. |
 | **2. Skill Curation** | Repeatable jobs (research, plan, prototype, review, compound) | Draws from Context. Invokes Rubrics at gates. Writes to Knowledge. |
 | **3. Workflow Orchestration** | How skills compose into real work—sequences, handoffs, gates | Emerges from how Skills dispatch agents. |
-| **4. Rubric Setting** | Quality bars—a11y, design-system, typography, telemetry, i18n | Applied by Skills at workflow gates. |
+| **4. Evaluation Design** | Quality bars made checkable—a11y, design-system, typography, telemetry, i18n | Applied by Skills at workflow gates through rubrics. |
 | **5. Knowledge Compounding** | Lessons, decisions, preferences, changelog | Captured by every skill. Recurring patterns promote to Context rules. |
 
 **At each layer, four choices:**
@@ -203,7 +203,7 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 ## Credits
 
-**The article**—Bill Guo's Substack series on design harnessing *(URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
+**The article**—Bill Guo's *Stop Chasing Design Tools. Start Building a Design Harness* *(public URL TBD)*. The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
 
 **Harness vocabulary + anatomy (primary inspiration)**—LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17). The noun "harness," the memory-typology framing, and the ownership argument come from here—this is the vocab + concept lineage that made a design-focused harness legible in the first place.
 
@@ -223,7 +223,7 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 ## Known Issues
 
-- **Article corpus URL is TBD.** `article-quote-finder` emits `corpus_status: not-configured` and returns an empty citation set rather than fabricating quotes. Populate `agents/research/references/article-quote-finder-corpus.md` once the Substack series is live (`agents/research/references/README.md` documents the convention).
+- **Article public URL is TBD.** A local draft corpus is bundled for `article-quote-finder`; replace it with the canonical public URL in `agents/research/references/article-quote-finder-corpus.md` once the article is live.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
 - **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 

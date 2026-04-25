@@ -77,7 +77,7 @@ Layer              Bar          Score   State
 L1 Context         ████░░░░░░    4.0    scattered, no canonical tree
 L2 Skill Curation  █████████░    9.0    .agent/skills/ with 7 skills
 L3 Orchestration   ██████░░░░    6.0    workflow docs, no gate map
-L4 Rubric Setting  ░░░░░░░░░░    0.0    absent
+L4 Evaluation      ░░░░░░░░░░    0.0    absent
 L5 Knowledge       ██░░░░░░░░    2.0    docs/solutions/ only
 
 ═══════════════════════════════════════════════════════════════════

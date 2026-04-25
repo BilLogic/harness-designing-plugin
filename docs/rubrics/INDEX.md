@@ -1,13 +1,13 @@
 # Rubrics Index — `harness-designing-plugin` meta-harness
 
-Layer 4 of the five-layer design harness. For this plug-in's own dogfood.
+Layer 4 — Evaluation Design — of the five-layer design harness. For this plug-in's own dogfood. Rubrics are the concrete check files that make evaluation inspectable.
 
-## Rubrics are a *behavior of the system*, not a folder
+## Evaluation is a *behavior of the system*, not a folder
 
-Per article §4d: rubrics are distributed across three loci:
+Per article §4d: evaluation is distributed across three loci:
 
 - **Definitions** → [`../context/design-system/cheat-sheet.md`](../context/design-system/cheat-sheet.md) (what "good" looks like for plug-in files + content)
-- **Execution** → `skills/hd-review/` (review + review modes run the checks)
+- **Execution** → `skills/hd-review/` (full + targeted review modes run the checks)
 - **Enforcement** → [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist" (gates at commit time)
 
 Centralizing everything here in `rubrics/` would break the connection between *what good is* (Layer 1) and *how we check for it* (Layer 2 + AGENTS.md). This INDEX is navigational, not prescriptive.
@@ -55,13 +55,13 @@ Per [`../../AGENTS.md`](../../AGENTS.md) § "Skill compliance checklist", every 
 
 `hd:review` executes rubric checks programmatically:
 
-- See `skills/hd-review/SKILL.md` § Review mode and § Review mode for the procedures (parallel 2-batch review dispatch; review applies rubrics to a single work item).
+- See `skills/hd-review/SKILL.md` for the full and targeted review procedures (parallel 2-batch review dispatch; targeted review applies rubrics to a single work item).
 - Starter rubrics ship at `skills/hd-review/assets/starter-rubrics/` (17 rubrics, for users to copy into `docs/rubrics/<name>.md` and customize). See `skills/hd-review/references/rubric-authoring-guide.md` for the authoring spec.
 
-Run `/hd:review review` for harness health; `/hd:review review <path-or-url>` for single-work-item rubric application.
+Run `/hd:review full` for harness health; `/hd:review targeted <path-or-url>` for single-work-item rubric application.
 
 ## See also
 
-- Article §4d — Rubric Setting (distributed pattern argument)
+- Article §4d — Evaluation Design (distributed pattern argument)
 - [`../../skills/hd-learn/references/layer-4-rubrics.md`](../../skills/hd-learn/references/layer-4-rubrics.md) — conceptual explainer
 - [`../../skills/hd-setup/references/layer-4-rubrics.md`](../../skills/hd-setup/references/layer-4-rubrics.md) — scaffolding guide

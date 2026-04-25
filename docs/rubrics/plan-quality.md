@@ -179,7 +179,7 @@ Per-criterion prose. Normative criteria live in YAML frontmatter above; this bod
 
 ### regression-acceptance-explicit
 
-**Pass:** "`/hd:review audit` on the plug-in's own repo produces same total finding count pre/post migration (no silent loss of criteria coverage)"
+**Pass:** "`/hd:review full` on the plug-in's own repo produces same total finding count pre/post migration (no silent loss of criteria coverage)"
 **Fail:** No regression bar — the plan changed existing behavior but didn't gate against breaking it.
 
 ### budget-acceptance-explicit

@@ -108,7 +108,7 @@ Grounded in:
 
 ### Personas
 - **Lesson author** — running `/hd:maintain capture` after a notable event or insight. Pain: forgets one of the 10 frontmatter fields; lesson lands with partial machine-extractable data.
-- **lesson-retriever agent** — searches the corpus on `/hd:review audit` or `/ce:plan` queries. Pain: weak `tags` or empty `decision_summary` makes the lesson invisible to relevance scoring.
+- **lesson-retriever agent** — searches the corpus on `/hd:review full` or `/ce:plan` queries. Pain: weak `tags` or empty `decision_summary` makes the lesson invisible to relevance scoring.
 - **rule-candidate-scorer agent** — counts confirmations toward graduation. Pain: stale `rule_candidate: true` on already-graduated lessons inflates candidate count incorrectly.
 - **Future archaeologist** — reads a lesson 6 months later. Pain: no `## Result` section means the lesson tells the *what-we-thought* but not *what-actually-happened*.
 - **Reviewer of an audit report** — sees a lesson surfaced as relevant context. Pain: padded body that duplicates the frontmatter; signal-to-noise ratio is poor.

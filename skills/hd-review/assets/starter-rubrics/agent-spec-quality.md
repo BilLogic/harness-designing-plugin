@@ -151,7 +151,7 @@ Grounded in:
 
 ### description-present-and-budget
 
-**Pass:** "Applies the skill-quality rubric to one SKILL.md and returns structured severity findings. Use from hd:review audit (L2) or critique --rubric skill-quality." (156 chars)
+**Pass:** "Applies the skill-quality rubric to one SKILL.md and returns structured severity findings. Use from /hd:review full (L2) or targeted --rubric skill-quality."
 **Fail:** description omitted, or 220 chars long.
 
 ### description-third-person
@@ -231,7 +231,7 @@ Grounded in:
 
 ### when-not-to-use-section
 
-**Pass:** "## When NOT to use this agent — for SKILL.md review, use skill-quality-auditor (specialized); for harness-wide review, use hd:review audit." Disambiguates from siblings.
+**Pass:** "## When NOT to use this agent — for SKILL.md review, use skill-quality-auditor (specialized); for harness-wide review, use /hd:review full." Disambiguates from siblings.
 **Fail:** missing — model occasionally picks wrong sibling.
 
 ### see-also-cites-related-agents
