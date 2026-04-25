@@ -7,12 +7,49 @@ applies_to:
   - readme
   - design-file
   - tsx
+version: 1
 severity_defaults:
   default: p2
 source:
-  - pbakaus/impeccable — source/skills/impeccable/reference/ux-writing.md (button labels, error messages, empty states)
-  - Fluent 2 — content guidance
+  - "pbakaus/impeccable — source/skills/impeccable/reference/ux-writing.md (button labels, error messages, empty states)"
+  - "Fluent 2 — content guidance"
 adapted_for: "This plug-in's own meta-harness (2026-04-21) — `SKILL.md` prose, agent descriptions, `/hd:*` command text, README copy, script error messages."
+
+sections:
+  criteria:
+    order: 1
+    title: "Criteria"
+    criteria:
+      - id: button-labels-verb-object
+        severity: p2
+        check: "Button labels are verb-first, ideally verb-object ('Save draft', 'Publish post', 'Delete account'); generic 'OK' / 'Submit' / 'Continue' only when verb is clear from context"
+      - id: error-messages-diagnostic
+        severity: p1
+        check: "Error messages name WHAT failed AND WHAT the user can do; banned: 'Something went wrong', 'Oops', 'Please try again' without more info"
+      - id: empty-states-directive
+        severity: p2
+        check: "Empty states have visual anchor (illustration/icon) + one-sentence explanation + primary CTA"
+      - id: success-confirmation-specific
+        severity: p3
+        check: "Success messages name what succeeded ('Draft saved' not 'Saved'; 'Post published' not 'Success')"
+      - id: microcopy-uses-user-language
+        severity: p2
+        check: "Field labels, helper text, tooltips use user's vocabulary — not the implementation's; avoids leaking technical terms when non-technical ones exist"
+      - id: tone-matches-context
+        severity: p3
+        check: "Error messages empathetic; success acknowledging; empty states coaching; admin terse"
+      - id: length-matches-weight
+        severity: p3
+        check: "Most-important labels/messages shorter; less-important can be slightly longer; short beats wordy almost always"
+      - id: no-anxiety-inducing-modals
+        severity: p2
+        check: "Confirmation modals use calm, specific language — not 'Are you sure?' existential dread; destructive actions name the consequence"
+      - id: no-banned-phrases
+        severity: p2
+        check: "Banned copy specific to team/product (maintained in content-voice.md); common bans: 'Oops!', 'Something went wrong', 'We're sorry for the inconvenience', 'Please note that…'"
+      - id: actions-lead-with-verbs
+        severity: p3
+        check: "Menu items, nav labels, and CTAs lead with verbs when describing an action; nouns only for destinations/categories"
 ---
 
 # UX writing
@@ -51,95 +88,68 @@ Grounded in pbakaus/impeccable's ux-writing reference (button labels, error mess
 - **"Oops! We're sorry..."** — apologetic filler. Symptom: wastes words; distorts in translation; reads as anxious.
 - **Technical leak in labels** — "UUID" or "Invalid JSON syntax" in user-facing copy. Symptom: implementation leaking into UX.
 
-## Criteria
+## Criteria — rationale + examples
+
+Per-criterion prose. Normative criteria live in YAML frontmatter above; this body explains the *why* + concrete pass/fail anchors.
 
 ### button-labels-verb-object
 
-**Check:** button labels are verb-first, ideally verb-object. "Save draft", "Publish post", "Delete account". Generic "OK" / "Submit" / "Continue" only when the verb is clear from context.
-**Default severity:** p2
-
-**Example pass:** `Save draft` · `Publish post` · `Cancel` (universal cancel is fine).
-**Example fail:** `OK` on a destructive action confirmation (user expects `Yes, delete` or similar); `Submit` on a settings-save page.
+**Pass:** `Save draft` · `Publish post` · `Cancel` (universal cancel is fine).
+**Fail:** `OK` on a destructive action confirmation (user expects `Yes, delete` or similar); `Submit` on a settings-save page.
 
 ### error-messages-diagnostic
 
-**Check:** error messages say WHAT failed + WHAT the user can do. Banned: "Something went wrong", "Oops", "Please try again" (without more info).
-**Default severity:** p1
-
-**Example pass:** "Couldn't save — your internet dropped. [Try again]" OR "This email is already registered. [Sign in instead]"
-**Example fail:** "Something went wrong." OR "Error." OR "Oops! Please try again later."
+**Pass:** "Couldn't save — your internet dropped. [Try again]" OR "This email is already registered. [Sign in instead]"
+**Fail:** "Something went wrong." OR "Error." OR "Oops! Please try again later."
 
 ### empty-states-directive
 
-**Check:** empty states have (a) visual anchor (illustration/icon), (b) one-sentence explanation, (c) primary CTA (what to do next).
-**Default severity:** p2
-
-**Example pass:** empty-cart illustration + "Your cart is empty." + [Browse items]
-**Example fail:** empty cart shows blank whitespace OR just text "No items" with no action.
+**Pass:** empty-cart illustration + "Your cart is empty." + [Browse items]
+**Fail:** empty cart shows blank whitespace OR just text "No items" with no action.
 
 ### success-confirmation-specific
 
-**Check:** success messages name what succeeded. "Draft saved" not "Saved." "Post published" not "Success."
-**Default severity:** p3
-
-**Example pass:** toast: "Settings saved." · "Order placed — confirmation sent to you@example.com."
-**Example fail:** toast: "✓" alone OR "Success!" with no context.
+**Pass:** toast: "Settings saved." · "Order placed — confirmation sent to you@example.com."
+**Fail:** toast: "✓" alone OR "Success!" with no context.
 
 ### microcopy-uses-user-language
 
-**Check:** field labels, helper text, tooltips use the user's vocabulary — not the implementation's. Avoid leaking technical terms when non-technical ones exist.
-**Default severity:** p2
-
-**Example pass:** "Email address" (not "User identifier"); "When should we remind you?" (not "Cron expression").
-**Example fail:** "UUID" in a user-facing field label; "Invalid JSON syntax" as a form validation error.
+**Pass:** "Email address" (not "User identifier"); "When should we remind you?" (not "Cron expression").
+**Fail:** "UUID" in a user-facing field label; "Invalid JSON syntax" as a form validation error.
 
 ### tone-matches-context
 
-**Check:** error messages empathetic; success acknowledging; empty states coaching; admin terse. Tone adjusts by UI pattern per `content-voice.md`.
-**Default severity:** p3
-
-**Example pass:** celebratory success ("🎉 First post published! Share on social?"); dry admin ("3 keys rotated; next rotation: 2026-05-01").
-**Example fail:** overly cheerful error ("Yay! Something broke!"); icy success ("Operation complete. Return code 0.").
+**Pass:** celebratory success ("🎉 First post published! Share on social?"); dry admin ("3 keys rotated; next rotation: 2026-05-01").
+**Fail:** overly cheerful error ("Yay! Something broke!"); icy success ("Operation complete. Return code 0.").
 
 ### length-matches-weight
 
-**Check:** most-important labels/messages shorter; less-important can be slightly longer. Short beats wordy almost always.
-**Default severity:** p3
-
-**Example pass:** primary CTA "Save"; secondary "Save and continue editing"; nowhere: "Click here to save your draft now."
-**Example fail:** long primary CTA ("Press this button to submit your changes to the backend server"); short tertiary ("Go").
+**Pass:** primary CTA "Save"; secondary "Save and continue editing"; nowhere: "Click here to save your draft now."
+**Fail:** long primary CTA ("Press this button to submit your changes to the backend server"); short tertiary ("Go").
 
 ### no-anxiety-inducing-modals
 
-**Check:** confirmation modals use calm, specific language — not "Are you sure?" existential dread. Destructive actions name the consequence.
-**Default severity:** p2
-
-**Example pass:** "Delete this project? All its data and settings will be removed." [Keep] [Delete]
-**Example fail:** "Are you sure?" with OK/Cancel only — user doesn't know what "sure" means.
+**Pass:** "Delete this project? All its data and settings will be removed." [Keep] [Delete]
+**Fail:** "Are you sure?" with OK/Cancel only — user doesn't know what "sure" means.
 
 ### no-banned-phrases
 
-**Check:** banned copy specific to the team/product (maintained in `content-voice.md`). Common bans: "Oops!", "Something went wrong", "We're sorry for the inconvenience", "Please note that...".
-**Default severity:** p2
-
-**Example pass:** error messages specific; no "oops" anywhere; no formal apologies.
-**Example fail:** "Oops! Something went wrong. We're sorry. Please try again later."
+**Pass:** error messages specific; no "oops" anywhere; no formal apologies.
+**Fail:** "Oops! Something went wrong. We're sorry. Please try again later."
 
 ### actions-lead-with-verbs
 
-**Check:** menu items, nav labels, and CTAs lead with verbs when describing an action. Use nouns only for destinations/categories.
-**Default severity:** p3
-
-**Example pass:** `Create project` (action); `Projects` (destination). Consistency: all actions start with verbs.
-**Example fail:** mixed — "Project creation" (noun for action) next to `Create team` (verb for action). Inconsistent.
+**Pass:** `Create project` (action); `Projects` (destination). Consistency: all actions start with verbs.
+**Fail:** mixed — "Project creation" (noun for action) next to `Create team` (verb for action). Inconsistent.
 
 ## Extending this rubric
 
 Copy to `docs/rubrics/ux-writing-<team>.md` and:
 
-1. Populate product-specific banned phrases
-2. Add voice-attribute criteria tied to `content-voice.md`
-3. Add i18n rules if localizing (message-length variance, formality levels)
+1. Adjust per-criterion `severity` values in the YAML to match team's tolerance
+2. Append product-specific banned phrases as additional criteria entries
+3. Add voice-attribute criteria tied to `content-voice.md`
+4. Add i18n rules if localizing (message-length variance, formality levels)
 
 ## What this rubric does NOT check
 
@@ -149,6 +159,7 @@ Copy to `docs/rubrics/ux-writing-<team>.md` and:
 
 ## See also
 
+- [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md) — schema for the YAML frontmatter above
 - [interaction-states.md](interaction-states.md) — empty-state copy overlaps with this rubric
 - [accessibility-wcag-aa.md](accessibility-wcag-aa.md) — error-message announcements for screen readers
 - Impeccable — [ux-writing.md](https://github.com/pbakaus/impeccable/blob/main/source/skills/impeccable/reference/ux-writing.md)

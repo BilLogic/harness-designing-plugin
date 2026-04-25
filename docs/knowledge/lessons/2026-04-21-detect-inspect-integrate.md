@@ -14,7 +14,7 @@ related_lessons:
 decision_summary: "Never hardcode known external formats (DESIGN.md, CONTRIBUTING.md, CODEOWNERS) as special cases. Detect substantive infrastructure files generically; present as integration candidates; user decides integration."
 result_summary: "Phase 3p ships generic L1 EXECUTE surfacing (no filename whitelist); our 5-layer structure stays the coordinating frame for external content."
 next_watch: "When a second external format reaches ecosystem adoption (say, agents.md.spec), we should NOT reach for a filename probe. Second confirmation of this pattern graduates the candidate rule."
-rule_candidate: true
+rule_candidate: false
 rule_ref: R_2026_04_21_detection_enumeration  # graduated 2026-04-21 (paired with whitelist-vs-research-time)
 supersedes: null
 superseded_by: null
@@ -70,7 +70,7 @@ What it DOES say: never encode specific filenames as branch conditions in our de
 Phase 3p shipped with 5 units embodying the discipline:
 - L1 EXECUTE proactively surfaces any detected substantive file (DESIGN.md or otherwise) via the existing `scattered_l1_signals` mechanism — no hardcoded filename logic
 - Ship `rubric-template.md` so users can author format-specific rubrics themselves (including a DESIGN.md-compliance rubric if they want one)
-- This lesson captured as rule_candidate for future graduation
+- This lesson captured as confirmation for the detection-enumeration pattern (graduated to `R_2026_04_21_detection_enumeration` paired with `whitelist-vs-research-time`)
 
 ## Graduation-readiness
 

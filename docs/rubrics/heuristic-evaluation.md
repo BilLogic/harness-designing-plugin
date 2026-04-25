@@ -6,13 +6,50 @@ applies_to:
   - slash-command-flow
   - design-file
   - tsx
+version: 1
 severity_defaults:
   default: p2
 source:
-  - Nielsen Norman Group — "10 Usability Heuristics for User Interface Design" (Jakob Nielsen, 1994; updated 2020)
-  - Material 3 foundations — accessibility + interaction
-  - Fluent 2 — accessibility + content guidance
+  - "Nielsen Norman Group — '10 Usability Heuristics for User Interface Design' (Jakob Nielsen, 1994; updated 2020)"
+  - "Material 3 foundations — accessibility + interaction"
+  - "Fluent 2 — accessibility + content guidance"
 adapted_for: "This plug-in's own meta-harness (2026-04-21) — `/hd:*` command interaction flows, SKILL.md decision trees, per-layer procedure prose."
+
+sections:
+  criteria:
+    order: 1
+    title: "Criteria"
+    criteria:
+      - id: visibility-of-system-status
+        severity: p1
+        check: "System keeps users informed about what's going on via appropriate feedback within reasonable time"
+      - id: match-between-system-and-real-world
+        severity: p2
+        check: "System speaks user's language, follows real-world conventions, presents information in natural order"
+      - id: user-control-and-freedom
+        severity: p1
+        check: "Users can recover from mistakes via clearly-marked emergency exit (undo, cancel, back)"
+      - id: consistency-and-standards
+        severity: p2
+        check: "Same words / situations / actions mean the same things; follows platform + product conventions"
+      - id: error-prevention
+        severity: p1
+        check: "Eliminates error-prone conditions OR presents confirmation before destructive actions"
+      - id: recognition-rather-than-recall
+        severity: p2
+        check: "Minimizes memory load by making objects / actions / options visible; users don't have to remember info between steps"
+      - id: flexibility-and-efficiency-of-use
+        severity: p3
+        check: "Shortcuts / power-user paths coexist with novice-friendly paths"
+      - id: aesthetic-and-minimalist-design
+        severity: p2
+        check: "UI doesn't contain irrelevant / rarely-needed information; every unit competes with relevant units"
+      - id: help-users-recognize-diagnose-recover-from-errors
+        severity: p1
+        check: "Error messages in plain language, state the problem precisely, suggest a solution"
+      - id: help-and-documentation
+        severity: p3
+        check: "Provides help when needed (contextual, searchable, task-focused) — even if system seems self-evident"
 ---
 
 # Heuristic evaluation (Nielsen 10)
@@ -51,94 +88,66 @@ Grounded in Nielsen Norman Group's original 10 heuristics (1994, updated 2020) p
 - **HTTP codes in user-facing errors** — "422 Unprocessable Entity". Symptom: violates match-between-system-and-real-world AND help-recognize-diagnose-recover.
 - **Memory-required wizards** — step 4 requires recall of step 2 inputs. Symptom: violates recognition-rather-than-recall.
 
-## Criteria
+## Criteria — rationale + examples
+
+Per-heuristic prose. Normative criteria live in YAML frontmatter above; this body explains the *why* + concrete pass/fail anchors.
 
 ### visibility-of-system-status
 
-**Check:** the system always keeps users informed about what's going on via appropriate feedback within reasonable time.
-**Default severity:** p1
-
-**Example pass:** submit button shows loading spinner immediately on click; progress bar for upload > 2s; network error banner appears when connection drops.
-**Example fail:** button shows no feedback on click; user clicks again; duplicate submission.
+**Pass:** submit button shows loading spinner immediately on click; progress bar for upload > 2s; network error banner appears when connection drops.
+**Fail:** button shows no feedback on click; user clicks again; duplicate submission.
 
 ### match-between-system-and-real-world
 
-**Check:** speak the user's language, follow real-world conventions, make information appear in natural order.
-**Default severity:** p2
-
-**Example pass:** error message "We couldn't find your order — check the order number" (user language). Shopping-cart icon for a cart.
-**Example fail:** "HTTP 404" as a user-facing error. Arbitrary icons that require learning.
+**Pass:** error message "We couldn't find your order — check the order number" (user language). Shopping-cart icon for a cart.
+**Fail:** "HTTP 404" as a user-facing error. Arbitrary icons that require learning.
 
 ### user-control-and-freedom
 
-**Check:** users make mistakes; provide clearly-marked "emergency exit" (undo, cancel, back).
-**Default severity:** p1
-
-**Example pass:** every form has `Cancel`; delete actions have undo toast; long flows have `Back` without losing progress.
-**Example fail:** destructive action with no undo; form cancel button discards all data silently.
+**Pass:** every form has `Cancel`; delete actions have undo toast; long flows have `Back` without losing progress.
+**Fail:** destructive action with no undo; form cancel button discards all data silently.
 
 ### consistency-and-standards
 
-**Check:** follow platform + product conventions; same words / situations / actions mean the same things.
-**Default severity:** p2
-
-**Example pass:** `Save` button always primary-positioned + primary-styled across the product.
-**Example fail:** `Save` is primary on page A, ghost on page B; `Submit` vs `Save` vs `Apply` used inconsistently.
+**Pass:** `Save` button always primary-positioned + primary-styled across the product.
+**Fail:** `Save` is primary on page A, ghost on page B; `Submit` vs `Save` vs `Apply` used inconsistently.
 
 ### error-prevention
 
-**Check:** eliminate error-prone conditions or present confirmation before destructive actions.
-**Default severity:** p1
-
-**Example pass:** typed confirmation ("type DELETE to confirm") for irreversible actions; auto-save prevents lost work.
-**Example fail:** single-click delete with no confirmation; form that silently discards on navigation.
+**Pass:** typed confirmation ("type DELETE to confirm") for irreversible actions; auto-save prevents lost work.
+**Fail:** single-click delete with no confirmation; form that silently discards on navigation.
 
 ### recognition-rather-than-recall
 
-**Check:** minimize memory load by making objects / actions / options visible; users shouldn't remember info between steps.
-**Default severity:** p2
-
-**Example pass:** breadcrumb shows current location; previous-step selections persist visibly in wizard.
-**Example fail:** wizard where user must remember what they entered on step 2 to complete step 4.
+**Pass:** breadcrumb shows current location; previous-step selections persist visibly in wizard.
+**Fail:** wizard where user must remember what they entered on step 2 to complete step 4.
 
 ### flexibility-and-efficiency-of-use
 
-**Check:** shortcuts / power-user paths coexist with novice-friendly paths.
-**Default severity:** p3
-
-**Example pass:** keyboard shortcuts for common actions (⌘K); recent-files quick-access alongside full search.
-**Example fail:** only one path to every action; power users forced through novice wizards every time.
+**Pass:** keyboard shortcuts for common actions (⌘K); recent-files quick-access alongside full search.
+**Fail:** only one path to every action; power users forced through novice wizards every time.
 
 ### aesthetic-and-minimalist-design
 
-**Check:** UI doesn't contain irrelevant / rarely-needed information; every unit competes with relevant units.
-**Default severity:** p2
-
-**Example pass:** dashboard shows the 3 most-used metrics prominently; rest are one-click-away.
-**Example fail:** dashboard with 20 widgets, no hierarchy; user can't tell what's important.
+**Pass:** dashboard shows the 3 most-used metrics prominently; rest are one-click-away.
+**Fail:** dashboard with 20 widgets, no hierarchy; user can't tell what's important.
 
 ### help-users-recognize-diagnose-recover-from-errors
 
-**Check:** error messages in plain language, state the problem precisely, suggest a solution.
-**Default severity:** p1
-
-**Example pass:** "Email already registered — [sign in instead] or [use a different email]."
-**Example fail:** "Error code 422" with no explanation.
+**Pass:** "Email already registered — [sign in instead] or [use a different email]."
+**Fail:** "Error code 422" with no explanation.
 
 ### help-and-documentation
 
-**Check:** even if the system is self-evident, provide help when needed (contextual, searchable, task-focused).
-**Default severity:** p3
-
-**Example pass:** inline tooltips on complex fields; searchable help center; empty-state coaching.
-**Example fail:** no help text anywhere; user stuck on ambiguous field with no tooltip.
+**Pass:** inline tooltips on complex fields; searchable help center; empty-state coaching.
+**Fail:** no help text anywhere; user stuck on ambiguous field with no tooltip.
 
 ## Extending this rubric
 
 Copy to `docs/rubrics/heuristic-evaluation-<team>.md` and:
 
-1. Adjust severity per heuristic for your product (e.g., a B2B tool might deprioritize `flexibility-and-efficiency` if users are trained)
-2. Add heuristic-11+ for product-specific concerns (e.g., "predictive next-step suggestions" for AI-enhanced flows)
+1. Adjust per-heuristic `severity` values in the YAML for your product (e.g., a B2B tool might deprioritize `flexibility-and-efficiency-of-use` if users are trained)
+2. Add heuristic-11+ entries to the YAML for product-specific concerns (e.g., "predictive next-step suggestions" for AI-enhanced flows)
 3. Reference in `hd-config.md` under `critique_rubrics`
 
 ## What this rubric does NOT check
@@ -150,6 +159,7 @@ Copy to `docs/rubrics/heuristic-evaluation-<team>.md` and:
 
 ## See also
 
+- [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md) — schema for the YAML frontmatter above
 - [accessibility-wcag-aa.md](accessibility-wcag-aa.md) — granular a11y
 - [interaction-states.md](interaction-states.md) — the state coverage overlap with visibility-of-system-status
 - Nielsen Norman Group — [10 Usability Heuristics](https://www.nngroup.com/articles/ten-usability-heuristics/)

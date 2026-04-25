@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "A design-focused AI harness. 4 skills for assembling the scattered AI setup your team already has into a five-layer harness \u2014 Context, Skills, Orchestration, Rubrics, Knowledge.",
-    "version": "1.3.0"
+    "version": "1.4.0"
   },
   "plugins": [
     {
       "name": "design-harness",
       "source": "./",
       "description": "Design-focused AI harness for design teams. 4 skills + 9 agents + 14 starter rubrics.",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "author": {
         "name": "Bill Guo",
         "url": "https://github.com/BilLogic"

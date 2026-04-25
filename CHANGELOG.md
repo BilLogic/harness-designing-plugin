@@ -3,7 +3,30 @@
 All notable changes to the `design-harness` plug-in are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.4.0] — 2026-04-24
+
+Iteration release. Two phases (3q + 3r) closing out the rubric YAML-split arc — POC → mechanical propagation → rule graduation. Plus targeted polish across review surface + post-graduation hygiene.
+
+Headlines:
+
+- **`R_2026_04_24_rubric_yaml_split` graduated** — 2nd confirmation landed via Phase 3r migrating `ux-writing.md` + `heuristic-evaluation.md` (10+10 criteria) on top of Phase 3q's `skill-quality.md` POC (37 criteria). Pattern: when an artifact is both machine-consumed and prose-bearing, split layers structurally — normative YAML, descriptive prose. Removes the prose-layout-fragility class entirely.
+- **All 3 adopted rubrics on YAML-criteria schema** (`version: 1`). `rubric-applier` legacy parser removed via clean cut. Custom user rubrics that don't conform now produce `error: rubric-invalid` rather than fall through.
+- **Strict dual-shape detection** in `rubric-applier` — 7-state validation gate (absent / null / empty / list / scalar / map-with-bad-criteria / valid). Never silently default a malformed rubric.
+- **`rubric_overrides` flow end-to-end** — new Step 2.5 in `targeted-review-procedure.md` reads `hd-config.md:critique_rubrics.<name>` and forwards as 3rd Task arg. User-path drops are fixed.
+- **`schema_version` surfaced to humans** — new header schema in `targeted-review-format.md` + response template. Users can see which parse path produced findings.
+- **Phase 3q + post-3q polish + Phase 3r** — 22 files changed across 3 commits. Net: -39 lines from 3q polish; +X lines from 3r.
+- **Post-graduation hygiene** — 3 lessons (`whitelist-vs-research-time`, `detect-inspect-integrate`, `external-source-fill-path`) whose rules had already graduated had stale `rule_candidate: true` flags reset to `false` with `rule_ref` populated.
+
+**Phase 3r details:**
+
+- `docs/rubrics/ux-writing.md` migrated: 10 criteria moved to YAML frontmatter (1 p1 / 5 p2 / 4 p3); body keeps Scope & Grounding + per-criterion rationale + pass/fail examples. Starter copy synced.
+- `docs/rubrics/heuristic-evaluation.md` migrated: 10 criteria (4 p1 / 4 p2 / 2 p3); same body convention. Starter copy synced.
+- `agents/review/rubric-applier.md` — legacy markdown-table parsing path removed; validation gate strict; output schema unifies on `schema_version: 1` + `section_slug` + `criterion_id`.
+- `skills/hd-review/references/targeted-review-format.md` updated — `schema_version: 1` only valid value; finding shape gains `section_slug`.
+- `AGENTS.md § Rules` — new entry `R_2026_04_24_rubric_yaml_split` graduated; rule_candidate corpus reduced from 6 to 3 (live candidates: iterative-refinement-3k-to-3m, sed-vocabulary-rename-mishap, plus the 3q→3r rule that just graduated, now removed).
+- `docs/knowledge/changelog.md` — 2026-04-24 entry logged.
+
+**Process milestone:** Phase 3r took ~2 hr from kickoff to graduation, validating the Phase 3q transitional bet (legacy parser as bridge, not permanent compat).
 
 ### Phase 3q — rubric YAML split (skill-quality.md POC) (2026-04-21)
 

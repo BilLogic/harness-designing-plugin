@@ -26,6 +26,16 @@ NOT a changelog for the plug-in's shipped features — that's `CHANGELOG.md` at 
 
 <!-- Add new entries above this line, most recent first. -->
 
+## 2026-04-24 — Phase 3r + rule adoption (rubric-YAML-split graduates)
+
+**Changed:** L4 rubric corpus + L3 `rubric-applier` agent + AGENTS.md § Rules
+**Before:** 3 adopted rubrics in mixed shapes — `skill-quality.md` on YAML-criteria (Phase 3q POC), `ux-writing.md` + `heuristic-evaluation.md` still on prose-table legacy. `rubric-applier` carried dual-shape backward-compat detection.
+**After:** All 3 adopted rubrics on YAML-criteria (`version: 1`). `rubric-applier` legacy parser removed (clean cut). New rule `R_2026_04_24_rubric_yaml_split` graduated based on the 2-confirmation pattern: 3q POC + 3r mechanical propagation.
+**Why:** Pattern proved out — 2nd migration was mechanical (10+10 criteria moved in a single pass without breaking parse logic). Removes prose-layout-fragility class; auditor + applier can now query criteria deterministically across the entire adopted corpus.
+**Source:** [`docs/knowledge/lessons/2026-04-21-rubric-yaml-prose-split.md`](lessons/2026-04-21-rubric-yaml-prose-split.md) (graduated)
+
+Also resolved post-graduation drift: 3 lessons whose rule had already graduated (`R_2026_04_21_detection_enumeration` ×2, `R_2026_04_21_advisor` ×1) had `rule_candidate: true` flags reset to `false` with `rule_ref` populated.
+
 ## 2026-04-21 — Phase 3n + 3 rule adoptions + rubric policy
 
 **Changed:** Three rules adopted into `AGENTS.md § Rules` + 3-of-14 rubric-adoption policy for `docs/rubrics/` + Phase 3n external-source fill-path + advisor-not-installer principle codified.

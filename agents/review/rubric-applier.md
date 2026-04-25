@@ -25,26 +25,23 @@ Legacy alias: older callers pass `work_item_path` + `rubric_path`. Treat `work_i
 
 ### Phase 1: load rubric
 
-Read the rubric file. Parse YAML frontmatter and detect which schema shape it uses:
+Read the rubric file. Parse YAML frontmatter and validate the schema (per [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md), `version: 1`). All rubrics emit `schema_version: 1` in output.
 
-- **YAML-criteria shape (Phase 3q+).** Frontmatter contains a `sections` map keyed by section slug; each section has `order`, `title`, and `criteria[]` with `id`, `severity`, `check`. Schema documented at `skills/hd-review/references/rubric-yaml-schema.md` (`version: 1` at time of writing). Iterate `sections` in `order` ascending; each criterion is a deterministic record. Emit `schema_version: 1` (or whatever the rubric declares) in the output.
-- **Legacy prose-table shape (pre-3q).** Frontmatter has `rubric`, `name`, `applies_to`, `severity_defaults`, `source` but no `sections` map. Criteria live in markdown tables (`| Criterion | Default severity |`) under `### criterion-name` headings or in numbered `## N. <Section>` sections. Parse the body to extract criteria. Emit `schema_version: legacy` in the output so callers can distinguish.
+**Required:** frontmatter contains a `sections` map keyed by section slug; each section has `order`, `title`, and a non-empty `criteria[]` list; each criterion has `id`, `severity` (or inherits `severity_defaults.default`), and `check`.
 
-**Detection rule (strict — handle malformed cases explicitly):**
+**Validation gate (strict — surface malformed states explicitly):**
 
 | `sections` state | Action |
 |---|---|
-| Absent (key not present) | Legacy path — parse markdown tables |
-| Present, value is a non-empty map (≥1 section key) with each section having a non-empty `criteria[]` list | YAML path |
+| Absent (key not present) | `error: rubric-invalid` — required field missing |
 | Present, value is `null` | `error: rubric-invalid` — `sections` declared but null |
 | Present, value is `{}` (empty map) | `error: rubric-empty` — no sections declared |
 | Present, value is a list `[...]` (wrong type) | `error: rubric-invalid` — `sections` must be a map, not a list |
-| Present, value is a map but ≥1 section is missing `criteria` or has an empty `criteria[]` | `error: rubric-invalid` — list which section(s) |
 | Present, value is a scalar (string/int/bool) | `error: rubric-invalid` — `sections` must be a map |
+| Present, value is a map but ≥1 section is missing `criteria` or has an empty `criteria[]` | `error: rubric-invalid` — list which section(s) |
+| Present, value is a non-empty map with each section having a non-empty `criteria[]` list | Proceed to Phase 2 |
 
-Never silently fall through to legacy when `sections` is malformed — that hides a real error as a successful-but-empty audit. Validation rule 4 of [`../../skills/hd-review/references/rubric-yaml-schema.md`](../../skills/hd-review/references/rubric-yaml-schema.md) is enforced at this gate.
-
-The legacy fallback exists as a transitional mechanism for `ux-writing.md` and `heuristic-evaluation.md`, which migrate in Phase 3r. Once all adopted rubrics are on the YAML shape, the legacy path is removed.
+Never silently default a malformed rubric. Phase 3r removed the legacy prose-table fallback — all 3 adopted rubrics (`skill-quality`, `ux-writing`, `heuristic-evaluation`) ship on the YAML schema. Custom user rubrics must conform to the schema or fail loudly.
 
 ### Phase 2: verify applicability
 If `applies_to:` list doesn't include this work item's shape (e.g., rubric is for `design-file` and work item is a `.py` file), abort with `error: "rubric not applicable to this work item type"`.
@@ -54,19 +51,18 @@ Load the target file. If the work item is a URL (Figma design file, etc.), use t
 
 ### Phase 4: apply each criterion
 
-For each criterion in the rubric:
-1. Check the work item for compliance
-2. If non-compliant, produce a finding with:
-   - `criterion_id` — kebab-case `id` (YAML shape) or section + heading slug (legacy shape)
-   - `criterion` — `check` string (YAML shape) or human-readable name (legacy shape)
-   - `severity` — rubric default, potentially overridden by `rubric_overrides`
+Iterate `sections` by `order`; iterate each section's `criteria[]` in declared order. For each criterion:
+
+1. Resolve effective severity: `rubric_overrides[section_slug][criterion.id]` → `criterion.severity` → `severity_defaults.default`
+2. Check the work item for compliance
+3. If non-compliant, produce a finding with:
+   - `criterion_id` — kebab-case `id` from rubric YAML
+   - `section_slug` — kebab-case section key (enables `/<section>/<id>` traceability)
+   - `criterion` — the rubric's `check` string
+   - `severity` — effective severity
    - `evidence` — file:line or exact quote showing the violation
    - `suggested_fix` — concrete actionable change
-3. If compliant, no finding (silent pass)
-
-**YAML shape:** iterate `sections` by `order`; iterate each section's `criteria[]` in declared order; resolve effective severity as `rubric_overrides[section_slug][criterion.id]` → `criterion.severity` → `severity_defaults.default`.
-
-**Legacy shape:** iterate body sections in document order; extract each table row as a criterion record; resolve effective severity as `rubric_overrides[criterion_name]` → table-row severity → `severity_defaults.default`.
+4. If compliant, no finding (silent pass)
 
 ### Phase 5: aggregate
 Count findings by severity. Compute a composite verdict:
@@ -80,21 +76,24 @@ Count findings by severity. Compute a composite verdict:
 work_item: src/components/Button.tsx
 rubric: design-system-compliance
 rubric_path: skills/hd-review/assets/starter-rubrics/design-system-compliance.md
-schema_version: legacy   # `1` for YAML-criteria rubrics; `legacy` for prose-table rubrics
+schema_version: 1
 composite: degraded
 findings:
-  - criterion_id: approved-color-tokens
-    criterion: "approved-color-tokens"
+  - section_slug: tokens
+    criterion_id: approved-color-tokens
+    criterion: "Use only approved color tokens from the design system"
     severity: p1
     evidence: "Button.tsx:24 — color: #0060FF (not in approved token set)"
     suggested_fix: "Replace with var(--text-primary) or #0051FF if that color is intended"
-  - criterion_id: approved-spacing
-    criterion: "approved-spacing"
+  - section_slug: tokens
+    criterion_id: approved-spacing
+    criterion: "Use approved spacing scale (8-point grid)"
     severity: p2
     evidence: "Button.tsx:31 — padding: 13px (off 8-point grid)"
     suggested_fix: "Use var(--space-2) = 8px or var(--space-3) = 12px"
-  - criterion_id: variant-within-approved-set
-    criterion: "variant-within-approved-set"
+  - section_slug: variants
+    criterion_id: variant-within-approved-set
+    criterion: "Component variants must come from the approved set"
     severity: p1
     evidence: "Button.tsx:8 — variant='primary-gradient' (not in approved set: primary, secondary, ghost)"
     suggested_fix: "Either use an approved variant OR start an RFC to add 'primary-gradient' to the design system"
@@ -126,8 +125,8 @@ summary:
 - `rubric_path` missing → `error: "rubric not found"`
 - `source` / `work_item_path` missing → `error: "source not found"`
 - Rubric's `applies_to:` doesn't include work-item shape → `error: "rubric not applicable"`
-- Rubric YAML malformed (frontmatter unparseable, or `sections` present but missing required keys) → `error: rubric-invalid` with one-line diagnosis
-- Rubric has neither `sections` (YAML shape) nor parseable criterion tables (legacy shape) → `error: rubric-empty` listing what was searched for
+- Rubric YAML malformed (frontmatter unparseable, `sections` absent / null / wrong-type / missing required sub-keys) → `error: rubric-invalid` with one-line diagnosis (per Phase 1 validation gate)
+- Rubric `sections: {}` empty → `error: rubric-empty` — no criteria to apply
 - Work item very large (>5000 lines) → apply per-section; return partial results + note
 - MCP required for work item but unavailable → abort with clear error naming which MCP
 

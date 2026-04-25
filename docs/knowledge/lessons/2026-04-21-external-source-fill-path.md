@@ -14,8 +14,8 @@ related_lessons:
 decision_summary: "The plug-in is an advisor: it scans, asks, researches AI-integration options (MCP/CLI/API), links to install docs. Never installs or wires auth on the user's behalf. Parallel path: paste-and-organize."
 result_summary: "Phase 3n shipped 8 units (scout agent, Step 3 collapse, known-mcps as cache, per-layer Fill path, paste-organize helper, Step 10 closer, schema v5). advisor-not-installer graduated to AGENTS.md § Rules same day."
 next_watch: "If any reviewer proposes auto-installing on user's behalf, cite this lesson + rule."
-rule_candidate: true
-rule_ref: R_2026_04_21_advisor
+rule_candidate: false
+rule_ref: R_2026_04_21_advisor  # graduated 2026-04-21 (1st confirmation; rule promoted same day per fast-track)
 supersedes: null
 superseded_by: null
 ---
