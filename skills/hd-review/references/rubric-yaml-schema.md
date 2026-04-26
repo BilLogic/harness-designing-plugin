@@ -78,11 +78,17 @@ The rubric body holds:
 
 **Invariant:** every YAML criterion has corresponding prose rationale somewhere in its section. The criterion's `check` string is the normative "what"; the body's prose is the "why". Examples in the body are advisory — the YAML criterion drives the audit.
 
-## Backward compatibility (Phase 3q transitional)
+## Backward compatibility + migrate-on-adopt
 
-Rubrics whose frontmatter does NOT include a `sections:` map are treated as **legacy prose-table** rubrics. `rubric-applier` falls back to markdown-table parsing for these. Phase 3r migrates the remaining adopted rubrics (`ux-writing`, `heuristic-evaluation`); after that, legacy parsing is removed.
+Rubrics whose frontmatter does NOT include a `sections:` map are treated as **legacy prose-table** rubrics. `rubric-applier` falls back to markdown-table parsing for these.
 
-The 11 unadopted starter rubrics ship as reference material only — they migrate when adopted.
+**Adopted rubrics are all on schema v1.** The 6 starters adopted to this plug-in's own dogfood (`skill-quality`, `ux-writing`, `heuristic-evaluation`, `plan-quality`, `lesson-quality`, `agent-spec-quality`) plus `rubric-template.md` ship in YAML schema v1.
+
+**The 11 unadopted starters are legacy prose-only by design.** They are reference material — opinions in prose form, intentionally readable without machine-parsing. They migrate to schema v1 **when a team adopts them**, not before. Eager migration would (a) inflate file size with YAML duplicating the prose, (b) lock in criterion `id`s that the adopting team should be free to rename, and (c) imply machine-checkability for rubrics that may need team-specific adaptation first.
+
+**`/hd:setup` L4 walks the migration step on adoption.** When a user copies a legacy starter into `docs/rubrics/`, the setup procedure prompts them to add `version: 1` + `source:` + a `sections:` map per the field-definitions table above before `rubric-applier` is run against the new copy. See [`../../hd-setup/references/layer-4-rubrics.md`](../../hd-setup/references/layer-4-rubrics.md) for the adoption walk-through.
+
+**L4 audit:** unadopted starters with prose-only criteria are **not** flagged as defects. Adopted rubrics in `docs/rubrics/` without a `sections:` map ARE flagged (P1 — `rubric-applier` cannot parse them).
 
 ## Validation + version semantics
 

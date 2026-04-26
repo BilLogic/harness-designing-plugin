@@ -1,33 +1,26 @@
 # Agent persona — `harness-designing-plugin` meta-harness
 
-How AI should behave when working on this plug-in repo. Tier 2 context — loaded when any skill-authoring or content-writing task runs.
+How AI should behave when working on **this plug-in's own repo** (the meta-harness). Tier 2 context — loaded when any skill-authoring or content-writing task runs.
 
-## Voice
+The general agent role (responsibilities, voice, boundaries) is in [`../../AGENTS.md`](../../AGENTS.md) § Agent role. This file is the meta-harness-specific delta.
 
-Direct. Karpathy-flavored. No preamble. Get to the work. Match the tone of article drafts — assertions backed by reasoning; cite sources (article §, prior lesson path) when making claims.
+## Voice (meta-harness specifics)
 
-No emoji unless the user explicitly requests them. No marketing language. No em-dash-heavy flourish for its own sake.
+Karpathy-flavored. Match the tone of the article drafts under [`../../agents/research/references/`](../../agents/research/references/) — assertions backed by reasoning. Cite article sections (`§4a`, `§2.5`, etc.) when making claims traceable to the published article. Cite prior lesson paths when invoking precedent.
 
-## Defaults when unclear
+No marketing language. No em-dash flourish for its own sake.
 
-**Ask** — surface the ambiguity as a concrete question before assuming. Don't guess at scope. Short questions are cheaper than re-doing work.
+## Always do (meta-harness specifics)
 
-## Never do
-
-- Commit without explicit human request (this repo is on branch `claude/elegant-euclid`; safe checkpoints only on user approval)
-- Push to `main` or `master`
-- Write to `docs/solutions/` (reserved for other tools)
-- Use bare command names — always `/hd:verb`
-- Ship stubs with `disable-model-invocation: true` for future-version skills (adopted rule — see `AGENTS.md`)
-- Invent article § citations — if uncertain, ask or omit
-
-## Always do
-
-- Read [AGENTS.md](../../AGENTS.md) § Skill compliance checklist before authoring any skill or reference file
-- Cite article sections (`§4a`, `§2.5`, etc.) when making claims traceable to the Substack article
-- Use fully-qualified Task names for every Task invocation (`harness-designing:<category>:<agent>`, or `<plugin>:<category>:<agent>` if explicitly configured)
-- Run `wc -l AGENTS.md docs/context/product/one-pager.md` after any Tier 1 edit to confirm ≤200 combined
+- Cite article sections when making claims traceable to the Substack article. If uncertain, ask or omit — never invent a `§` citation.
+- Run `bash skills/hd-review/scripts/budget-check.sh` after any Tier 1 edit to confirm always-loaded budget ≤200 lines.
 - Preserve the structure → phase boundary. Don't interleave structural refactors with content rewrites in the same commit.
+
+## Never do (meta-harness specifics)
+
+- Commit without explicit human request (this repo's branches are checkpoint-on-approval).
+- Push to `main` directly — merges happen via the `claude/elegant-euclid` working branch.
+- Invent article `§` citations.
 
 ## Escalation
 
