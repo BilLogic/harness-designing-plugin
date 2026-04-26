@@ -113,7 +113,16 @@ Load [layer-5-knowledge.md](references/layer-5-knowledge.md). Respond:
 
 Fully-qualified Task names only.
 
-- `harness-designing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus
+- `harness-designing:research:article-quote-finder` — optional solo dispatch when a question requires pulling an exact quote or passage from the source Substack article and its local corpus.
+
+  **Dispatch:** when a user question is best answered by a verbatim line from the article (e.g., "what's the article's exact wording on the floor/ceiling/ladder framing?"), invoke:
+  ```
+  Task harness-designing:research:article-quote-finder(
+    question: "<the user's question, verbatim>",
+    section_hint: "<optional § identifier, e.g. '§5 — Closing'>"
+  )
+  ```
+  Use the returned quote + `§` citation in the answer; omit the call when the FAQ or reference content already answers the question paraphrased.
 
 ## Reference files
 
