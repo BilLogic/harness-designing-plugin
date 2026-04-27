@@ -8,16 +8,29 @@ Four skills. Five layers. One harness your whole team inherits—across Notion, 
 
 Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools. [Install →](#installation)
 
-> *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
-> —from the companion article, [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by Bill Guo
+📖 **Read the article first** → [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by Bill Guo. The thesis, the five-layer frame, and the memory taxonomy that this plug-in operationalizes all originate there. This README is the implementation manual; the article is the argument.
 
-📖 **Read the article first** → [Stop Chasing Design Tools. Start Building a Design Harness](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, and the memory taxonomy that this plug-in operationalizes all originate there. This README is the implementation manual; the article is the argument.
+![Stop chasing design tools. Start building a design harness.](assets/meme%200%20banner%20copy.png)
+
+> *"Tools lower the floor. Taste sets the ceiling. Your harness is the ladder."*
+> — Bill Guo, [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building)
 
 ## Thesis
 
 **You already have a design harness.** It's scattered—Slack pins, Notion docs, Figma comments, AGENTS.md rules, a decade of design reviews.
 
 This plug-in assembles the pile into **five layers**. Every AI-assisted task inherits all of them. Each layer has its own home and feeds the others.
+
+```
+Agent          = Model + Harness
+Design Harness = Context Engineering
+               + Skill Curation
+               + Workflow Orchestration
+               + Evaluation Design
+               + Knowledge Compounding
+```
+
+![The Design Harness — a team-owned stack that makes AI work reusable, reviewable, and compounding. Floor: generic AI output. Ceiling: design team's full potential. Five rungs: Context Engineering, Skill Curation, Workflow Orchestration, Evaluation Design, Knowledge Compounding.](assets/design%20harness%20copy.png)
 
 | Layer | What lives here | How it connects |
 |---|---|---|
@@ -100,16 +113,17 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 
 **Targeted review** of one layer, file, or rubric against team rubrics.
 
-**17 starter rubrics ship with the plug-in** (all on YAML-criteria schema). Copy any into `docs/rubrics/<name>.md` and customize:
+**17 starter rubrics ship with the plug-in.** Copy any into `docs/rubrics/<name>.md` and customize:
 
 | Category | Rubrics |
 |---|---|
-| **Craft** | `accessibility-wcag-aa`, `design-system-compliance`, `component-budget`, `skill-quality`, `interaction-states`, `heuristic-evaluation` |
+| **Craft** | `accessibility-wcag-aa`, `design-system-compliance`, `component-budget`, `interaction-states`, `heuristic-evaluation` |
 | **Visual** | `typography`, `color-and-contrast`, `spatial-design`, `motion-design` |
 | **Communication** | `ux-writing`, `responsive-design` |
 | **Domain-specific** | `telemetry-display`, `i18n-cjk` |
+| **Harness self-checks** | `skill-quality`, `agent-spec-quality`, `plan-quality`, `lesson-quality` |
 
-Each rubric carries a `## Scope & Grounding` block—personas, user stories, scenarios, anti-scenarios—with source citation.
+Each rubric carries a `## Scope & Grounding` block—personas, user stories, scenarios, anti-scenarios—with source citation. Six adopted rubrics ship in the YAML-criteria schema (machine-queryable); the eleven visual/UI starters ship as prose-only reference material and migrate to YAML-schema when a team adopts them via `/hd:setup` L4. See [`rubric-yaml-schema.md`](skills/hd-review/references/rubric-yaml-schema.md) for the migrate-on-adopt policy.
 
 > **The plug-in maintains the library. Your AI applies it** against actual design work.
 
@@ -205,6 +219,8 @@ These hosts don't yet read Claude Code-compatible plug-in manifests natively, an
 
 The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations work wherever your host loads them. Sub-agent dispatch via the Task tool needs explicit host support; without it, skills run inline serial (same output, slower wall time).
 
+![Me watching the harness survive the next tool launch.](assets/meme%203%20copy.png)
+
 ## Credits
 
 **The article**—Bill Guo's [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
@@ -224,11 +240,6 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 **Adjacent work**—[*Designer's Guide to Context Engineering with AI IDEs*](https://productpower.substack.com/p/the-designers-guide-to-context-engineering) by [Samet Özkale](https://twitter.com/sametozkale) covers context engineering for designers; this plug-in extends to all five layers.
 
 **Working implementation**—[BilLogic/plus-uno](https://github.com/BilLogic/plus-uno) is the source repo this plug-in was distilled from: a production design harness running across a rotating ~15-designer team, used daily for prototyping, design-system work, and AI-assisted critique. It is where the five-layer structure (context, skills, workflows, evaluation, knowledge) was first stress-tested across real projects, real reviews, and real handoffs before being templated into the starter scaffolds shipped here. Read it as the "fully populated" reference for what each layer can grow into once a team has been compounding lessons for a while.
-
-## Known Issues
-
-- **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
-- **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/knowledge/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
 ## License
 
