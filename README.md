@@ -10,7 +10,7 @@ Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/
 
 📖 **Read the article first** → [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by [Bill Guo](https://www.linkedin.com/in/boyuang/). The argument lives there; this README is the implementation.
 
-![Stop chasing design tools. Start building a design harness.](assets/meme%200%20banner%20copy.png)
+![Stop chasing design tools. Start building a design harness.](assets/meme%200%20banner.png)
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness is the ladder."*
 > — [Bill Guo](https://www.linkedin.com/in/boyuang/), [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building)
@@ -29,7 +29,7 @@ Agent = Model + Harness
 Design Harness = Context + Skills + Orchestration + Evaluations + Compounding
 ```
 
-![The Design Harness — a team-owned stack that makes AI work reusable, reviewable, and compounding. Floor: generic AI output. Ceiling: design team's full potential. Five rungs: Context Engineering, Skill Curation, Workflow Orchestration, Evaluation Design, Knowledge Compounding.](assets/design%20harness%20copy.png)
+![The Design Harness — a team-owned stack that makes AI work reusable, reviewable, and compounding. Floor: generic AI output. Ceiling: design team's full potential. Five rungs: Context Engineering, Skill Curation, Workflow Orchestration, Evaluation Design, Knowledge Compounding.](assets/design%20harness.png)
 
 | Layer | What lives here | How it connects |
 |---|---|---|
@@ -244,4 +244,4 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 MIT—see [LICENSE](./LICENSE).
 
-![Me watching the harness survive the next tool launch.](assets/meme%203%20copy.png)
+![Me watching the harness survive the next tool launch.](assets/meme%203.png)
