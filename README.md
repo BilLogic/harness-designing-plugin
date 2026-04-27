@@ -26,7 +26,7 @@ Agent = Model + Harness
 ```
 
 ```
-Design Harness = Context Engineering + Skill Curation + Workflow Orchestration + Evaluation Design + Knowledge Compounding
+Design Harness = Context + Skills + Orchestration + Evaluations + Compounding
 ```
 
 ![The Design Harness — a team-owned stack that makes AI work reusable, reviewable, and compounding. Floor: generic AI output. Ceiling: design team's full potential. Five rungs: Context Engineering, Skill Curation, Workflow Orchestration, Evaluation Design, Knowledge Compounding.](assets/design%20harness%20copy.png)
