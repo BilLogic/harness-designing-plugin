@@ -17,9 +17,9 @@ Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/
 
 ## Thesis
 
-**Every new AI tool resets your practice.** Each release lowers the floor for output and pulls your team back to setup—new prompts, new conventions, the same standards re-explained. Scattered tool use is not a harness; it's a tax you pay every release.
+AI keeps lowering the floor for design output, and every new tool resets your team's setup. Each release pulls you back into reconfiguring prompts, re-explaining standards, and rediscovering what worked last month. For teams with products and standards already in place, this treadmill is the real cost of AI—not the output itself.
 
-**A design harness is the layer your team owns across tools.** Context, skills, workflows, evaluation, knowledge—five layers, one repo, version-controlled with your code. Every AI-assisted task inherits all of them. Tools come and go; the harness compounds.
+A design harness is the layer your team owns across tools. Five layers—context, skills, workflows, evaluation, knowledge—version-controlled in your repo, inherited by every AI-assisted task. Tools come and go. The harness compounds.
 
 ```
 Agent = Model + Harness
