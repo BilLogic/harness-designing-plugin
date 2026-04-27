@@ -220,8 +220,6 @@ These hosts don't read Claude Code-compatible manifests yet. Manual install unti
 
 The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations work wherever your host loads them. Sub-agent dispatch via the Task tool needs explicit host support; without it, skills run inline serial (same output, slower wall time).
 
-![Me watching the harness survive the next tool launch.](assets/meme%203%20copy.png)
-
 ## Credits
 
 **The article**—[Bill Guo's](https://www.linkedin.com/in/boyuang/) [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, and the memory taxonomy all originate there. This plug-in is the starter kit.
@@ -245,3 +243,5 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 ## License
 
 MIT—see [LICENSE](./LICENSE).
+
+![Me watching the harness survive the next tool launch.](assets/meme%203%20copy.png)
