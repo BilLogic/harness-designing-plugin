@@ -8,12 +8,12 @@ Four skills. Five layers. One harness your whole team inherits—across Notion, 
 
 Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools. [Install →](#installation)
 
-📖 **Read the article first** → [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by Bill Guo. The thesis, the five-layer frame, and the memory taxonomy that this plug-in operationalizes all originate there. This README is the implementation manual; the article is the argument.
+📖 **Read the article first** → [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by [Bill Guo](https://www.linkedin.com/in/boyuang/). The argument lives there; this README is the implementation.
 
 ![Stop chasing design tools. Start building a design harness.](assets/meme%200%20banner%20copy.png)
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness is the ladder."*
-> — Bill Guo, [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building)
+> — [Bill Guo](https://www.linkedin.com/in/boyuang/), [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building)
 
 ## Thesis
 
@@ -22,12 +22,11 @@ Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/
 This plug-in assembles the pile into **five layers**. Every AI-assisted task inherits all of them. Each layer has its own home and feeds the others.
 
 ```
-Agent          = Model + Harness
-Design Harness = Context Engineering
-               + Skill Curation
-               + Workflow Orchestration
-               + Evaluation Design
-               + Knowledge Compounding
+Agent = Model + Harness
+```
+
+```
+Design Harness = Context Engineering + Skill Curation + Workflow Orchestration + Evaluation Design + Knowledge Compounding
 ```
 
 ![The Design Harness — a team-owned stack that makes AI work reusable, reviewable, and compounding. Floor: generic AI output. Ceiling: design team's full potential. Five rungs: Context Engineering, Skill Curation, Workflow Orchestration, Evaluation Design, Knowledge Compounding.](assets/design%20harness%20copy.png)
@@ -36,7 +35,7 @@ Design Harness = Context Engineering
 |---|---|---|
 | **1. Context Engineering** | Product facts, users, brand voice, design tokens, conventions | Loaded first on every task. Every other layer reads from it. |
 | **2. Skill Curation** | Repeatable jobs (research, plan, prototype, review, compound) | Draws from Context. Invokes Rubrics at gates. Writes to Knowledge. |
-| **3. Workflow Orchestration** | How skills compose into real work—sequences, handoffs, gates | Emerges from how Skills dispatch agents. |
+| **3. Workflow Orchestration** | How skills compose—sequences, handoffs, gates | Emerges from how Skills dispatch agents. |
 | **4. Evaluation Design** | Quality bars made checkable—a11y, design-system, typography, telemetry, i18n | Applied by Skills at workflow gates through rubrics. |
 | **5. Knowledge Compounding** | Lessons, decisions, preferences, changelog | Captured by every skill. Recurring patterns promote to Context rules. |
 
@@ -51,9 +50,9 @@ Design Harness = Context Engineering
 
 ### [`/hd:learn`](skills/hd-learn/SKILL.md) — ask about the concept
 
-Read-only Q&A about any layer, memory type, or decision in the harness frame.
+Read-only Q&A about any layer, memory type, or decision in the framework.
 
-Ten atomic references back the answers—one per layer, plus glossary, FAQ, and memory taxonomy. Article sections cited when the corpus is configured.
+Ten reference files back the answers—one per layer, plus glossary, FAQ, and memory taxonomy. Article sections cited when the corpus is configured.
 
 **Try:**
 
@@ -63,7 +62,7 @@ Ten atomic references back the answers—one per layer, plus glossary, FAQ, and 
 
 ### [`/hd:setup`](skills/hd-setup/SKILL.md) — walk your repo, layer by layer
 
-Detects existing harness artifacts (`.agent/`, `.claude/`, `docs/context/`, etc.). Pre-analyzes all five layers in parallel. Walks each layer with a **preview-before-write gate**.
+Detects existing harness artifacts (`.agent/`, `.claude/`, `docs/context/`, etc.). Analyzes all five layers in parallel up front. Walks each layer with a **preview-before-write gate**.
 
 Per layer: **scaffold** · **review** · **create** · **skip**.
 
@@ -94,7 +93,7 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 
 **Capture.** When a decision, surprise, or recurring pattern is worth remembering. One dated file per event.
 
-**Propose.** When the same pattern recurs three-plus times, `rule-propose` scores the cluster and suggests a new rule for `AGENTS.md`.
+**Propose.** When the same pattern shows up three or more times, `rule-propose` scores it and suggests a new rule for `AGENTS.md`.
 
 **Adopt.** Rule adoption requires SHA-256 plan-hash proof-of-consent. Rules never land by accident.
 
@@ -111,7 +110,7 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 - Emits a chat summary with ASCII health bars, priorities table, cross-layer signals, a **Proposed revision** file-tree diff, and a staleness check against any prior review
 - Pair with `/hd:setup --from-review <path>` to apply findings as concrete writes
 
-**Targeted review** of one layer, file, or rubric against team rubrics.
+**Targeted review** of one layer, file, or work item against your team's rubrics.
 
 **17 starter rubrics ship with the plug-in.** Copy any into `docs/rubrics/<name>.md` and customize:
 
@@ -123,9 +122,11 @@ When scaffolding a greenfield repo, it proposes this starting structure:
 | **Domain-specific** | `telemetry-display`, `i18n-cjk` |
 | **Harness self-checks** | `skill-quality`, `agent-spec-quality`, `plan-quality`, `lesson-quality` |
 
-Each rubric carries a `## Scope & Grounding` block—personas, user stories, scenarios, anti-scenarios—with source citation. Six adopted rubrics ship in the YAML-criteria schema (machine-queryable); the eleven visual/UI starters ship as prose-only reference material and migrate to YAML-schema when a team adopts them via `/hd:setup` L4. See [`rubric-yaml-schema.md`](skills/hd-review/references/rubric-yaml-schema.md) for the migrate-on-adopt policy.
+Each rubric carries a `## Scope & Grounding` block—personas, user stories, scenarios, anti-scenarios—with source citation.
 
-> **The plug-in maintains the library. Your AI applies it** against actual design work.
+Six rubrics ship in the YAML-criteria schema (machine-queryable). The other eleven are prose-only reference material; `/hd:setup` walks the YAML migration when you adopt one. See [`rubric-yaml-schema.md`](skills/hd-review/references/rubric-yaml-schema.md) for the migrate-on-adopt policy.
+
+> **The plug-in maintains the library. Your AI applies it** to your design work.
 
 ## Install
 
@@ -156,7 +157,7 @@ Two steps — register the marketplace, then install through Codex's TUI.
    codex plugin marketplace add BilLogic/harness-designing-plugin
    ```
 
-2. **Install through the TUI:** launch `codex`, run `/plugins`, find the **harness-designing** marketplace, select **harness-designing**, and choose **Install**. Restart Codex when it finishes. Codex's CLI doesn't currently have a subcommand for installing a plug-in from an added marketplace—the `/plugins` TUI is the canonical flow.
+2. **Install through the TUI:** launch `codex`, run `/plugins`, find the **harness-designing** marketplace, select **harness-designing**, and choose **Install**. Restart Codex when it finishes. Codex's CLI doesn't have a subcommand for installing a plug-in from an added marketplace yet—the `/plugins` TUI is the only path.
 
 > **Heads up:** Codex's plug-in spec doesn't register custom sub-agents yet, so our 10 sub-agents only dispatch via the Task tool when the host exposes it. On Codex CLI without Task, `/hd:review` runs inline serial (~1–2 min) instead of parallel (~30s). Same output.
 
@@ -207,7 +208,7 @@ Qwen Code reads the same Claude Code-compatible manifest from GitHub and convert
 
 ### OpenCode, Pi, Gemini, and Kiro
 
-These hosts don't yet read Claude Code-compatible plug-in manifests natively, and we don't ship a converter the way some plug-ins do. The install path is manual until host support lands:
+These hosts don't read Claude Code-compatible manifests yet. Manual install until host support lands:
 
 1. Clone the repo to a stable location:
 
@@ -223,9 +224,9 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 ## Credits
 
-**The article**—Bill Guo's [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, the memory taxonomy, and the core quotables all originate there. This plug-in is the starter kit.
+**The article**—[Bill Guo's](https://www.linkedin.com/in/boyuang/) [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, and the memory taxonomy all originate there. This plug-in is the starter kit.
 
-**Harness vocabulary + anatomy (primary inspiration)**—LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17). The noun "harness," the memory-typology framing, and the ownership argument come from here—this is the vocab + concept lineage that made a design-focused harness legible in the first place.
+**Harness vocabulary + anatomy (primary inspiration)**—LangChain: [*The Anatomy of an Agent Harness*](https://blog.langchain.com/the-anatomy-of-an-agent-harness/) by [Vivek Trivedy](https://x.com/Vtrivedy10) and [*Your Harness, Your Memory*](https://blog.langchain.com/your-harness-your-memory/) by [Harrison Chase](https://x.com/hwchase17). The noun "harness," the memory-typology framing, and the ownership argument come from here—the vocabulary and concept lineage that made a design-focused harness legible in the first place.
 
 **Compounding practice + plug-in pattern**—[compound-engineering-plugin](https://github.com/EveryInc/compound-engineering-plugin) by [Kieran Klaassen](https://twitter.com/kieranklaassen) and the [Every](https://every.to) team, with their companion essay [*Compound Engineering*](https://every.to/guides/compound-engineering). Heavy user—their lesson → rule compounding loop inspired the design-focused compounding we wire into the Workflow Orchestration layer. The structural model (`plugin.json` + skills as commands + agents as categorized sub-agents + plan-then-work workflow) is also lifted from their work.
 
