@@ -23,7 +23,7 @@ Return verbatim article quotes with section citations for a given concept questi
 
 Source list comes from two places, merged in this order:
 
-1. **Default corpus** — `agents/research/references/article-quote-finder-corpus.md` (this repo). Always read first. While the public article URL is pre-publication, rows may point to the local draft excerpt corpus or carry the `{{TBD}}` sentinel.
+1. **Default corpus** — `agents/research/references/article-quote-finder-corpus.md` (this repo). Always read first. The corpus is populated with the published article URL (<https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building>); the local-draft excerpt at `article-draft-stop-chasing-design-tools.md` remains as an offline fallback. `{{TBD}}` sentinel handling is retained for user overrides.
 2. **User overrides** — `hd-config.md` in the caller's repo, under `article_sources:`. User values WIN on key collision; new keys are appended to the resolved set.
 
 Typical source keys (corpus rows + common overrides):

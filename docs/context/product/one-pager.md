@@ -22,5 +22,5 @@ Turn scattered AI use (prompts, Figma comments, design-system rules, review habi
 
 ## Links
 
-- Origin article: "Stop Chasing Design Tools. Start Building a Design Harness" *(public link TBD)*
+- Origin article: ["Stop Chasing Design Tools. Start Building a Design Harness"](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building)
 - Extraction source: [github.com/BilLogic/plus-uno](https://github.com/BilLogic/plus-uno)

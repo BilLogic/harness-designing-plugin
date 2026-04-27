@@ -1,13 +1,15 @@
 ---
 title: "Stop Chasing Design Tools. Start Building a Design Harness"
-loaded_by: article-quote-finder
-status: draft-local
-public_url: TBD
+loaded_by: article-quote-finder (fallback only)
+status: superseded
+public_url: https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building
 ---
 
 # Stop Chasing Design Tools. Start Building a Design Harness
 
-Local draft excerpt corpus for `article-quote-finder`. Public URL is TBD; replace this draft-backed corpus with the canonical article URL after publication.
+**Article is published.** Canonical URL: <https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building>.
+
+This file is preserved as an offline excerpt fallback for `article-quote-finder` when the live URL is unreachable. The default corpus at [`article-quote-finder-corpus.md`](article-quote-finder-corpus.md) now points at the published Substack URL — prefer that over the local excerpts below.
 
 ## §1 — Thesis / TL;DR
 

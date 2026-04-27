@@ -27,5 +27,5 @@ When authoring a new research agent that needs a corpus:
 
 ## Current contents
 
-- [`article-quote-finder-corpus.md`](article-quote-finder-corpus.md) — default corpus for `article-quote-finder` (local draft or public article locations + section anchors)
-- [`article-draft-stop-chasing-design-tools.md`](article-draft-stop-chasing-design-tools.md) — local draft excerpt corpus until the public article URL is available
+- [`article-quote-finder-corpus.md`](article-quote-finder-corpus.md) — default corpus for `article-quote-finder`, populated with the published Substack URL + section anchors
+- [`article-draft-stop-chasing-design-tools.md`](article-draft-stop-chasing-design-tools.md) — offline excerpt fallback (article is now published; corpus prefers the canonical URL)
