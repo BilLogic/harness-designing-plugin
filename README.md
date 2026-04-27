@@ -9,7 +9,9 @@ Four skills. Five layers. One harness your whole team inherits—across Notion, 
 Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/openai/codex), [Cursor](https://cursor.com), and other agentic coding tools. [Install →](#installation)
 
 > *"Tools lower the floor. Taste sets the ceiling. Your harness builds the ladder."*
-> —from the companion article
+> —from the companion article, [*Stop Chasing Design Tools. Start Building a Design Harness*](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building) by Bill Guo
+
+📖 **Read the article first** → [Stop Chasing Design Tools. Start Building a Design Harness](https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building). The thesis, the five-layer frame, and the memory taxonomy that this plug-in operationalizes all originate there. This README is the implementation manual; the article is the argument.
 
 ## Thesis
 
@@ -225,9 +227,8 @@ The four `SKILL.md` files are host-agnostic markdown — `/hd:*` invocations wor
 
 ## Known Issues
 
-- **Article published.** The canonical URL is wired into [`agents/research/references/article-quote-finder-corpus.md`](agents/research/references/article-quote-finder-corpus.md). Override per-repo via `article_sources:` in your `hd-config.md` if you maintain a mirror.
 - **User-level MCPs require opt-in.** `detect.py` scans repo-scoped MCP configs by default. Pass `--include-user-mcps` to also scan `~/.claude/mcp.json` and `~/.codex/mcp.json`.
-- **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/design-solutions/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
+- **Namespace respect, not integration.** Strictly namespaced: commands `/hd:*`, skills `hd-*`, config `hd-config.md`, knowledge under `docs/knowledge/` (never `docs/solutions/`). The `<protected_artifacts>` block declares our outputs as read-only for external review/cleanup tools. We do not call into other plug-ins' skills or agents.
 
 ## License
 
