@@ -61,7 +61,7 @@ Never answer without citations. "According to the article" is weak; `§4a` is di
 Every response ends with a concrete suggested action:
 
 - "Ready to scaffold?" → suggest `/hd:setup`
-- "Want to read the full argument?" → suggest article URL
+- "Want to read the full argument?" → link to <https://rexandduckie.substack.com/p/stop-chasing-design-tools-start-building>
 - "Have a related question?" → suggest the matching reference file
 
 ## Routing table
