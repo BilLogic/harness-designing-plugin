@@ -17,9 +17,9 @@ Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/
 
 ## Thesis
 
-**You already have a design harness.** It's scattered—Slack pins, Notion docs, Figma comments, AGENTS.md rules, a decade of design reviews.
+**Every new AI tool resets your practice.** Each release lowers the floor for output and pulls your team back to setup—new prompts, new conventions, the same standards re-explained. Scattered tool use is not a harness; it's a tax you pay every release.
 
-This plug-in assembles the pile into **five layers**. Every AI-assisted task inherits all of them. Each layer has its own home and feeds the others.
+**A design harness is the layer your team owns across tools.** Context, skills, workflows, evaluation, knowledge—five layers, one repo, version-controlled with your code. Every AI-assisted task inherits all of them. Tools come and go; the harness compounds.
 
 ```
 Agent = Model + Harness
