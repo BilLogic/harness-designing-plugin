@@ -17,7 +17,7 @@ Works with [Claude](https://claude.com/claude-code), [Codex](https://github.com/
 
 ## Thesis
 
-AI keeps lowering the floor for design output, and every new tool resets your team's setup. Each release pulls you back into reconfiguring prompts, re-explaining standards, and rediscovering what worked last month. For teams with products and standards already in place, this treadmill is the real cost of AI—not the output itself.
+AI keeps lowering the floor for design output, and every new tool resets the practice you built around the last one. For teams with standards already in place, that treadmill is the real cost of AI.
 
 A design harness is the layer your team owns across tools. Five layers—context, skills, workflows, evaluation, knowledge—version-controlled in your repo, inherited by every AI-assisted task. Tools come and go. The harness compounds.
 
