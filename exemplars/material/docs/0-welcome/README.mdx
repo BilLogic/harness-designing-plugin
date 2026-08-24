@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="0-welcome/README" />
+
+# Material 3 — harness exemplar
+
+> A populated v7.4 harness tree built from Material 3's design tokens (color roles, type scale, elevation tiers, state layers).
+> Source: [m3.material.io](https://m3.material.io) + [material-components/material-web](https://github.com/material-components/material-web).
+> Generated to dogfood the harness templates against M3's role-based token model.
+
+## What this exemplar exercises
+
+- **Role-based tokens** — `--md-sys-color-{primary, secondary, tertiary, error}` × `{base, on-, container, on-container}` (4 roles × 4 variations = 16 color tokens for actions alone)
+- **State layers** — hover/focus/pressed/dragged opacities applied as overlays, not separate colors
+- **Elevation tiers** — 6 levels (0-5), each with a defined shadow
+- **Surface tiers** — 5 levels of neutral surface (lowest → highest) for layering
+- **Full M3 typescale** — 15 tokens from `display-large` (57px) down to `label-medium` (12px)
+- **Web Components / Lit** stories — different framework than shadcn (React) but the same `.tsx` harness-blocks render the docs page chrome
+
+## What's special about this exemplar's framework
+
+This Storybook runs `@storybook/web-components-vite`. The components in `src/components/` are Lit custom elements (`<md-filled-button>` etc.) — but the docs page chrome (`<Panel>`, swatch displays) renders as React inside the docs renderer, regardless. That's framework-agnosticism the harness ships out of the box.
+
+## Three exemplars
+
+| Exemplar | DS philosophy | Framework |
+|---|---|---|
+| shadcn | Utility-first / token pairs | `@storybook/react-vite` |
+| **Material 3** (this one) | Role-based tokens + state layers + elevation | `@storybook/web-components-vite` |
+| Fluent 2 | Brand ramps + semantic neutrals | `@storybook/react-vite` |
+
+## Run it
+
+```bash
+cd exemplars/material
+npm install
+npm run storybook
+```

@@ -1,0 +1,191 @@
+import { Meta } from '@storybook/blocks';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../src/components/Card';
+import { Badge } from '../../src/components/Badge';
+
+<Meta title="2-styles/Typography" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: '8 sizes inherited from the Tailwind defaults. System fonts by default, override `--font-sans` once for branded faces. No custom scale to memorize.',
+  chips: ['8 sizes', '4 weights', 'System fonts'],
+  preview: 'MiniTypeStack',
+  kicker: 'Styles 02',
+};
+
+# Typography
+
+> shadcn/ui doesn't ship a custom type system — it inherits the [Tailwind v4 default scale](https://tailwindcss.com/docs/font-size). The 8 sizes below cover the entire surface; values render live from `src/styles/tokens.css`.
+
+## The scale
+
+export const TypeRow = ({ token, px, intent, sample = 'The quick brown fox jumps over the lazy dog' }) => {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '6.5rem 1fr 5rem', gap: '1rem', alignItems: 'baseline', padding: '0.875rem 0', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>--text-{token}</code>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>{intent}</span>
+      </div>
+      <div style={{ fontSize: `var(--text-${token})`, fontFamily: 'var(--font-sans)', lineHeight: 1.25 }}>{sample}</div>
+      <span style={{ fontSize: 'var(--text-xs)', fontVariantNumeric: 'tabular-nums', color: 'var(--muted-foreground)', textAlign: 'right' }}>{px}</span>
+    </div>
+  );
+};
+
+<TypeRow token="4xl" px="36px" intent="Display 1" sample="Page title" />
+<TypeRow token="3xl" px="30px" intent="Display 2" sample="Page title" />
+<TypeRow token="2xl" px="24px" intent="Heading 1" sample="Section heading" />
+<TypeRow token="xl"  px="20px" intent="Heading 2" sample="Section heading" />
+<TypeRow token="lg"  px="18px" intent="Heading 3" sample="Card title" />
+<TypeRow token="base" px="16px" intent="Body" sample="Body copy — this is the default reading size for paragraphs and prose." />
+<TypeRow token="sm"  px="14px" intent="Body small" sample="Body small — labels, dense UI, table cells, list items." />
+<TypeRow token="xs"  px="12px" intent="Caption" sample="Caption — metadata, hints, fine print." />
+
+## Hierarchy in context
+
+Pair sizes with semantic HTML. The visual hierarchy and the document outline must match.
+
+export const HierarchyDemo = () => (
+  <div style={{ padding: '1.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)', maxWidth: 720 }}>
+    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginBottom: '0.5rem' }}>
+      Eyebrow
+    </div>
+    <h1 style={{ margin: 0, fontSize: 'var(--text-3xl)', fontWeight: 700, letterSpacing: '-0.015em', lineHeight: 1.15 }}>
+      Page title
+    </h1>
+    <p style={{ marginTop: '0.5rem', fontSize: 'var(--text-lg)', lineHeight: 1.5, color: 'var(--muted-foreground)' }}>
+      Page lede — one sentence that tells the reader what they will find here.
+    </p>
+    <h2 style={{ marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: 'var(--text-2xl)', fontWeight: 600, letterSpacing: '-0.01em' }}>
+      Section heading
+    </h2>
+    <p style={{ margin: 0, fontSize: 'var(--text-base)', lineHeight: 1.6 }}>
+      Body copy. Paragraphs run at 16px with 1.6 line-height. Read for distance, not skim.
+    </p>
+    <h3 style={{ marginTop: '1.25rem', marginBottom: '0.375rem', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
+      Subheading
+    </h3>
+    <p style={{ margin: 0, fontSize: 'var(--text-sm)', lineHeight: 1.5, color: 'var(--muted-foreground)' }}>
+      Body small. Use for secondary text — labels, captions, dense UI, secondary metadata.
+    </p>
+  </div>
+);
+
+<HierarchyDemo />
+
+## Scale → use mapping
+
+| Token | Use | Semantic |
+|---|---|---|
+| `text-4xl` | Display 1 — hero pages, marketing surfaces | `<h1>` rare |
+| `text-3xl` | Display 2 — page titles | `<h1>` |
+| `text-2xl` | Heading 1 — section heading | `<h2>` |
+| `text-xl` | Heading 2 — sub-section heading | `<h3>` |
+| `text-lg` | Heading 3 — card title, form section | `<h3>` / `<h4>` |
+| **`text-base`** | **Default body** — paragraphs, descriptions | `<p>` |
+| `text-sm` | Body small — labels, dense UI, list items | `<p>` / `<span>` |
+| `text-xs` | Caption — metadata, hints, badges | `<span>` |
+
+## Font families
+
+| Token | Stack |
+|---|---|
+| `--font-sans` | `ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` |
+| `--font-mono` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace` |
+
+Override `--font-sans` **once at the root** when introducing a branded face — every component picks it up automatically.
+
+## Weights
+
+Four weights cover the surface. The system fonts ship with these out of the box; custom faces should provide the same set.
+
+| Weight | Used for |
+|---|---|
+| `400` (regular) | Body, descriptions |
+| `500` (medium) | Buttons, labels, table headers |
+| `600` (semibold) | Card titles, section headings |
+| `700` (bold) | Page titles, display |
+
+## Line height
+
+Per-size defaults from Tailwind:
+
+| Size | Line height |
+|---|---|
+| `text-xs` to `text-base` | `1.5` (body) |
+| `text-lg` to `text-xl` | `1.4` (subheading) |
+| `text-2xl` to `text-3xl` | `1.25` (heading) |
+| `text-4xl` | `1.1` (display) |
+
+Override per-component when needed; don't tokenize variants we don't actually use.
+
+## Truncation patterns
+
+When content overflows its container, use one of three patterns. Pick by intent.
+
+export const TruncDemo = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+    <Card>
+      <CardHeader>
+        <CardTitle style={{ fontSize: 'var(--text-base)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          A very long card title that overflows
+        </CardTitle>
+        <CardDescription>1-line truncate</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>
+          text-overflow: ellipsis
+        </code>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle style={{ fontSize: 'var(--text-base)' }}>2-line clamp</CardTitle>
+        <CardDescription style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}>
+          A description longer than two lines that we want to clamp at exactly two lines so the cards stay visually balanced in a grid even when the content varies.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>
+          -webkit-line-clamp: 2
+        </code>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+<TruncDemo />
+
+## Decisions
+
+- **No custom font face by default.** System UI fonts ship instantly with zero load weight. If a brand demands a custom face, set `--font-sans` to the imported family — every component picks it up.
+- **No type "scale" beyond Tailwind defaults.** A 13-step scale invites bikeshedding. The 8 sizes above cover 95% of real usage.
+- **Line-height defaults to Tailwind's per-size** (1.5 for body, 1.25 for headings, 1 for display). Override per-component if needed; don't tokenize variants we don't use.
+- **Tabular numerals** for numeric values that align in columns (`fontVariantNumeric: 'tabular-nums'`). Mix into stat tiles, table cells, dial readouts.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Use `text-base` for body, `text-sm` for labels | Add a `text-md` "between" — pick `base` or `sm` |
+| Override `--font-sans` once at the root for branded faces | Apply `font-family` per-component |
+| Pair heading sizes with semantic `<h1>`/`<h2>`/etc. | Use type size to convey hierarchy without semantics |
+| Use `tabular-nums` for numeric columns | Hand-pad numbers with spaces to align |
+| Truncate single-line with `text-overflow: ellipsis` | Truncate multi-line with `text-overflow: ellipsis` (won't work) |
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — `--text-*`, `--font-sans`, `--font-mono`.
+
+## Related
+
+[Tokens](?path=/docs/1-foundations-tokens--docs) · [Color](?path=/docs/2-styles-color--docs) · [Voice](?path=/docs/1-foundations-voice--docs) · [Spacing](?path=/docs/2-styles-spacing--docs)
+
+## Agent prompt guide
+
+> Body copy → `text-sm` for compact UI, `text-base` for readable prose. Page title → `text-3xl` or `text-4xl`. Section heading → `text-2xl`. Card title → `text-lg`. Labels and metadata → `text-xs`. Use the semantic HTML tag (`<h1>`–`<h6>`) appropriate to document outline; don't pick by visual size alone. Numeric columns → add `font-variant-numeric: tabular-nums`.

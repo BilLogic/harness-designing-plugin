@@ -1,0 +1,89 @@
+/**
+ * Storybook preview config — scaffolded by /hd:design-system establish.
+ *
+ * Globals: theme / brand / direction / strictMode (Fluent UI react-storybook-addon
+ * pattern). Each is exposed as a toolbar control; decorators below apply them.
+ */
+
+import './harness-blocks/harness-styles.css';
+
+import { withThemeBrand } from './decorators/with-theme-brand';
+import { withDirection } from './decorators/with-direction';
+import { withAriaLive } from './decorators/with-aria-live';
+import { withReactStrictMode } from './decorators/with-react-strict-mode';
+import { HarnessDocsContainer } from './decorators/harness-docs-container';
+import { HarnessDocsPage } from './decorators/harness-docs-page';
+
+export const globalTypes = {
+  theme: {
+    name: 'Theme',
+    description: 'Active color/elevation theme',
+    defaultValue: 'light',
+    toolbar: {
+      icon: 'paintbrush',
+      items: {{MODES}},
+      dynamicTitle: true,
+    },
+  },
+  brand: {
+    name: 'Brand',
+    description: 'Active brand variant',
+    defaultValue: 'default',
+    toolbar: {
+      icon: 'circlehollow',
+      items: {{BRANDS}},
+      dynamicTitle: true,
+    },
+  },
+  direction: {
+    name: 'Direction',
+    description: 'Text direction (LTR / RTL)',
+    defaultValue: 'ltr',
+    toolbar: {
+      icon: 'transfer',
+      items: ['ltr', 'rtl'],
+      dynamicTitle: true,
+    },
+  },
+  strictMode: {
+    name: 'Strict mode',
+    description: 'React StrictMode wrapper',
+    defaultValue: 'off',
+    toolbar: {
+      icon: 'beaker',
+      items: ['off', 'on'],
+      dynamicTitle: true,
+    },
+  },
+};
+
+export const decorators = [
+  withThemeBrand,
+  withDirection,
+  withAriaLive,
+  withReactStrictMode,
+];
+
+/** @type { import('@storybook/{{FRAMEWORK_BARE}}').Preview } */
+const preview = {
+  parameters: {
+    viewMode: 'docs',
+    controls: {
+      expanded: true,
+      sort: 'requiredFirst',
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    a11y: {
+      config: {},
+    },
+    docs: {
+      container: HarnessDocsContainer,
+      page: HarnessDocsPage,
+    },
+  },
+};
+
+export default preview;

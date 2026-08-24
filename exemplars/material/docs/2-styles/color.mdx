@@ -1,0 +1,85 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Color" />
+
+# Color
+
+> Each role group has 4 tokens forming a tonal pair: the base color, its `on-` foreground, a less-prominent `container`, and the container's `on-` foreground. Below: every group rendered live from `tokens.css`.
+
+export const RoleGroup = ({ name, role }) => (
+  <div style={{ marginBottom: '1.25rem' }}>
+    <div style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem' }}>{name}</div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, borderRadius: 'var(--md-sys-shape-corner-medium)', overflow: 'hidden', border: '1px solid var(--md-sys-color-outline-variant)' }}>
+      <div style={{ padding: '1.25rem 0.75rem', background: `var(--md-sys-color-${role})`, color: `var(--md-sys-color-on-${role})`, fontFamily: 'ui-monospace, monospace', fontSize: '0.7rem' }}>
+        --md-sys-color-{role}
+      </div>
+      <div style={{ padding: '1.25rem 0.75rem', background: `var(--md-sys-color-on-${role})`, color: `var(--md-sys-color-${role})`, fontFamily: 'ui-monospace, monospace', fontSize: '0.7rem' }}>
+        on-{role}
+      </div>
+      <div style={{ padding: '1.25rem 0.75rem', background: `var(--md-sys-color-${role}-container)`, color: `var(--md-sys-color-on-${role}-container)`, fontFamily: 'ui-monospace, monospace', fontSize: '0.7rem' }}>
+        {role}-container
+      </div>
+      <div style={{ padding: '1.25rem 0.75rem', background: `var(--md-sys-color-on-${role}-container)`, color: `var(--md-sys-color-${role}-container)`, fontFamily: 'ui-monospace, monospace', fontSize: '0.7rem' }}>
+        on-{role}-container
+      </div>
+    </div>
+  </div>
+);
+
+## Action role groups
+
+<RoleGroup name="Primary" role="primary" />
+<RoleGroup name="Secondary" role="secondary" />
+<RoleGroup name="Tertiary" role="tertiary" />
+<RoleGroup name="Error" role="error" />
+
+## Surface tiers
+
+5 levels of neutral surface for content layering. Pick by hierarchical depth, not by visual weight.
+
+export const SurfaceTier = ({ tier, label }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+    <div style={{ width: '5rem', height: '2.5rem', background: `var(--md-sys-color-${tier})`, border: '1px solid var(--md-sys-color-outline-variant)', borderRadius: 'var(--md-sys-shape-corner-small)' }} />
+    <div>
+      <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>{label}</div>
+      <code style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>--md-sys-color-{tier}</code>
+    </div>
+  </div>
+);
+
+<SurfaceTier tier="surface" label="Surface (page bg)" />
+<SurfaceTier tier="surface-container-lowest" label="Surface container — lowest" />
+<SurfaceTier tier="surface-container-low" label="Surface container — low" />
+<SurfaceTier tier="surface-container" label="Surface container" />
+<SurfaceTier tier="surface-container-high" label="Surface container — high" />
+<SurfaceTier tier="surface-container-highest" label="Surface container — highest" />
+
+## Outline + on-surface helpers
+
+<SurfaceTier tier="on-surface" label="On surface (primary text)" />
+<SurfaceTier tier="on-surface-variant" label="On surface variant (secondary text)" />
+<SurfaceTier tier="outline" label="Outline (default border)" />
+<SurfaceTier tier="outline-variant" label="Outline variant (subtle border)" />
+
+## State layer demo
+
+Hover state painted as `on-primary` overlay at 8% opacity on top of `primary`:
+
+<div style={{ display: 'inline-block', position: 'relative', padding: '0.875rem 1.5rem', background: 'var(--md-sys-color-primary)', color: 'var(--md-sys-color-on-primary)', borderRadius: 'var(--md-sys-shape-corner-extra-large)', fontFamily: 'var(--md-sys-typescale-label-large-font)', fontSize: 'var(--md-sys-typescale-label-large-size)', overflow: 'hidden' }}>
+  <span style={{ position: 'absolute', inset: 0, background: 'var(--md-sys-color-on-primary)', opacity: 0.08 }} />
+  <span style={{ position: 'relative' }}>Primary button (hover state)</span>
+</div>
+
+## Decisions
+
+- **Tonal pairs always come together.** Use `primary` + `on-primary`, never `primary` + `on-surface`. The on- token is luminance-tuned for the base.
+- **Container variants for less-prominent uses.** `primary-container` is intentionally softer — for filled chips, light banners, surface accents.
+- **Surface tiers, not opacity overlays.** Layering content uses different surface roles, not `rgba(0,0,0,0.05)`. Means dark theme works correctly without re-tuning.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-design-tokens--docs) — `:root` (light) and `[data-theme="dark"]` blocks.
+
+## Agent prompt guide
+
+> Action button → `primary` family. Secondary action → `secondary`. Information chrome → `tertiary`. Errors → `error`. For surfaces: page bg = `surface`, cards on the page = `surface-container-low`, modals = `surface-container-high`. Always pair the role with its `on-` token for foreground.

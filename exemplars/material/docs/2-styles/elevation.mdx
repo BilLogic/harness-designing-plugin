@@ -1,0 +1,75 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Elevation" />
+
+# Elevation
+
+> Six levels (0-5), each with a defined shadow. M3 also supports tonal elevation (surface tint shifts) but in light mode the shadow is the dominant cue. Match level to component class, not visual intuition.
+
+export const ElevationDemo = ({ level }) => (
+  <div style={{ marginBottom: '1.5rem' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
+      <div style={{
+        width: '8rem',
+        height: '5rem',
+        background: 'var(--md-sys-color-surface-container-low)',
+        borderRadius: 'var(--md-sys-shape-corner-medium)',
+        boxShadow: `var(--md-sys-elevation-level${level})`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 600,
+        color: 'var(--md-sys-color-on-surface)',
+        fontFamily: 'var(--md-sys-typescale-title-medium-font)',
+        fontSize: 'var(--md-sys-typescale-title-medium-size)',
+      }}>
+        Level {level}
+      </div>
+      <div>
+        <code style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>--md-sys-elevation-level{level}</code>
+        <div style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>{
+          ['Flat (no shadow). Resting cards on a tinted surface.',
+           'Outlined card hover, default FAB resting state, navigation bar.',
+           'Default elevated card, top app bar (scrolled).',
+           'Modal dialogs, navigation drawer.',
+           'Floating action button (lifted), banner.',
+           'Snackbar, dialog above other dialogs.'][level]
+        }</div>
+      </div>
+    </div>
+  </div>
+);
+
+## Levels
+
+<ElevationDemo level={0} />
+<ElevationDemo level={1} />
+<ElevationDemo level={2} />
+<ElevationDemo level={3} />
+<ElevationDemo level={4} />
+<ElevationDemo level={5} />
+
+## When to use which
+
+| Use case | Level |
+|---|---|
+| Static card on surface | 0 (use `surface-container-low` background instead) |
+| FAB resting / navigation bar | 1 |
+| Elevated card / top app bar (scrolled) | 2 |
+| Modal dialog / navigation drawer | 3 |
+| Lifted FAB during drag / banner | 4 |
+| Stacked dialog over dialog | 5 |
+
+## Decisions
+
+- **6 levels is the entire scale.** No level-1.5 between levels. If two adjacent levels feel too close, the right answer is usually a surface tier shift, not a custom shadow.
+- **Tonal elevation is implicit, not exposed.** In light mode, level-1 surfaces look identical to surface; in dark mode the surface tint adds visible warmth. Don't tokenize the tint manually.
+- **Don't combine elevation with surface tier shifts arbitrarily.** A `surface-container-high` card with a level-3 shadow reads as "this dialog tries too hard." Pick one cue per component.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-design-tokens--docs) — `--md-sys-elevation-level{0..5}`.
+
+## Agent prompt guide
+
+> Static UI on a page → level 0. FAB / nav bar → level 1. Elevated card → level 2. Modal / drawer → level 3. Don't go above level 3 unless you're stacking dialogs (rare).

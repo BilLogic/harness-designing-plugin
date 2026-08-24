@@ -1,0 +1,66 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as TextFieldStories from '../../src/components/filled-text-field.stories';
+
+<Meta of={TextFieldStories} />
+
+# Filled Text Field
+
+> Material 3's filled-style text input. The default text field — use unless your surface specifically calls for outlined style. Persistent label that floats above the value when focused or filled.
+
+## Description
+
+A custom element (`<md-filled-text-field>`) wrapping a native `<input>`. Consumes `--md-sys-color-surface-container-highest` for the container fill, `--md-sys-color-on-surface-variant` for the label, `--md-sys-color-primary` for the focused underline. The container has rounded top corners (`shape-corner-extra-small`) and a flat bottom — the underline is the active-state cue.
+
+## Default
+
+<Panel name="Default" source="src/components/filled-text-field.ts">
+  <Canvas of={TextFieldStories.Default} sourceState="none" />
+</Panel>
+
+## States
+
+<Panel name="States" source="src/components/filled-text-field.ts">
+  <Canvas of={TextFieldStories.States} sourceState="none" />
+</Panel>
+
+| State | Cue |
+|---|---|
+| Empty + unfocused | Label at full size in the input area |
+| Empty + focused | Label shrinks + floats to top, underline thickens to 2px in `--md-sys-color-primary` |
+| Filled | Same as empty + focused but persists when blur |
+| Disabled | Container at 4% surface tint, label + value at 38% opacity |
+| Error | Underline + label switch to `--md-sys-color-error` |
+
+## Usage
+
+```html
+<md-filled-text-field label="Email"></md-filled-text-field>
+<md-filled-text-field label="Email" value="hello@example.com"></md-filled-text-field>
+<md-filled-text-field label="Email" disabled></md-filled-text-field>
+```
+
+## Accessibility
+
+- The visible label is the accessible name — no separate `<label>` needed (the element handles ARIA wiring)
+- For required fields, set `required` and pair with a visible asterisk or "Required" supporting text
+- Errors set `aria-invalid="true"` and reference a supporting-text element via `aria-describedby`
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Always set the `label` attribute | Use `placeholder` as the only label |
+| Use `error-text` for inline validation | Hide errors behind tooltips |
+| Pair with supporting text for hints (max length, format) | Cram instructions into the placeholder |
+| Use `type="email"` / `tel` / `number` etc. for the right keyboard | Use `type="text"` for everything |
+
+## Source of truth
+
+- Code — [`src/components/filled-text-field.ts`](?path=/story/4-components-filled-text-field--default)
+- Stories — [`src/components/filled-text-field.stories.ts`](?path=/story/4-components-filled-text-field--default)
+- Reference — [Material 3 — Text field](https://m3.material.io/components/text-fields/specs)
+
+## Agent prompt guide
+
+> Always set `label`. Pair with `supporting-text` for hints, `error-text` + `aria-invalid` for validation. Pick `<md-filled-text-field>` (this) for default forms; `<md-outlined-text-field>` only when surface contrast specifically demands it.

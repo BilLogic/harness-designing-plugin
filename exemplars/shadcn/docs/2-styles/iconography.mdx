@@ -1,0 +1,236 @@
+import { Meta } from '@storybook/blocks';
+import {
+  Search,
+  Settings,
+  ArrowRight,
+  Check,
+  AlertTriangle,
+  Mail,
+  Bell,
+  User,
+  Plus,
+  X,
+  ChevronDown,
+  Trash2,
+  Info,
+  Pencil,
+  Eye,
+  Filter,
+  Download,
+  Upload,
+} from 'lucide-react';
+import { Button } from '../../src/components/Button';
+import { Badge } from '../../src/components/Badge';
+
+<Meta title="2-styles/Iconography" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'lucide-react. 1300+ glyphs, 24×24 viewBox, 2px stroke. Sized to the type scale: 12 / 14 / 16 / 18 / 20.',
+  chips: ['lucide-react', '1300+ glyphs', '5 sizes'],
+  kicker: 'Styles 05',
+};
+
+# Iconography
+
+> shadcn projects use [lucide-react](https://lucide.dev) — a 1300+ glyph open-source set with consistent 24×24 viewBox + 2px stroke. One import, one prop API, one stroke weight. The harness ships the canonical mappings below so agents and designers reach for the same glyph for the same intent.
+
+## Sizes — match the adjacent text
+
+| Pixel | Type-scale equivalent | Use |
+|---|---|---|
+| 12px | `text-xs` | Inline status pills, dense chips, small badges |
+| 14px | `text-sm` | Inline body text, secondary labels, tab labels |
+| **16px** | `text-base` | **Default** — buttons, form fields, list items |
+| 18px | `text-lg` | Page-level kickers, prominent UI |
+| 20px | `text-xl` | Section headers, special cards |
+
+export const SizeRow = ({ Icon, name }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '0.625rem 0', borderBottom: '1px solid var(--border)' }}>
+    <code style={{ width: '5rem', fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
+      {name}
+    </code>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+      <Icon size={12} aria-hidden />
+      <Icon size={14} aria-hidden />
+      <Icon size={16} aria-hidden />
+      <Icon size={18} aria-hidden />
+      <Icon size={20} aria-hidden />
+    </div>
+  </div>
+);
+
+<div style={{ marginTop: '1rem' }}>
+  <SizeRow Icon={Search} name="Search" />
+  <SizeRow Icon={Settings} name="Settings" />
+  <SizeRow Icon={Bell} name="Bell" />
+</div>
+
+## Common glyphs
+
+A small set covers most product surfaces — start here, escalate to lucide's full catalog only when one of these doesn't fit.
+
+export const IconCard = ({ Icon, name, intent }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.375rem', padding: '0.875rem 0.5rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+    <Icon size={20} aria-hidden />
+    <code style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
+      {name}
+    </code>
+    <span style={{ fontSize: '0.6875rem', color: 'var(--muted-foreground)' }}>{intent}</span>
+  </div>
+);
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.5rem', marginTop: '0.75rem' }}>
+  <IconCard Icon={Search} name="Search" intent="search" />
+  <IconCard Icon={Settings} name="Settings" intent="settings" />
+  <IconCard Icon={Bell} name="Bell" intent="notifications" />
+  <IconCard Icon={Mail} name="Mail" intent="email" />
+  <IconCard Icon={User} name="User" intent="profile" />
+  <IconCard Icon={Plus} name="Plus" intent="add / new" />
+  <IconCard Icon={X} name="X" intent="close / dismiss" />
+  <IconCard Icon={ChevronDown} name="ChevronDown" intent="expand" />
+  <IconCard Icon={ArrowRight} name="ArrowRight" intent="forward" />
+  <IconCard Icon={Check} name="Check" intent="confirm / done" />
+  <IconCard Icon={Trash2} name="Trash2" intent="delete" />
+  <IconCard Icon={AlertTriangle} name="AlertTriangle" intent="warning" />
+  <IconCard Icon={Info} name="Info" intent="info" />
+  <IconCard Icon={Pencil} name="Pencil" intent="edit" />
+  <IconCard Icon={Eye} name="Eye" intent="view" />
+  <IconCard Icon={Filter} name="Filter" intent="filter" />
+  <IconCard Icon={Download} name="Download" intent="download" />
+  <IconCard Icon={Upload} name="Upload" intent="upload" />
+</div>
+
+## Convention
+
+```tsx
+import { Search } from 'lucide-react';
+
+<Search size={16} aria-hidden />
+```
+
+- **Always set `aria-hidden`** for decorative icons. Pair with adjacent text or `aria-label` on the parent control.
+- **Use `size`, not `width` + `height`.** lucide's prop is the single source.
+- **Don't restyle the stroke.** 2px is the system. If you find yourself reaching for `strokeWidth`, you probably want a different icon.
+
+## Color — inherits via `currentColor`
+
+Icons inherit `currentColor`. To change color, change `color` on the parent — never set `stroke` directly.
+
+export const ColorDemo = () => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1rem 1.25rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: 'var(--foreground)' }}>
+      <Bell size={16} aria-hidden />
+      <span style={{ fontSize: 'var(--text-sm)' }}>Default</span>
+    </span>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: 'var(--muted-foreground)' }}>
+      <Bell size={16} aria-hidden />
+      <span style={{ fontSize: 'var(--text-sm)' }}>Muted</span>
+    </span>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: 'var(--primary)' }}>
+      <Bell size={16} aria-hidden />
+      <span style={{ fontSize: 'var(--text-sm)' }}>Primary</span>
+    </span>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: 'var(--destructive)' }}>
+      <AlertTriangle size={16} aria-hidden />
+      <span style={{ fontSize: 'var(--text-sm)' }}>Destructive</span>
+    </span>
+  </div>
+);
+
+<ColorDemo />
+
+## Inside components
+
+Icons compose into Buttons, Badges, Alerts, Tabs, and more. The component decides the size; you supply the glyph.
+
+export const InContext = () => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+    <Button>
+      <Plus size={16} />
+      New
+    </Button>
+    <Button variant="outline">
+      <Filter size={16} />
+      Filter
+    </Button>
+    <Button variant="ghost" size="icon" aria-label="Settings">
+      <Settings size={16} />
+    </Button>
+    <Badge>
+      <Check size={12} />
+      Live
+    </Badge>
+    <Badge variant="destructive">
+      <AlertTriangle size={12} />
+      Failed
+    </Badge>
+  </div>
+);
+
+<InContext />
+
+## Icon-only buttons require `aria-label`
+
+The icon alone isn't a name. Set `aria-label` on the parent `Button`; mark the icon `aria-hidden`.
+
+```tsx
+<Button variant="ghost" size="icon" aria-label="Settings">
+  <Settings size={16} aria-hidden />
+</Button>
+```
+
+[See Button — Size story →](?path=/docs/4-components-button--docs)
+
+## Agent intent → glyph lookup
+
+When generating code that references an icon by intent rather than name (e.g., "the close icon"), use this mapping as the canonical resolution. Same intent → same glyph across the system.
+
+| Intent | lucide name | Notes |
+|---|---|---|
+| Close / dismiss | `X` | Not `XCircle` (heavier) |
+| Delete | `Trash2` | Not `Trash` (older outline style) |
+| Settings | `Settings` | The cog wheel |
+| Confirm / done | `Check` | Not `CheckCircle` for inline use |
+| Warning | `AlertTriangle` | Use `AlertCircle` for info, `XCircle` for error |
+| Info | `Info` | The "i" in a circle |
+| Search | `Search` | The magnifier |
+| Add / new | `Plus` | Not `PlusCircle` for inline use |
+| Forward / continue | `ArrowRight` | Use in CTAs trailing the label |
+| Expand | `ChevronDown` | `ChevronUp` for collapse |
+| Edit | `Pencil` | Not `Edit` (deprecated) |
+| View / preview | `Eye` | The visibility glyph |
+| Filter | `Filter` | The funnel |
+| Download | `Download` | Arrow into tray |
+| Upload | `Upload` | Arrow out of tray |
+| Avatar fallback | `User` | The single-person silhouette |
+| Notifications | `Bell` | Not `BellRing` (active variant) |
+| Email | `Mail` | The envelope |
+
+If the intent doesn't map, search the lucide catalog at https://lucide.dev/icons.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Match icon size to adjacent text | Mix sizes inside the same row |
+| Use `aria-hidden` on decorative icons | Leave decorative icons announceable |
+| Use `aria-label` on icon-only buttons | Rely on the icon name alone for meaning |
+| Inherit color via `currentColor` | Set `stroke` directly on the icon |
+| Pull from lucide first | Bring in a second icon library |
+| Use the canonical intent → glyph lookup | Pick a different glyph for the same intent in different contexts |
+
+## Source of truth
+
+- [lucide-react](https://lucide.dev) — full catalog
+- This page — size scale + agent intent → glyph lookup
+- Per-component stories that use icons — see [Button — Icon story](?path=/docs/4-components-button--docs) and [Badge — Status story](?path=/docs/4-components-badge--docs)
+
+## Related
+
+[Typography](?path=/docs/2-styles-typography--docs) · [Voice](?path=/docs/1-foundations-voice--docs) · [Button](?path=/docs/4-components-button--docs) · [Badge](?path=/docs/4-components-badge--docs)
+
+## Agent prompt guide
+
+> When generating code that needs an icon: import from `lucide-react`, use `size={16}` by default, set `aria-hidden` for decorative use, set `aria-label` on the parent for icon-only controls. Never invent SVG inline. Never bring in a second icon library — if lucide doesn't have it, surface the gap. For intents in the lookup table, use the canonical glyph; consistency outranks novelty.

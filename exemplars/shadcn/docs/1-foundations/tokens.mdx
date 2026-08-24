@@ -1,0 +1,226 @@
+import { Meta } from '@storybook/blocks';
+import { Button } from '../../src/components/Button';
+import { Badge } from '../../src/components/Badge';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../src/components/Card';
+
+<Meta title="1-foundations/Tokens" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'Two-tier model — OKLCH primitives feed 11 semantic role pairs. Components consume tier 2; tier 3 (component tokens) is intentionally absent. Theme switches via the `.dark` class.',
+  chips: ['11 role pairs', 'OKLCH', 'Light + dark'],
+  kicker: 'Foundation 05',
+};
+
+# Tokens
+
+> All design decisions live in `src/styles/tokens.css` as CSS custom properties on `:root` and `.dark`. Two tiers — primitives (raw OKLCH values) feed semantic roles (paired by purpose). No third tier; component-level tokens are out of scope on purpose.
+
+## Tier flow — primitive → semantic → component
+
+export const TokenFlowDemo = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto 1fr', alignItems: 'center', gap: '0.5rem', padding: '1rem 1.25rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+    <div>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.375rem' }}>
+        Tier 1 · Primitive
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', background: 'oklch(0.205 0 0)', border: '1px solid var(--border)' }} />
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)' }}>oklch(0.205 0 0)</code>
+      </div>
+    </div>
+    <span style={{ color: 'var(--muted-foreground)', fontSize: 'var(--text-sm)' }}>→</span>
+    <div>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.375rem' }}>
+        Tier 2 · Semantic
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <span style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', background: 'var(--primary)' }} />
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)' }}>--primary</code>
+      </div>
+    </div>
+    <span style={{ color: 'var(--muted-foreground)', fontSize: 'var(--text-sm)' }}>→</span>
+    <div>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.375rem' }}>
+        Component
+      </div>
+      <Button>Save</Button>
+    </div>
+  </div>
+);
+
+<TokenFlowDemo />
+
+Primitives live on `:root` and `.dark`. Semantic roles read from primitives. Components read from semantic roles. There is no fourth step.
+
+## Tier 1 — Primitives
+
+Raw color values in OKLCH. **Never consumed directly by components.** They exist only to feed semantic roles below.
+
+```css
+/* in :root */
+--background:           oklch(1 0 0);
+--foreground:           oklch(0.145 0 0);
+--primary:              oklch(0.205 0 0);
+--primary-foreground:   oklch(0.985 0 0);
+--secondary:            oklch(0.97 0 0);
+--secondary-foreground: oklch(0.205 0 0);
+--muted:                oklch(0.97 0 0);
+--muted-foreground:     oklch(0.556 0 0);
+--accent:               oklch(0.97 0 0);
+--accent-foreground:    oklch(0.205 0 0);
+--destructive:          oklch(0.577 0.245 27.325);
+--destructive-foreground: oklch(0.985 0 0);
+--border:               oklch(0.922 0 0);
+--input:                oklch(0.922 0 0);
+--ring:                 oklch(0.708 0 0);
+--radius:               0.625rem;
+```
+
+## Tier 2 — Semantic roles
+
+Every fill has a paired `-foreground` token, scoped for the text or icon that sits on top. Use the pair, never one without the other.
+
+export const PairRow = ({ name, fill, fg, use }) => (
+  <div style={{ display: 'flex', alignItems: 'stretch', gap: '0.75rem', padding: '0.625rem 0', borderBottom: '1px solid var(--border)' }}>
+    <div style={{ display: 'flex', borderRadius: 'calc(var(--radius) - 0.25rem)', overflow: 'hidden', border: '1px solid var(--border)', minWidth: '7.5rem' }}>
+      <div style={{ flex: 1, padding: '0.5rem 0.625rem', background: `var(--${fill})`, color: `var(--${fg})`, fontFamily: 'var(--font-mono)', fontSize: '0.6875rem' }}>
+        {fill}
+      </div>
+      <div style={{ flex: 1, padding: '0.5rem 0.625rem', background: `var(--${fg})`, color: `var(--${fill})`, fontFamily: 'var(--font-mono)', fontSize: '0.6875rem' }}>
+        {fg}
+      </div>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{name}</div>
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>{use}</div>
+    </div>
+  </div>
+);
+
+<PairRow name="Page" fill="background" fg="foreground" use="Outermost surface · primary text" />
+<PairRow name="Card" fill="card" fg="card-foreground" use="Elevated surfaces · cards, dialogs" />
+<PairRow name="Popover" fill="popover" fg="popover-foreground" use="Floating surfaces · tooltips, menus" />
+<PairRow name="Primary" fill="primary" fg="primary-foreground" use="Primary CTAs · brand accents" />
+<PairRow name="Secondary" fill="secondary" fg="secondary-foreground" use="Secondary buttons · less-prominent CTAs" />
+<PairRow name="Muted" fill="muted" fg="muted-foreground" use="De-emphasized text · labels, captions" />
+<PairRow name="Accent" fill="accent" fg="accent-foreground" use="Hover states on neutral surfaces" />
+<PairRow name="Destructive" fill="destructive" fg="destructive-foreground" use="Errors · deletions · dangerous actions" />
+
+## Form chrome — single tokens
+
+These three don't pair — they describe form-control chrome.
+
+export const ChromeRow = ({ name, varName, demo }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
+    {demo}
+    <div>
+      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{name}</div>
+      <code style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>--{varName}</code>
+    </div>
+  </div>
+);
+
+<ChromeRow name="Border" varName="border" demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }} />} />
+<ChromeRow name="Input" varName="input" demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--input)' }} />} />
+<ChromeRow name="Ring (focus)" varName="ring" demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', outline: '2px solid var(--ring)', outlineOffset: '2px' }} />} />
+
+## Theme switching — light vs dark
+
+The same token names hold different OKLCH values in `.dark`. Components don't change; the values do.
+
+export const ThemeCompare = () => {
+  const Sample = ({ theme }) => (
+    <div data-theme={theme} style={{ background: theme === 'dark' ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)', color: theme === 'dark' ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)', padding: '1rem 1.25rem', border: '1px solid', borderColor: theme === 'dark' ? 'oklch(1 0 0 / 0.1)' : 'oklch(0.922 0 0)', borderRadius: 'var(--radius)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.625rem' }}>
+        <Badge style={{ background: theme === 'dark' ? 'oklch(0.922 0 0)' : 'oklch(0.205 0 0)', color: theme === 'dark' ? 'oklch(0.205 0 0)' : 'oklch(0.985 0 0)', borderColor: 'transparent' }}>{theme}</Badge>
+        <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: theme === 'dark' ? 'oklch(0.708 0 0)' : 'oklch(0.556 0 0)' }}>
+          {theme === 'dark' ? '.dark' : ':root'}
+        </code>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <button style={{ height: '2.25rem', padding: '0 0.875rem', borderRadius: 'var(--radius)', border: 'none', background: theme === 'dark' ? 'oklch(0.922 0 0)' : 'oklch(0.205 0 0)', color: theme === 'dark' ? 'oklch(0.205 0 0)' : 'oklch(0.985 0 0)', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', fontWeight: 500, cursor: 'default' }}>
+          Save
+        </button>
+        <span style={{ display: 'inline-flex', alignItems: 'center', height: '1.25rem', padding: '0 0.5rem', borderRadius: '999px', background: theme === 'dark' ? 'oklch(0.922 0 0)' : 'oklch(0.205 0 0)', color: theme === 'dark' ? 'oklch(0.205 0 0)' : 'oklch(0.985 0 0)', fontSize: 'var(--text-xs)', fontWeight: 500 }}>
+          Pro
+        </span>
+        <span style={{ fontSize: 'var(--text-sm)', color: theme === 'dark' ? 'oklch(0.708 0 0)' : 'oklch(0.556 0 0)' }}>
+          Subdued copy
+        </span>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+      <Sample theme="light" />
+      <Sample theme="dark" />
+    </div>
+  );
+};
+
+<ThemeCompare />
+
+Toggle the **Theme** dropdown in the toolbar to switch the surrounding Storybook in real time. The components don't re-render — only the CSS variables on `<html>` change.
+
+## Decisions
+
+- **OKLCH not HSL.** As of shadcn's 2024 update, all default tokens are OKLCH for predictable luminance contrast across themes.
+- **No tier-3 component tokens** like `--button-background`. Components consume tier-2 directly. Adding `--button-*` tokens means forking — at which point you own that decision.
+- **`.dark` class strategy** rather than `prefers-color-scheme`. Lets users opt in/out of the system preference and lets tests pin a theme.
+- **Pair, don't pick.** Always read a fill with its `-foreground` sibling.
+
+## Spacing scale
+
+Eight steps. Numbers match Tailwind v3 conventions; values land on the 4px grid.
+
+export const SpacingRow = ({ token, px }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.375rem 0', borderBottom: '1px solid var(--border)' }}>
+    <code style={{ width: '5.5rem', fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>--{token}</code>
+    <div style={{ width: `var(--${token})`, height: '0.625rem', background: 'var(--primary)', borderRadius: '999px' }} />
+    <span style={{ fontSize: 'var(--text-xs)', fontVariantNumeric: 'tabular-nums', color: 'var(--muted-foreground)' }}>{px}</span>
+  </div>
+);
+
+<SpacingRow token="space-1" px="4px" />
+<SpacingRow token="space-2" px="8px" />
+<SpacingRow token="space-3" px="12px" />
+<SpacingRow token="space-4" px="16px" />
+<SpacingRow token="space-6" px="24px" />
+<SpacingRow token="space-8" px="32px" />
+<SpacingRow token="space-12" px="48px" />
+<SpacingRow token="space-16" px="64px" />
+
+## Type scale
+
+Eight steps. Values expressed in `rem` so they respect user font-size preferences.
+
+export const TypeRow = ({ token, px, sample }) => (
+  <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', padding: '0.375rem 0', borderBottom: '1px solid var(--border)' }}>
+    <code style={{ width: '5.5rem', fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>--{token}</code>
+    <span style={{ fontSize: `var(--${token})`, fontFamily: 'var(--font-sans)', flex: 1 }}>{sample}</span>
+    <span style={{ fontSize: 'var(--text-xs)', fontVariantNumeric: 'tabular-nums', color: 'var(--muted-foreground)' }}>{px}</span>
+  </div>
+);
+
+<TypeRow token="text-xs" px="12px" sample="Caption · 12px" />
+<TypeRow token="text-sm" px="14px" sample="Body small · 14px" />
+<TypeRow token="text-base" px="16px" sample="Body · 16px" />
+<TypeRow token="text-lg" px="18px" sample="Lead · 18px" />
+<TypeRow token="text-xl" px="20px" sample="Heading 4 · 20px" />
+<TypeRow token="text-2xl" px="24px" sample="Heading 3 · 24px" />
+<TypeRow token="text-3xl" px="30px" sample="Heading 2 · 30px" />
+<TypeRow token="text-4xl" px="36px" sample="Heading 1 · 36px" />
+
+## Source of truth
+
+[`src/styles/tokens.css`](https://ui.shadcn.com/docs/theming) — the single file that defines every value the system uses. Edit there; everything downstream tracks it.
+
+## Related
+
+[Color](?path=/docs/2-styles-color--docs) · [Typography](?path=/docs/2-styles-typography--docs) · [Spacing](?path=/docs/2-styles-spacing--docs) · [Elevation](?path=/docs/2-styles-elevation--docs) · [Principles](?path=/docs/1-foundations-principles--docs)
+
+## Agent prompt guide
+
+> To pick a token: identify the role (background / foreground / fill / outline) → use the pair (`--primary` + `--primary-foreground`) → never use just one half. If the role doesn't fit any of the 11 pairs above, the right answer is usually a new pair, not a one-off color. Never reach for tier-3 component-specific tokens — they don't exist by design.

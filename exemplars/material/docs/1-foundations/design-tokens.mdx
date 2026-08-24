@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="1-foundations/Design tokens" />
+
+# Design tokens
+
+> Material 3 organizes tokens by role, not by appearance. A `Button` doesn't ask "what color?" — it asks "what role?" (primary action / secondary / tertiary / error) and the tier system supplies the right shade.
+
+## Token tiers
+
+```
+sys ← what components consume                  (--md-sys-color-primary)
+ ↑
+ref ← reference palette anchors                 (--md-ref-palette-primary40)
+```
+
+In practice: **components only ever consume `--md-sys-*` tokens**. `--md-ref-*` tokens exist as the source palette but are never referenced from styles directly. This exemplar omits the ref tier for brevity.
+
+## The four families
+
+### 1 · Color
+
+`--md-sys-color-{role}` where `{role}` is one of:
+
+- **primary** / **on-primary** / **primary-container** / **on-primary-container** (and same for secondary, tertiary, error)
+- **surface** / **on-surface** / **on-surface-variant** + 5 surface-container tiers (lowest → highest)
+- **outline** / **outline-variant**
+- **inverse-surface** / **inverse-on-surface**
+
+Live values: see [Color](?path=/docs/2-styles-color--docs).
+
+### 2 · Typography
+
+`--md-sys-typescale-{token}-{property}` where `{token}` ∈ display / headline / title / body / label and each has small / medium / large variants. Properties: `font` / `size` / `line-height` / `weight` / `tracking`.
+
+Live values: see [Typography](?path=/docs/2-styles-typography--docs).
+
+### 3 · Elevation
+
+`--md-sys-elevation-level{0..5}` — six pre-defined shadows.
+
+Live values: see [Elevation](?path=/docs/2-styles-elevation--docs).
+
+### 4 · Shape
+
+`--md-sys-shape-corner-{extra-small, small, medium, large, extra-large}` — five corner radii.
+
+## State layers (the M3 specialty)
+
+Hover, focus, pressed, dragged are **overlays** painted on top of the surface, not separate colors. Each has a defined opacity:
+
+| State | Opacity token |
+|---|---|
+| hover | `--md-sys-state-hover-state-layer-opacity` (0.08) |
+| focus | `--md-sys-state-focus-state-layer-opacity` (0.10) |
+| pressed | `--md-sys-state-pressed-state-layer-opacity` (0.10) |
+| dragged | `--md-sys-state-dragged-state-layer-opacity` (0.16) |
+
+Components paint a translucent layer of `on-{role}` color on the `{role}` surface to convey state — which means hover/focus/pressed work consistently on every color in the system without per-color tuning.
+
+## Decisions
+
+- **No ref-palette consumption.** Components never reach into `--md-ref-*`. This is the M3 contract — only sys tokens are stable.
+- **State layers, not state colors.** Hover ≠ a different color; hover = overlay. Means a primary button and a tertiary button both lighten the same way on hover, automatically.
+- **Surface tiers replace elevation-as-shadow for layering.** Modal? Use `surface-container-high`. Page background? `surface`. Don't reach for level-3 shadow when a tier shift conveys the right depth.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-design-tokens--docs) — full token set including dark theme via `[data-theme="dark"]`.
+
+## Agent prompt guide
+
+> Always pick a sys token, never a ref token. Pick the role first (primary/secondary/tertiary/error/surface) → then the variation (base/on-/container/on-container). For depth: use surface tiers (`surface-container-low/high/highest`) for layered content; reach for elevation shadows only when chrome (FABs, dialogs) genuinely needs to float above the page.

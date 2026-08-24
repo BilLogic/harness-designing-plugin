@@ -1,0 +1,168 @@
+import { Meta } from '@storybook/blocks';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../../src/components/Card';
+import { Button } from '../../src/components/Button';
+
+<Meta title="2-styles/Elevation" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'shadcn does not ship a token elevation scale — surfaces stack via tier (background → card → popover), not by shadow depth. Three tiers, three implicit shadows.',
+  chips: ['Tier-based', 'No shadow tokens'],
+  kicker: 'Styles 04',
+};
+
+# Elevation
+
+> shadcn doesn't expose an elevation token scale. Depth is conveyed by **surface tier**, not by **shadow depth**. Three named surfaces, three implicit shadows, no z-index ladder to memorize.
+
+## The three tiers
+
+export const ElevationDemo = ({ token, fg, label, shadow, use }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+    <div style={{
+      width: '14rem',
+      height: '5rem',
+      background: `var(--${token})`,
+      color: `var(--${fg})`,
+      borderRadius: 'var(--radius)',
+      border: '1px solid var(--border)',
+      boxShadow: shadow,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.25rem',
+    }}>
+      <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>{label}</span>
+      <code style={{ fontSize: '0.6875rem', fontFamily: 'var(--font-mono)', opacity: 0.7 }}>
+        --{token}
+      </code>
+    </div>
+    <div style={{ flex: 1 }}>
+      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500, marginBottom: '0.25rem' }}>{use}</div>
+      <code style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)', display: 'block' }}>
+        {shadow || 'no shadow'}
+      </code>
+    </div>
+  </div>
+);
+
+<ElevationDemo
+  token="background"
+  fg="foreground"
+  label="Page"
+  use="The outermost canvas. The page itself has no shadow."
+  shadow=""
+/>
+<ElevationDemo
+  token="card"
+  fg="card-foreground"
+  label="Card"
+  use="Discrete content surfaces — cards, panels, sidebars, list items."
+  shadow="0 1px 2px 0 rgb(0 0 0 / 0.05)"
+/>
+<ElevationDemo
+  token="popover"
+  fg="popover-foreground"
+  label="Popover"
+  use="Floating surfaces — tooltips, menus, dialogs, dropdowns."
+  shadow="0 4px 12px -2px rgb(0 0 0 / 0.12), 0 2px 4px -1px rgb(0 0 0 / 0.06)"
+/>
+
+## Tier reference
+
+| Tier | Token | Shadow | Use |
+|---|---|---|---|
+| **Base** | `--background` | (none) | Page surface, app shell |
+| **Raised** | `--card` | `0 1px 2px 0 rgb(0 0 0 / 0.05)` | Cards, panels, sidebars, list items |
+| **Floating** | `--popover` | `0 4px 12px -2px rgb(0 0 0 / 0.12)` + lift | Tooltips, menus, dialogs, popovers |
+
+Components that live on a tier own that tier's shadow internally — `Card.tsx` ships with the raised shadow inline. You don't apply elevation manually; you pick the surface tier.
+
+## Why no shadow scale?
+
+A 0–5 elevation scale is common but creates a long tail of "is this a 2 or a 3?" decisions. Three tiers fits the actual product surface — every UI element is either a page background, a discrete content surface, or floating above content.
+
+## Cards in context
+
+Same `Card` component, two contexts. The shadow doesn't change.
+
+export const CardContext = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+    <div style={{ background: 'var(--background)', padding: '1rem', borderRadius: 'var(--radius)', border: '1px dashed var(--border)' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.625rem' }}>
+        Card on --background
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Activity</CardTitle>
+          <CardDescription>Last 24 hours</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button size="sm">Open</Button>
+        </CardContent>
+      </Card>
+    </div>
+    <div style={{ background: 'var(--muted)', padding: '1rem', borderRadius: 'var(--radius)', border: '1px dashed var(--border)' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.625rem' }}>
+        Card on --muted
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Activity</CardTitle>
+          <CardDescription>Last 24 hours</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button size="sm">Open</Button>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+);
+
+<CardContext />
+
+## Decisions
+
+- **No `--shadow-*` tokens.** A scale of 0–5 elevations creates ambiguity. Three tiers fits the actual product surface.
+- **Shadow lives in the component, not the token.** `Card.tsx` ships `boxShadow` inline. If three components ever need the *same* shadow that isn't a tier, only then promote to a token.
+- **Tier name = shadow.** "Floating" implies the popover shadow. You never specify both.
+
+## Dark theme
+
+Shadows fade in dark mode — they read as luminance, and dark surfaces have less luminance to give up. shadcn handles this implicitly: borders carry more weight in `.dark`, shadows carry less. No per-tier dark-shadow override needed.
+
+## When you genuinely need a shadow outside the tier system
+
+A floating action button that hovers above a card might want a stronger shadow than the popover tier. Declare it inline:
+
+```tsx
+<button style={{ boxShadow: '0 8px 24px -8px rgb(0 0 0 / 0.25)' }} />
+```
+
+Don't add to `tokens.css` unless three or more components need the same value.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Pick the tier (`--background` / `--card` / `--popover`) | Compose your own shadow scale (`--shadow-sm`, etc.) |
+| Trust the component to ship its tier's shadow | Reach for `boxShadow` inline on `Card` |
+| Use `--popover` for any element that floats above content | Use a higher z-index without changing the tier |
+| Leave dark-theme shadows lighter than light-theme | Force the same shadow opacity in both themes |
+| Stack tier-by-tier (page → card → popover) | Skip a tier (page → popover with no card between) |
+
+## Source of truth
+
+- [`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — the three surface tokens
+- [`Card.tsx`](?path=/docs/4-components-card-card--docs) — the canonical raised-tier shadow
+- This page — the agreement to **not** introduce a shadow token scale
+
+## Related
+
+[Color](?path=/docs/2-styles-color--docs) · [Layout](?path=/docs/1-foundations-layout--docs) · [Card](?path=/docs/4-components-card-card--docs) · [Dialog](?path=/docs/4-components-dialog-dialog--docs)
+
+## Agent prompt guide
+
+> When picking a surface depth: use `--background` for the page, `--card` for any discrete content surface, `--popover` for anything that floats. Never invent shadow tokens. If a design calls for "elevation 3", ask which tier the surface conceptually belongs to — pick that tier instead.

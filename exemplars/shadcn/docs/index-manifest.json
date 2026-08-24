@@ -1,0 +1,130 @@
+{
+  "spec_version": "1",
+  "scenario": "code-only",
+  "display_name": "shadcn/ui exemplar",
+  "lede": "Documents the shadcn-flavored design system in this exemplar repo. Source of truth: src/styles/tokens.css and src/components/. The harness scaffolds the directory you're reading; team-authored content lives in the manifest, components-index, and per-page frontmatter.",
+  "last_filled_at": "2026-05-09T18:00:00Z",
+  "tracker_stats": {
+    "filled": 28,
+    "in_progress": 0,
+    "empty": 0,
+    "last": "2026-05-09"
+  },
+  "tokens": {
+    "tiers": ["primitive", "semantic"],
+    "modes": ["light", "dark"],
+    "brands": ["default"],
+    "source_of_truth": "src/styles/tokens.css"
+  },
+  "folders_enabled": {
+    "foundations": true,
+    "styles": true,
+    "assets": false,
+    "components": true,
+    "patterns": false,
+    "data_viz": false,
+    "specs": false
+  },
+  "counts": {
+    "tokens": { "color": 11, "space": 8, "type": 8 },
+    "foundation_pages": 5,
+    "style_pages": 5,
+    "components": 18,
+    "internal_components": 0
+  },
+  "rules": [
+    "**Tokens always.** Never hardcode hex, px, or shadow values — consume `var(--*)` only.",
+    "**Pair, don't pick.** Every fill has a `-foreground` sibling. Use `--primary` with `--primary-foreground`, never with `--foreground`.",
+    "**One primary per region.** Two `default` buttons in the same view is a smell — pair primary with secondary or outline.",
+    "**WCAG 2.1 AA.** Semantic HTML, keyboard access, visible focus rings via `--ring`.",
+    "**Owned source.** Components live in this repo, not `node_modules` — fork patterns to extend, never override in place.",
+    "**No `node_modules` references in MDX.** Documentation imports must resolve from this repo or relative paths only.",
+    "**Forbidden: emojis.** Glyphs come from the team's icon library (`lucide-react`) — never inline emoji."
+  ],
+  "source_of_truth_paths": [
+    {
+      "tier": "1",
+      "label": "Tokens",
+      "path": "src/styles/tokens.css",
+      "purpose": "11 paired roles, OKLCH primitives, light + dark themes."
+    },
+    {
+      "tier": "1",
+      "label": "Component",
+      "path": "src/components/Button.tsx",
+      "purpose": "6 variants × 4 sizes. CSS-var consumption."
+    },
+    {
+      "tier": "1",
+      "label": "Component",
+      "path": "src/components/Input.tsx",
+      "purpose": "Single shape, native attrs pass-through."
+    },
+    {
+      "tier": "1",
+      "label": "Component",
+      "path": "src/components/Card.tsx",
+      "purpose": "6-part composition primitive."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Button.stories.tsx",
+      "purpose": "Axes-based: Default · Appearance · Size · Icon · Disabled."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Input.stories.tsx",
+      "purpose": "Axes-based: Default · States · WithLabel · Types · WithIcon · Invalid."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Card.stories.tsx",
+      "purpose": "Folder canonical: Card / CardHeader / CardContent / CardFooter siblings."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Label.stories.tsx",
+      "purpose": "Default · WithInput · Required · WithHelper."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Checkbox.stories.tsx",
+      "purpose": "Default · States (off / on / indeterminate) · Disabled · Group."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Switch.stories.tsx",
+      "purpose": "Default · States · Disabled · WithDescription · SettingsList."
+    },
+    {
+      "tier": "2",
+      "label": "Stories",
+      "path": "src/components/Badge.stories.tsx",
+      "purpose": "Default · Appearance · Status · Counter · TagList."
+    },
+    {
+      "tier": "2",
+      "label": "Manifest",
+      "path": "docs/index-manifest.json",
+      "purpose": "DS state, counts, rules, source-of-truth paths."
+    },
+    {
+      "tier": "2",
+      "label": "Index",
+      "path": "docs/4-components/components-index.json",
+      "purpose": "Per-component status, category, variants, preview hints."
+    },
+    {
+      "tier": "3",
+      "label": "Skill",
+      "path": "skills/hd-design-system/SKILL.md",
+      "purpose": "establish · evolve · tracker · validate modes."
+    }
+  ]
+}

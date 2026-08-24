@@ -1,0 +1,82 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta } from '@storybook/blocks';
+import { FigmaFrame } from '../../../.storybook/harness-blocks';
+
+<Meta title="Specs/{{PAGE_NAME}}" />
+
+# {{PAGE_NAME}}
+
+> {{PAGE_PURPOSE_AND_USER_GOAL}}
+
+## Reference pages
+
+<!-- TODO: similar pages in other apps for inspiration / comparison. List 3-5 with URLs. -->
+
+## Page contract
+
+- Route: `{{URL_PATTERN}}`
+- Props/params: <!-- TODO -->
+- Slots: <!-- TODO -->
+
+## Layout
+
+<!-- TODO: region map — header / sidebar / content / footer / etc. -->
+
+## Components used
+
+| Region | Component | Doc |
+|---|---|---|
+{{COMPONENTS_USED_TABLE}}
+
+## Content
+
+<!-- TODO: copy, microcopy, labels — full strings or pointer to copy doc. -->
+
+## States
+
+| State | Trigger | What changes | ARIA |
+|---|---|---|---|
+| Empty | <!-- TODO --> | <!-- TODO --> | <!-- TODO --> |
+| Loading | <!-- TODO --> | <!-- TODO --> | <!-- TODO --> |
+| Error | <!-- TODO --> | <!-- TODO --> | <!-- TODO --> |
+| Partial | <!-- TODO --> | <!-- TODO --> | <!-- TODO --> |
+| Success | <!-- TODO --> | <!-- TODO --> | <!-- TODO --> |
+
+## Behaviors
+
+<!-- TODO: page-level transitions + interactions (e.g., infinite scroll trigger, modal open). -->
+
+## Edge cases
+
+<!-- TODO: what happens when X. -->
+
+## Accessibility
+
+<!-- TODO: page-level a11y beyond per-component (heading hierarchy, landmark roles, skip-links). -->
+
+## Visual reference
+
+<FigmaFrame url="{{FIGMA_FRAME_URL}}" />
+
+## Concerns
+
+<!-- TODO: perf / SEO / privacy / scaling concerns. -->
+
+## Source of truth
+
+- Figma: {{FIGMA_FRAME_URL}}
+- Code route: `{{ROUTE_PATH}}`
+- Last sync: {{DATE}}
+
+## Decisions
+
+<!-- TODO: 3-5 non-obvious rules. -->
+
+## Agent prompt guide
+
+<!-- TODO: imperatives for an agent generating or modifying this page. -->

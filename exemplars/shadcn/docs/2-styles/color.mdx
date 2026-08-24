@@ -1,0 +1,176 @@
+import { Meta } from '@storybook/blocks';
+import { Button } from '../../src/components/Button';
+import { Badge } from '../../src/components/Badge';
+import { Alert, AlertTitle, AlertDescription } from '../../src/components/Alert';
+import { AlertTriangle, Info } from 'lucide-react';
+
+<Meta title="2-styles/Color" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: '11 paired tokens. Every fill has a foreground sibling sized for AA on that fill. OKLCH primitives, light + dark themes, no third tier.',
+  chips: ['11 role pairs', 'OKLCH', 'Light + dark'],
+  preview: 'MiniSwatchRow',
+  kicker: 'Styles 01',
+};
+
+# Color
+
+> Eleven paired tokens, every fill with a matching `-foreground` sibling. The pair is the unit of work — never use one without the other. Live values render below from `src/styles/tokens.css`. Toggle the **Theme** dropdown in the toolbar to swap to dark — the same names, different values.
+
+## The pair convention
+
+export const PairCard = ({ name, fill, fg, use }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
+    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>{name}</div>
+      <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>
+        --{fill} / --{fg}
+      </code>
+    </div>
+    <div style={{ display: 'flex', borderRadius: 'var(--radius)', overflow: 'hidden', border: '1px solid var(--border)' }}>
+      <div style={{ flex: 1, padding: '1.25rem 1rem', background: `var(--${fill})`, color: `var(--${fg})`, display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
+        <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', opacity: 0.85 }}>
+          --{fill}
+        </code>
+        <span style={{ fontWeight: 500, fontSize: 'var(--text-sm)' }}>fill</span>
+      </div>
+      <div style={{ flex: 1, padding: '1.25rem 1rem', background: `var(--${fg})`, color: `var(--${fill})`, display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
+        <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', opacity: 0.85 }}>
+          --{fg}
+        </code>
+        <span style={{ fontWeight: 500, fontSize: 'var(--text-sm)' }}>foreground</span>
+      </div>
+    </div>
+    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>{use}</div>
+  </div>
+);
+
+## Page surface
+
+<PairCard name="Background" fill="background" fg="foreground" use="The outermost canvas. Every page starts here." />
+
+## Surface tiers
+
+<PairCard name="Card" fill="card" fg="card-foreground" use="Raised surfaces — cards, panels, sidebars." />
+<PairCard name="Popover" fill="popover" fg="popover-foreground" use="Floating surfaces — tooltips, menus, dialogs." />
+
+## Action emphasis
+
+<PairCard name="Primary" fill="primary" fg="primary-foreground" use="Primary CTAs and brand accents. One per region." />
+<PairCard name="Secondary" fill="secondary" fg="secondary-foreground" use="Secondary buttons, less-prominent CTAs." />
+<PairCard name="Destructive" fill="destructive" fg="destructive-foreground" use="Errors, deletions, dangerous actions." />
+
+## De-emphasis
+
+<PairCard name="Muted" fill="muted" fg="muted-foreground" use="Helper text, captions, secondary metadata." />
+<PairCard name="Accent" fill="accent" fg="accent-foreground" use="Hover states on neutral surfaces." />
+
+## Form chrome — single tokens
+
+These three don't pair. They describe form-control chrome — rules, input borders, focus rings.
+
+export const ChromeRow = ({ name, varName, demo, note }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
+    {demo}
+    <div style={{ flex: 1 }}>
+      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{name}</div>
+      <code style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>--{varName}</code>
+    </div>
+    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>{note}</span>
+  </div>
+);
+
+<ChromeRow
+  name="Border"
+  varName="border"
+  demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }} />}
+  note="Hairlines, separators"
+/>
+<ChromeRow
+  name="Input"
+  varName="input"
+  demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--input)' }} />}
+  note="Form-control outlines"
+/>
+<ChromeRow
+  name="Ring (focus)"
+  varName="ring"
+  demo={<div style={{ width: '4rem', height: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', outline: '2px solid var(--ring)', outlineOffset: '2px' }} />}
+  note="`:focus-visible` outline"
+/>
+
+## Color in context — applied to components
+
+The same tokens drive every component. Pick the role; the components consume it.
+
+export const InContext = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.625rem' }}>
+        --primary in Buttons + Badge
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <Button>Save</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Badge>Pro</Badge>
+      </div>
+    </div>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.625rem' }}>
+        --destructive in error states
+      </div>
+      <Alert variant="destructive">
+        <AlertTriangle size={16} aria-hidden style={{ gridColumn: 1, marginTop: '0.125rem' }} />
+        <AlertTitle>Couldn&apos;t save</AlertTitle>
+        <AlertDescription>The connection dropped — try again when you&apos;re back online.</AlertDescription>
+      </Alert>
+    </div>
+  </div>
+);
+
+<InContext />
+
+## Decisions
+
+- **Pair, don't pick.** Every fill has a foreground sibling. If text needs to sit on `--primary`, use `--primary-foreground`; never `--foreground`.
+- **OKLCH** for predictable contrast. Hex equivalents are in `tokens.css` comments; the canonical values are OKLCH.
+- **Dark mode = remap, not invert.** `.dark` reassigns the same role names to different OKLCH values. No component code changes between themes.
+- **No tier-3 tokens.** No `--button-background-hover` or `--card-border-active`. Components consume tier-2 directly; if you need a new pair, add it.
+
+## Accessible contrast across themes
+
+The pairs ship pre-checked for WCAG AA. Below: actual ratios in light and dark.
+
+| Pair | Light | Dark |
+|---|---|---|
+| `--foreground` on `--background` | 19.5:1 | 18.7:1 |
+| `--primary-foreground` on `--primary` | 18.4:1 | 18.7:1 |
+| `--muted-foreground` on `--background` | 4.83:1 | 4.61:1 |
+| `--destructive-foreground` on `--destructive` | 6.21:1 | 5.95:1 |
+| `--card-foreground` on `--card` | 19.5:1 | 17.4:1 |
+
+[See Accessibility — Color contrast →](?path=/docs/1-foundations-accessibility--docs)
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Use the role pair (`--card` + `--card-foreground`) | Mix tiers (`--background` text on `--card` surface) |
+| Toggle `.dark` on `<html>` to switch themes | Use `prefers-color-scheme` directly in components |
+| Add new pairs to `tokens.css` when a role is genuinely new | Override `--primary` for "this one button" |
+| Inherit color via `currentColor` for icons | Hardcode color on icons inside Buttons |
+| Use `--muted-foreground` for low-emphasis text | Use `--foreground` at 60% opacity to fake it |
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — `:root` block (light) and `.dark` block (dark). Eleven role pairs, three chrome tokens.
+
+## Related
+
+[Tokens](?path=/docs/1-foundations-tokens--docs) · [Accessibility](?path=/docs/1-foundations-accessibility--docs) · [Elevation](?path=/docs/2-styles-elevation--docs) · [Button](?path=/docs/4-components-button--docs)
+
+## Agent prompt guide
+
+> If the surface is a card → use `--card` + `--card-foreground`. If a button → match the role to intent (primary / secondary / destructive / outline), and pair it with the matching `-foreground`. Never sample a hex value from a Figma file — find the role, use the var. Never reach for tier-3 tokens — they don't exist.

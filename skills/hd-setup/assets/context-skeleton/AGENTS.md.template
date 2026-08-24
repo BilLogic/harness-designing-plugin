@@ -1,0 +1,41 @@
+# {{REPO_NAME}} — Agent conventions
+
+Canonical source of truth for how AI agents behave in this codebase. Read natively by Claude Code, Codex CLI, Cursor CLI, Windsurf, GitHub Copilot. Other tools get thin redirects (`CLAUDE.md`, `.cursor/rules/AGENTS.mdc`).
+
+## Philosophy
+
+{{ONE_PARAGRAPH_PRODUCT_THESIS}}
+
+## Repo layout
+
+{{REPO_LAYOUT_TREE}}
+
+## Voice
+
+<!-- Authored via /hd:setup voice step. Edit here to update. -->
+
+- {{ADJECTIVE_1}}
+- {{ADJECTIVE_2}}
+- {{ADJECTIVE_3}}
+
+## Use case
+
+- **IS for:** {{IS_FOR}}
+- **ISN'T for:** {{ISNT_FOR}}
+
+## Forbidden moves
+
+- {{FORBIDDEN_1}}
+- {{FORBIDDEN_2}}
+- {{FORBIDDEN_3}}
+
+## Rules
+
+<!-- Add new rules above this line. Promoted from docs/knowledge/lessons/ via /hd:maintain. -->
+
+{{RULES_PLACEHOLDER}}
+
+## Pre-commit checklist
+
+- [ ] {{PRE_COMMIT_RULE_1}}
+- [ ] {{PRE_COMMIT_RULE_2}}

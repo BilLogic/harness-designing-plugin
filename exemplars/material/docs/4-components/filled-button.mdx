@@ -1,0 +1,77 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as ButtonStories from '../../src/components/filled-button.stories';
+
+<Meta of={ButtonStories} />
+
+# Filled Button
+
+> Material 3's high-emphasis button. Used for primary CTAs that should stand out — checkout, save, send. One per page region.
+
+## Description
+
+A custom element (`<md-filled-button>`) backed by a Lit class. Consumes `--md-sys-color-primary` for fill, `--md-sys-color-on-primary` for label, `--md-sys-typescale-label-large-*` for type, and `--md-sys-shape-corner-extra-large` for the pill radius. Hover state paints an `on-primary` overlay at 8% opacity (state-layer pattern) — no separate hover color needed.
+
+## Default
+
+<Panel name="Default" source="src/components/filled-button.ts">
+  <Canvas of={ButtonStories.Default} sourceState="none" />
+</Panel>
+
+## States
+
+<Panel name="States" source="src/components/filled-button.ts">
+  <Canvas of={ButtonStories.States} sourceState="none" />
+</Panel>
+
+| State | Cue |
+|---|---|
+| Default | `--md-sys-color-primary` fill |
+| Hover | + `on-primary` overlay at 8% (state-hover-state-layer-opacity) |
+| Focus | + `on-primary` overlay at 10% |
+| Pressed | + `on-primary` overlay at 10% (M3 spec; same as focus) |
+| Disabled | `on-surface` at 12% fill, `on-surface` at 38% label, no shadow |
+
+## Usage
+
+```html
+<md-filled-button>Save</md-filled-button>
+<md-filled-button disabled>Save</md-filled-button>
+```
+
+## Accessibility
+
+- Keyboard activation (Enter/Space) via the underlying `<button>` element
+- Focus ring is the state-layer overlay — visible against every surface theme
+- Disabled state communicates via `aria-disabled="true"` (handled by the element)
+- For icon-only buttons, use `aria-label` to provide an accessible name
+
+## When to use which
+
+M3 has 5 button variants — this exemplar covers `filled` only. Pick filled when:
+
+| Need | Pick |
+|---|---|
+| High-emphasis primary CTA | **Filled** (this) |
+| Medium-emphasis paired secondary | Outlined or Tonal |
+| Low-emphasis text-only | Text |
+| Compound action with primary visual | Elevated |
+| Floating contextual action | FAB (separate component family) |
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Use one filled button per page region | Use two filled buttons in the same view |
+| Pair with an Outlined or Text button for cancel | Stack two filled buttons of equal weight |
+| Trust the state-layer for hover/focus | Override the hover color manually |
+
+## Source of truth
+
+- Code — [`src/components/filled-button.ts`](?path=/story/4-components-filled-button--default)
+- Stories — [`src/components/filled-button.stories.ts`](?path=/story/4-components-filled-button--default)
+- Reference — [Material 3 — Filled button](https://m3.material.io/components/buttons/specs#filled)
+
+## Agent prompt guide
+
+> Use `<md-filled-button>` for the primary CTA in any view. Pair with `<md-outlined-button>` (not in this exemplar) for the cancel/secondary action. Don't stack two filled buttons. Don't override colors — pick a different button variant if the role calls for less emphasis.

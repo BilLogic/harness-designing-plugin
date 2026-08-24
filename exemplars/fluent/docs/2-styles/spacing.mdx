@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Spacing" />
+
+# Spacing
+
+> Fluent splits spacing by axis — `--spacingHorizontal*` and (omitted from this exemplar for brevity) `--spacingVertical*`. T-shirt sizes from XXS through XXXL, with two "nudge" intermediates (SNudge, MNudge) for fine-tuning.
+
+export const SpaceRow = ({ size, px }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '220px 80px 1fr', gap: 'var(--spacingHorizontalL)', alignItems: 'center', padding: 'var(--spacingHorizontalS) 0', borderBottom: 'var(--strokeWidthThin) solid var(--colorNeutralStroke2)' }}>
+    <code style={{ fontSize: 'var(--fontSizeBase200)', color: 'var(--colorNeutralForeground3)' }}>--spacingHorizontal{size}</code>
+    <div style={{ fontSize: 'var(--fontSizeBase200)', color: 'var(--colorNeutralForeground3)', fontFamily: 'var(--fontFamilyMonospace)' }}>{px}px</div>
+    <div style={{ height: '1.5rem', width: `var(--spacingHorizontal${size})`, background: 'var(--colorBrandBackground)', borderRadius: 'var(--borderRadiusSmall)' }} />
+  </div>
+);
+
+## Horizontal scale
+
+<SpaceRow size="None" px="0" />
+<SpaceRow size="XXS" px="2" />
+<SpaceRow size="XS" px="4" />
+<SpaceRow size="SNudge" px="6" />
+<SpaceRow size="S" px="8" />
+<SpaceRow size="MNudge" px="10" />
+<SpaceRow size="M" px="12" />
+<SpaceRow size="L" px="16" />
+<SpaceRow size="XL" px="20" />
+<SpaceRow size="XXL" px="24" />
+<SpaceRow size="XXXL" px="32" />
+
+## Hierarchy guidance
+
+| Context | Recommended | Rationale |
+|---|---|---|
+| Inline gap (icon + label) | `S` (8px) | Fluent button leading icon |
+| Component padding (button, input medium) | `M` (12px) horizontal | Fluent default sizes |
+| Card padding | `L` (16px) | Fluent card v9 default |
+| Section gaps | `XL` to `XXL` (20-24px) | Group separation |
+| Page gutters | `XXL` to `XXXL` (24-32px) | Major layout breaks |
+| Fine adjustments | `SNudge` / `MNudge` | When `S` feels tight but `M` feels loose |
+
+## Border radii (related)
+
+| Token | Value | Use |
+|---|---|---|
+| `--borderRadiusNone` | 0 | Edge-to-edge contexts |
+| `--borderRadiusSmall` | 2px | Dense chips, compact UI |
+| `--borderRadiusMedium` | 4px | **Default** — buttons, inputs, cards |
+| `--borderRadiusLarge` | 6px | Larger cards, dialogs |
+| `--borderRadiusXLarge` | 8px | Most rounded |
+| `--borderRadiusCircular` | 10000px | Avatars, pill chips |
+
+## Stroke widths
+
+| Token | Value |
+|---|---|
+| `--strokeWidthThin` | 1px (default border) |
+| `--strokeWidthThick` | 2px (focus indicators) |
+| `--strokeWidthThicker` | 3px |
+| `--strokeWidthThickest` | 4px |
+
+## Decisions
+
+- **Per-axis spacing tokens.** Horizontal and vertical spacing are separate — accommodates teams that want different rhythms on each axis.
+- **T-shirt sizes plus nudge intermediates.** Nudge sizes (SNudge=6px, MNudge=10px) handle the cases where you really do need a middle step.
+- **Stroke widths as separate token family.** Border thickness is a distinct concept from spacing — exposed independently.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — `--spacingHorizontal*`, `--strokeWidth*`, `--borderRadius*`.
+
+## Agent prompt guide
+
+> Default component padding → `spacingHorizontalM` (12px). Card padding → `spacingHorizontalL` (16px). Section breaks → `spacingHorizontalXL` to `XXL`. Fine adjustment between `S` and `M` → use `SNudge`. Default border → `strokeWidthThin`. Default radius → `borderRadiusMedium` (4px).

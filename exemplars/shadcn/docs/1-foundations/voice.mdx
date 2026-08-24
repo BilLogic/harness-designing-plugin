@@ -1,0 +1,226 @@
+import { Meta } from '@storybook/blocks';
+import { AlertTriangle, Inbox } from 'lucide-react';
+import { Button } from '../../src/components/Button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../src/components/Card';
+import { Alert, AlertTitle, AlertDescription } from '../../src/components/Alert';
+import { Badge } from '../../src/components/Badge';
+import { Input } from '../../src/components/Input';
+import { Label } from '../../src/components/Label';
+
+<Meta title="1-foundations/Voice" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'Direct, technical, second-person. Verbs over nouns. Real numbers over weasel words. The product respects the user\'s time.',
+  chips: ['Direct', 'Second-person', 'Verbs first'],
+  kicker: 'Foundation 03',
+};
+
+# Voice
+
+> The product is a tool. It speaks to a competent operator who has work to finish. The voice is **direct**, **technical**, **second-person**. No marketing register inside the product surface — when copy starts feeling like an ad, the page has the wrong author.
+
+## The four rules
+
+### 1 · Verbs first
+
+export const VerbsDemo = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+      <div style={{ marginBottom: '0.625rem' }}>
+        <Badge>Do</Badge>
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <Button>Save changes</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="destructive">Delete</Button>
+      </div>
+    </div>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid var(--destructive)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+      <div style={{ marginBottom: '0.625rem' }}>
+        <Badge variant="destructive">Don't</Badge>
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <Button>Submit</Button>
+        <Button variant="outline">Click here</Button>
+        <Button variant="destructive">OK</Button>
+      </div>
+    </div>
+  </div>
+);
+
+<VerbsDemo />
+
+Buttons name the action. `Save`, `Delete`, `Send`, `Open`, `Dismiss`. Never `Click here`, never noun-only labels (`Settings` is a destination — fine; `Preferences` for an action button is wrong — say `Edit preferences`).
+
+### 2 · Second-person, present tense
+
+The product addresses you directly. "**Your** subscription renews on Jan 4" — not "The subscription will renew." Past perfect ("Has been saved") and future tense ("Will be processed") usually mean the prose is dodging an outcome.
+
+| Instead of | Say |
+|---|---|
+| "The file has been saved" | "Saved" |
+| "Your account will be created" | "Create your account" |
+| "The user can change settings" | "Change your settings" |
+| "Subscription renews soon" | "Renews Jan 4" |
+
+### 3 · Specific over generic
+
+Real numbers, real names, real dates. If the system doesn't know yet, say "Unknown" — don't paper over it with vagueness.
+
+export const SpecificDemo = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+    <Card>
+      <CardHeader>
+        <CardTitle style={{ fontSize: 'var(--text-base)' }}>
+          <Badge style={{ marginRight: '0.5rem' }}>Do</Badge>
+          Inbox
+        </CardTitle>
+        <CardDescription>12 unread · last sync 3 min ago</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p style={{ margin: 0, fontSize: 'var(--text-sm)' }}>
+          Renews Jan 4 · $19/mo · Pro plan
+        </p>
+      </CardContent>
+    </Card>
+    <Card style={{ borderColor: 'var(--destructive)' }}>
+      <CardHeader>
+        <CardTitle style={{ fontSize: 'var(--text-base)' }}>
+          <Badge variant="destructive" style={{ marginRight: '0.5rem' }}>Don't</Badge>
+          Inbox
+        </CardTitle>
+        <CardDescription>You have several new messages</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p style={{ margin: 0, fontSize: 'var(--text-sm)' }}>
+          Subscription will renew soon. Various plan options available.
+        </p>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+<SpecificDemo />
+
+### 4 · Errors describe outcomes, not causes
+
+A failed save tells you what was lost and what's next. It does not paste the HTTP status.
+
+export const ErrorDemo = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxWidth: 480 }}>
+    <Alert>
+      <AlertTriangle size={16} aria-hidden style={{ gridColumn: 1, marginTop: '0.125rem' }} />
+      <AlertTitle><Badge style={{ marginRight: '0.5rem' }}>Do</Badge>Couldn't save</AlertTitle>
+      <AlertDescription>The connection dropped. Your draft is preserved locally — try again when you're back online.</AlertDescription>
+    </Alert>
+    <Alert variant="destructive">
+      <AlertTriangle size={16} aria-hidden style={{ gridColumn: 1, marginTop: '0.125rem' }} />
+      <AlertTitle><Badge variant="destructive" style={{ marginRight: '0.5rem' }}>Don't</Badge>Error 500</AlertTitle>
+      <AlertDescription>An error occurred while processing your request.</AlertDescription>
+    </Alert>
+  </div>
+);
+
+<ErrorDemo />
+
+## Action labels — canonical verbs
+
+| Verb | Use | Avoid |
+|---|---|---|
+| `Save` | Persist a change to the current record | `Submit`, `OK`, `Apply` |
+| `Send` | Deliver to a recipient | `Submit` |
+| `Delete` | Remove permanently | `Remove`, `Discard` (confusing pair) |
+| `Cancel` | Abandon current action, no side effects | `No`, `Close` (when destructive paired) |
+| `Confirm` | Affirmative resolution of a dialog | `Yes`, `OK` |
+| `Dismiss` | Acknowledge a notification | `Close`, `Got it` |
+| `Open` | Reveal more of an item | `View`, `See`, `Show` |
+| `Edit` | Modify in place | `Change`, `Update` |
+| `Continue` | Advance a multi-step flow | `Next`, `Proceed` |
+
+## Errors — the shape
+
+```
+Couldn't <verb the user attempted>. <Plain-language reason if helpful>.
+[Action button: Try again | Undo | Edit]
+```
+
+**Good:** "Couldn't send. The recipient address looks invalid." — `[Edit]`
+
+**Bad:** "An error occurred while processing your request."
+
+## Empty states — the shape
+
+```
+<Singular noun describing what's missing>
+<One sentence: what populates this surface>
+[Primary CTA — the verb that creates one]
+```
+
+export const EmptyStateDemo = () => (
+  <Card style={{ width: 380 }}>
+    <CardContent style={{ paddingTop: 'var(--space-6)', textAlign: 'center' }}>
+      <Inbox size={32} aria-hidden style={{ color: 'var(--muted-foreground)', marginBottom: '0.5rem' }} />
+      <div style={{ fontSize: 'var(--text-base)', fontWeight: 600, marginBottom: '0.25rem' }}>No drafts yet</div>
+      <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--muted-foreground)' }}>
+        Your unsent messages land here.
+      </p>
+    </CardContent>
+    <CardFooter style={{ justifyContent: 'center' }}>
+      <Button>Compose</Button>
+    </CardFooter>
+  </Card>
+);
+
+<EmptyStateDemo />
+
+## Microcopy — label vs placeholder vs helper
+
+Three slots, three jobs.
+
+export const FieldRolesDemo = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 360 }}>
+    <Label htmlFor="voice-email">Email address</Label>
+    <Input id="voice-email" type="email" placeholder="you@example.com" aria-describedby="voice-email-help" />
+    <span id="voice-email-help" style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>
+      We'll send a magic link — no password required.
+    </span>
+  </div>
+);
+
+<FieldRolesDemo />
+
+| Slot | Job | Always present? |
+|---|---|---|
+| Label | Names the field. Every field needs one. | Yes |
+| Placeholder | Sample value. Cleared on type. | Optional |
+| Helper | Explains the field. Linked via `aria-describedby`. | When useful |
+
+Never use placeholder text as a label substitute — it disappears the moment the user types, and screen readers may skip it.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| `Save changes` | `Submit form` |
+| `12 unread messages` | `You have several unread messages` |
+| `Couldn't save — try again` | `An error occurred` |
+| `Your draft is preserved locally` | `Don't worry, your data is safe` |
+| `Compose` (empty drafts state) | `No drafts to display` |
+| Sentence case for buttons | `Title Case` or `ALL CAPS` |
+| Use serial commas | Mix comma styles within a session |
+
+## Source of truth
+
+- This page (`docs/1-foundations/voice.mdx`)
+- Per-component story descriptions in `*.stories.tsx` — concrete examples in product context
+- `AGENTS.md` at repo root — agent voice contract for any generative use
+
+## Related
+
+[Accessibility](?path=/docs/1-foundations-accessibility--docs) · [Iconography](?path=/docs/2-styles-iconography--docs) · [Alert](?path=/docs/4-components-alert-alert--docs) · [Button](?path=/docs/4-components-button--docs)
+
+## Agent prompt guide
+
+> When writing copy for any UI surface in this codebase: lead with verbs on actions, address the user as "you", use specific numbers and dates, say what failed and what's next on errors. Sentence case throughout. Avoid marketing register ("seamlessly", "powerful", "robust") — the product is a tool, not a pitch. If a label feels generic, ask whether the verb is missing.

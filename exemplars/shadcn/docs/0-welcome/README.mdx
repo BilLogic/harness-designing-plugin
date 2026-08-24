@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/blocks';
+import pkg from '../../package.json';
+import manifest from '../index-manifest.json';
+import componentsIndex from '../4-components/components-index.json';
+import { Welcome } from '../_components/welcome';
+
+<Meta title="0-welcome/Introduction" />
+
+export const componentPreviews = {
+  Button: () => import('../../src/components/Button'),
+  Input: () => import('../../src/components/Input'),
+  Textarea: () => import('../../src/components/Textarea'),
+  Label: () => import('../../src/components/Label'),
+  Checkbox: () => import('../../src/components/Checkbox'),
+  Switch: () => import('../../src/components/Switch'),
+  Slider: () => import('../../src/components/Slider'),
+  Badge: () => import('../../src/components/Badge'),
+  Progress: () => import('../../src/components/Progress'),
+};
+
+<Welcome
+  pkg={pkg}
+  manifest={manifest}
+  components={componentsIndex}
+  pages={import.meta.glob('../**/*.mdx', { eager: true })}
+  componentPreviews={componentPreviews}
+/>

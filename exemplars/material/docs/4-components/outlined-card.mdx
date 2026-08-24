@@ -1,0 +1,69 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as CardStories from '../../src/components/outlined-card.stories';
+
+<Meta of={CardStories} />
+
+# Outlined Card
+
+> Material 3 ships three card variants. This exemplar covers Outlined (border, no shadow) and Elevated (level-1 shadow, surface tint). Filled is the third variant.
+
+## Description
+
+`<md-outlined-card>` and `<md-elevated-card>` are layout primitives. They consume `--md-sys-color-surface` (or `surface-container-low` for elevated), `--md-sys-color-outline-variant` for the border (outlined only), and `--md-sys-elevation-level1` for the shadow (elevated only). All padding, type, and color is the consumer's responsibility — the card just owns surface, border, and shadow.
+
+## Default
+
+<Panel name="Default outlined card" source="src/components/outlined-card.ts">
+  <Canvas of={CardStories.Default} sourceState="none" />
+</Panel>
+
+## Variants
+
+<Panel name="Outlined vs Elevated" source="src/components/outlined-card.ts">
+  <Canvas of={CardStories.Variants} sourceState="none" />
+</Panel>
+
+| Variant | When to use |
+|---|---|
+| **Outlined** | Cards inside a card / on a busy page. Border conveys grouping without adding shadow noise. |
+| **Elevated** | Cards on a flat page background. Shadow + tint conveys "this is a discrete surface". |
+| Filled (not in v1) | Less-emphasized grouping. Tinted background, no border, no shadow. |
+
+## Anatomy
+
+M3 cards are layout-only. Compose internally:
+
+```html
+<md-outlined-card>
+  <h3 style="font: var(--md-sys-typescale-title-medium-...);">Title</h3>
+  <p style="color: var(--md-sys-color-on-surface-variant);">Description.</p>
+  <md-filled-button>Action</md-filled-button>
+</md-outlined-card>
+```
+
+The card doesn't own a "header / content / footer" structure — that's the consumer's choice. If your app needs that structure, build a wrapper component.
+
+## Accessibility
+
+- Cards are containers. They don't carry ARIA role; let the contents define semantics.
+- A clickable card needs `role="button"` and keyboard handlers — but at that point you may want a real `<md-filled-button>` styled to look like a card surface, not a card with click semantics.
+- For dialog surfaces, wrap the card in a `role="dialog"` container.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Pick Outlined or Elevated based on the surface beneath | Stack a filled card on a colored hero — pick a contrast that works |
+| Compose internal structure with type tokens | Use `<md-card>` as a div replacement for any container |
+| Keep card content scannable — title + description + 1-2 actions | Cram dense data tables inside |
+
+## Source of truth
+
+- Code — [`src/components/outlined-card.ts`](?path=/story/4-components-outlined-card--default) (defines both Outlined and Elevated)
+- Stories — [`src/components/outlined-card.stories.ts`](?path=/story/4-components-outlined-card--default)
+- Reference — [Material 3 — Cards](https://m3.material.io/components/cards/specs)
+
+## Agent prompt guide
+
+> Cards on a flat page → Elevated. Cards inside another card / dense layout → Outlined. Don't make the card itself clickable — put a button inside if there's an action.

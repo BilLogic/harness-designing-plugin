@@ -1,0 +1,46 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta } from '@storybook/blocks';
+import { AssetGallery } from '../../../.storybook/harness-blocks';
+
+<Meta title="Assets/{{ASSET_TYPE_TITLE}}" />
+
+# {{ASSET_TYPE_TITLE}}
+
+> {{ONE_LINE_PURPOSE}}
+
+## Decisions
+
+- Source format: {{FORMAT}}
+- Naming: {{NAMING_CONVENTION}}
+- Usage rules: <!-- TODO -->
+
+## Gallery
+
+<AssetGallery dir="{{ASSETS_DIR}}" />
+
+## How to reference
+
+```{{LANG}}
+{{IMPORT_OR_PATH_EXAMPLE}}
+```
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| <!-- TODO --> | <!-- TODO --> |
+
+## Source of truth
+
+- Authoritative: `{{ASSETS_DIR}}`
+- Optimization pipeline: <!-- TODO -->
+
+## Agent prompt guide
+
+- <!-- TODO: how to pick the right asset -->
+- <!-- TODO: when to use placeholder vs real -->

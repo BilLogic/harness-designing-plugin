@@ -1,0 +1,36 @@
+{
+  "description": "harness-designing self-validation hooks. Surface unfilled TODOs at session start, watch Tier-1 budget on Tier-1 file writes, and emit a post-setup summary when /hd:setup or /hd:design-system finishes.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks-handlers/surface-todos.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks-handlers/check-tier1-budget.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks-handlers/post-setup-summary.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

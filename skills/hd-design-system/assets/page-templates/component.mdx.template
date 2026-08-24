@@ -1,0 +1,121 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta, Canvas, Controls, Stories, ArgsTable } from '@storybook/blocks';
+import { DesignTokenDocBlock } from 'storybook-design-token';
+import { Panel{{IF_FIGMA_FRAME_OR_FIGMA_ONLY}}, FigmaFrame{{/IF_FIGMA_FRAME_OR_FIGMA_ONLY}} } from '../../../.storybook/harness-blocks';
+{{IF_HAS_STORIES}}import * as ComponentStories from './{{COMPONENT_NAME}}.stories';{{/IF_HAS_STORIES}}
+
+<Meta {{IF_HAS_STORIES}}of={ComponentStories}{{/IF_HAS_STORIES}} title="Components/{{COMPONENT_NAME}}" />
+
+# {{COMPONENT_NAME}}
+
+> {{ONE_LINE_PURPOSE}}
+
+## Description
+
+{{NARRATIVE_2_3_SENTENCES}}
+
+## Variants
+
+<Panel name="{{PRIMARY_AXIS_LABEL}}" source="{{COMPONENT_PATH}}">
+  {{IF_HAS_STORIES}}<Canvas of={ComponentStories.AllVariants} sourceState="none" />{{/IF_HAS_STORIES}}
+  {{IF_FIGMA_ONLY}}<FigmaFrame url="{{FIGMA_FRAME_URL}}" />
+  *Live preview will be available when this component is implemented in code.*{{/IF_FIGMA_ONLY}}
+</Panel>
+
+{{IF_HAS_SIZES}}
+### Sizes
+
+<Panel name="Sizes" source="{{COMPONENT_PATH}}">
+  {{IF_HAS_STORIES}}<Canvas of={ComponentStories.Sizes} sourceState="none" />{{/IF_HAS_STORIES}}
+</Panel>
+{{/IF_HAS_SIZES}}
+
+{{IF_HAS_STATES}}
+### Interaction states
+
+<Panel name="States" source="{{COMPONENT_PATH}}">
+  {{IF_HAS_STORIES}}<Canvas of={ComponentStories.States} sourceState="none" />{{/IF_HAS_STORIES}}
+</Panel>
+{{/IF_HAS_STATES}}
+
+## Usage
+
+### Basic
+
+```{{LANG}}
+{{BASIC_CODE}}
+```
+
+{{IF_HAS_STORIES}}<Canvas of={ComponentStories.UsageBasic} />{{/IF_HAS_STORIES}}
+
+{{NESTED_FEATURE_SUBSECTIONS}}
+
+## Accessibility
+
+- Role: `{{ARIA_ROLE}}`
+- Keyboard: <!-- TODO: keyboard map -->
+- Focus: <!-- TODO: focus behavior -->
+- Test status: <!-- TODO: tested with axe / Lighthouse / manual -->
+
+## When to use which
+
+<!-- TODO: per-variant guidance — text only -->
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| <!-- TODO --> | <!-- TODO --> |
+| <!-- TODO --> | <!-- TODO --> |
+
+## Theming
+
+| Role | Pattern | Source |
+|---|---|---|
+{{TOKEN_TABLE}}
+
+<DesignTokenDocBlock categoryName="{{COMPONENT_SLUG}}" viewType="card" />
+
+## API
+
+{{IF_HAS_STORIES}}<ArgsTable of={ComponentStories} />{{/IF_HAS_STORIES}}
+{{IF_NO_STORIES}}<!-- TODO: props table extracted from Figma node properties -->{{/IF_NO_STORIES}}
+
+{{IF_HAS_STORIES}}
+## Examples
+
+<Canvas of={ComponentStories.Default} />
+<Controls />
+
+## All stories
+
+<Stories includePrimary={false} />
+{{/IF_HAS_STORIES}}
+
+{{IF_FIGMA_FRAME_AND_HAS_STORIES}}
+## Design reference
+
+<FigmaFrame url="{{FIGMA_FRAME_URL}}" />
+{{/IF_FIGMA_FRAME_AND_HAS_STORIES}}
+
+## Source of truth
+
+- Code: `{{CODE_PATH}}`
+- Stories: `{{STORIES_PATH}}`
+- Storybook URL: {{STORYBOOK_URL}}
+- Figma node: {{FIGMA_NODE_ID}}
+- Reference implementations: {{REF_LIBS_LIST}}
+- Last sync: {{DATE}}
+
+## Decisions
+
+<!-- TODO: 3-5 non-obvious rules. -->
+
+## Agent prompt guide
+
+<!-- TODO: imperatives for an agent picking this component. -->

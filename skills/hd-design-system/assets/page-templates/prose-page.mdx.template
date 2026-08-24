@@ -1,0 +1,54 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="{{SECTION}}/{{TITLE}}" />
+
+# {{TITLE}}
+
+> {{ONE_LINE_PURPOSE}}
+
+## {{DECISIONS_HEADER}}
+
+{{!--
+  DECISIONS_HEADER substitutes per topic:
+    principles.mdx       → "Principles"
+    accessibility.mdx    → "WCAG target"
+    content-voice.mdx    → "Voice"
+    layout.mdx           → "Layout rules"
+    tokens.mdx           → "Tokens"
+  Body: 3-5 normative rules in imperative voice.
+--}}
+
+<!-- TODO: list 3-5 rules in imperative voice. -->
+
+## Reference
+
+{{!-- Tables, lists, examples specific to topic. Free-form. --}}
+
+<!-- TODO: fill reference content. -->
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| <!-- TODO --> | <!-- TODO --> |
+| <!-- TODO --> | <!-- TODO --> |
+
+## Rationale
+
+<!-- TODO: 2-4 sentence narrative — why these choices. -->
+
+## Source of truth
+
+- Owner: <!-- TODO -->
+- Last reviewed: {{DATE}}
+- Cadence: <!-- TODO: every release / weekly / on-demand -->
+
+## Agent prompt guide
+
+<!-- TODO: imperatives for an agent working in this domain. -->

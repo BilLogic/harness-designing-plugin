@@ -1,0 +1,180 @@
+import { Meta } from '@storybook/blocks';
+import { Button } from '../../src/components/Button';
+import { Input } from '../../src/components/Input';
+import { Label } from '../../src/components/Label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../src/components/Card';
+import { Badge } from '../../src/components/Badge';
+
+<Meta title="1-foundations/Layout" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'Four ideas — a 12-column grid, four breakpoints, a container ceiling, and a four-tier surface hierarchy. Everything else composes from these.',
+  chips: ['12-col grid', 'Breakpoints', 'Hierarchy'],
+  kicker: 'Foundation 04',
+};
+
+# Layout
+
+> Four ideas: a 12-column grid, four breakpoints, a 1280px container ceiling, and a four-tier surface hierarchy (page → section → card → element). Combined, they describe every layout in the product. There is intentionally no fifth idea.
+
+## Grid
+
+12 columns. 16px gutter (`var(--space-4)`) at all breakpoints. Container max-width 1280px — page surfaces never exceed it.
+
+export const GridDemo = () => (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '0.5rem', border: '1px dashed var(--border)', padding: '0.75rem', borderRadius: 'var(--radius)' }}>
+    {Array.from({ length: 12 }).map((_, i) => (
+      <div key={i} style={{ height: '3rem', background: 'var(--muted)', borderRadius: 'calc(var(--radius) - 0.25rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
+        {i + 1}
+      </div>
+    ))}
+  </div>
+);
+
+<GridDemo />
+
+## Breakpoints
+
+| Name | Min width | Use |
+|---|---|---|
+| (default) | 0 | Mobile-first base |
+| `sm` | 640px | Compact layouts, dense forms, mobile landscape |
+| `md` | 768px | Default tablet |
+| `lg` | 1024px | Default desktop |
+| `xl` | 1280px | Wide desktop — equal to container ceiling |
+
+There is intentionally no `2xl` — the container caps at `xl`, so wider viewports get more whitespace, not more content.
+
+## Surface hierarchy
+
+Four tiers stack via CSS variables. Pick by purpose, not aesthetic.
+
+export const HierarchyDiagram = () => (
+  <div style={{ background: 'var(--background)', border: '2px dashed var(--border)', borderRadius: 'var(--radius)', padding: '1.25rem' }}>
+    <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+      Page · --background
+    </div>
+    <div style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '1rem' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+        Section · spacing only
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+        <Card>
+          <CardHeader>
+            <CardTitle style={{ fontSize: 'var(--text-base)' }}>Card</CardTitle>
+            <CardDescription>--card surface</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.5rem' }}>
+              Element · inherits
+            </div>
+            <Button size="sm">Element</Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle style={{ fontSize: 'var(--text-base)' }}>Card</CardTitle>
+            <CardDescription>--card surface</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button size="sm" variant="outline">Element</Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+);
+
+<HierarchyDiagram />
+
+| Tier | Token | Padding | Use |
+|---|---|---|---|
+| **Page** | `--background` | `--space-8` (32px) | Outermost canvas |
+| **Section** | `--background` (often) | `--space-6` (24px) | Logical groupings within a page |
+| **Card** | `--card` | `--space-6` (24px, supplied by `CardHeader` / `Content` / `Footer`) | Discrete surface — list items, dialogs, dashboard tiles |
+| **Element** | inherits | `--space-2` to `--space-3` | Individual control |
+
+Each tier owns its own padding. When a `Card` lives inside a `Section`, the section provides the gap **between** cards, the card provides padding **within** itself.
+
+## Stack composition rules
+
+- **Element inside Card** — element's padding is intrinsic; the card supplies the surface.
+- **Card inside Section** — the section supplies vertical rhythm via `gap`, not via card outer-margin.
+- **Section inside Page** — page padding is the outermost frame; sections stack with `gap: var(--space-8)`.
+
+This eliminates margin-collapse debugging — surfaces never margin, parents always `gap`.
+
+## Worked example — a settings page
+
+export const SettingsLayout = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)', maxWidth: 720 }}>
+    <div>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: '0.375rem' }}>
+        Section header
+      </div>
+      <h2 style={{ margin: 0, fontSize: 'var(--text-xl)', fontWeight: 600 }}>Account</h2>
+    </div>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Profile</CardTitle>
+          <CardDescription>Public information</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <Label htmlFor="layout-name">Display name</Label>
+            <Input id="layout-name" defaultValue="Avery Brooks" />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button>Save</Button>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Plan</CardTitle>
+          <CardDescription>Current subscription</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Badge>Pro</Badge>
+            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted-foreground)' }}>$19/mo · renews Jan 4</span>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline">Manage</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  </div>
+);
+
+<SettingsLayout />
+
+Page (`--background`) → Section (header + grid) → Cards (`--card`) → Elements (`Input`, `Button`, `Badge`). One pass, four tiers, no margin debugging.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Use `gap` on the parent for rhythm between siblings | Apply `margin-bottom` to each child |
+| Cap content width at 1280px | Stretch dashboards edge-to-edge |
+| Pick the surface tier by intent | Apply translucent overlays to fake an extra tier |
+| Mobile-first — escalate at `sm` / `md` / `lg` / `xl` | Desktop-first with shrinking media queries |
+| Let `Section` provide the gap between `Card`s | Add `margin` to cards |
+
+## Source of truth
+
+- [`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — spacing scale (`--space-*`) and surface tokens (`--background`, `--card`, `--popover`)
+- [`Card` story](?path=/docs/4-components-card-card--docs) — the canonical "card lives in section" pattern
+- [Spacing](?path=/docs/2-styles-spacing--docs) · [Elevation](?path=/docs/2-styles-elevation--docs)
+
+## Related
+
+[Spacing](?path=/docs/2-styles-spacing--docs) · [Elevation](?path=/docs/2-styles-elevation--docs) · [Card](?path=/docs/4-components-card-card--docs) · [Tokens](?path=/docs/1-foundations-tokens--docs)
+
+## Agent prompt guide
+
+> Picking a layout: start with the page tier, drop sections inside, drop cards inside sections, drop elements inside cards. Never reach for absolute positioning except for overlays (popovers, tooltips). Never margin a card — give the parent a `gap`. Below 640px is the default; opt into `sm` / `md` / `lg` / `xl` only when the layout needs to change.

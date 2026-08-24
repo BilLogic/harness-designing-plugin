@@ -1,0 +1,98 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as CardStories from '../../src/components/Card.stories';
+
+<Meta of={CardStories} />
+
+# Card
+
+> Fluent's card has four appearances — `filled` (default with shadow + border), `filled-alternative`, `outline` (border only), `subtle` (tinted bg, no chrome). Sub-components: `CardHeader` for title group, `CardPreview` for media that bleeds to edges, `CardFooter` for actions.
+
+## Description
+
+A composition primitive. The wrapper handles surface, border, shadow, padding, and corner radius via tokens. Sub-components handle layout regions — header (title + description), preview (media bleed), footer (action row).
+
+## Default
+
+<Panel name="Default filled card" source="src/components/Card.tsx">
+  <Canvas of={CardStories.Default} sourceState="none" />
+</Panel>
+
+## Appearances
+
+<Panel name="Filled vs Outline vs Subtle" source="src/components/Card.tsx">
+  <Canvas of={CardStories.Appearances} sourceState="none" />
+</Panel>
+
+| Appearance | Surface | Border | Shadow | When |
+|---|---|---|---|---|
+| `filled` (default) | `Background1` | `Stroke1` | `shadow4` | Cards on a flat page |
+| `filled-alternative` | `Background2` | `Stroke1` | `shadow4` | Cards on the same level as `filled` to provide visual variation |
+| `outline` | `Background1` | `Stroke2` | none | Cards inside cards (avoid shadow stacking) |
+| `subtle` | `Background2` | none | none | De-emphasized grouping |
+
+## Sub-components
+
+```
+Card                  ← surface, padding (16px), radius (4px), gap (12px column)
+├── CardHeader        ← grid 1fr × 1fr, gap-XS — title + description
+│   ├── (your <h3>)
+│   └── (your <p>)
+├── CardPreview       ← bleeds to card edges (negative margins)
+│   └── (your media)
+├── (your body content) ← inside Card's gap rhythm
+└── CardFooter        ← flex row, gap-S — actions
+```
+
+The Card itself owns the gap between sub-components — that's why no inner padding is needed on each sub-component except where the layout demands it.
+
+## Form card
+
+<Panel name="Form card" source="src/components/Card.tsx">
+  <Canvas of={CardStories.FormCard} sourceState="none" />
+</Panel>
+
+## Usage
+
+```tsx
+import { Card, CardHeader, CardFooter } from '@/components/Card';
+import { Button } from '@/components/Button';
+
+<Card>
+  <CardHeader>
+    <h3>Notifications</h3>
+    <p>You have 3 unread messages.</p>
+  </CardHeader>
+  <p>Body content here.</p>
+  <CardFooter>
+    <Button>Dismiss</Button>
+    <Button appearance="primary">Open</Button>
+  </CardFooter>
+</Card>
+```
+
+## Accessibility
+
+- Card is a layout primitive — it does NOT add ARIA roles
+- Header titles use semantic `<h3>` by default; raise/lower the level for the document outline
+- Clickable cards need `role="button"` + keyboard handlers; consider whether a real Button styled to look like a card would be cleaner
+- For dialogs, wrap Card in a `role="dialog"` container
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Pick `appearance` based on surface beneath | Stack `filled` cards on a colored hero — pick `filled-alternative` or `outline` |
+| Use `CardPreview` for media bleed | Add negative margins yourself |
+| Match Footer button hierarchy intentionally | Stack three `primary` buttons in the footer |
+| Test all themes (light/dark/HC) via toolbar | Hardcode shadows |
+
+## Source of truth
+
+- Code — [`src/components/Card.tsx`](?path=/story/4-components-card--default)
+- Stories — [`src/components/Card.stories.tsx`](?path=/story/4-components-card--default)
+- Reference — [Fluent UI v9 Card](https://github.com/microsoft/fluentui/tree/master/packages/react-components/react-card)
+
+## Agent prompt guide
+
+> Cards on flat page → `appearance="filled"` (default). Cards inside another card → `appearance="outline"`. De-emphasized grouping → `appearance="subtle"`. Use `CardHeader` for title + description, `CardFooter` for actions. Don't make the card itself clickable — put a button inside.

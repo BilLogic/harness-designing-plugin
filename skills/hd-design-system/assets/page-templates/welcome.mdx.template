@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Welcome/README" />
+
+<div className="harness-hero">
+  <p className="harness-hero-eyebrow">{{DS_NAME}} · v{{VERSION}}</p>
+  <h1 className="harness-hero-headline">{{HEADLINE_TAGLINE}}</h1>
+  <p className="harness-hero-lede">{{ONE_PARAGRAPH_LEDE}}</p>
+  <div className="harness-hero-meta">
+    <div><strong>Stack</strong>{{STACK_SUMMARY}}</div>
+    <div><strong>Tokens</strong>{{TIER_MODEL_SUMMARY}}</div>
+    <div><strong>Audience</strong>Designers, engineers, design agents</div>
+  </div>
+</div>
+
+## Visual reference
+
+<div className="harness-page-grid">
+  <a className="harness-page-card" href="?path=/docs/foundations-principles--docs">
+    <h3>Foundations</h3>
+    <p>Principles · accessibility · voice · layout · tokens. The why.</p>
+  </a>
+  <a className="harness-page-card" href="?path=/docs/styles-color--docs">
+    <h3>Styles</h3>
+    <p>Color · typography · spacing · elevation · iconography. Visual values.</p>
+  </a>
+  <a className="harness-page-card" href="?path=/docs/components-inventory--docs">
+    <h3>Components</h3>
+    <p>UI primitives. Description · types · usage · API · stories.</p>
+  </a>
+  {{IF_PATTERNS}}<a className="harness-page-card" href="?path=/docs/patterns-inventory--docs">
+    <h3>Patterns</h3>
+    <p>Multi-component compositions. Loading · notifications · forms · empty states.</p>
+  </a>{{/IF_PATTERNS}}
+</div>
+
+## Non-negotiable rules
+
+{{NON_NEGOTIABLE_RULES_BULLETS}}
+
+## How to use this Storybook
+
+- **Toolbar (top)** — switch theme (light / dark{{IF_HIGH_CONTRAST}} / high-contrast{{/IF_HIGH_CONTRAST}}), direction (LTR / RTL){{IF_MULTI_BRAND}}, brand{{/IF_MULTI_BRAND}}, strict mode (off / on)
+- **Component pages** show Live preview, interactive Controls, and All stories below the docs
+- **Status banners** at the top of each page indicate fill state (✅ filled · 🟡 in-progress · 📋 placeholder · ⬜ empty)
+- **Single source of truth**: this Storybook reads MDX directly from `docs/context/design-system/`. Same `.mdx` files serve human readers (rendered) and coding agents (read as markdown)
+
+## Spec docs
+
+| Topic | Doc |
+|---|---|
+| Token system | [`1-foundations/tokens.mdx`](?path=/docs/foundations-tokens--docs) |
+| Accessibility target | [`1-foundations/accessibility.mdx`](?path=/docs/foundations-accessibility--docs) |
+| Voice & content | [`1-foundations/content-voice.mdx`](?path=/docs/foundations-content-voice--docs) |
+| Component inventory | [`4-components/inventory.mdx`](?path=/docs/components-inventory--docs) |
+| Component cheat-sheet | [`4-components/cheat-sheet.mdx`](?path=/docs/components-cheat-sheet--docs) |
+
+## Tracker
+
+[Fill Tracker](?path=/docs/welcome-fill-tracker--docs) — current fill status across the harness · [Audit](?path=/docs/welcome-audit--docs) — discrepancies + suggested actions

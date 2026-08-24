@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Spacing" />
+
+# Spacing
+
+> M3 uses 4dp as the base unit. Eight tokens cover component, card, and page-level rhythm.
+
+export const SpaceRow = ({ token, dp }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '180px 80px 1fr', gap: '1rem', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+    <code style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>--md-sys-spacing-{token}</code>
+    <div style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)', fontFamily: 'ui-monospace, monospace' }}>{dp}dp</div>
+    <div style={{ height: '1.5rem', width: `var(--md-sys-spacing-${token})`, background: 'var(--md-sys-color-primary)', borderRadius: '2px' }} />
+  </div>
+);
+
+## The scale
+
+<SpaceRow token="1" dp="4" />
+<SpaceRow token="2" dp="8" />
+<SpaceRow token="3" dp="12" />
+<SpaceRow token="4" dp="16" />
+<SpaceRow token="6" dp="24" />
+<SpaceRow token="8" dp="32" />
+<SpaceRow token="12" dp="48" />
+<SpaceRow token="16" dp="64" />
+
+## Hierarchy guidance
+
+| Context | Recommended | Notes |
+|---|---|---|
+| Inline gap (icon + label, leading FAB icon) | `--md-sys-spacing-2` (8dp) | M3 button leading icon spacing |
+| Component padding (text field, button) | `--md-sys-spacing-4` (16dp) | M3 button horizontal padding for filled |
+| Card padding | `--md-sys-spacing-4` (16dp) | M3 outlined card default |
+| Section breaks | `--md-sys-spacing-6` to `--md-sys-spacing-8` | 24-32dp |
+| Page gutters (compact) | `--md-sys-spacing-4` (16dp) | Phone, tablet portrait |
+| Page gutters (medium+) | `--md-sys-spacing-8` (32dp) | Tablet landscape, desktop |
+
+## Shape (corner radius)
+
+```
+extra-small    4dp     (chips, dense components)
+small          8dp     (text-field active container)
+medium        12dp     (card outlined / elevated)
+large         16dp     (extended FAB, dialog)
+extra-large   28dp     (full-width buttons, prominent CTAs)
+```
+
+## Decisions
+
+- **4dp base.** No 2dp half-steps — they create drift over time.
+- **Spacing means margin OR padding OR gap.** Same token, different context.
+- **Shape tokens are separate from spacing.** Don't use `spacing-1` (4dp) as a corner radius — use `shape-corner-extra-small` (also 4dp). The values match today; the tokens differ by intent and may diverge in future M3 revisions.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-design-tokens--docs) — `--md-sys-spacing-*` and `--md-sys-shape-corner-*`.
+
+## Agent prompt guide
+
+> Component padding → `spacing-4` for default density, `spacing-3` for compact. Card and dialog padding → `spacing-4`. Section breaks → `spacing-6` to `spacing-8`. Inline gap (icon + label) → `spacing-2`. Use shape tokens for radii, never spacing tokens — even when values match today.

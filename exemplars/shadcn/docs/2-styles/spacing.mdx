@@ -1,0 +1,150 @@
+import { Meta } from '@storybook/blocks';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../src/components/Card';
+import { Button } from '../../src/components/Button';
+import { Badge } from '../../src/components/Badge';
+
+<Meta title="2-styles/Spacing" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: '8-step scale on a 4px base. Pick from the 8 tokens — no half-steps. Same scale serves padding, margin, and gap.',
+  chips: ['8 steps', '4px base', 'No half-steps'],
+  preview: 'MiniSpacingBars',
+  kicker: 'Styles 03',
+};
+
+# Spacing
+
+> shadcn/ui inherits Tailwind's 4px-base spacing scale. Eight steps for component-level padding, gap, and margin. The same eight tokens serve every consumer — no separate gap, padding, or margin scales.
+
+## The scale
+
+export const SpacingRow = ({ token, px, intent }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '6.5rem 4.5rem 1fr 5.5rem', gap: '1rem', alignItems: 'center', padding: '0.625rem 0', borderBottom: '1px solid var(--border)' }}>
+    <code style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>--space-{token}</code>
+    <span style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)' }}>{px}px</span>
+    <div style={{ height: '0.875rem', width: `var(--space-${token})`, background: 'var(--primary)', borderRadius: '999px' }} />
+    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textAlign: 'right' }}>{intent}</span>
+  </div>
+);
+
+<SpacingRow token="1"  px="4"  intent="Hairline gap" />
+<SpacingRow token="2"  px="8"  intent="Inline gap" />
+<SpacingRow token="3"  px="12" intent="Tight stack" />
+<SpacingRow token="4"  px="16" intent="Default gap · gutter" />
+<SpacingRow token="6"  px="24" intent="Card padding · section gap" />
+<SpacingRow token="8"  px="32" intent="Page section gap" />
+<SpacingRow token="12" px="48" intent="Large layout break" />
+<SpacingRow token="16" px="64" intent="Page-level padding" />
+
+## Tier hierarchy
+
+Spacing maps to the four-tier surface hierarchy from [Layout](?path=/docs/1-foundations-layout--docs). Each tier owns a default padding.
+
+export const TierStack = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+    {[
+      { label: 'Element', token: 'space-2', use: 'Inline icon + label, badge content' },
+      { label: 'Tight stack', token: 'space-3', use: 'Form fields, list items' },
+      { label: 'Component padding', token: 'space-3', use: 'Button, input, badge horizontal' },
+      { label: 'Card / section padding', token: 'space-6', use: 'Card body, section breaks' },
+      { label: 'Page-level gutter', token: 'space-8', use: 'Major layout breaks' },
+    ].map((row) => (
+      <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '11rem auto 1fr', gap: '0.875rem', alignItems: 'center', padding: '0.625rem 0.875rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+        <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{row.label}</span>
+        <div style={{ height: '0.625rem', width: `var(--${row.token})`, background: 'var(--primary)', borderRadius: '999px' }} />
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)' }}>{row.use}</span>
+      </div>
+    ))}
+  </div>
+);
+
+<TierStack />
+
+## In context — same scale, three consumers
+
+Padding inside a card. Gap between cards in a grid. Margin around a section. One token, three roles.
+
+export const ContextDemo = () => (
+  <div style={{ background: 'var(--background)', padding: 'var(--space-6)', borderRadius: 'var(--radius)', border: '1px dashed var(--border)' }}>
+    <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', marginBottom: 'var(--space-2)' }}>
+      Outer padding · --space-6
+    </div>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
+      <div style={{ fontSize: 'var(--text-xs)', fontFamily: 'var(--font-mono)', color: 'var(--muted-foreground)', gridColumn: '1 / -1' }}>
+        Grid gap · --space-4
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Card</CardTitle>
+          <CardDescription>Internal padding from CardHeader/Content/Footer · --space-6</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-sm)' }}>
+            <Badge>Pro</Badge>
+            <span>Inline gap · --space-2</span>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button>Save</Button>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle style={{ fontSize: 'var(--text-base)' }}>Card</CardTitle>
+          <CardDescription>Same hierarchy, different content</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', fontSize: 'var(--text-sm)' }}>
+            <span>Stack item</span>
+            <span>Stack item — gap --space-2</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+);
+
+<ContextDemo />
+
+## Padding vs gap vs margin
+
+Same eight tokens; three different consumers. Pick by purpose.
+
+| Consumer | Use when |
+|---|---|
+| **Padding** | Inside a surface (card, button, section) |
+| **Gap** | Between siblings inside a flex/grid parent |
+| **Margin** | Reserved — spacing between siblings is the parent's job; margin is the escape hatch when parent layout can't be controlled |
+
+The harness defaults to `gap` over `margin` for stack rhythm — eliminates margin-collapse debugging.
+
+## Decisions
+
+- **4px base, no 2px steps.** Half-steps invite drift. The 8 sizes above are the entire scale; if you find yourself wanting 10px, use 8 or 12.
+- **No exposed `--space-5`, `--space-7`, `--space-9`–`--space-11`, `--space-13`–`--space-15`.** Tailwind has them; we only token-expose the 8 in regular use.
+- **Spacing means margin, padding, OR gap.** Same token, different consumer.
+- **`gap` first, `margin` last.** Use `gap` on flex/grid parents for stack rhythm.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Pick from the 8 tokens | Use arbitrary px values (`p-[7px]`) |
+| Use `gap` over margin where flex/grid permit | Stack `margin-top` on every child |
+| Increase to next step when needing more breathing room | Add a token between two existing ones |
+| Pad surfaces, not their children | Margin individual children to fake surface padding |
+| Match the tier — element/card/section/page | Use `--space-12` inside a card body |
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — `--space-1` through `--space-16` exposed. Tailwind's full scale is available via classes, but tokens limit consumption to 8.
+
+## Related
+
+[Layout](?path=/docs/1-foundations-layout--docs) · [Tokens](?path=/docs/1-foundations-tokens--docs) · [Card](?path=/docs/4-components-card-card--docs) · [Elevation](?path=/docs/2-styles-elevation--docs)
+
+## Agent prompt guide
+
+> Inline gap → `--space-2`. Component internal padding → `--space-3` (horizontal) and `--space-2` (vertical) for buttons; `--space-6` for cards. Layout-level → `--space-8`+. Never sample a px value from a Figma frame — round to the nearest token. Use `gap` on the parent over `margin` on children.

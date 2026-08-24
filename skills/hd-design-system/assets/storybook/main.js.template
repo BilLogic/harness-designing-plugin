@@ -1,0 +1,33 @@
+/**
+ * Storybook main config — scaffolded by /hd:design-system establish.
+ *
+ * The `stories` glob points at the harness directly (docs/context/design-system/**\/*.mdx).
+ * Storybook reads MDX from there; agent reads the same files. Single source of truth.
+ *
+ * Recommended addons (install separately):
+ *   npm install --save-dev @storybook/addon-a11y @storybook/addon-docs storybook-design-token
+ */
+
+/** @type { import('@storybook/{{FRAMEWORK_BARE}}').StorybookConfig } */
+const config = {
+  stories: [
+    '../docs/context/design-system/**/*.mdx',
+  ],
+  addons: [
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs',
+    'storybook-design-token',
+  ],
+  framework: {
+    name: '{{FRAMEWORK}}',
+    options: {},
+  },
+  docs: {
+    defaultName: 'Docs',
+  },
+  staticDirs: [
+    '../docs/context/design-system/3-assets',
+  ],
+};
+
+export default config;

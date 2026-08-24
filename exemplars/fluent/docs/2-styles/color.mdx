@@ -1,0 +1,81 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Color" />
+
+# Color
+
+> Fluent's color system has three pillars — **brand** (your accent ramp), **neutral** (text + surfaces in 4-6 tiers), and **palette** (status colors). Toggle the Brand toolbar to swap from default blue to Teams purple.
+
+export const Swatch = ({ name, role, fgRole = 'colorNeutralForegroundOnBrand' }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacingHorizontalM)', marginBottom: 'var(--spacingHorizontalS)' }}>
+    <div style={{ width: '5rem', height: '2.5rem', background: `var(--${role})`, color: `var(--${fgRole})`, fontSize: 'var(--fontSizeBase200)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--borderRadiusMedium)', border: 'var(--strokeWidthThin) solid var(--colorNeutralStroke2)' }}>Aa</div>
+    <div>
+      <div style={{ fontSize: 'var(--fontSizeBase300)', fontWeight: 'var(--fontWeightSemibold)' }}>{name}</div>
+      <code style={{ fontSize: 'var(--fontSizeBase200)', color: 'var(--colorNeutralForeground3)' }}>--{role}</code>
+    </div>
+  </div>
+);
+
+## Brand ramp
+
+The primary action color + its interaction states. Toggle Brand in the toolbar to swap between `default` (Fluent web blue) and `teams` (Teams purple).
+
+<Swatch name="Brand background (default fill)" role="colorBrandBackground" />
+<Swatch name="Brand background hover" role="colorBrandBackgroundHover" />
+<Swatch name="Brand background pressed" role="colorBrandBackgroundPressed" />
+<Swatch name="Brand background selected" role="colorBrandBackgroundSelected" />
+
+### Brand on neutral surfaces
+
+<Swatch name="Brand foreground 1 (primary brand text)" role="colorBrandForeground1" fgRole="colorNeutralBackground1" />
+<Swatch name="Brand foreground 2 (subtle brand text)" role="colorBrandForeground2" fgRole="colorNeutralBackground1" />
+<Swatch name="Brand stroke 1 (primary brand border)" role="colorBrandStroke1" fgRole="colorNeutralBackground1" />
+<Swatch name="Brand stroke 2 (subtle brand border)" role="colorBrandStroke2" fgRole="colorNeutralBackground1" />
+
+## Neutral foreground (text)
+
+Hierarchy via numbered tiers — 1 most prominent, 4 most muted.
+
+<Swatch name="Foreground 1 (primary text)" role="colorNeutralForeground1" fgRole="colorNeutralBackground1" />
+<Swatch name="Foreground 2 (secondary text)" role="colorNeutralForeground2" fgRole="colorNeutralBackground1" />
+<Swatch name="Foreground 3 (tertiary text, hint)" role="colorNeutralForeground3" fgRole="colorNeutralBackground1" />
+<Swatch name="Foreground 4 (disabled text)" role="colorNeutralForeground4" fgRole="colorNeutralBackground1" />
+<Swatch name="Foreground disabled" role="colorNeutralForegroundDisabled" fgRole="colorNeutralBackground1" />
+<Swatch name="Foreground on brand (text on brand fill)" role="colorNeutralForegroundOnBrand" fgRole="colorBrandBackground" />
+
+## Neutral background (surfaces)
+
+6 tiers from lightest (1, page bg) to darkest (6, deepest section).
+
+<Swatch name="Background 1 (page surface)" role="colorNeutralBackground1" fgRole="colorNeutralForeground1" />
+<Swatch name="Background 2" role="colorNeutralBackground2" fgRole="colorNeutralForeground1" />
+<Swatch name="Background 3" role="colorNeutralBackground3" fgRole="colorNeutralForeground1" />
+<Swatch name="Background 4" role="colorNeutralBackground4" fgRole="colorNeutralForeground1" />
+<Swatch name="Background 5" role="colorNeutralBackground5" fgRole="colorNeutralForeground1" />
+<Swatch name="Background 6" role="colorNeutralBackground6" fgRole="colorNeutralForeground1" />
+
+## Strokes
+
+<Swatch name="Stroke 1 (default border)" role="colorNeutralStroke1" fgRole="colorNeutralBackground1" />
+<Swatch name="Stroke 2 (subtle border)" role="colorNeutralStroke2" fgRole="colorNeutralBackground1" />
+<Swatch name="Stroke accessible (WCAG AA border)" role="colorNeutralStrokeAccessible" fgRole="colorNeutralBackground1" />
+
+## Status (palette)
+
+<Swatch name="Danger (red)" role="colorPaletteRedBackground3" />
+<Swatch name="Success (green)" role="colorPaletteGreenBackground3" />
+<Swatch name="Warning (yellow)" role="colorPaletteYellowBackground3" />
+
+## Decisions
+
+- **Numbered tiers, not semantic names.** Foreground1 / Foreground2 / Foreground3 / Foreground4 — adding a 5th doesn't require renaming the existing 4.
+- **Brand and neutral are separate pillars.** A button doesn't ask "primary or secondary?" — it asks "brand-filled or neutral-filled?". Different decision.
+- **High-contrast theme is a first-class swap, not a `prefers-contrast` override.** Designers can preview HC in the toolbar and ensure their layouts work in it before shipping.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — light, dark, high-contrast themes plus brand swap.
+
+## Agent prompt guide
+
+> Brand action → `--colorBrandBackground` + `--colorNeutralForegroundOnBrand`. Neutral text → pick the tier (1-4) by hierarchy. Surface → pick background tier by depth (1 page-level, 2-3 cards, 4+ deep sections). Status → palette tokens. Always test in dark + high-contrast themes via the Storybook toolbar before shipping.

@@ -1,0 +1,37 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="0-welcome/README" />
+
+# Fluent 2 — harness exemplar
+
+> A populated v7.4 harness tree built from Fluent 2's design tokens (brand ramp, semantic neutrals, spacing/type scales, shadow elevation).
+> Source: [microsoft/fluentui v9 tokens](https://github.com/microsoft/fluentui/tree/master/packages/tokens) + [fluent2.microsoft.design](https://fluent2.microsoft.design).
+
+## What this exemplar exercises
+
+- **Brand ramp + brand swap.** `--colorBrand*` tokens overridden by `[data-brand]` attribute (default = blue, alternative = Teams purple). Toggle in the Storybook toolbar.
+- **Semantic neutrals.** `--colorNeutralForeground{1..4}` for text hierarchy, `--colorNeutralBackground{1..6}` for surface tiers — no opacity tricks.
+- **Three themes.** Light, Dark, **High contrast** — all driven by `[data-theme]`.
+- **Direction toggle.** Full RTL support via `[dir="rtl"]` decorator. Try the Direction toolbar item.
+- **StrictMode toolbar.** React StrictMode wrapper toggle for testing concurrent rendering.
+- **Multi-pillar control set.** `theme` + `brand` + `direction` + `strictMode` — modeled directly on Microsoft's [react-storybook-addon globalTypes](https://github.com/microsoft/fluentui/tree/master/packages/react-components/react-storybook-addon).
+
+## What's special about this exemplar's preview.ts
+
+While shadcn ships with one toolbar global (theme) and Material with two (theme), Fluent ships with all four — theme, brand, direction, strictMode. This is what the harness produces when scaffolding for a multi-brand / multi-theme team. Try toggling each: every component on every page reflects the change live.
+
+## Three exemplars
+
+| Exemplar | DS philosophy | Toolbar globals |
+|---|---|---|
+| shadcn | Utility-first / token pairs | theme |
+| Material 3 | Role-based + state layers + elevation | theme |
+| **Fluent 2** (this one) | Brand ramp + semantic neutrals + multi-pillar | theme, brand, direction, strictMode |
+
+## Run it
+
+```bash
+cd exemplars/fluent
+npm install
+npm run storybook
+```

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$comment": "Single source of truth for hd-config.md schema. detect.py imports SCHEMA_VERSION + REQUIRED_FIELDS from this file. References/hd-config-schema.md is the human doc derived from this spec; if they drift, this file wins. Bump major version (integer) only on breaking changes; additive fields don't bump (K8s / dbt convention).",
   "title": "hd-config.md schema",
-  "schema_version": "5",
+  "schema_version": "6.1",
   "additive_changes_since_lock": [
     {
       "version": "5",
@@ -20,6 +20,25 @@
         "signals.scattered_l1_signals.root_l1_files[]"
       ],
       "note": "Generic root-level *.md probe (≥30 non-blank lines) for external formats like DESIGN.md / CONTRIBUTING.md — no filename whitelist"
+    },
+    {
+      "version": "6",
+      "phase": "ds-bootstrap",
+      "added": [
+        "signals.design_system_scenario",
+        "signals.voice_docs_found[]",
+        "signals.storybook_present",
+        "signals.dataviz_lib_detected"
+      ],
+      "note": "DS bootstrap signals for /hd:design-system establish — design_system_scenario is one of starter|figma-only|code-and-figma|code-only; voice_docs_found is a generic detector (filename pattern + section heading match), no whitelist; storybook_present detects .storybook/ dir or @storybook/* deps; dataviz_lib_detected detects recharts/d3/visx/chart.js/nivo/etc."
+    },
+    {
+      "version": "6.1",
+      "phase": "ds-bootstrap-framework",
+      "added": [
+        "signals.storybook_framework"
+      ],
+      "note": "Storybook framework package detection (@storybook/sveltekit, @storybook/react-vite, @storybook/vue3-vite, etc.) — drives scaffold-storybook.mjs --framework arg so we adapt to any framework the team builds with via Storybook. Null when storybook_present but no framework package matched (rare — pre-7 or mid-migration)."
     }
   ],
   "required_top_level_fields": [
@@ -39,7 +58,7 @@
     "scaffold_mode"
   ],
   "field_types": {
-    "schema_version": {"type": "string", "enum": ["5"], "note": "Quoted string, not bare int. K8s/dbt convention."},
+    "schema_version": {"type": "string", "enum": ["6", "6.1"], "note": "Quoted string, not bare int. K8s/dbt convention. v6.1 adds signals.storybook_framework — additive, backward-compatible."},
     "setup_mode": {"type": "string", "enum": ["greenfield", "scattered", "advanced", "localize"]},
     "setup_date": {"type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
     "team_size": {"type": "string", "enum": ["solo", "small", "medium", "large"]},
@@ -75,6 +94,38 @@
         "urls": {"type": "array", "items": {"type": "string"}, "note": "Deduped external URL list filtered for noise"}
       },
       "consumer": "ai-integration-scout classify mode (Layer B)"
+    },
+    "signals.design_system_scenario": {
+      "added_phase": "ds-bootstrap (v6)",
+      "type": "string",
+      "enum": ["starter", "figma-only", "code-and-figma", "code-only"],
+      "derivation": "has_figma_config + has_tokens_package + components-dir richness (≥10 .tsx/.jsx/.vue/.svelte files)",
+      "consumer": "/hd:design-system establish mode router"
+    },
+    "signals.voice_docs_found": {
+      "added_phase": "ds-bootstrap (v6)",
+      "type": "array",
+      "items": {"type": "string", "note": "relative path"},
+      "derivation": "filename match (AGENTS|CLAUDE|soul|voice|persona)\\.md + heading match (`## Voice|Tone|Use case|Forbidden|Persona`); generic — no whitelist",
+      "consumer": "/hd:setup voice-authoring step (skip when non-empty unless user wants to extend); /hd:review L1 audit (read whichever doc was found)"
+    },
+    "signals.storybook_present": {
+      "added_phase": "ds-bootstrap (v6)",
+      "type": "boolean",
+      "derivation": ".storybook/ dir exists OR @storybook/* in package.json deps",
+      "consumer": "/hd:design-system establish (existing-Storybook 3-way branch: no-existing/adopt/preserve)"
+    },
+    "signals.storybook_framework": {
+      "added_phase": "ds-bootstrap-framework (v6.1)",
+      "type": "string|null",
+      "derivation": "first matching @storybook/<framework>-<bundler> package in deps (sveltekit/react-vite/react-webpack5/svelte-vite/vue3-vite/angular/web-components-vite/nextjs/qwik/preact-vite/html-vite/...); null when storybook_present but no framework package detected",
+      "consumer": "/hd:design-system establish passes through as scaffold-storybook.mjs --framework arg; ALSO drives `*.stories.<ext>` extension choice (.svelte for sveltekit/svelte-vite, .ts CSF for vue3-vite, .tsx for react-*, etc.) when scaffolding sample stories in code-only S-3"
+    },
+    "signals.dataviz_lib_detected": {
+      "added_phase": "ds-bootstrap (v6)",
+      "type": "boolean",
+      "derivation": "recharts/d3/visx/chart.js/nivo/victory/highcharts/plotly/echarts/apexcharts in package.json deps",
+      "consumer": "/hd:design-system establish (smart default for Q7 data-viz folder enablement)"
     }
   },
   "validation_rules": [

@@ -1,0 +1,591 @@
+/**
+ * Shadcn DocsPage styles — port of Fluent's FluentDocsPage layout.
+ *
+ * Goal: match the visual rhythm of https://storybooks.fluentui.dev/react/
+ * but using shadcn tokens (`--primary`, `--border`, `--muted`, etc.).
+ *
+ * No emojis; all glyphs come from lucide-react via the team's `<Icon>` map.
+ */
+
+.hd-docs-page {
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  max-width: 1200px;
+  padding: 1rem 0 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Title — Fluent's H1 spec: large, bold, slight negative tracking */
+.hd-docs-page .sbdocs-title,
+.hd-docs-page h1 {
+  font-size: 3rem;             /* 48px — Fluent's component-page H1 */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--foreground);
+  margin: 0 0 0.5rem;
+}
+
+/* ━━━ Inline toolbar ━━━ */
+.hd-inline-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.hd-toolbar-spacer { flex: 1; }
+
+.hd-theme-picker-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.hd-theme-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.hd-theme-picker:hover {
+  background: var(--muted);
+}
+
+.hd-theme-picker:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.hd-theme-picker-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  min-width: 8.5rem;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.12), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  z-index: 50;
+}
+
+.hd-theme-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+}
+
+.hd-theme-picker-item:hover {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.hd-theme-picker-item--active {
+  background: var(--muted);
+}
+
+.hd-theme-picker-item:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -1px;
+}
+
+.hd-dir-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background-color 120ms ease;
+}
+
+.hd-dir-switch:hover {
+  background: var(--muted);
+}
+
+.hd-dir-switch:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.hd-dir-active { color: var(--foreground); font-weight: 500; }
+.hd-dir-inactive { color: var(--muted-foreground); }
+
+.hd-dir-toggle {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  background: var(--muted);
+  border-radius: 9999px;
+  transition: background-color 150ms ease;
+}
+
+.hd-dir-toggle[data-active='true'] {
+  background: var(--primary);
+}
+
+.hd-dir-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: var(--card);
+  border-radius: 9999px;
+  transition: transform 150ms ease;
+  border: 1px solid var(--border);
+}
+
+.hd-dir-toggle[data-active='true'] .hd-dir-toggle-knob {
+  transform: translateX(14px);
+}
+
+.hd-copy-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+  font-family: var(--font-sans);
+}
+
+.hd-copy-page-btn:hover {
+  background: var(--muted);
+  border-color: color-mix(in oklch, var(--primary) 30%, var(--border));
+}
+
+/* ━━━ Subtitle / description (the 1-sentence under the title) ━━━ */
+.hd-docs-page .sbdocs-subtitle {
+  display: none;     /* Fluent hides subtitle when description acts as lede */
+}
+
+.hd-docs-description {
+  font-size: 1.0625rem;       /* 17px */
+  line-height: 1.55;
+  color: var(--foreground);
+  max-width: 760px;
+  margin: 0 0 0.5rem;
+}
+
+.hd-docs-description p {
+  margin: 0;
+}
+
+.hd-docs-description code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 0.0625rem 0.3125rem;
+  border-radius: 0.25rem;
+}
+
+/* ━━━ Hairline divider between description and content ━━━ */
+.hd-docs-divider {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 1.5rem 0 2.5rem;
+}
+
+/* ━━━ Two-column layout: body + right-rail TOC ━━━ */
+.hd-docs-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.hd-docs-page-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hd-docs-toc-rail {
+  flex: 0 0 200px;
+}
+
+@media (max-width: 1000px) {
+  .hd-docs-toc-rail {
+    display: none;
+  }
+}
+
+/* ━━━ Section headings (per-variant H2 + API h2) ━━━ */
+.hd-docs-section-heading {
+  margin: 0;
+  font-size: 1.5rem;        /* 24px (Fluent's section H2) */
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--foreground);
+  scroll-margin-top: 5rem;  /* so anchor links don't bury under sticky chrome */
+}
+
+.hd-docs-api-heading {
+  margin-top: 2rem;
+}
+
+/* ━━━ Right-rail TOC (port of FluentDocsPage's Toc) ━━━ */
+.hd-toc {
+  position: sticky;
+  top: 4rem;
+}
+
+.hd-toc-heading {
+  margin: 0 0 1rem;
+  font-size: 0.6875rem;           /* 11px (Fluent spec) */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.hd-toc-list {
+  position: relative;
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style: none;
+}
+
+.hd-toc-list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.hd-toc-item {
+  position: relative;
+  margin-bottom: 0.875rem;
+  line-height: 1;
+}
+
+.hd-toc-item:last-child {
+  margin-bottom: 0;
+}
+
+.hd-toc-item--active::after {
+  content: '';
+  position: absolute;
+  left: -1.25rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.hd-toc-item a {
+  font-size: 0.8125rem;          /* 13px */
+  color: var(--muted-foreground);
+  text-decoration: none;
+  line-height: 1.4;
+  transition: color 120ms ease;
+}
+
+.hd-toc-item a:hover {
+  color: var(--foreground);
+}
+
+.hd-toc-item--active a {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* ━━━ Storybook-block override: Canvas chrome ━━━ */
+.hd-docs-page .docblock-source,
+.hd-docs-page .sbdocs-preview {
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--card);
+  margin: 1rem 0;
+}
+
+.hd-docs-page .sbdocs-preview {
+  padding: 1.5rem;
+}
+
+/* ━━━ Markdown tables inside MDX ━━━
+ * .sb-unstyled strips Storybook defaults; we re-add scoped to .hd-docs-page.
+ * Affects every | x | y | row in the .mdx files (foundation refs,
+ * style scale tables, do/don't tables, etc).
+ */
+.hd-docs-page table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+  background: var(--card);
+}
+
+.hd-docs-page th,
+.hd-docs-page td {
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.hd-docs-page tbody tr:last-child th,
+.hd-docs-page tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.hd-docs-page thead th {
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+.hd-docs-page td code,
+.hd-docs-page th code {
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 0.0625rem 0.3125rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* ━━━ Storybook ArgsTable / Controls ━━━
+ * Storybook 8 renders BOTH <Controls /> and <ArgTypes /> as a table with
+ * class `docblock-argstable` (plus the always-present `.sb-unstyled` reset).
+ * `.sb-argstableBlock` is the loading-skeleton table — keep its border so
+ * the SSR shell doesn't flash unstyled.
+ *
+ * Verified DOM (Storybook 8.4):
+ *   <table class="docblock-argstable sb-unstyled css-...">
+ *     <thead class="docblock-argstable-head"><tr><th>Name</th>...</tr></thead>
+ *     <tbody class="docblock-argstable-body"><tr><td>...</td></tr></tbody>
+ *   </table>
+ */
+.hd-docs-page .docblock-argstable,
+.hd-docs-page .sb-argstableBlock {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  margin: 1rem 0;
+  background: var(--card);
+  font-family: var(--font-sans);
+}
+
+.hd-docs-page .docblock-argstable .docblock-argstable-head th,
+.hd-docs-page .docblock-argstable thead th {
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.875rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.hd-docs-page .docblock-argstable .docblock-argstable-body td,
+.hd-docs-page .docblock-argstable tbody td {
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--foreground);
+  background: var(--card);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.hd-docs-page .docblock-argstable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Inline code badges inside the table (token names, types like `union`) */
+.hd-docs-page .docblock-argstable code,
+.hd-docs-page .docblock-argstable .docblock-argstable-code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+}
+
+/* Form widgets inside the Controls column — selects, inputs, checkboxes */
+.hd-docs-page .docblock-argstable select,
+.hd-docs-page .docblock-argstable input[type='text'],
+.hd-docs-page .docblock-argstable input[type='number'],
+.hd-docs-page .docblock-argstable input[type='range'],
+.hd-docs-page .docblock-argstable textarea {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--input);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  outline-color: var(--ring);
+  outline-offset: 2px;
+}
+
+.hd-docs-page .docblock-argstable select:focus-visible,
+.hd-docs-page .docblock-argstable input:focus-visible,
+.hd-docs-page .docblock-argstable textarea:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-color: var(--ring);
+}
+
+/* Reset-controls button in the header — a small icon button */
+.hd-docs-page .docblock-argstable thead button {
+  background: transparent;
+  border: none;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: 0.375rem;
+}
+
+.hd-docs-page .docblock-argstable thead button:hover {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Storybook 8 also wraps the controls in a "no controls" empty state when
+ * the story's args panel can't render. Keep that legible. */
+.hd-docs-page .docblock-emptyblock,
+.hd-docs-page .sbdocs-empty {
+  padding: 1rem 1.25rem;
+  border: 1px dashed var(--border);
+  border-radius: 0.625rem;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  margin: 1rem 0;
+}
+
+/* ━━━ Best practices block (Do / Don't grid under primary) ━━━ */
+.hd-docs-bp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 720px) {
+  .hd-docs-bp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hd-docs-bp-col {
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--card);
+  padding: 1rem 1.25rem;
+}
+
+.hd-docs-bp-do {
+  border-left: 3px solid var(--primary);
+}
+
+.hd-docs-bp-dont {
+  border-left: 3px solid var(--destructive);
+}
+
+.hd-docs-bp-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 0.625rem;
+}
+
+.hd-docs-bp-do .hd-docs-bp-title {
+  color: var(--primary);
+}
+
+.hd-docs-bp-dont .hd-docs-bp-title {
+  color: var(--destructive);
+}
+
+.hd-docs-bp-col ul {
+  margin: 0;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+}
+
+.hd-docs-bp-col li {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.hd-docs-bp-col li::marker {
+  color: var(--muted-foreground);
+}

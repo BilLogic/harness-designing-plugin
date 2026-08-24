@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="1-foundations/Tokens" />
+
+# Tokens
+
+> Fluent 2 ships ~250 tokens organized into 7 token families. This exemplar covers the 4 most commonly consumed: color, typography, spacing, and elevation. Tokens are CamelCase per Fluent convention (`--colorBrandBackground`, not `--color-brand-background`).
+
+## Token families
+
+| Family | Prefix | Coverage |
+|---|---|---|
+| **Color — brand** | `--colorBrand*` | Primary action color + states (hover/pressed/selected) + brand-tinted strokes/foregrounds |
+| **Color — neutral** | `--colorNeutralForeground{1..4}`, `--colorNeutralBackground{1..6}`, `--colorNeutralStroke{1..3}` | Text hierarchy, surface tiers, borders |
+| **Color — palette** | `--colorPalette{Red,Green,Yellow,...}*` | Status colors (danger / success / warning) |
+| **Typography** | `--fontFamily*`, `--fontSize{Base,Hero}*`, `--lineHeight{Base,Hero}*`, `--fontWeight*` | Type stacks, sizes, line-heights, weights |
+| **Spacing** | `--spacingHorizontal*`, `--spacingVertical*` | XXS / XS / S / M / L / XL / XXL / XXXL on each axis |
+| **Stroke** | `--strokeWidth{Thin,Thick,Thicker,Thickest}` | Border widths |
+| **Elevation** | `--shadow{2,4,8,16,28,64}` | Six shadow levels |
+
+## Theme switching
+
+Three themes via `[data-theme]` attr on `<html>`:
+
+```html
+<html data-theme="light">       <!-- default -->
+<html data-theme="dark">        <!-- dark -->
+<html data-theme="high-contrast"><!-- WCAG AAA accessibility theme -->
+```
+
+Plus brand ramp swap via `[data-brand]`:
+
+```html
+<html data-brand="default">     <!-- Fluent web blue ramp -->
+<html data-brand="teams">       <!-- Teams purple ramp -->
+```
+
+Combinations work — `data-theme="dark" data-brand="teams"` picks Teams purple in the dark color scale.
+
+## Decisions
+
+- **CamelCase token names.** Fluent's convention since v9 (Griffel). Matches CSS-in-JS authoring patterns.
+- **Numbered tier suffixes** instead of semantic names. `--colorNeutralForeground1` (primary text) → 4 (most muted) → Disabled. Lets teams add a Foreground5 without renaming.
+- **Brand swap via attribute, not separate stylesheet.** Single bundle, attribute-driven theme + brand combination.
+- **High-contrast as a first-class theme.** Not an afterthought — explicitly tokenized per WCAG 2.1 AAA.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — all themes (light/dark/high-contrast) and brand swaps in one file.
+
+Reference: [Microsoft FluentUI tokens package](https://github.com/microsoft/fluentui/tree/master/packages/tokens) — the canonical token definitions.
+
+## Agent prompt guide
+
+> Pick by family: text → `colorNeutralForeground{1..4}`, surface → `colorNeutralBackground{1..6}`, brand → `colorBrand{Background,Foreground,Stroke}{1,2}`, status → `colorPalette{Red,Green,Yellow}{Background,Foreground}{1..3}`. Spacing: `spacingHorizontal{XXS..XXXL}` for inline, `spacingVertical{XXS..XXXL}` for stack. Never sample hex from a Figma file — find the family and tier.

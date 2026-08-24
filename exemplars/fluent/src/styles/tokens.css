@@ -1,0 +1,170 @@
+/**
+ * Fluent 2 canonical tokens — abridged
+ * Source: https://github.com/microsoft/fluentui/tree/master/packages/tokens
+ *
+ * Naming convention: --colorBrandBackground, --colorNeutralForeground1, --fontSizeBase300, --strokeWidthThin, --shadow4.
+ * Two themes via [data-theme="light"] / "dark" / "high-contrast", plus [data-brand="default"] / "teams" for brand swap.
+ */
+
+:root,
+[data-theme="light"] {
+  /* === BRAND RAMP (default — Fluent web blue) === */
+  --colorBrandBackground:           #0f6cbd;  /* primary fill */
+  --colorBrandBackgroundHover:      #115ea3;
+  --colorBrandBackgroundPressed:    #0c3b5e;
+  --colorBrandBackgroundSelected:   #0f548c;
+  --colorBrandForeground1:          #0f6cbd;  /* primary text on neutral */
+  --colorBrandForeground2:          #115ea3;
+  --colorBrandStroke1:              #0f6cbd;  /* primary border */
+  --colorBrandStroke2:              #b4d6fa;
+
+  /* === NEUTRAL FOREGROUND (semantic neutrals — text + icons on neutral surfaces) === */
+  --colorNeutralForeground1:        #242424;  /* primary text */
+  --colorNeutralForeground2:        #424242;  /* secondary text */
+  --colorNeutralForeground3:        #616161;  /* tertiary text, hint */
+  --colorNeutralForeground4:        #707070;  /* disabled text */
+  --colorNeutralForegroundDisabled: #bdbdbd;
+  --colorNeutralForegroundOnBrand:  #ffffff;  /* text on brand fill */
+
+  /* === NEUTRAL BACKGROUND === */
+  --colorNeutralBackground1:        #ffffff;  /* primary surface */
+  --colorNeutralBackground2:        #fafafa;
+  --colorNeutralBackground3:        #f5f5f5;
+  --colorNeutralBackground4:        #f0f0f0;
+  --colorNeutralBackground5:        #ebebeb;
+  --colorNeutralBackground6:        #e6e6e6;
+  --colorNeutralBackgroundDisabled: #f0f0f0;
+
+  /* === STROKES === */
+  --colorNeutralStroke1:            #d1d1d1;
+  --colorNeutralStroke2:            #e0e0e0;
+  --colorNeutralStroke3:            #ebebeb;
+  --colorNeutralStrokeAccessible:   #616161;
+  --colorNeutralStrokeDisabled:     #e0e0e0;
+
+  /* === STATUS === */
+  --colorPaletteRedBackground3:     #c50f1f;  /* danger fill */
+  --colorPaletteRedForeground1:     #b10e1c;
+  --colorPaletteGreenBackground3:   #107c10;  /* success fill */
+  --colorPaletteYellowBackground3:  #f5d300;  /* warning fill */
+
+  /* === TYPOGRAPHY === */
+  --fontFamilyBase: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --fontFamilyMonospace: "Cascadia Code", Consolas, "Courier New", monospace;
+
+  --fontSizeBase100: 10px;
+  --fontSizeBase200: 12px;
+  --fontSizeBase300: 14px;   /* default body */
+  --fontSizeBase400: 16px;
+  --fontSizeBase500: 20px;
+  --fontSizeBase600: 24px;
+  --fontSizeHero700: 28px;
+  --fontSizeHero800: 32px;
+  --fontSizeHero900: 40px;
+  --fontSizeHero1000: 68px;
+
+  --lineHeightBase300: 20px;  /* matches base300 size */
+  --lineHeightBase400: 22px;
+  --lineHeightBase500: 28px;
+  --lineHeightBase600: 32px;
+  --lineHeightHero700: 36px;
+  --lineHeightHero800: 40px;
+
+  --fontWeightRegular: 400;
+  --fontWeightMedium: 500;
+  --fontWeightSemibold: 600;
+  --fontWeightBold: 700;
+
+  /* === SPACING === */
+  --spacingHorizontalNone: 0;
+  --spacingHorizontalXXS: 2px;
+  --spacingHorizontalXS:  4px;
+  --spacingHorizontalSNudge: 6px;
+  --spacingHorizontalS:   8px;
+  --spacingHorizontalMNudge: 10px;
+  --spacingHorizontalM:   12px;
+  --spacingHorizontalL:   16px;
+  --spacingHorizontalXL:  20px;
+  --spacingHorizontalXXL: 24px;
+  --spacingHorizontalXXXL: 32px;
+
+  /* === STROKE WIDTHS === */
+  --strokeWidthThin:    1px;
+  --strokeWidthThick:   2px;
+  --strokeWidthThicker: 3px;
+  --strokeWidthThickest: 4px;
+
+  /* === BORDER RADIUS === */
+  --borderRadiusNone:     0;
+  --borderRadiusSmall:    2px;
+  --borderRadiusMedium:   4px;
+  --borderRadiusLarge:    6px;
+  --borderRadiusXLarge:   8px;
+  --borderRadiusCircular: 10000px;
+
+  /* === SHADOWS === */
+  --shadow2:  0 0 2px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14);
+  --shadow4:  0 0 2px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.14);
+  --shadow8:  0 0 2px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.14);
+  --shadow16: 0 0 2px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.14);
+  --shadow28: 0 0 8px rgba(0,0,0,0.12), 0 14px 28px rgba(0,0,0,0.20);
+  --shadow64: 0 0 8px rgba(0,0,0,0.12), 0 32px 64px rgba(0,0,0,0.24);
+}
+
+[data-theme="dark"] {
+  --colorBrandBackground:           #115ea3;
+  --colorBrandBackgroundHover:      #0f6cbd;
+  --colorBrandBackgroundPressed:    #082338;
+  --colorBrandBackgroundSelected:   #0c3b5e;
+  --colorBrandForeground1:          #62abf5;
+  --colorBrandForeground2:          #96c6fa;
+
+  --colorNeutralForeground1:        #ffffff;
+  --colorNeutralForeground2:        #d6d6d6;
+  --colorNeutralForeground3:        #adadad;
+  --colorNeutralForeground4:        #919191;
+  --colorNeutralForegroundDisabled: #5c5c5c;
+
+  --colorNeutralBackground1:        #292929;
+  --colorNeutralBackground2:        #1f1f1f;
+  --colorNeutralBackground3:        #141414;
+  --colorNeutralBackground4:        #0a0a0a;
+  --colorNeutralBackground5:        #000000;
+
+  --colorNeutralStroke1:            #666666;
+  --colorNeutralStroke2:            #525252;
+  --colorNeutralStroke3:            #3d3d3d;
+  --colorNeutralStrokeAccessible:   #adadad;
+}
+
+[data-theme="high-contrast"] {
+  --colorBrandBackground:           #1aebff;
+  --colorBrandBackgroundHover:      #ffffff;
+  --colorNeutralForeground1:        #ffffff;
+  --colorNeutralForeground2:        #ffffff;
+  --colorNeutralForeground3:        #ffffff;
+  --colorNeutralForegroundOnBrand:  #000000;
+  --colorNeutralBackground1:        #000000;
+  --colorNeutralBackground2:        #000000;
+  --colorNeutralStroke1:            #ffffff;
+  --colorNeutralStrokeAccessible:   #ffffff;
+}
+
+/* Brand swap — Teams (purple) overrides the default blue ramp */
+[data-brand="teams"] {
+  --colorBrandBackground:           #6264a7;
+  --colorBrandBackgroundHover:      #464775;
+  --colorBrandBackgroundPressed:    #33344a;
+  --colorBrandBackgroundSelected:   #494b83;
+  --colorBrandForeground1:          #6264a7;
+  --colorBrandStroke1:              #6264a7;
+}
+
+body {
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  font-family: var(--fontFamilyBase);
+  font-size: var(--fontSizeBase300);
+  line-height: var(--lineHeightBase300);
+  margin: 0;
+}

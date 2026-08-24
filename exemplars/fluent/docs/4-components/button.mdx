@@ -1,0 +1,90 @@
+import { Meta, Canvas, Controls, ArgsTable } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as ButtonStories from '../../src/components/Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+> Fluent's button asks not "primary or secondary?" but "**how prominent?**" — five appearance values from `secondary` (default neutral) to `transparent` (no chrome at all). Independent from `size` (small / medium / large).
+
+## Description
+
+A click target. Five appearance × three sizes = 15 combinations. The `appearance` axis sets the visual prominence; `size` sets the height + horizontal padding + label size. Both axes are independent — large + transparent works as well as small + primary.
+
+## All appearances
+
+<Panel name="All appearances at default size" source="src/components/Button.tsx">
+  <Canvas of={ButtonStories.AllAppearances} sourceState="none" />
+</Panel>
+
+| Appearance | When to use |
+|---|---|
+| `secondary` (default) | Default action — neutral chrome with a thin border. The "if you don't know, pick this" choice. |
+| `primary` | Single highest-emphasis action per region. Fills with `--colorBrandBackground`. |
+| `outline` | Same chrome shape as `secondary` but lighter — for use on busy surfaces. |
+| `subtle` | Borderless, hover-only chrome. For toolbars and dense UI. |
+| `transparent` | No chrome at all. For text-button-like contexts inside other widgets. |
+
+## Sizes
+
+<Panel name="Sizes" source="src/components/Button.tsx">
+  <Canvas of={ButtonStories.Sizes} sourceState="none" />
+</Panel>
+
+| Size | Height | Use |
+|---|---|---|
+| `small` | 24px | Toolbars, dense UI, inline filters |
+| `medium` (default) | 32px | Forms, dialog actions, page CTAs |
+| `large` | 40px | Hero CTAs, marketing surfaces |
+
+## Disabled
+
+<Panel name="Disabled state" source="src/components/Button.tsx">
+  <Canvas of={ButtonStories.Disabled} sourceState="none" />
+</Panel>
+
+## Usage
+
+```tsx
+import { Button } from '@/components/Button';
+
+// Primary action — single per region
+<Button appearance="primary" onClick={save}>Save</Button>
+
+// Secondary cancel
+<Button appearance="secondary" onClick={cancel}>Cancel</Button>
+
+// Subtle in a toolbar
+<Button appearance="subtle" size="small">Filter</Button>
+```
+
+## Accessibility
+
+- Renders native `<button>` — keyboard activation (Enter/Space) inherited
+- Focus indicator uses `--strokeWidthThick` outline in `--colorBrandBackground` (Fluent v9 standard)
+- Disabled state uses `aria-disabled` + `pointer-events: none` (handled by browser via `disabled`)
+- For icon-only buttons, set `aria-label`
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Use one `primary` per region | Use two `primary` buttons in the same view |
+| Pair `primary` cancel with `secondary` or `subtle` | Use two `secondary` buttons stacked — pick a hierarchy |
+| Use `subtle` / `transparent` for icon-only contexts | Use `primary` for navigation |
+| Test in HC theme via toolbar before shipping | Hardcode hex values — use `colorBrand*` |
+
+## API
+
+<ArgsTable of={ButtonStories} />
+
+## Source of truth
+
+- Code — [`src/components/Button.tsx`](?path=/story/4-components-button--default)
+- Stories — [`src/components/Button.stories.tsx`](?path=/story/4-components-button--default)
+- Reference — [Fluent UI v9 Button](https://github.com/microsoft/fluentui/tree/master/packages/react-components/react-button)
+
+## Agent prompt guide
+
+> Primary CTA → `appearance="primary"`. Cancel paired with primary → `appearance="secondary"`. Toolbar / icon-only → `appearance="subtle"` + `aria-label`. Hero CTA → `appearance="primary" size="large"`. One primary per region. Test light + dark + high-contrast themes before shipping.

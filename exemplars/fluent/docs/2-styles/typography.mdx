@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Typography" />
+
+# Typography
+
+> Fluent's typescale splits into **Base** (10-24px, body and UI) and **Hero** (28-68px, marketing). Sizes are numbered (200/300/400/...) — same numbering pattern as Microsoft's design system since Fabric.
+
+export const TypeRow = ({ token, sizeVar, lhVar = 'lineHeightBase300' }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 'var(--spacingHorizontalL)', alignItems: 'baseline', padding: 'var(--spacingHorizontalS) 0', borderBottom: 'var(--strokeWidthThin) solid var(--colorNeutralStroke2)' }}>
+    <code style={{ fontSize: 'var(--fontSizeBase200)', color: 'var(--colorNeutralForeground3)' }}>--{sizeVar}</code>
+    <div style={{ fontFamily: 'var(--fontFamilyBase)', fontSize: `var(--${sizeVar})`, lineHeight: `var(--${lhVar})` }}>{token}</div>
+  </div>
+);
+
+## Base sizes
+
+The 7 sizes used for body, UI, and most headings.
+
+<TypeRow token="Base 100 (10px)" sizeVar="fontSizeBase100" />
+<TypeRow token="Base 200 (12px) — caption" sizeVar="fontSizeBase200" />
+<TypeRow token="Base 300 (14px) — default body" sizeVar="fontSizeBase300" />
+<TypeRow token="Base 400 (16px)" sizeVar="fontSizeBase400" lhVar="lineHeightBase400" />
+<TypeRow token="Base 500 (20px) — title" sizeVar="fontSizeBase500" lhVar="lineHeightBase500" />
+<TypeRow token="Base 600 (24px) — subtitle" sizeVar="fontSizeBase600" lhVar="lineHeightBase600" />
+
+## Hero sizes
+
+Marketing surfaces, splash, large empty states.
+
+<TypeRow token="Hero 700 (28px)" sizeVar="fontSizeHero700" lhVar="lineHeightHero700" />
+<TypeRow token="Hero 800 (32px)" sizeVar="fontSizeHero800" lhVar="lineHeightHero800" />
+<TypeRow token="Hero 900 (40px)" sizeVar="fontSizeHero900" lhVar="lineHeightHero800" />
+<TypeRow token="Hero 1000 (68px)" sizeVar="fontSizeHero1000" lhVar="lineHeightHero800" />
+
+## Weights
+
+| Token | Weight | Use |
+|---|---|---|
+| `--fontWeightRegular` | 400 | Body copy |
+| `--fontWeightMedium` | 500 | Emphasized body, captions |
+| `--fontWeightSemibold` | 600 | Buttons, nav labels, emphasis |
+| `--fontWeightBold` | 700 | Hero text, prominent emphasis |
+
+## Font families
+
+| Token | Stack |
+|---|---|
+| `--fontFamilyBase` | `"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif` |
+| `--fontFamilyMonospace` | `"Cascadia Code", Consolas, "Courier New", monospace` |
+
+## Decisions
+
+- **Numbered scale (200/300/400/...) instead of named (sm/md/lg).** Adding a 350 between two existing sizes works without renaming.
+- **Base + Hero split** — different teams own different surfaces. Hero sizes intentionally jump (28 → 32 → 40 → 68) — they're not on the Base 4-step scale.
+- **Line height locked to size.** `--lineHeightBase300` is 20px (vs `--fontSizeBase300` at 14px). Don't override per-component.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — `--fontFamily*`, `--fontSize{Base,Hero}*`, `--lineHeight{Base,Hero}*`, `--fontWeight*`.
+
+## Agent prompt guide
+
+> Default body → `fontSizeBase300` (14px). Caption → `fontSizeBase200`. Buttons → `fontSizeBase300` + `fontWeightSemibold`. Page title → `fontSizeBase600` (24px) or `fontSizeHero700` (28px). Marketing hero → `fontSizeHero900` or 1000. Always pair size with the matching `lineHeight` token.

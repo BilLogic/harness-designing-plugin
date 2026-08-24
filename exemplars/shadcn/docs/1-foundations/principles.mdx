@@ -1,0 +1,124 @@
+import { Meta } from '@storybook/blocks';
+import { Button } from '../../src/components/Button';
+import { Badge } from '../../src/components/Badge';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../src/components/Card';
+
+<Meta title="1-foundations/Principles" />
+
+export const frontmatter = {
+  status: 'filled',
+  last_filled: '2026-05-09',
+  description: 'Three commitments: composition over configuration, CSS variables as the contract, owned source not vendored binary. Every other rule descends from these.',
+  chips: ['Composition', 'CSS vars', 'Owned source'],
+  kicker: 'Foundation 01',
+};
+
+# Principles
+
+> shadcn/ui is intentionally **not a component library**. It's a registry of components you copy into your codebase. The harness reflects that reality — every component lives in `src/components/`, every token in `src/styles/tokens.css`. You own the source. The principles below explain why that arrangement matters, and what it asks of you in return.
+
+## The three commitments
+
+### 1 · Composition over configuration
+
+No `<Button variant="enterprise" tone="cautious-but-confident" />`. Variants name the action — what the button **does** — not its appearance. Six visual variants × four sizes is the entire button surface, and it covers the full design space.
+
+export const ComposeDemo = () => (
+  <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', background: 'var(--card)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <Button>Default</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="destructive">Destructive</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="link">Link</Button>
+    </div>
+    <div style={{ marginTop: '0.75rem', fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
+      variant ∈ &#123; default · secondary · destructive · outline · ghost · link &#125;
+    </div>
+  </div>
+);
+
+<ComposeDemo />
+
+[See Button — Appearance story →](?path=/docs/4-components-button--docs)
+
+### 2 · CSS variables as the contract
+
+Tokens are CSS custom properties on `:root` and `.dark`. Components consume `var(--primary)`, never hex literals. Theme switches happen by toggling the `.dark` class on `<html>`; nothing else changes — no React re-renders, no JS theme provider, no per-component overrides.
+
+```tsx
+// What components look like — token consumption only.
+<button style={{
+  background: 'var(--primary)',
+  color: 'var(--primary-foreground)',
+  borderRadius: 'var(--radius)',
+}} />
+
+// Never:
+<button style={{
+  background: '#0F172A',     // hardcoded hex
+  color: '#F8FAFC',
+  borderRadius: '0.5rem',
+}} />
+```
+
+[See Tokens — Tier 2 semantic roles →](?path=/docs/1-foundations-tokens--docs)
+
+### 3 · Owned source, not vendored binary
+
+When you `npx shadcn add button`, the `Button.tsx` lands in **your** repo. Not in `node_modules`. You're free to edit; the tradeoff is: no automatic upstream updates. The harness must therefore document **YOUR copy** — not a generic spec.
+
+export const OwnedDemo = () => (
+  <Card style={{ width: 460 }}>
+    <CardHeader>
+      <CardTitle style={{ fontSize: 'var(--text-base)' }}>Where does Button live?</CardTitle>
+      <CardDescription>Two answers; we want the second one.</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Badge variant="destructive">Don't</Badge>
+          <code>node_modules/@some-vendor/button</code>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Badge>Do</Badge>
+          <code>src/components/Button.tsx</code>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+<OwnedDemo />
+
+## Why these three, and not others?
+
+| Commitment | What it buys | What it costs |
+|---|---|---|
+| Composition over configuration | Predictable surface area; every variant has a reason | No "enterprise mode" prop you can flip on |
+| CSS variables as the contract | Theming for free; runtime theme switch with no JS | Can't ship ahead-of-time computed colors per theme |
+| Owned source | Full control; no breaking upgrades | No auto-patches; you carry your own forks |
+
+Each cost is real. Pick this system because the trades fit your team — not because it's fashionable.
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Consume `var(--primary)` etc. from `tokens.css` | Hardcode hex values in components |
+| Add new tokens to `tokens.css` first, then use them | Define new colors inline in component styles |
+| Use semantic role names (`primary`, `destructive`) | Use color names (`blue-500`, `red`) |
+| Layer your own variants on top of shadcn's six | Modify the canonical six in place — fork instead |
+| Read `src/components/<Name>.tsx` to know the surface | Reference the public shadcn docs as authoritative |
+
+## Source of truth
+
+- [`src/styles/tokens.css`](?path=/docs/1-foundations-tokens--docs) — the contract surface
+- `src/components/` — the implementation surface; **your** copy, not the registry
+- `.storybook/preview.ts` — theme switching decorator (`.dark` class toggle)
+- [Theming](?path=/docs/1-foundations-tokens--docs) · [Color](?path=/docs/2-styles-color--docs) · [Layout](?path=/docs/1-foundations-layout--docs)
+
+## Agent prompt guide
+
+> When asked to build a UI surface in this repo: pull the relevant component from `src/components/`, consume tokens via `var(--*)`, never hardcode color or spacing. If a needed token doesn't exist in `tokens.css`, stop and surface the gap — don't invent locally. If a component doesn't ship a variant for the desired meaning, stop and propose adding the variant — don't restyle inline.

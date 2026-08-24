@@ -1,0 +1,137 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta } from '@storybook/blocks';
+import { DesignTokenDocBlock } from 'storybook-design-token';
+import {
+  SwatchRow,
+  SurfaceScale,
+  TextAndOutline,
+  StateLayerScale,
+  TypeRow,
+  HierarchyDiagram,
+  SpacingScale,
+  SpacingDemo,
+  ElevationDemo,
+} from '../../../.storybook/harness-blocks';
+
+<Meta title="Styles/{{CATEGORY_TITLE}}" />
+
+# {{CATEGORY_TITLE}}
+
+> {{ONE_LINE_PURPOSE}}
+
+## {{INTRO_HEADER}}
+
+{{!--
+  INTRO_HEADER substitutes per category:
+    color.mdx       → "Color scheme"
+    typography.mdx  → "Type scale"
+    spacing.mdx     → "Context-level hierarchy"
+    elevation.mdx   → "Levels"
+    iconography.mdx → "Icon system"
+--}}
+
+{{INTRO_BODY}}
+
+## Decisions
+
+- Tier model: {{TIER_MODEL}}
+- Naming: {{NAMING_CONVENTION}}
+- <!-- TODO: additional rules -->
+
+## Tokens
+
+{{!--
+  Per-category JSX islands — ONE of these renders depending on which file:
+
+  COLOR variant:
+    ### Accent schemes
+    <SwatchRow scheme="primary" />
+    <SwatchRow scheme="secondary" />
+    <SwatchRow scheme="tertiary" />
+
+    ### Status colors
+    <SwatchRow scheme="success" />
+    <SwatchRow scheme="warning" />
+    <SwatchRow scheme="danger" />
+
+    ### Neutrals & surfaces
+    <SurfaceScale />
+    <TextAndOutline />
+
+    ### State layers
+    <StateLayerScale role="primary" />
+
+  TYPOGRAPHY variant:
+    ### Display & headlines
+    <TypeRow token="display-large" />
+    <TypeRow token="display-medium" />
+    <TypeRow token="headline-large" />
+    <TypeRow token="headline-medium" />
+
+    ### Body
+    <TypeRow token="body-large" />
+    <TypeRow token="body-medium" />
+
+    ### Labels
+    <TypeRow token="label-large" />
+
+  SPACING variant:
+    <HierarchyDiagram levels={['Element', 'Card', 'Section', 'Modal']} />
+
+    ### Element tokens
+    <SpacingScale />
+
+    ### Card & section padding
+    <SpacingDemo level="card" />
+    <SpacingDemo level="section" />
+
+  ELEVATION variant:
+    <ElevationDemo level={1} />
+    <ElevationDemo level={2} />
+    <ElevationDemo level={3} />
+    <ElevationDemo level={4} />
+    <ElevationDemo level={5} />
+
+  Scaffold writes the right block(s) per file.
+--}}
+
+{{TOKEN_BLOCKS}}
+
+<DesignTokenDocBlock categoryName="{{CATEGORY}}" viewType="card" />
+
+{{IF_MODES}}
+## Mode mappings
+
+| Semantic | Light | Dark{{IF_HC}} | High-contrast{{/IF_HC}} |
+|---|---|---{{IF_HC}}|---{{/IF_HC}}|
+{{MODE_MATRIX}}
+{{/IF_MODES}}
+
+{{IF_MULTI_BRAND}}
+## Brand variants
+
+| Semantic | Default brand | <!-- TODO: brand columns --> |
+|---|---|---|
+<!-- TODO: per-brand override rows -->
+{{/IF_MULTI_BRAND}}
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| <!-- TODO --> | <!-- TODO --> |
+
+## Source of truth
+
+- Authoritative: {{SOT_PATH}}
+- Build pipeline: {{BUILD_PIPELINE}}
+- Refresh cadence: {{CADENCE}}
+
+## Agent prompt guide
+
+<!-- TODO: imperatives for an agent picking tokens from this category. -->

@@ -124,6 +124,6 @@ Locate `.hd/propose-<hash>.json` → re-run `scripts/compute-plan-hash.sh` → o
 All dispatch uses fully-qualified `harness-designing:<category>:<agent>` Task names (compound 2.35.0 convention — bare names get re-prefixed wrong).
 
 - `harness-designing:research:lesson-retriever` — Phase 1 research (capture, optional)
-- `harness-designing:analysis:rule-candidate-scorer` — cluster scoring (propose, required)
+- `harness-designing:analysis:rule-candidate-scorer` — cluster scoring (propose, required). **DS lessons get promotion priority (v6 / DS bootstrap):** when a lesson cluster contains ≥1 lesson tagged with design-system / token / component / Figma / Storybook keywords, the scorer's importance weight gets a +1.0 boost. Promoted DS rules can land in AGENTS.md "Forbidden moves" section (when imperative bans) or in `docs/context/design-system/1-foundations/tokens.mdx` Decisions section (when token-governance rules) instead of the generic `## Rules` section.
 - `harness-designing:review:rubric-extractor` — optional; dispatched in propose mode when a source lesson contains ≥4 imperative statements (may be promotable to a rubric in its own right)
 - `rule-apply` mode runs inline — no agent; `scripts/compute-plan-hash.sh` is authoritative

@@ -1,0 +1,36 @@
+{
+  "spec_version": "1",
+  "scenario": "{{SCENARIO}}",
+  "tokens": {
+    "doc": "1-foundations/tokens.mdx",
+    "tiers": {{TIERS}},
+    "modes": {{MODES}},
+    "brands": {{BRANDS}},
+    "source_of_truth": "{{TOKENS_SOURCE_OF_TRUTH}}"
+  },
+  "components": {
+    "index": "4-components/components-index.json",
+    "dir": "4-components/"
+  },
+  "folders_enabled": {
+    "patterns": {{PATTERNS_ENABLED}},
+    "data_viz": {{DATA_VIZ_ENABLED}},
+    "specs": {{SPECS_ENABLED}},
+    "assets": true
+  },
+  "storybook": {
+    "enabled": {{STORYBOOK_ENABLED}},
+    "path": "{{STORYBOOK_PATH}}",
+    "existing_handling": "{{EXISTING_HANDLING}}"
+  },
+  "voice_docs_found": {{VOICE_DOCS_FOUND}},
+  "audit_findings_cache": [],
+  "scaffold_progress": {
+    "current_folder": "1-foundations",
+    "completed": [],
+    "started_at": "{{DATE}}",
+    "last_step_at": "{{DATE}}"
+  },
+  "last_filled_by": "/hd:design-system establish",
+  "last_filled_at": "{{DATE}}"
+}

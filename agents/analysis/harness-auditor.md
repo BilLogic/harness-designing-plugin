@@ -42,7 +42,10 @@ Always read `detect_json` and `hd_config_path` (if present).
 
 In `mode: full`, additionally read the layer-specific user artifacts:
 
-- `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any always-loaded files flagged in `detect_json.context_files`
+- `layer: 1` → `<repo_root>/AGENTS.md`, `<repo_root>/CLAUDE.md`, `<repo_root>/docs/context/**`, any always-loaded files flagged in `detect_json.context_files`. **DS sub-checks (v6 / DS bootstrap):** when `detect_json.signals.design_system_scenario != "starter"` OR `<repo_root>/docs/context/design-system/index-manifest.json` exists, additionally:
+  1. Run `node skills/hd-design-system/scripts/validate.mjs --repo <repo_root> --json` and incorporate its findings — `frontmatter-present`, `index-to-file`, `mdx-parses`, `ia-sync`, `no-img-in-md` (all HIGH severity) feed Layer-1 content_status as `present-but-stale` if any fire
+  2. Check `signals.voice_docs_found` — if empty AND no `## Voice` heading in AGENTS.md → flag as `voice-missing` finding (medium)
+  3. Read `index-manifest.json:scaffold_progress` — if `completed[]` is shorter than enabled folders, surface incomplete-scaffold finding (low/medium per how many folders behind)
 - `layer: 2` → `<repo_root>/.agent/skills/**` OR `<repo_root>/.claude/skills/**` (whichever `detect_json.platform` indicates), plus user's skill inventory from `detect_json.skills_by_platform`
 - `layer: 3` → orchestration artifacts listed in `detect_json.orchestration_signals`; other-tool coexistence paths from `detect_json.signals.other_tool_harnesses_detected[]`
 - `layer: 4` → `<repo_root>/docs/rubrics/**`

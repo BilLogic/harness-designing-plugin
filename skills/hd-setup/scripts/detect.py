@@ -19,6 +19,17 @@ Schema v5 (3n.7) adds — additive only, v4 configs still parse:
 - team_tooling.data_api[] — databases/BaaS/headless-CMS signals
   (supabase/, firebase.json, hasura/, @sanity/client, contentful, airtable)
 
+Schema v6 (hd:design-system bootstrap) adds — additive only, v5 configs still parse:
+- design_system_scenario — "starter" | "figma-only" | "code-and-figma" |
+  "code-only", derived from has_figma_config + has_tokens_package +
+  components-dir signals. Drives /hd:design-system establish branch.
+- voice_docs_found[] — paths of any markdown file containing voice/tone
+  authoring sections (AGENTS.md / CLAUDE.md / soul.md / voice.md /
+  persona.md OR any *.md with `## Voice|Tone|Use case|Forbidden|Persona`
+  headings). Generic — no filename whitelist.
+- storybook_present — boolean (.storybook/ dir OR @storybook/* in deps)
+- dataviz_lib_detected — boolean (recharts/d3/visx/chart.js/nivo in deps)
+
 Usage:
     cd <user's repo root>
     python3 .../skills/hd-setup/scripts/detect.py
@@ -431,6 +442,240 @@ def detect_config_sot() -> dict:
         "has_figma_config": has_figma_config,
         "tokens_package_paths": tokens_package_paths,
     }
+
+
+# --- C5 (v6): design-system scenario, voice docs, storybook, data-viz --------
+#
+# Each lives in its own function to keep main() narrative-driven. All four are
+# additive — v5 configs still parse without these fields.
+
+
+def detect_design_system_scenario(config_sot: dict) -> str:
+    """Classify DS starting state into one of 4 scenarios.
+
+    Drives /hd:design-system establish branch:
+      - "figma-only"     → has_figma_config AND no tokens AND no components dir
+      - "code-only"      → has_tokens_package OR rich components dir; no figma
+      - "code-and-figma" → has both
+      - "starter"        → none of the above (greenfield-style)
+
+    Components-dir richness check: ≥10 .tsx/.jsx/.vue/.svelte files anywhere
+    under src/components/, app/components/, design-system/, or packages/*/src/
+    components/. Caps probe at 200 files to stay fast on huge repos.
+    """
+    has_figma = config_sot["has_figma_config"]
+    has_tokens = config_sot["has_tokens_package"]
+
+    # Components-dir richness — count UI source files in conventional locations
+    SKIP = {"node_modules", "dist", "build", ".next", "__pycache__", ".git",
+            ".turbo", "coverage", ".venv", "venv", "storybook-static"}
+    component_extensions = {".tsx", ".jsx", ".vue", ".svelte"}
+    component_count = 0
+    component_dir_candidates = [
+        REPO / "src" / "components",
+        REPO / "src" / "lib" / "components",  # SvelteKit convention
+        REPO / "app" / "components",
+        REPO / "design-system",
+        REPO / "design-system" / "src" / "components",
+        REPO / "components",
+    ]
+    # Also probe packages/*/src/components/ for monorepos
+    packages_dir = REPO / "packages"
+    if packages_dir.is_dir():
+        try:
+            for entry in packages_dir.iterdir():
+                if entry.is_dir():
+                    component_dir_candidates.append(entry / "src" / "components")
+        except OSError:
+            pass
+
+    for cand in component_dir_candidates:
+        if not cand.is_dir():
+            continue
+        try:
+            for f in cand.rglob("*"):
+                if not f.is_file():
+                    continue
+                if any(part in SKIP for part in f.relative_to(REPO).parts):
+                    continue
+                if f.suffix in component_extensions:
+                    component_count += 1
+                    if component_count >= 200:
+                        break
+            if component_count >= 200:
+                break
+        except OSError:
+            continue
+
+    rich_components = component_count >= 10
+    has_code = has_tokens or rich_components
+
+    if has_figma and has_code:
+        return "code-and-figma"
+    if has_figma:
+        return "figma-only"
+    if has_code:
+        return "code-only"
+    return "starter"
+
+
+_VOICE_FILENAME_RE = re.compile(
+    r"^(AGENTS|CLAUDE|soul|voice|persona|VOICE|PERSONA|SOUL)\.md$"
+)
+_VOICE_SECTION_RE = re.compile(
+    r"^##\s+(Voice|Tone|Use case|Use Case|Forbidden|Persona|Voice and tone|"
+    r"Voice & tone|Tone of voice)\b",
+    re.MULTILINE,
+)
+
+
+def detect_voice_docs() -> list[str]:
+    """Find markdown files containing voice/tone authoring sections.
+
+    Generic — pattern + filename match, no hardcoded whitelist beyond a
+    small set of conventional filenames. Probes:
+      1. Repo root *.md files matching the conventional filename pattern
+      2. docs/context/*.md (one level deep) with matching filename or
+         containing a `## Voice|Tone|Use case|Forbidden|Persona` heading
+      3. Any other root-level *.md (≥10 lines) that contains the heading
+         pattern in its body
+
+    Returns sorted list of relative paths (capped at 10).
+    """
+    found: set[str] = set()
+
+    # Pass 1 — root-level conventional filenames
+    try:
+        for p in REPO.iterdir():
+            if not p.is_file() or p.suffix != ".md":
+                continue
+            if _VOICE_FILENAME_RE.match(p.name):
+                found.add(str(p.relative_to(REPO)))
+    except OSError:
+        pass
+
+    # Pass 2 — docs/context/*.md (any name; check headings)
+    docs_context = REPO / "docs" / "context"
+    if docs_context.is_dir():
+        try:
+            for p in docs_context.rglob("*.md"):
+                if not p.is_file():
+                    continue
+                rel = p.relative_to(REPO).parts
+                if len(rel) > 4:  # cap depth
+                    continue
+                if _VOICE_FILENAME_RE.match(p.name):
+                    found.add(str(p.relative_to(REPO)))
+                    continue
+                try:
+                    if p.stat().st_size > 256 * 1024:
+                        continue
+                    body = p.read_text(encoding="utf-8", errors="replace")
+                    if _VOICE_SECTION_RE.search(body):
+                        found.add(str(p.relative_to(REPO)))
+                except (OSError, UnicodeDecodeError):
+                    pass
+        except OSError:
+            pass
+
+    # Pass 3 — any other root-level *.md with voice headings in body
+    try:
+        for p in REPO.glob("*.md"):
+            if not p.is_file():
+                continue
+            rel = str(p.relative_to(REPO))
+            if rel in found:
+                continue
+            try:
+                if p.stat().st_size > 256 * 1024:
+                    continue
+                body = p.read_text(encoding="utf-8", errors="replace")
+                if _VOICE_SECTION_RE.search(body):
+                    found.add(rel)
+            except (OSError, UnicodeDecodeError):
+                pass
+    except OSError:
+        pass
+
+    return sorted(found)[:10]
+
+
+_STORYBOOK_DEP_RE = re.compile(r"^(@storybook/|storybook$)")
+
+
+def detect_storybook_present(deps: set[str]) -> bool:
+    """Storybook detection — `.storybook/` dir presence OR @storybook/* in deps."""
+    if (REPO / ".storybook").is_dir():
+        return True
+    return any(_STORYBOOK_DEP_RE.match(dep) for dep in deps)
+
+
+# Known Storybook framework packages (Storybook 7+ "framework" concept).
+# Order matters — more specific frameworks first so `nextjs` beats `react-*`.
+_STORYBOOK_FRAMEWORK_PACKAGES = (
+    "@storybook/nextjs",
+    "@storybook/sveltekit",
+    "@storybook/react-vite",
+    "@storybook/react-webpack5",
+    "@storybook/react-native",
+    "@storybook/react-native-web-vite",
+    "@storybook/svelte-vite",
+    "@storybook/svelte-webpack5",
+    "@storybook/vue3-vite",
+    "@storybook/vue3-webpack5",
+    "@storybook/angular",
+    "@storybook/web-components-vite",
+    "@storybook/web-components-webpack5",
+    "@storybook/ember",
+    "@storybook/qwik",
+    "@storybook/preact-vite",
+    "@storybook/preact-webpack5",
+    "@storybook/html-vite",
+    "@storybook/html-webpack5",
+    "@storybook/server-webpack5",
+)
+
+
+def detect_storybook_framework(deps: set[str]) -> str | None:
+    """Detect which @storybook/<framework> package is installed.
+
+    Storybook 7+ requires exactly one framework package per project. We return
+    the package name (e.g., '@storybook/sveltekit') which `scaffold-storybook.mjs`
+    passes through as its `--framework` argument. Returns None when storybook is
+    present in deps but no framework package matched (rare; user is mid-migration
+    or running pre-7).
+    """
+    for pkg in _STORYBOOK_FRAMEWORK_PACKAGES:
+        if pkg in deps:
+            return pkg
+    return None
+
+
+_DATAVIZ_DEP_NAMES = {
+    "recharts",
+    "d3",
+    "@visx/visx",
+    "chart.js",
+    "react-chartjs-2",
+    "nivo",
+    "@nivo/core",
+    "victory",
+    "highcharts",
+    "highcharts-react-official",
+    "plotly.js",
+    "react-plotly.js",
+    "echarts",
+    "apexcharts",
+    "react-apexcharts",
+}
+_DATAVIZ_DEP_RE = re.compile(r"^(@visx/|@nivo/)")
+
+
+def detect_dataviz_lib(deps: set[str]) -> bool:
+    """Data-viz library detection via package.json deps."""
+    if any(d in _DATAVIZ_DEP_NAMES for d in deps):
+        return True
+    return any(_DATAVIZ_DEP_RE.match(d) for d in deps)
 
 
 # --- C2 (extended): a11y-framework detection via package.json deps -----------
@@ -1059,6 +1304,12 @@ def main() -> int:
     maturity = detect_maturity_signals(v1["has_ai_docs"])
     other_tool_harnesses = detect_other_tool_harnesses()
     scattered_l1 = detect_scattered_l1()  # 3l.3
+    # v6 — DS bootstrap signals
+    ds_scenario = detect_design_system_scenario(config_sot)
+    voice_docs = detect_voice_docs()
+    storybook_present = detect_storybook_present(deps)
+    storybook_framework = detect_storybook_framework(deps)
+    dataviz_present = detect_dataviz_lib(deps)
 
     # 3l.3: compute layers_present_scattered — layers that exist in scattered
     # form but not in the canonical docs/context/ tree.
@@ -1126,6 +1377,12 @@ def main() -> int:
         "other_tool_harnesses_detected": other_tool_harnesses,
         # Plug-in install signal (separate from repo-level detection)
         "compound_installed": v1["compound_installed"],
+        # v6 — DS bootstrap signals
+        "design_system_scenario": ds_scenario,
+        "voice_docs_found": voice_docs,
+        "storybook_present": storybook_present,
+        "storybook_framework": storybook_framework,
+        "dataviz_lib_detected": dataviz_present,
     }
 
     output = {

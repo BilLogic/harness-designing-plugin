@@ -1,0 +1,74 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import { Panel } from '../../.storybook/harness-blocks';
+import * as InputStories from '../../src/components/Input.stories';
+
+<Meta of={InputStories} />
+
+# Input
+
+> Fluent's input has 4 appearances × 3 sizes. Default is outline; underline for embedded form contexts; filled-darker / filled-lighter when surface contrast specifically wants the field to feel grouped.
+
+## Default
+
+<Panel name="Default" source="src/components/Input.tsx">
+  <Canvas of={InputStories.Default} sourceState="none" />
+</Panel>
+
+## Appearances
+
+<Panel name="All appearances" source="src/components/Input.tsx">
+  <Canvas of={InputStories.Appearances} sourceState="none" />
+</Panel>
+
+| Appearance | When to use |
+|---|---|
+| `outline` (default) | Default — visible border on neutral surface |
+| `underline` | Inline forms / embedded contexts where a full border would be too heavy |
+| `filled-darker` | Filled background tier 3 — for forms inside subtle surfaces |
+| `filled-lighter` | Filled background tier 1 — for surfaces that already have a tint |
+
+## Sizes
+
+<Panel name="Sizes" source="src/components/Input.tsx">
+  <Canvas of={InputStories.Sizes} sourceState="none" />
+</Panel>
+
+## Usage
+
+```tsx
+import { Input } from '@/components/Input';
+
+// Default outline
+<Input placeholder="Email" type="email" />
+
+// Underline for inline forms
+<Input appearance="underline" placeholder="Search" type="search" />
+
+// Filled inside a subtle card
+<Input appearance="filled-darker" placeholder="Notes" />
+```
+
+## Accessibility
+
+- Always pair with a `<Label>` (visible or visually hidden) — the input itself does NOT render a label
+- Set `aria-required="true"` for required fields with a visible asterisk
+- For errors, set `aria-invalid="true"` + `aria-describedby` referencing a visible error message
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| Pair with a `<Label>` | Rely on placeholder as the label |
+| Set `type="email"` / `tel` / `number` | Use `type="text"` for everything |
+| Use `outline` as default | Use `underline` outside of inline-form contexts |
+| Test in HC theme | Hardcode border colors |
+
+## Source of truth
+
+- Code — [`src/components/Input.tsx`](?path=/story/4-components-input--default)
+- Stories — [`src/components/Input.stories.tsx`](?path=/story/4-components-input--default)
+- Reference — [Fluent UI v9 Input](https://github.com/microsoft/fluentui/tree/master/packages/react-components/react-input)
+
+## Agent prompt guide
+
+> Default → `appearance="outline"`. Inline form / search bar → `appearance="underline"`. Field inside a tinted surface → `appearance="filled-darker"`. Always pair with `<Label>`. Use the right `type` for the right keyboard. Validation: `aria-invalid` + `aria-describedby`.

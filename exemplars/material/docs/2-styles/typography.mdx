@@ -1,0 +1,73 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="2-styles/Typography" />
+
+# Typography
+
+> M3 typescale: 5 categories × 3 sizes (small / medium / large) = 15 tokens. Each token bundles font / size / line-height / weight / tracking.
+
+export const TypeRow = ({ token, sample = 'The quick brown fox jumps over the lazy dog' }) => {
+  const fontVar = `var(--md-sys-typescale-${token}-font)`;
+  const sizeVar = `var(--md-sys-typescale-${token}-size)`;
+  const lhVar = `var(--md-sys-typescale-${token}-line-height)`;
+  const weightVar = `var(--md-sys-typescale-${token}-weight)`;
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '1rem', alignItems: 'baseline', padding: '0.75rem 0', borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+      <div>
+        <code style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-on-surface-variant)' }}>--md-sys-typescale-{token}</code>
+      </div>
+      <div style={{ fontFamily: fontVar, fontSize: sizeVar, lineHeight: lhVar, fontWeight: weightVar }}>{sample}</div>
+    </div>
+  );
+};
+
+## Display
+
+Hero text — splash screens, marketing, large empty states. Used sparingly.
+
+<TypeRow token="display-large" sample="Display large 57px" />
+<TypeRow token="display-medium" sample="Display medium 45px" />
+<TypeRow token="display-small" sample="Display small 36px" />
+
+## Headline
+
+Page and section titles. The most-used hero category.
+
+<TypeRow token="headline-large" sample="Headline large 32px" />
+<TypeRow token="headline-medium" sample="Headline medium 28px" />
+<TypeRow token="headline-small" sample="Headline small 24px" />
+
+## Title
+
+Card titles, dialog titles, prominent navigation labels.
+
+<TypeRow token="title-large" sample="Title large 22px" />
+<TypeRow token="title-medium" sample="Title medium 16px / 500" />
+
+## Body
+
+Default reading copy. `body-large` for longer paragraphs, `body-medium` for compact UI.
+
+<TypeRow token="body-large" sample="Body large — primary reading copy" />
+<TypeRow token="body-medium" sample="Body medium — compact UI text" />
+
+## Label
+
+Buttons, captions, metadata. `label-large` for buttons by default.
+
+<TypeRow token="label-large" sample="LABEL LARGE — BUTTONS" />
+<TypeRow token="label-medium" sample="LABEL MEDIUM — CAPTIONS" />
+
+## Decisions
+
+- **Roboto by default, replaceable per-app.** Override `--md-sys-typescale-*-font` once at the root to brand.
+- **`title-medium` is 500 weight, `body-large` is 400.** Weight is part of the token bundle; never overridden per-instance.
+- **`label-large` for buttons specifically.** Same size as `body-medium` (14px) but heavier weight (500) — that's what makes a button "feel" interactive.
+
+## Source of truth
+
+[`src/styles/tokens.css`](?path=/docs/1-foundations-design-tokens--docs) — `--md-sys-typescale-*` block.
+
+## Agent prompt guide
+
+> Page title → `headline-large`. Card title → `title-medium`. Body copy → `body-large` for prose, `body-medium` for dense UI. Button label → `label-large` (handled automatically by `<md-filled-button>`). Display sizes are for hero/marketing only.

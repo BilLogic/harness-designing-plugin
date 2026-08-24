@@ -1,0 +1,76 @@
+---
+status: placeholder
+last_filled: {{DATE}}
+todos: {{TODO_COUNT}}
+---
+
+import { Meta, Canvas } from '@storybook/blocks';
+import { Panel } from '../../../.storybook/harness-blocks';
+{{IF_HAS_STORIES}}import * as PatternStories from './{{PATTERN_NAME}}.stories';{{/IF_HAS_STORIES}}
+
+<Meta {{IF_HAS_STORIES}}of={PatternStories}{{/IF_HAS_STORIES}} title="Patterns/{{PATTERN_NAME}}" />
+
+# {{PATTERN_NAME}} pattern
+
+> {{ONE_LINE_PURPOSE}}
+
+## Description
+
+{{NARRATIVE_2_3_SENTENCES}}
+
+## When to use
+
+<!-- TODO: decision tree for when this pattern fits vs alternatives. -->
+
+## Variants
+
+<Panel name="{{PRIMARY_VARIANT_NAME}}" source="{{PATTERN_PATH}}">
+  {{IF_HAS_STORIES}}<Canvas of={PatternStories.Default} sourceState="none" />{{/IF_HAS_STORIES}}
+</Panel>
+
+## Anatomy
+
+<!-- TODO: composition diagram — what components compose this pattern, in what arrangement. -->
+
+## Components used
+
+| Component | Role in pattern | Doc |
+|---|---|---|
+{{COMPONENTS_USED_TABLE}}
+
+## Behaviors
+
+<!-- TODO: state transitions + interactions across the composed components. -->
+
+## Accessibility
+
+<!-- TODO: pattern-level a11y (announcement order, focus management, ARIA live regions). -->
+
+## Do's and don'ts
+
+| Do | Don't |
+|---|---|
+| <!-- TODO --> | <!-- TODO --> |
+
+{{IF_HAS_STORIES}}
+## Examples
+
+<Canvas of={PatternStories.Default} />
+{{/IF_HAS_STORIES}}
+
+## Edge cases
+
+<!-- TODO: what to do when data is empty / loading / errored / partial. -->
+
+## Source of truth
+
+- Canonical implementation: `{{CODE_PATH}}`
+- Figma frame: {{FIGMA_FRAME_URL}}
+
+## Decisions
+
+<!-- TODO: 3-5 non-obvious rules. -->
+
+## Agent prompt guide
+
+<!-- TODO: imperatives for an agent assembling this pattern. -->
